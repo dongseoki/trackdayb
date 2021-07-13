@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lds.trackdayb.repository.TimeRecordRepository">
+    <insert id="insertTimeRecord">
+        INSERT INTO time_record
+        (selection_date, content, modification_datetime, create_datetime, deletion_status, goal_content, member_serial_number)
+        VALUES('2021-07-13', 'test2', '2021-07-13 23:05:00', '2021-07-13 23:05:12', 'N', NULL, 1);
+    </insert>
+</mapper>

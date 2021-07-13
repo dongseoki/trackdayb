@@ -1,0 +1,12 @@
+spring:
+  datasource:
+#    url: jdbc:mysql://ip주소:port번호/DB이름?characterEncoding=utf8
+#    url: jdbc:mysql://127.0.0.1:3306/world?characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3306/trackday?characterEncoding=utf8
+    username: trackday
+    password: ~tsobitkstnek~
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package: com.lds.trackdayb.domain;com.lds.trackdayb.vo;com.lds.trackdayb.mvo;
+  mapper-locations: mybatis/mapper/**/*.xml
