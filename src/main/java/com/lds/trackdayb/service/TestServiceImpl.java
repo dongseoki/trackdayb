@@ -18,7 +18,7 @@ public class TestServiceImpl implements TestService{
     }
 
     @Override
-    public String selectLoginMemberSerialNumber() {
-        return "1";
+    public int selectLoginMemberSerialNumber() {
+        return 1;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface TimeRecordRepository {
+public interface TimeManageRepository {
     void insertTimeRecord(TimeRecordVO vo);
+    void insertActivityRecords(TimeRecordVO vo);
 }

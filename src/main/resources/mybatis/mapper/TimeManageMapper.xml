@@ -3,10 +3,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lds.trackdayb.repository.TimeRecordRepository">
-    <insert id="insertTimeRecord">
-        INSERT INTO time_record
-        (selection_date, content, modification_datetime, create_datetime, deletion_status, goal_content, member_serial_number)
-        VALUES('2021-07-13', 'test2', '2021-07-13 23:05:00', '2021-07-13 23:05:12', 'N', NULL, 1);
+<mapper namespace="com.lds.trackdayb.repository.TimeManageRepository">
+    <insert id="insertTimeRecord" useGeneratedKeys="true" keyProperty="timeRecordId">
+        INSERT INTO time_record(
+            selection_date,
+            member_serial_number
+        )
+        VALUES (
+            #{selectionDate},
+            #{memberSerialNumber}
+        );
     </insert>
+    <insert id="insertActivityRecords">
+        INSERT INTO activity_record(
+            start_datetime,
+            end_datetime,
+            classification_name,
+            activity_content,
+            goal_content,
+            outcome_content,
+            reflection_content,
+            activity_score,
+            time_record_id
+        )
+        VALUES
+        <foreach collection="activityRecordDTOList" item="item" separator=",">
+            (
+                #{item.startDatetime},
+                #{item.endDatetime},
+                #{item.classificationName},
+                #{item.activityContent},
+                #{item.goalContent},
+                #{item.outcomeContent},
+                #{item.reflectionContent},
+                #{item.activityScore},
+                #{timeRecordId}
+            )
+        </foreach>
+        ;
+    </insert>
+
 </mapper>

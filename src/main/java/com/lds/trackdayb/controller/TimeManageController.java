@@ -3,10 +3,7 @@ package com.lds.trackdayb.controller;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.service.TimeManageService;
 import com.lds.trackdayb.vo.TimeRecordVO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/timeManage")
@@ -27,12 +24,14 @@ public class TimeManageController {
     }
 
 //    @PostMapping("/createTimeRecord")
-    @GetMapping("/createTimeRecord")
-    public String createTimeRecord(){
+    @PostMapping("/createTimeRecord")
+    public String createTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
-        TimeRecordVO vo = new TimeRecordVO();
-        timeManageService.createTimeRecord(vo);
+        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+//        TimeRecordVO vo = new TimeRecordVO();
+//        timeManageService.createTimeRecord(vo);
+        timeRecordVO.setMemberSerialNumber(loginSerialNumber);
+        timeManageService.createTimeRecord(timeRecordVO);
         return "시간관리 - 기록하기 - 시간기록 삽입";
     }
 
