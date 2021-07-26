@@ -4,43 +4,146 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lds.trackdayb.repository.TimeManageRepository">
+
+    <!--    TimeRecord-->
     <insert id="insertTimeRecord" useGeneratedKeys="true" keyProperty="timeRecordId">
         INSERT INTO time_record(
-            selection_date,
-            member_serial_number
+        selection_date,
+        member_serial_number
         )
         VALUES (
-            #{selectionDate},
-            #{memberSerialNumber}
+        #{selectionDate},
+        #{memberSerialNumber}
         );
     </insert>
+
+
+    <resultMap id="timeRecordResult" type="com.lds.trackdayb.mvo.TimeRecordMVO">
+        <result property="timeRecordId" column="time_record_id"/>
+        <result property="selectionDate" column="selection_date"/>
+        <result property="modificationDatetime" column="modification_datetime"/>
+        <result property="createDatetime" column="create_datetime"/>
+        <result property="deletionStatus" column="deletion_status"/>
+        <result property="memberSerialNumber" column="member_serial_number"/>
+        <collection property="activityRecordDTOList" column="{timeRecordId = time_record_id, memberSerialNumber=member_serial_number}" javaType="java.util.ArrayList"
+                    ofType="com.lds.trackdayb.dto.ActivityRecordDTO" select="selectActivityRecords"/>
+
+    </resultMap>
+
+    <select id="selectTimeRecord" resultMap="timeRecordResult">
+        select * FROM time_record
+        WHERE
+        1=1
+        AND
+        selection_date = #{selectionDate}
+        AND
+        member_serial_number = #{memberSerialNumber}
+        AND
+        deletion_status = 'N'
+        limit 1;
+    </select>
+
+
+    <update id="updateTimeRecord">
+        UPDATE time_record
+        SET
+        <if test="deletionStatus != null and deletionStatus neq ''">
+            deletion_status=#{deletionStatus},
+        </if>
+        modification_datetime=NOW()
+        WHERE time_record_id=#{timeRecordId}
+        AND
+        member_serial_number = #{memberSerialNumber}
+    </update>
+
+    <update id="updateActivityRecords">
+        UPDATE activity_record
+        SET
+        <if test="deletionStatus != null and deletionStatus neq ''">
+            deletion_status=#{deletionStatus},
+        </if>
+        modification_datetime=NOW()
+        WHERE
+        time_record_id=#{timeRecordId}
+        AND
+        time_record_id IN (SELECT time_record_id FROM time_record TB1 where TB1.member_serial_number = #{memberSerialNumber});
+    </update>
+
+
+    <!--    activityRecords-->
+    <select id="selectActivityRecords" parameterType="java.util.Map" resultType="com.lds.trackdayb.dto.ActivityRecordDTO">
+        SELECT * FROM activity_record
+        WHERE
+        time_record_id = #{timeRecordId}
+        AND
+        time_record_id IN (SELECT time_record_id FROM time_record TB1 where TB1.member_serial_number = #{memberSerialNumber})
+        AND
+        deletion_status = 'N'
+        <!--            selection_date = #{selectionDate}-->
+    </select>
+
     <insert id="insertActivityRecords">
         INSERT INTO activity_record(
-            start_datetime,
-            end_datetime,
-            classification_name,
-            activity_content,
-            goal_content,
-            outcome_content,
-            reflection_content,
-            activity_score,
-            time_record_id
+        start_datetime,
+        end_datetime,
+        classification_name,
+        activity_content,
+        goal_content,
+        outcome_content,
+        reflection_content,
+        activity_score,
+        time_record_id
         )
         VALUES
         <foreach collection="activityRecordDTOList" item="item" separator=",">
             (
-                #{item.startDatetime},
-                #{item.endDatetime},
-                #{item.classificationName},
-                #{item.activityContent},
-                #{item.goalContent},
-                #{item.outcomeContent},
-                #{item.reflectionContent},
-                #{item.activityScore},
-                #{timeRecordId}
+            #{item.startDatetime},
+            #{item.endDatetime},
+            #{item.classificationName},
+            #{item.activityContent},
+            #{item.goalContent},
+            #{item.outcomeContent},
+            #{item.reflectionContent},
+            #{item.activityScore},
+            #{timeRecordId}
             )
         </foreach>
         ;
     </insert>
+
+
+    <!--    <select id="selectTimeRecord" resultType="TimeRecordMVO">-->
+    <!--        select *-->
+    <!--        FROM time_record-->
+    <!--        WHERE-->
+    <!--            1=1-->
+    <!--            AND-->
+    <!--            selection_date = #{selectionDate}-->
+    <!--            AND-->
+    <!--            member_serial_number = #{memberSerialNumber}-->
+    <!--            AND-->
+    <!--            deletion_status = 'N'-->
+    <!--        limit 1;-->
+    <!--    </select>-->
+
+    <!--    <select id="selectTimeRecord" resultType="TimeRecordMVO">-->
+    <!--        select-->
+    <!--        time_record_id as timeRecordId,-->
+    <!--        selection_date as selectionDate,-->
+    <!--        modification_datetime as modificationDatetime,-->
+    <!--        create_datetime as createDatetime,-->
+    <!--        deletion_status as deletionStatus,-->
+    <!--        member_serial_number as  memberSerialNumber-->
+    <!--        FROM time_record-->
+    <!--        WHERE-->
+    <!--        1=1-->
+    <!--        AND-->
+    <!--        selection_date = #{selectionDate}-->
+    <!--        AND-->
+    <!--        member_serial_number = #{memberSerialNumber}-->
+    <!--        AND-->
+    <!--        deletion_status = 'N'-->
+    <!--        limit 1;-->
+    <!--    </select>-->
 
 </mapper>

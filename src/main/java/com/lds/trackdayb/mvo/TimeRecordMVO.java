@@ -1,4 +1,4 @@
-package com.lds.trackdayb.vo;
+package com.lds.trackdayb.mvo;
 
 import com.lds.trackdayb.dto.ActivityRecordDTO;
 import com.lds.trackdayb.dto.TimeRecordDTO;
@@ -8,19 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class TimeRecordVO extends TimeRecordDTO {
-    int memberSerialNumber;
-    List<ActivityRecordDTO> activityRecordDTOList= new ArrayList<ActivityRecordDTO>();
+public class TimeRecordMVO extends TimeRecordDTO {
+    List<ActivityRecordDTO> activityRecordDTOList = new ArrayList<ActivityRecordDTO>();
 
-//    @Override
-//    public int getMemberSerialNumber() {
-//        return memberSerialNumber;
-//    }
-//
-//    public void setMemberSerialNumber(int memberSerialNumber) {
-//        this.memberSerialNumber = memberSerialNumber;
-//    }
-//
 //    public List<ActivityRecordDTO> getActivityRecordDTOList() {
 //        return activityRecordDTOList;
 //    }
