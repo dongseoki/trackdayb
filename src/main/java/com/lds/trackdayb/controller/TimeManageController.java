@@ -4,11 +4,13 @@ import com.lds.trackdayb.mvo.TimeRecordMVO;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.service.TimeManageService;
 import com.lds.trackdayb.vo.TimeRecordVO;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+//@RestController
+@Controller
 @RequestMapping("/timeManage")
 public class TimeManageController {
     private  final TestService testService;
@@ -22,12 +24,18 @@ public class TimeManageController {
     @GetMapping("/record")
     public String recordPage(){
         // TODO 로그인 아이디 조회
+        // 필요 없을듯..?
 
-        return "시간관리 - 기록하기 - 페이지 접근(틀잡기)";
+
+
+
+        return "/timeManage/record";
     }
 
 //    @PostMapping("/createTimeRecord")
+
     @PostMapping("/createTimeRecord")
+    @ResponseBody
     public String createTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
         int loginSerialNumber = testService.selectLoginMemberSerialNumber();
@@ -39,6 +47,7 @@ public class TimeManageController {
     }
 
     @GetMapping("/viewTimeRecord")
+    @ResponseBody
     public TimeRecordMVO viewTimeRecord(@RequestParam("selectionDate") String selectionDate){
         // FIXME 로그인 아이디 조회.
         int loginSerialNumber = testService.selectLoginMemberSerialNumber();
@@ -50,6 +59,7 @@ public class TimeManageController {
     }
 
     @PostMapping("/modifyTimeRecord")
+    @ResponseBody
     public TimeRecordMVO modifyTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
         int loginSerialNumber = testService.selectLoginMemberSerialNumber();
@@ -57,7 +67,9 @@ public class TimeManageController {
 //        timeRecordVO.setTimeRecordId(timeRecordVO.getTimeRecordId());
         return timeManageService.modifyTimeRecord(timeRecordVO);
     }
+
     @PostMapping("/deleteTimeRecord")
+    @ResponseBody
     public TimeRecordMVO deleteTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
         int loginSerialNumber = testService.selectLoginMemberSerialNumber();
