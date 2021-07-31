@@ -38,14 +38,10 @@ public class TimeManageServiceImpl implements TimeManageService{
     @Override
     public TimeRecordMVO modifyTimeRecord(TimeRecordVO timeRecordVO) {
 
-        // 기존 엑티비티 레코드 삭제처리.
-        timeRecordVO.setDeletionStatus("Y");
-        timeManageRepository.updateActivityRecords(timeRecordVO);
+        // 기존 엑티비티 레코드 삭제처리. : activity record는 수정없이 생성과 삭제 만으로 이루어져 있기 때문.
+        timeManageRepository.deleteActivityRecords(timeRecordVO);
 
         // 타임 레코드 수정 시간을 수정.
-        // 왜 수정하는가?
-        // 시간이 없고...
-        timeRecordVO.setDeletionStatus("N");
         timeManageRepository.updateTimeRecord(timeRecordVO);
 
         timeManageRepository.insertActivityRecords(timeRecordVO);
@@ -58,8 +54,10 @@ public class TimeManageServiceImpl implements TimeManageService{
 
     @Override
     public TimeRecordMVO deleteTimeRecord(TimeRecordVO timeRecordVO) {
-        timeRecordVO.setDeletionStatus("Y");
-        timeManageRepository.updateTimeRecord(timeRecordVO);
+        // timeRecordVO.setDeletionStatus("Y");
+        // timeManageRepository.updateTimeRecord(timeRecordVO);
+        timeManageRepository.deleteTimeRecord(timeRecordVO);
+
 
         // 삭제 정보 반환.
         TimeRecordMVO timeRecordMVO = new TimeRecordMVO();

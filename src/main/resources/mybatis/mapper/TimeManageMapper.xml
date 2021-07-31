@@ -47,26 +47,44 @@
     <update id="updateTimeRecord">
         UPDATE time_record
         SET
-        <if test="deletionStatus != null and deletionStatus neq ''">
-            deletion_status=#{deletionStatus},
-        </if>
-        modification_datetime=NOW()
-        WHERE time_record_id=#{timeRecordId}
-        AND
-        member_serial_number = #{memberSerialNumber}
+            modification_datetime=NOW()
+        WHERE 
+            time_record_id=#{timeRecordId}
+            AND
+            member_serial_number = #{memberSerialNumber}
+    </update>
+
+    <update id="deleteTimeRecord">
+        UPDATE time_record
+        SET
+            deletion_status='Y',
+            modification_datetime=NOW()
+        WHERE 
+            time_record_id=#{timeRecordId}
+            AND
+            member_serial_number = #{memberSerialNumber}
     </update>
 
     <update id="updateActivityRecords">
         UPDATE activity_record
         SET
-        <if test="deletionStatus != null and deletionStatus neq ''">
             deletion_status=#{deletionStatus},
-        </if>
-        modification_datetime=NOW()
+            modification_datetime=NOW()
         WHERE
-        time_record_id=#{timeRecordId}
-        AND
-        time_record_id IN (SELECT time_record_id FROM time_record TB1 where TB1.member_serial_number = #{memberSerialNumber});
+            time_record_id=#{timeRecordId}
+            AND
+            time_record_id IN (SELECT time_record_id FROM time_record TB1 where TB1.member_serial_number = #{memberSerialNumber});
+    </update>
+
+    <update id="deleteActivityRecords">
+        UPDATE activity_record
+        SET
+            deletion_status='Y',
+            modification_datetime=NOW()
+        WHERE
+            time_record_id=#{timeRecordId}
+            AND
+            time_record_id IN (SELECT time_record_id FROM time_record TB1 where TB1.member_serial_number = #{memberSerialNumber});
     </update>
 
 

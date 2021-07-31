@@ -18,4 +18,6 @@ public interface TimeManageRepository {
     void updateTimeRecord(TimeRecordVO timeRecordVO);
 
     void updateActivityRecords(TimeRecordVO timeRecordVO);
+    void deleteTimeRecord(TimeRecordVO timeRecordVO);
+	void deleteActivityRecords(TimeRecordVO timeRecordVO);
 }

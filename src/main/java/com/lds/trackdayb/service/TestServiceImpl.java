@@ -19,6 +19,7 @@ public class TestServiceImpl implements TestService{
 
     @Override
     public int selectLoginMemberSerialNumber() {
+        // FIXME 제대로된 것으로 바꾸자.
         return 1;
     }
 }
