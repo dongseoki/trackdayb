@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lagn="ko"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8" />
+<title>thymeleaf layout</title>
+</head>
+<body>
+<!-- header -->
+<th:block th:replace="common/header::sampleheader"></th:block>
+<!-- content -->
+<th:block layout:fragment="content"></th:block>
+<!-- footer -->
+<th:block th:replace="common/footer::samplefooter"> </th:block>
+</body>
+</html>

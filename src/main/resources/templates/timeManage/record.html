@@ -1,165 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title>Title</title>
     
 </head>
-<script>
-    var selectionDate = 
 
-    jQuery(function($) {
-        $('#time_record_main_box').load('/timeManage/viewTimeRecord?selectionDate=' + $('input#selectionDate').val());
-    });
-</script>
 
 <body>
-<input id="selectionDate" hidden th:value="${selectionDate}">
+    <div layout:fragment="content">
+        test
+        <script>
+            var selectionDate; 
+            var selectedRFId;
+            function leftPad(value) { if (value >= 10) { return value; } return `0${value}`; }
+            function toStringByFormatting(source, delimiter = '-') { const year = source.getFullYear(); const month = leftPad(source.getMonth() + 1); const day = leftPad(source.getDate()); return [year, month, day].join(delimiter); }
+        
+            function calculateDate(selectionDate, relativeInfo){
+                var asOfDate = new Date(selectionDate);
+                var numInfo = parseInt(relativeInfo.substring(0,relativeInfo.length-1));
+                var timeUnit = relativeInfo.charAt(relativeInfo.length-1);
+                var calculatedDate ; 
+                switch(timeUnit){
+                    case 'd':
+                        asOfDate.setDate(asOfDate.getDate() + 1 * numInfo); 
+                        break;
+                    case 'w':
+                        asOfDate.setDate(asOfDate.getDate() + 7 * numInfo);
+                        break;
+                    case 'm':
+                        asOfDate.setMonth(asOfDate.getMonth() + numInfo);
+                        break;
+                    case 'y':
+                        asOfDate.setFullYear(asOfDate.getFullYear() + numInfo);
+                        break;
+                }
+                calculatedDate = asOfDate;
+                return toStringByFormatting(calculatedDate);
+            }
+        
+            jQuery(function($) {
+        
+        
+                // 이벤트 핸들러 등록.
+                $('select#referenceFavoriteSelect').on('change', function(){
+                    selectedRFId = $(this).val();
+                    // $("#referenceFavoriteRelativeTimeInfoSampleList table[data-reference-favorite-id="+ selectedRFId + "]").clone().appendTo('.reference_record_area');
+                    $('.reference_favorite_info_area').html($("#referenceFavoriteRelativeTimeInfoSampleList table[data-reference-favorite-id="+ selectedRFId + "]").clone());
+                    
+                    $('.reference_favorite_info_area tr:first td').each(function(index){
+                        console.log( $(this).text()+''+index);
+                        var relativeInfo = $(this).text();
+                        $('.reference_favorite_info_area tr:eq(1) td:eq('+ index + ')').text(  
+                            calculateDate($('input#selectionDate').val(),relativeInfo));
+                    });
+                });
+        
+        
+            
+        
+        
+        
+                $('#time_record_main_box').load('/timeManage/viewTimeRecord?selectionDate=' + $('input#selectionDate').val());
+        
+                $("#btnSearch").on("click",function(){
+                    location.href="/timeManage/record" +"?selectionDate=" + $("[name='yearSelect']").val() + "-" + $("[name='monthSelect']").val()+"-"+ $("[name='daySelect']").val();
+                });
+        
+                // 기본 참고 즐겨찾기 선택
+                $('#referenceFavoriteSelect').val($(".model_data input[name='defaultReferenceFavoriteId']").val()).trigger('change');
+        
+        
+            });
+        </script>
+        <div class="model_data">
+            <input type="hidden" th:value="${selectionDate}" th:attr="name='selectionDate'"></input>
+            <input type="hidden" th:value="${referenceFavoriteDefaultSetting.referenceFavoriteId}" th:attr="name='defaultReferenceFavoriteId'"></input>
+            <div name="classificationList">
+                <input type="hidden" th:each="item : ${classificationList}" th:value="${item.name}" th:attr="name=${item.classificationId}"></input>
+            </div>
+        
+        </div>
+        <input id="selectionDate" hidden th:value="${selectionDate}">
+        <div class="search_area" style="border: 1px solid;">
+            FIXME search_area
+            <div class="search_detail_area">
+                <select name="yearSelect" id="yearSelect">
+                    <option th:each="num : ${#numbers.sequence(2020,2045)}" th:value="${num}" th:text="${num}" th:selected="${#strings.substring(selectionDate, 0, 4) == #strings.toString(num)}"></option>
+                </select>
+                <label>년</label>
+                <select name="monthSelect" id="monthSelect">
+                    <option th:each="num : ${#numbers.sequence(1,12)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${#numbers.formatInteger(num,2)}" th:selected="${#strings.substring(selectionDate, 5, 7) == #strings.toString(#numbers.formatInteger(num,2))}"></option>
+                </select>
+                <label>월</label>
+                <select name="daySelect" id="daySelect">
+                    <option th:each="num : ${#numbers.sequence(1,31)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${#numbers.formatInteger(num,2)}" th:selected="${#strings.substring(selectionDate, 8, 10) == #strings.toString(#numbers.formatInteger(num,2))}"></option>
+                </select>
+                <label>일</label>
+                <button id="btnSearch">검색</button>
+            </div>
+        </div>
+        FIXME -------------
+        <br>
+        <div class="reference_favorite_select_area" style="border: 1px solid;">
+            FIXME reference_favorite_select_area
+            <select id="referenceFavoriteSelect">
+                <option th:each="item : ${referenceFavoriteList}" th:value="${item.referenceFavoriteId}" th:text="${item.name}"></option>
+            </select>
+            <div class="reference_favorite_info_area" style="border: 1px solid;">
+                FIXME reference_favorite_info_area
+        
+            </div>
+            
+        </div>
+        <div class="data_transfer_and_help_area">
+            <button>import</button>
+            <button>export</button>
+            <button>도움말</button>
+            <button>양식다운로드</button>
+        </div>
+        <div class="main_record_area">
+            <div class="main_record_left_area">
+                <table>
+                    <tr>
+                        <th>
+                            checkbox
+                        </th>
+                        <th>상세분류</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                        <td>목표</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                        <td>내역</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                        <td>반성</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                        <td>기타</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="main_record_right_area" style="border: 1px solid;">
+                FIXME main_record_right_area
+                <div id="time_record_main_box"></div>
+            </div>
+            <div class="action_bar">
+                <button>수정</button>
+                <button>삭제</button>
+                <button>공유</button>
+            </div>
+        </div>
+        <div class="reference_record_area" style="border: 1px solid;">
+            FIXME reference_record_area
+        
+        </div>
+        
+        <div id="referenceFavoriteRelativeTimeInfoSampleList" style="display:none;">
+            <table th:each="rfList : ${referenceFavoriteList}" th:attr="data-reference-favorite-id=${rfList.referenceFavoriteId}">
+                <tr>
+                    <th> 상대정보 </th>
+                    <td th:each="rfInfo : ${rfList.relativeTimeInfoList}" th:text="${rfInfo}"></td>
+                    <!-- <td> -2d </td>
+                    <td> -3d </td> -->
+                </tr>
+                <tr>
+                    <th>계산시간</th>
+                    <td th:each="rfItem : ${rfList.relativeTimeInfoList}"></td>
+                    <!-- <td>2021년 5월 18일</td> -->
+                </tr>
+                <tr>
+                    <th> 참조체크 </th>
+                    <td th:each="rfItem : ${rfList.relativeTimeInfoList}"><input type="checkbox" name="referenceCheck" value="check"></td>
+                </tr>
+        
+            </table>
+        </div>
+        
+        <div id="time_record_sample_box"></div>
+    </div>
 
-<div class="search_area">
-    <div class="search_detail_area">
-        <select name="cars" id="cars">
-            <option value="volvo">2021</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-        </select>
-        <label>년</label>
-        <select name="cars" id="cars">
-            <option value="volvo">7</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-        </select>
-        <label>월</label>
-        <select name="cars" id="cars">
-            <option value="volvo">30</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-        </select>
-        <label>일</label>
-        <button>검색</button>
-    </div>
-</div>
-<div class="reference_favorite_select_area">
-    <select name="cars" id="cars">
-        <option value="volvo">기본 참고 즐겨찾기</option>
-        <option value="saab">Saab</option>
-        <option value="opel">Opel</option>
-        <option value="audi">Audi</option>
-    </select>
-    <table>
-        <tr>
-            <th> 상대정보 </th>
-            <td> -1d </td>
-            <td> -2d </td>
-            <td> -3d </td>
-        </tr>
-        <tr>
-            <th>계산시간</th>
-            <td>2021년 5월 18일</td>
-            <td>2021년 5월 17일</td>
-            <td>2021년 5월 16일</td>
-        </tr>
-        <tr>
-            <th> 참조체크 </th>
-            <td> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> </td>
-            <td> <input type="checkbox" id="vehicle2" name="vehicle1" value="Bike"> </td>
-            <td> <input type="checkbox" id="vehicle3" name="vehicle1" value="Bike"> </td>
-        </tr>
-
-    </table>
-</div>
-<div class="data_transfer_and_help_area">
-    <button>import</button>
-    <button>export</button>
-    <button>도움말</button>
-    <button>양식다운로드</button>
-</div>
-<div class="main_record_area">
-    <div class="main_record_left_area">
-        <table>
-            <tr>
-                <th>
-                    checkbox
-                </th>
-                <th>상세분류</th>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
-                <td>목표</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
-                <td>내역</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
-                <td>반성</td>
-            </tr>
-            <tr>
-                <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
-                <td>기타</td>
-            </tr>
-        </table>
-    </div>
-    <div class="main_record_right_area">
-        <div id="time_record_main_box"></div>
-        <label>2021년 5월 19일</label>
-        <table border="1">
-            <tr>
-                <th>시작</th>
-                <th>종료</th>
-                <th>분류</th>
-                <th>상세분류</th>
-                <th>상세내용</th>
-            </tr>
-            <tr>
-                <td rowspan="3">10:00</td>
-                <td rowspan="3">11:00</td>
-                <td>분류</td>
-                <td>상세분류</td>
-                <td>상세내용</td>
-            </tr>
-            <tr>
-                <td>w</td>
-                <td>w</td>
-                <td>w</td>
-            </tr>
-            <tr>
-                <td>w</td>
-                <td>w</td>
-                <td>w</td>
-            </tr>
-            <tr>
-                <td rowspan="3">10:00</td>
-                <td rowspan="3">11:00</td>
-                <td>분류</td>
-                <td>상세분류</td>
-                <td>상세내용</td>
-            </tr>
-            <tr>
-                <td>w</td>
-                <td>w</td>
-                <td>w</td>
-            </tr>
-            <tr>
-                <td>w</td>
-                <td>w</td>
-                <td>w</td>
-            </tr>
-        </table>
-    </div>
-    <div class="action_bar">
-        <button>수정</button>
-        <button>삭제</button>
-        <button>공유</button>
-    </div>
-</div>
-<div class="reference_record_area">
-</div>
 
 </body>
 </html>

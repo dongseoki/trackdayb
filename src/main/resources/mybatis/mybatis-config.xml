@@ -8,7 +8,8 @@
 <!--        <setting name="jdbcTypeForNull" value="NULL"/>-->
 <!--    </settings>-->
     <mappers>
-        <mapper resource="TestMapper.xml"/>
+        <!-- <mapper resource="TestMapper.xml"/>
         <mapper resource="TimeManageMapper.xml"/>
+        <mapper resource="SystemManageMapper.xml"/> -->
     </mappers>
 </configuration>

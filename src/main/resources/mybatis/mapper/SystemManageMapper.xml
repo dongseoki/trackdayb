@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lds.trackdayb.repository.SystemManageRepository">
+    <select id="selectReferenceFavoriteList" parameterType="HashMap" resultType="ReferenceFavoriteMVO">
+        select *  /*SystemManageRepository.selectReferenceFavoriteList */
+        from reference_favorite rf 
+        where 
+            management_type = #{managementType}
+            AND time_unit = #{timeUnit}
+            AND member_serial_number = #{memberSerialNumber}
+    </select>
+
+    <select id="selectReferenceFavoriteDefaultSetting" parameterType="HashMap" resultType="ReferenceFavoriteDefaultSettingDTO">
+        select *  /*SystemManageRepository.selectReferenceFavoriteDefaultSetting */
+        from reference_favorite_default_setting rfds  
+        where 
+            management_type = #{managementType}
+            AND time_unit = #{timeUnit}
+            AND member_serial_number = #{memberSerialNumber}
+        limit 1;
+    </select>
+    
+    <select id="selectClassificationList" parameterType="HashMap" resultType="ClassificationDTO">
+        select *  /*SystemManageRepository.selectClassificationList */
+        from classification c 
+        where 
+            management_type = #{managementType}
+            AND time_unit = #{timeUnit}
+            AND member_serial_number = #{memberSerialNumber}
+    </select>
+
+</mapper>

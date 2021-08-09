@@ -1,11 +1,18 @@
 package com.lds.trackdayb.controller;
 
+import com.lds.trackdayb.dto.ClassificationDTO;
+import com.lds.trackdayb.dto.ReferenceFavoriteDTO;
+import com.lds.trackdayb.dto.ReferenceFavoriteDefaultSettingDTO;
+import com.lds.trackdayb.mvo.ReferenceFavoriteMVO;
 import com.lds.trackdayb.mvo.TimeRecordMVO;
 import com.lds.trackdayb.service.SystemManageService;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.service.TimeManageService;
+import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.vo.TimeRecordVO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +35,7 @@ public class TimeManageController {
     private  final TestService testService;
     private final TimeManageService timeManageService;
     private final SystemManageService systemManageService;
+    static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
 
     
 
@@ -41,20 +49,27 @@ public class TimeManageController {
         // 
 
         // TODO 
-        // systemManageService.viewReferenceFavoriteList(selectionDate);
+        List<ReferenceFavoriteMVO> referenceFavoriteList = systemManageService.viewReferenceFavoriteList(CommonCodeUtil.TIME_RECORD, CommonCodeUtil.TIME_UNIT_DAY, loginSerialNumber);
 
         // TODO
-        // systemManageService.viewReferenceFavoriteDefaultSetting(selectionDate);
+        ReferenceFavoriteDefaultSettingDTO referenceFavoriteDefaultSetting = systemManageService.viewReferenceFavoriteDefaultSetting(CommonCodeUtil.TIME_RECORD, CommonCodeUtil.TIME_UNIT_DAY, loginSerialNumber);
 
         // TODO
-        // systemManageService.viewClassificationList()
+        List<ClassificationDTO> classificationList =  systemManageService.viewClassificationList(CommonCodeUtil.TIME_RECORD, CommonCodeUtil.TIME_UNIT_DAY, loginSerialNumber);
+        
         if(selectionDate == null || "".equals(selectionDate)){
             SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd");   
             Date time = new Date();
             selectionDate = format1.format(time);
         }
 
+        // FIXME  LOGGER TEST
+        LOGGER.info("#### Success 참조 즐겨찾기 기본 설정 : 관리유형 is {}, 참조 즐겨찾기 id is {}", referenceFavoriteDefaultSetting.getManagementType(), referenceFavoriteDefaultSetting.getReferenceFavoriteId());
+
         model.addAttribute("selectionDate", selectionDate);
+        model.addAttribute("referenceFavoriteList", referenceFavoriteList);
+        model.addAttribute("referenceFavoriteDefaultSetting", referenceFavoriteDefaultSetting);
+        model.addAttribute("classificationList", classificationList);
         return "/timeManage/record";
     }
 
@@ -65,8 +80,6 @@ public class TimeManageController {
     public String createTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
         int loginSerialNumber = testService.selectLoginMemberSerialNumber();
-//        TimeRecordVO vo = new TimeRecordVO();
-//        timeManageService.createTimeRecord(vo);
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         timeManageService.createTimeRecord(timeRecordVO);
         return "시간관리 - 기록하기 - 시간기록 삽입";

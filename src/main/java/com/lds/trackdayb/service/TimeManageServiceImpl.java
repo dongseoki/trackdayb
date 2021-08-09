@@ -1,17 +1,18 @@
 package com.lds.trackdayb.service;
 
 import com.lds.trackdayb.mvo.TimeRecordMVO;
+import com.lds.trackdayb.repository.SystemManageRepository;
 import com.lds.trackdayb.repository.TimeManageRepository;
 import com.lds.trackdayb.vo.TimeRecordVO;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class TimeManageServiceImpl implements TimeManageService{
     private final TimeManageRepository timeManageRepository;
-
-    public TimeManageServiceImpl(TimeManageRepository timeManageRepository) {
-        this.timeManageRepository = timeManageRepository;
-    }
+    private final SystemManageRepository systemManageRepository;
 
     @Override
     public void createTimeRecord(TimeRecordVO vo) {
