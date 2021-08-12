@@ -1,11 +1,18 @@
 package com.lds.trackdayb.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.lds.trackdayb.mvo.TimeRecordMVO;
 import com.lds.trackdayb.repository.SystemManageRepository;
 import com.lds.trackdayb.repository.TimeManageRepository;
 import com.lds.trackdayb.vo.TimeRecordVO;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -13,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class TimeManageServiceImpl implements TimeManageService{
     private final TimeManageRepository timeManageRepository;
     private final SystemManageRepository systemManageRepository;
+    static final Logger LOGGER = LoggerFactory.getLogger(TimeManageServiceImpl.class);
 
     @Override
     public void createTimeRecord(TimeRecordVO vo) {
@@ -64,5 +72,32 @@ public class TimeManageServiceImpl implements TimeManageService{
         TimeRecordMVO timeRecordMVO = new TimeRecordMVO();
         timeRecordMVO.setTimeRecordId(timeRecordVO.getTimeRecordId());
         return timeRecordMVO;
+    }
+
+    private TimeRecordMVO findTimeRecordMVOFromList(String selectedDate, List<TimeRecordMVO> selectedTimeRecordMVOs){
+        for(TimeRecordMVO timeRecordMVO : selectedTimeRecordMVOs){
+            if ( StringUtils.equals(selectedDate, timeRecordMVO.getSelectionDate())== true){
+                return timeRecordMVO;
+            }
+            //(selectedDate,timeRecordMVO.getSelectionDate())
+        }
+        // false case.
+        return new TimeRecordMVO();
+    }
+
+    @Override
+    public List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, int memberSerialNumber) {
+        TimeRecordVO timeRecordVO = new TimeRecordVO();
+        timeRecordVO.setSelectedDateList(selectedDateList);
+        timeRecordVO.setMemberSerialNumber(memberSerialNumber);
+        List<TimeRecordMVO> selectedTimeRecordMVOs = timeManageRepository.selectTimeRecordList(timeRecordVO);
+        List<TimeRecordMVO> fullTimeRecordMVOs = new ArrayList<TimeRecordMVO>();
+        for(String selectedDate : selectedDateList){
+            TimeRecordMVO timeRecordMVO =  findTimeRecordMVOFromList(selectedDate,selectedTimeRecordMVOs);
+            timeRecordMVO.setSelectionDate(selectedDate);
+            fullTimeRecordMVOs.add(timeRecordMVO);
+        }
+        LOGGER.info("fullTimeRecordMVOs : {}", fullTimeRecordMVOs.toString());
+        return fullTimeRecordMVOs;
     }
 }

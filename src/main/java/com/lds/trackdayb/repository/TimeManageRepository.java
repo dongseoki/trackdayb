@@ -20,4 +20,5 @@ public interface TimeManageRepository {
     void updateActivityRecords(TimeRecordVO timeRecordVO);
     void deleteTimeRecord(TimeRecordVO timeRecordVO);
 	void deleteActivityRecords(TimeRecordVO timeRecordVO);
+    List<TimeRecordMVO> selectTimeRecordList(TimeRecordVO timeRecordVO);
 }

@@ -16,6 +16,7 @@ import java.util.List;
 public class TimeRecordVO extends TimeRecordDTO {
     int memberSerialNumber;
     List<ActivityRecordDTO> activityRecordDTOList= new ArrayList<ActivityRecordDTO>();
+    List<String> selectedDateList = new ArrayList<String>();
 
 //    @Override
 //    public int getMemberSerialNumber() {

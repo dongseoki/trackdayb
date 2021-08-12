@@ -103,6 +103,26 @@ public class TimeManageController {
         return "/timeManage/timeRecordView";
     }
 
+    @PostMapping("/viewTimeRecordList")
+    // public String viewTimeRecordList(List<String> selectedDateList){
+    public String viewTimeRecordList(TimeRecordVO timeRecordVO,ModelMap model){
+        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        timeRecordVO.setMemberSerialNumber(loginSerialNumber);
+
+        // FIXME 
+        LOGGER.info("TEST VO : {}", timeRecordVO.getSelectedDateList().toString());
+
+        List<String> selectedDateList = timeRecordVO.getSelectedDateList();
+        List<TimeRecordMVO> timeRecordList = timeManageService.selectTimeRecordList(timeRecordVO.getSelectedDateList(), loginSerialNumber);
+
+        model.addAttribute("timeRecordList", timeRecordList);
+        model.addAttribute("selectedDateList", selectedDateList);
+        // FIXME 임시.
+        // return "/timeManage/timeRecordView";
+        return "/timeManage/timeRecordListView";
+    }
+
+
     @PostMapping("/modifyTimeRecord")
     @ResponseBody
     public TimeRecordMVO modifyTimeRecord(@RequestBody TimeRecordVO timeRecordVO){

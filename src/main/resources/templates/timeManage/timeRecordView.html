@@ -1,6 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<label th:text="${timeRecord.selectionDate}"></label>
-<table border="1">
+<div class= "time_record_element_area" th:fragment="timeRecordFragment(timeRecord)">
+    <label th:text="${timeRecord.selectionDate}"></label>
+<table >
+    <!-- <table border="1"></table> -->
     <tr>
         <th>시작</th>
         <th>종료</th>
@@ -31,4 +33,5 @@
         </tr>
     </tbody>
 </table>
+</div>
 </html>

@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- hello, World -->
+
+<!-- <h1 th:text="${timeRecordVO}"></h1> -->
+
+<!-- <h1 th:text="${param}"></h1> -->
+
+
+<!-- <h1 th:text="${selectedDateList}"></h1> -->
+<!-- <h1 th:text="${timeRecordVO.memberSerialNumber}"></h1> -->
+
+
+<!-- <h1 th:text="${timeRecordVO.selectedDateList}"></h1> -->
+<!-- <div class="time_record_list_area">
+    <div th:each="timeRecord : ${timeRecordList}">
+        <h1 th:text="${timeRecord}"></h1>
+    </div>
+
+</div> -->
+
+<div class="time_record_list_area">
+    <div th:each="timeRecord : ${timeRecordList}" th:attr="data-selectedDate=${timeRecord.selectionDate}">
+        <div th:replace="/timeManage/timeRecordView.html :: timeRecordFragment(${timeRecord})">
+    </div>
+
+</div>
+
+<!-- <div class="time_record_list_area">
+    <div th:each="timeRecord : ${timeRecordList}"  th:replace="/timeManage/timeRecordView.html :: timeRecordFragment(${timeRecord})">
+    </div>
+</div> -->
+
+
+
+</div>
+</html>

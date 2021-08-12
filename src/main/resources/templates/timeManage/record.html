@@ -10,35 +10,34 @@
 
 <body>
     <div layout:fragment="content">
-        test
         <script>
             var selectionDate; 
             var selectedRFId;
-            function leftPad(value) { if (value >= 10) { return value; } return `0${value}`; }
-            function toStringByFormatting(source, delimiter = '-') { const year = source.getFullYear(); const month = leftPad(source.getMonth() + 1); const day = leftPad(source.getDate()); return [year, month, day].join(delimiter); }
+            // function leftPad(value) { if (value >= 10) { return value; } return `0${value}`; }
+            // function toStringByFormatting(source, delimiter = '-') { const year = source.getFullYear(); const month = leftPad(source.getMonth() + 1); const day = leftPad(source.getDate()); return [year, month, day].join(delimiter); }
         
-            function calculateDate(selectionDate, relativeInfo){
-                var asOfDate = new Date(selectionDate);
-                var numInfo = parseInt(relativeInfo.substring(0,relativeInfo.length-1));
-                var timeUnit = relativeInfo.charAt(relativeInfo.length-1);
-                var calculatedDate ; 
-                switch(timeUnit){
-                    case 'd':
-                        asOfDate.setDate(asOfDate.getDate() + 1 * numInfo); 
-                        break;
-                    case 'w':
-                        asOfDate.setDate(asOfDate.getDate() + 7 * numInfo);
-                        break;
-                    case 'm':
-                        asOfDate.setMonth(asOfDate.getMonth() + numInfo);
-                        break;
-                    case 'y':
-                        asOfDate.setFullYear(asOfDate.getFullYear() + numInfo);
-                        break;
-                }
-                calculatedDate = asOfDate;
-                return toStringByFormatting(calculatedDate);
-            }
+            // function calculateDate(selectionDate, relativeInfo){
+            //     var asOfDate = new Date(selectionDate);
+            //     var numInfo = parseInt(relativeInfo.substring(0,relativeInfo.length-1));
+            //     var timeUnit = relativeInfo.charAt(relativeInfo.length-1);
+            //     var calculatedDate ; 
+            //     switch(timeUnit){
+            //         case 'd':
+            //             asOfDate.setDate(asOfDate.getDate() + 1 * numInfo); 
+            //             break;
+            //         case 'w':
+            //             asOfDate.setDate(asOfDate.getDate() + 7 * numInfo);
+            //             break;
+            //         case 'm':
+            //             asOfDate.setMonth(asOfDate.getMonth() + numInfo);
+            //             break;
+            //         case 'y':
+            //             asOfDate.setFullYear(asOfDate.getFullYear() + numInfo);
+            //             break;
+            //     }
+            //     calculatedDate = asOfDate;
+            //     return toStringByFormatting(calculatedDate);
+            // }
         
             jQuery(function($) {
         
@@ -49,12 +48,24 @@
                     // $("#referenceFavoriteRelativeTimeInfoSampleList table[data-reference-favorite-id="+ selectedRFId + "]").clone().appendTo('.reference_record_area');
                     $('.reference_favorite_info_area').html($("#referenceFavoriteRelativeTimeInfoSampleList table[data-reference-favorite-id="+ selectedRFId + "]").clone());
                     
+                    var listParam = [];
+                    debugger;
                     $('.reference_favorite_info_area tr:first td').each(function(index){
-                        console.log( $(this).text()+''+index);
                         var relativeInfo = $(this).text();
-                        $('.reference_favorite_info_area tr:eq(1) td:eq('+ index + ')').text(  
-                            calculateDate($('input#selectionDate').val(),relativeInfo));
+                        var resultDate = calculateDate($('input#selectionDate').val(),relativeInfo);
+                        listParam.push(resultDate);
+                        
+                        // TEST
+                        // console.log( $(this).text()+''+index);
+
+                        $('.reference_favorite_info_area tr:eq(1) td:eq('+ index + ')').text(resultDate);
                     });
+                    
+                    // ajax
+                    //$('#time_record_main_box').load('/timeManage/viewTimeRecordList', JSON.stringify(listParam)
+                    // $('#time_record_main_box').load('/timeManage/viewTimeRecordList', {test :JSON.stringify(['1','2'])});
+//                    $('#time_record_main_box').load('/timeManage/viewTimeRecordList', encodeURI(JSON.stringify([1,2])));
+                    $('#time_record_main_box').load('/timeManage/viewTimeRecordList', {'selectedDateList':listParam});
                 });
         
         
@@ -159,6 +170,7 @@
         </div>
         <div class="reference_record_area" style="border: 1px solid;">
             FIXME reference_record_area
+            <div id="reference_record_box"></div>
         
         </div>
         

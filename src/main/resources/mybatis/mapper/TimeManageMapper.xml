@@ -43,6 +43,22 @@
         limit 1;
     </select>
 
+    <select id="selectTimeRecordList" resultMap="timeRecordResult">
+        select * FROM time_record
+        WHERE
+            1=1
+            AND
+            selection_date IN
+                <foreach collection="selectedDateList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+
+            AND
+            member_serial_number = #{memberSerialNumber}
+            AND
+            deletion_status = 'N'
+    </select>
+
 
     <update id="updateTimeRecord">
         UPDATE time_record

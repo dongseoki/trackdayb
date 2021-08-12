@@ -1,0 +1,11 @@
+
+
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="testFragment(test)">
+    <h1> hello world</h1>
+    <h1 th:text="${test}"></h1>
+    <div th:each="item : ${test}">
+        <h2 th:text="${item.selectionDate}"></h2>
+    </div>
+</div>
+</html>
