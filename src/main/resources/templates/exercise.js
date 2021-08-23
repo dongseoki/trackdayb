@@ -103,3 +103,13 @@
 
 // date.setDate(date.getDate() + 7 * -1);
 // console.log('13일 전 : ' + date + '<br>');
+$("input[name='referenceCheck']").unbind('change');
+$("input[name='referenceCheck']").on('change', function(){
+    var index = $(this).closest('td').index();
+    var selectedCalculatedDate = $(this).closest('table').find("tr[name='calculateDateRow']").children().eq(index).text();
+    if($(this).prop('checked')){
+        $("div[data-selecteddate='" + selectedCalculatedDate +"']").show()
+    }else{
+        $("div[data-selecteddate='" + selectedCalculatedDate +"']").hide()
+    }
+});

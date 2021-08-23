@@ -103,6 +103,24 @@ public class TimeManageController {
         return "/timeManage/timeRecordView";
     }
 
+    @GetMapping("/viewTimeRecordRegist")
+    public String viewTimeRecordRegist(@RequestParam("selectionDate") @Nullable String selectionDate, ModelMap model){
+        // FIXME 로그인 아이디 조회.
+        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+
+        TimeRecordVO vo = new TimeRecordVO();
+        vo.setMemberSerialNumber(loginSerialNumber);
+        vo.setSelectionDate(selectionDate);
+        TimeRecordMVO timeRecord = timeManageService.selectTimeRecord(vo);
+        if(timeRecord == null){
+            timeRecord = new TimeRecordMVO();
+            timeRecord.setSelectionDate(selectionDate);
+        }
+
+        model.addAttribute("timeRecord", timeRecord);
+        return "/timeManage/timeRecordRegistView";
+    }
+
     @PostMapping("/viewTimeRecordList")
     // public String viewTimeRecordList(List<String> selectedDateList){
     public String viewTimeRecordList(TimeRecordVO timeRecordVO,ModelMap model){

@@ -1,88 +1,98 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <title>Title</title>
-    
 </head>
 
 
 <body>
     <div layout:fragment="content">
+
+        hi
         <script>
             var selectionDate; 
             var selectedRFId;
-            // function leftPad(value) { if (value >= 10) { return value; } return `0${value}`; }
-            // function toStringByFormatting(source, delimiter = '-') { const year = source.getFullYear(); const month = leftPad(source.getMonth() + 1); const day = leftPad(source.getDate()); return [year, month, day].join(delimiter); }
-        
-            // function calculateDate(selectionDate, relativeInfo){
-            //     var asOfDate = new Date(selectionDate);
-            //     var numInfo = parseInt(relativeInfo.substring(0,relativeInfo.length-1));
-            //     var timeUnit = relativeInfo.charAt(relativeInfo.length-1);
-            //     var calculatedDate ; 
-            //     switch(timeUnit){
-            //         case 'd':
-            //             asOfDate.setDate(asOfDate.getDate() + 1 * numInfo); 
-            //             break;
-            //         case 'w':
-            //             asOfDate.setDate(asOfDate.getDate() + 7 * numInfo);
-            //             break;
-            //         case 'm':
-            //             asOfDate.setMonth(asOfDate.getMonth() + numInfo);
-            //             break;
-            //         case 'y':
-            //             asOfDate.setFullYear(asOfDate.getFullYear() + numInfo);
-            //             break;
-            //     }
-            //     calculatedDate = asOfDate;
-            //     return toStringByFormatting(calculatedDate);
-            // }
         
             jQuery(function($) {
         
         
                 // 이벤트 핸들러 등록.
                 $('select#referenceFavoriteSelect').on('change', function(){
+
+                    // 참조 즐겨찾기: 기본 설정 표시하기.
                     selectedRFId = $(this).val();
-                    // $("#referenceFavoriteRelativeTimeInfoSampleList table[data-reference-favorite-id="+ selectedRFId + "]").clone().appendTo('.reference_record_area');
                     $('.reference_favorite_info_area').html($("#referenceFavoriteRelativeTimeInfoSampleList table[data-reference-favorite-id="+ selectedRFId + "]").clone());
+
+
+                    $("input[name='referenceCheck']").unbind('change');
+                    $("input[name='referenceCheck']").on('change', function(){
+                        var index = $(this).closest('td').index();
+                        var selectedCalculatedDate = $(this).closest('table').find("tr[name='calculateDateRow']").children().eq(index).text();
+                        if($(this).prop('checked')){
+                            $("div[data-selecteddate='" + selectedCalculatedDate +"']").show()
+                        }else{
+                            $("div[data-selecteddate='" + selectedCalculatedDate +"']").hide()
+                        }
+                    });
+
+                    // 참조 즐겨찾기 정보 : 체크박스 모두 체크 처리(초기 상태.)
+                    $(".reference_favorite_info_area input[name='referenceCheck']").prop('checked', true);
                     
                     var listParam = [];
-                    debugger;
                     $('.reference_favorite_info_area tr:first td').each(function(index){
                         var relativeInfo = $(this).text();
                         var resultDate = calculateDate($('input#selectionDate').val(),relativeInfo);
                         listParam.push(resultDate);
-                        
-                        // TEST
-                        // console.log( $(this).text()+''+index);
 
                         $('.reference_favorite_info_area tr:eq(1) td:eq('+ index + ')').text(resultDate);
                     });
                     
-                    // ajax
+                    // 참고를 위한 레코드 목록 부르기.
                     //$('#time_record_main_box').load('/timeManage/viewTimeRecordList', JSON.stringify(listParam)
-                    // $('#time_record_main_box').load('/timeManage/viewTimeRecordList', {test :JSON.stringify(['1','2'])});
-//                    $('#time_record_main_box').load('/timeManage/viewTimeRecordList', encodeURI(JSON.stringify([1,2])));
-                    $('#time_record_main_box').load('/timeManage/viewTimeRecordList', {'selectedDateList':listParam});
+                    $('#reference_record_box').load('/timeManage/viewTimeRecordList', {'selectedDateList':listParam});
                 });
-        
-        
-            
-        
-        
-        
-                $('#time_record_main_box').load('/timeManage/viewTimeRecord?selectionDate=' + $('input#selectionDate').val());
+
+                // time record 부르기.
+                $('#time_record_main_box').load('/timeManage/viewTimeRecord?selectionDate=' + $('input#selectionDate').val(), function(data){
+                    if($('#time_record_main_box .data_empty').length != 0){
+                        //데이터 없음.
+                        $("button#btnCreate").show();
+                        $("button#btnEdit").hide();
+                        $("button#btnDelete").hide();
+                        $("button#btnShare").hide();
+                    }else{
+                        $("button#btnCreate").hide();
+                    }
+                });
+
+                // FIXME
+                debugger;
         
                 $("#btnSearch").on("click",function(){
                     location.href="/timeManage/record" +"?selectionDate=" + $("[name='yearSelect']").val() + "-" + $("[name='monthSelect']").val()+"-"+ $("[name='daySelect']").val();
+                });
+
+                $("#btnCreate").on("click",function(){
+
+                });
+
+                $("#btnEdit").on("click",function(){
+                });
+
+                $("#btnDelete").on("click",function(){
+
+                });
+
+                $("#btnShare").on("click",function(){
+
                 });
         
                 // 기본 참고 즐겨찾기 선택
                 $('#referenceFavoriteSelect').val($(".model_data input[name='defaultReferenceFavoriteId']").val()).trigger('change');
         
-        
+                // FIXME
+                $("#select2Test").select2();
             });
         </script>
         <div class="model_data">
@@ -163,9 +173,10 @@
                 <div id="time_record_main_box"></div>
             </div>
             <div class="action_bar">
-                <button>수정</button>
-                <button>삭제</button>
-                <button>공유</button>
+                <button id="btnCreate">생성하기</button>
+                <button id="btnEdit">수정하기</button>
+                <button id="btnDelete">삭제하기</button>
+                <button id="btnShare">공유하기</button>
             </div>
         </div>
         <div class="reference_record_area" style="border: 1px solid;">
@@ -182,7 +193,7 @@
                     <!-- <td> -2d </td>
                     <td> -3d </td> -->
                 </tr>
-                <tr>
+                <tr name="calculateDateRow">
                     <th>계산시간</th>
                     <td th:each="rfItem : ${rfList.relativeTimeInfoList}"></td>
                     <!-- <td>2021년 5월 18일</td> -->
@@ -196,6 +207,12 @@
         </div>
         
         <div id="time_record_sample_box"></div>
+        <select id="select2Test">
+            <option value="">서태지</option>
+            <option value="">양현석</option>
+            <option value="">이주노</option>
+        </select>
+        <input type="datetime-local" />
     </div>
 
 

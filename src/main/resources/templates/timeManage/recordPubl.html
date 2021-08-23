@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- for test -->
+        <style>
+            div{
+                border: 1px solid;
+            } 
+            .grid-container {
+                display: grid;
+                grid-template-columns: 737px auto;
+                grid-gap: 10px;
+                padding: 10px;
+            }
+            .reference_action_area > *{
+                float: left;
+            }
+
+            .main_record_area > *{
+                float: left;
+            }
+            /* .main_record_right_area * {
+                font-size: smaller;
+            } */
+            .data_transfer_and_help_area button{
+                display: block;
+            }
+            /* .time_record_element_area{
+                width: 100%;
+            } */
+            /* .time_record_element_area label{
+                text-align: center;
+                display: block;
+            } */
+            .action_bar{
+                float: right;
+            }
+            reference_record_area{
+                overflow: scroll;
+            }
+            .time_record_list_area {
+                white-space: nowrap;
+                /* 가로스크롤시 중요한 속성 */
+  /* overflow-x: scroll; */
+  /* overflow-y: hidden; */
+                overflow: scroll;
+            }
+            .time_record_list_area > * {
+                /* float: left */
+                display: inline-block;
+            }
+
+        </style>
+        <div class="grid-container">
+            <div class="search_area">
+                search_areazz
+                <div class="search_detail_area">
+                    <select name="yearSelect" id="yearSelect">
+                        <option value="2020">2020</option>
+                        <option value="2021" selected="selected">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                        <option value="2041">2041</option>
+                        <option value="2042">2042</option>
+                        <option value="2043">2043</option>
+                        <option value="2044">2044</option>
+                        <option value="2045">2045</option>
+                    </select>
+                    <label>년</label>
+                    <select name="monthSelect" id="monthSelect">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08" selected="selected">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                    <label>월</label>
+                    <select name="daySelect" id="daySelect">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20" selected="selected">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                    <label>일</label>
+                    <button id="btnSearch">검색</button>
+                </div>
+            </div>
+            <div class="reference_action_area">
+                <table>
+                    <tr>
+                        <td>참조 정보 선택</td><td>test</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">선택된 참조 정보</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="reference_favorite_info_area" style="border: 1px solid;"><table data-reference-favorite-id="2">
+                                <tbody><tr>
+                                    <th> 상대정보 </th>
+                                    <td>-1d</td>
+                                    <td>-2d</td>
+                                    <td>-5d</td>
+                                    <!-- <td> -2d </td>
+                                    <td> -3d </td> -->
+                                </tr>
+                                <tr name="calculateDateRow">
+                                    <th>계산시간</th>
+                                    <td>2021-08-19</td>
+                                    <td>2021-08-18</td>
+                                    <td>2021-08-15</td>
+                                    <!-- <td>2021년 5월 18일</td> -->
+                                </tr>
+                                <tr>
+                                    <th> 참조체크 </th>
+                                    <td><input type="checkbox" name="referenceCheck" value="check"></td>
+                                    <td><input type="checkbox" name="referenceCheck" value="check"></td>
+                                    <td><input type="checkbox" name="referenceCheck" value="check"></td>
+                                </tr>
+                        
+                            </tbody></table></div>
+                        </td>
+                        
+                    </tr>
+                </table>
+                <div class="data_transfer_and_help_area">
+                    <button>import</button>
+                    <button>export</button>
+                    <button>도움말</button>
+                    <button>양식다운로드</button>
+                </div>
+            </div>
+            <div class="main_record_area">
+                <div class="main_record_left_area">
+                    <table class="detail_clsfc_table">
+                        <tbody><tr>
+                            <th>
+                                checkbox
+                            </th>
+                            <th>상세분류</th>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                            <td>목표</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                            <td>내역</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                            <td>반성</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></td>
+                            <td>기타</td>
+                        </tr>
+                    </tbody></table>
+                </div>
+                <div class="main_record_right_area" style="border: 1px solid;">
+                    <div id="time_record_main_box">
+    <div class="time_record_element_area">
+        <label>2021-07-17</label>
+    <table >
+        <!-- <table border="1"></table> -->
+        <tbody><tr>
+            <th>시작</th>
+            <th>종료</th>
+            <th>분류</th>
+            <th>상세분류</th>
+            <th>상세내용</th>
+        </tr>
+        </tbody><tbody>
+            <tr>
+                <td rowspan="3">18:30</td>
+                <td rowspan="3">19:30</td>
+                <td rowspan="3">운동</td>
+                <td>목표</td>
+                <td>다리운동</td>
+            </tr>
+            <tr>
+                <td>성과</td>
+                <td>다리운동을 끝냄.</td>
+            </tr>
+            <tr>
+                <td>평가</td>
+                <td>단백질 보충제를 섭취해야 겠다.</td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td rowspan="3">19:30</td>
+                <td rowspan="3">20:32</td>
+                <td rowspan="3">독서</td>
+                <td>목표</td>
+                <td>책 80페이지 까지 읽기</td>
+            </tr>
+            <tr>
+                <td>성과</td>
+                <td>70페이지를 읽음</td>
+            </tr>
+            <tr>
+                <td>평가</td>
+                <td>test</td>
+            </tr>
+        </tbody>
+        
+    </table>
+    </div>
+    </div>
+    <div class="action_bar">
+        <button id="btnCreate" style="display: none;">생성하기</button>
+        <button id="btnEdit">수정하기</button>
+        <button id="btnDelete">삭제하기</button>
+        <button id="btnShare">공유하기</button>
+    </div>
+                </div>
+                
+            </div>
+            <div class="reference_record_area">
+                <div class="time_record_list_area">
+                    <div class="time_record_element_area">
+                        <label>2021-07-17</label>
+                    <table>
+                        <!-- <table border="1"></table> -->
+                        <tbody><tr>
+                            <th>시작</th>
+                            <th>종료</th>
+                            <th>분류</th>
+                            <th>상세분류</th>
+                            <th>상세내용</th>
+                        </tr>
+                        </tbody><tbody>
+                            <tr>
+                                <td rowspan="3">18:30</td>
+                                <td rowspan="3">19:30</td>
+                                <td rowspan="3">운동</td>
+                                <td>목표</td>
+                                <td>다리운동</td>
+                            </tr>
+                            <tr>
+                                <td>성과</td>
+                                <td>다리운동을 끝냄.</td>
+                            </tr>
+                            <tr>
+                                <td>평가</td>
+                                <td>단백질 보충제를 섭취해야 겠다.</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">19:30</td>
+                                <td rowspan="3">20:32</td>
+                                <td rowspan="3">독서</td>
+                                <td>목표</td>
+                                <td>책 80페이지 까지 읽기</td>
+                            </tr>
+                            <tr>
+                                <td>성과</td>
+                                <td>70페이지를 읽음</td>
+                            </tr>
+                            <tr>
+                                <td>평가</td>
+                                <td>test</td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                    </div>
+                    <div class="time_record_element_area">
+                        <label>2021-07-17</label>
+                    <table>
+                        <!-- <table border="1"></table> -->
+                        <tbody><tr>
+                            <th>시작</th>
+                            <th>종료</th>
+                            <th>분류</th>
+                            <th>상세분류</th>
+                            <th>상세내용</th>
+                        </tr>
+                        </tbody><tbody>
+                            <tr>
+                                <td rowspan="3">18:30</td>
+                                <td rowspan="3">19:30</td>
+                                <td rowspan="3">운동</td>
+                                <td>목표</td>
+                                <td>다리운동</td>
+                            </tr>
+                            <tr>
+                                <td>성과</td>
+                                <td>다리운동을 끝냄.</td>
+                            </tr>
+                            <tr>
+                                <td>평가</td>
+                                <td>단백질 보충제를 섭취해야 겠다.</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">19:30</td>
+                                <td rowspan="3">20:32</td>
+                                <td rowspan="3">독서</td>
+                                <td>목표</td>
+                                <td>책 80페이지 까지 읽기</td>
+                            </tr>
+                            <tr>
+                                <td>성과</td>
+                                <td>70페이지를 읽음</td>
+                            </tr>
+                            <tr>
+                                <td>평가</td>
+                                <td>test</td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                    </div>
+                    <div class="time_record_element_area">
+                        <label>2021-07-17</label>
+                    <table>
+                        <!-- <table border="1"></table> -->
+                        <tbody><tr>
+                            <th>시작</th>
+                            <th>종료</th>
+                            <th>분류</th>
+                            <th>상세분류</th>
+                            <th>상세내용</th>
+                        </tr>
+                        </tbody><tbody>
+                            <tr>
+                                <td rowspan="3">18:30</td>
+                                <td rowspan="3">19:30</td>
+                                <td rowspan="3">운동</td>
+                                <td>목표</td>
+                                <td>다리운동</td>
+                            </tr>
+                            <tr>
+                                <td>성과</td>
+                                <td>다리운동을 끝냄.</td>
+                            </tr>
+                            <tr>
+                                <td>평가</td>
+                                <td>단백질 보충제를 섭취해야 겠다.</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">19:30</td>
+                                <td rowspan="3">20:32</td>
+                                <td rowspan="3">독서</td>
+                                <td>목표</td>
+                                <td>책 80페이지 까지 읽기</td>
+                            </tr>
+                            <tr>
+                                <td>성과</td>
+                                <td>70페이지를 읽음</td>
+                            </tr>
+                            <tr>
+                                <td>평가</td>
+                                <td>test</td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>

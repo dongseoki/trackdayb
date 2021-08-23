@@ -6,7 +6,7 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
+            <Pattern>%d{HH:mm} %highlight(%-5level) %cyan(%logger{36}) - %msg%n</Pattern>
         </layout>
     </appender>
     <appender name="DAILY_ROLLING_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
