@@ -1,0 +1,270 @@
+{
+  "version": 6,
+  "entities": [
+    {
+      "entity": {
+        "type": "Project",
+        "id": "c3dad246-0a99-4e8b-86c5-11231ad29538",
+        "name": "trackDay"
+      },
+      "children": [
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "requestBody": true,
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+              "name": "POST"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text",
+              "textBody": "{\n  \"selectionDate\": \"2021-07-30\",\n  \"activityRecordDTOList\":[\n    {\n      \"startDatetime\": \"2021-06-03 21:20:00\",\n      \"endDatetime\" : \"2021-06-03 21:32:00\",\n      \"classificationName\" : \"\",\n      \"activityContent\" : \"\",\n      \"goalContent\" : \"\",\n      \"outcomeContent\" : \"\",\n      \"reflectionContent\" : \"\",\n      \"activityScore\" : \"12\"\n    },{\n      \"startDatetime\": \"2021-06-03 21:59:00\",\n      \"endDatetime\" : \"2021-06-03 21:32:00\",\n      \"classificationName\" : \"\",\n      \"activityContent\" : \"\",\n      \"goalContent\" : \"\",\n      \"outcomeContent\" : \"\",\n      \"reflectionContent\" : \"\",\n      \"activityScore\" : \"12\"\n    }]\n}"
+            },
+            "uri": {
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "127.0.0.1:8080",
+              "path": "/timeManage/createTimeRecord"
+            },
+            "id": "00ede39f-95ae-4f28-ba75-9895889dc83f",
+            "name": "createTimeRecord_example1",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "assertions": [
+              {
+                "comparison": "Exists",
+                "subject": "ResponseBody",
+                "path": "content",
+                "value": ""
+              }
+            ]
+          }
+        },
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "requestBody": true,
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+              "name": "POST"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text",
+              "textBody": "{\n  \"timeRecordId\": \"25\"\n}"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "127.0.0.1:8080",
+              "path": "/timeManage/deleteTimeRecord"
+            },
+            "id": "99adb3a6-902c-40dc-9f4d-12e61cf80b7d",
+            "name": "deleteTimeRecord_example1",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        },
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "requestBody": true,
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+              "name": "POST"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text",
+              "textBody": "{\n  \"timeRecordId\":\"25\",\n  \"activityRecordDTOList\":[\n    {\n      \"startDatetime\": \"2021-07-30 21:20:00\",\n      \"endDatetime\" : \"2021-07-30 21:32:00\",\n      \"classificationName\" : \"\",\n      \"activityContent\" : \"\",\n      \"goalContent\" : \"\",\n      \"outcomeContent\" : \"\",\n      \"reflectionContent\" : \"\",\n      \"activityScore\" : \"12\"\n    },{\n      \"startDatetime\": \"2021-07-15 21:59:00\",\n      \"endDatetime\" : \"2021-07-15 21:32:00\",\n      \"classificationName\" : \"\",\n      \"activityContent\" : \"\",\n      \"goalContent\" : \"\",\n      \"outcomeContent\" : \"\",\n      \"reflectionContent\" : \"\",\n      \"activityScore\" : \"12\"\n    }]\n}"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "127.0.0.1:8080",
+              "path": "/timeManage/modifyTimeRecord"
+            },
+            "id": "4dfab6cf-333e-45aa-ad50-ba7fa381e335",
+            "name": "modifyTimeRecord_example1",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "assertions": [
+              {
+                "comparison": "Exists",
+                "subject": "ResponseBody",
+                "path": "content",
+                "value": ""
+              }
+            ]
+          }
+        },
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+              "name": "GET"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "127.0.0.1:8080",
+              "path": "/timeManage/record"
+            },
+            "id": "cd981012-b351-4231-830c-51ceb9b0fda2",
+            "name": "recordPage",
+            "headers": []
+          }
+        },
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "requestBody": true,
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+              "name": "POST"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": [
+                  {
+                    "enabled": true,
+                    "type": "Text",
+                    "name": "selectedDateList",
+                    "value": "2021-07-17"
+                  },
+                  {
+                    "enabled": true,
+                    "type": "Text",
+                    "name": "selectedDateList",
+                    "value": "2021-07-20"
+                  }
+                ]
+              },
+              "bodyType": "Form",
+              "textBody": "{\"selectedDateList\":[\"2021-07-17\",\"2021-07-20\"]}"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": []
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "127.0.0.1:8080",
+              "path": "/timeManage/viewTimeRecordList"
+            },
+            "id": "19662e7a-788e-4fd7-87da-d279c8a8f500",
+            "name": "viewTimeRecordList",
+            "headers": [
+              {
+                "enabled": true,
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ]
+          }
+        },
+        {
+          "entity": {
+            "type": "Request",
+            "method": {
+              "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+              "name": "GET"
+            },
+            "body": {
+              "formBody": {
+                "overrideContentType": true,
+                "encoding": "application/x-www-form-urlencoded",
+                "items": []
+              },
+              "bodyType": "Text",
+              "textBody": "{\n  \"selectionDate\": \"2021-07-17\"\n}"
+            },
+            "uri": {
+              "query": {
+                "delimiter": "&",
+                "items": [
+                  {
+                    "enabled": true,
+                    "name": "selectionDate",
+                    "value": "2021-07-30"
+                  }
+                ]
+              },
+              "scheme": {
+                "name": "http",
+                "version": "V11"
+              },
+              "host": "127.0.0.1:8080",
+              "path": "/timeManage/viewTimeRecord"
+            },
+            "id": "065d05ee-4545-489c-bbf9-f2072bbaff08",
+            "name": "viewTimeRecord_example1",
+            "headers": []
+          }
+        }
+      ]
+    }
+  ]
+}

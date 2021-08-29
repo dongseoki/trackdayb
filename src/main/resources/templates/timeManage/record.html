@@ -53,6 +53,7 @@
                     $('#reference_record_box').load('/timeManage/viewTimeRecordList', {'selectedDateList':listParam});
                 });
 
+                debugger;
                 // time record 부르기.
                 $('#time_record_main_box').load('/timeManage/viewTimeRecord?selectionDate=' + $('input#selectionDate').val(), function(data){
                     if($('#time_record_main_box .data_empty').length != 0){
