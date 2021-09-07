@@ -1,15 +1,15 @@
 import React from "react";
-import "./About.css";
+import "./Signup.css";
 
-function About(props) {
+function Signup(props) {
   console.log(props);
   return (
     <div className="about__container">
       <span>
-        안녕하세요
+        회원가입
       </span>
     </div>
   );
 }
 
-export default About;
+export default Signup;
