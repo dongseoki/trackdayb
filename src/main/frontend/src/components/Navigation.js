@@ -18,8 +18,10 @@ function Navigation(){
                 </ul>
             </div>
             <div className="sign">
-                <Link to="/login">로그인</Link>
-                <Link to="/signup">회원가입</Link>
+                <ul>
+                    <li><Link to="/login">로그인</Link></li>
+                    <li><Link to="/signup">회원가입</Link></li>
+                </ul>
             </div>
         </nav>
     )
