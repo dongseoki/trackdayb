@@ -17,13 +17,6 @@ class Header extends Component {
                 <header>
                     <HashRouter>
                         <Navigation />
-                        <Route path='/' exact={true} component={Home} />
-                        <Route path='/time' exact={true} component={Time} />
-                        <Route path='/goal' exact={true} component={Goal} />
-                        <Route path='/report' exact={true} component={Report} />
-                        <Route path='/community' exact={true} component={Community} />
-                        <Route path='/login' exact={true} component={Login} />
-                        <Route path='/signup' exact={true} component={Signup} />
                     </HashRouter>
                 </header>
             </div>
