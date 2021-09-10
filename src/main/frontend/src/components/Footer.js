@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { HashRouter, Route, Link } from "react-router-dom"; //BrouserRouter 사용시 # 없앨수있음
 import "./Footer.css"
-import Signup from "../routes/Signup";
 
 class Footer extends Component {
     render() {

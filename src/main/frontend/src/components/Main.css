@@ -1,0 +1,12 @@
+.main{
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+
+.main .left{
+    border : 1px solid red;
+}
+
+.main .content{
+    border : 1px solid green;
+}

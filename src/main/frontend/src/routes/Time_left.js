@@ -1,7 +1,7 @@
 import React from "react";
 import "./Time.css";
 
-function Time(props) {
+function Time_left(props) {
   console.log(props);
   return (
     <div>
@@ -29,4 +29,4 @@ function Time(props) {
   );
 }
 
-export default Time;
+export default Time_left;

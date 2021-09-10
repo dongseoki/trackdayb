@@ -63,15 +63,31 @@ import './App.css';
 // import Navigation from './components/Navigation';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { Main } from './components/index';
+import { Main, Time, Goal } from './components/index';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 function App(){
     return (
         <div>
+            <BrowserRouter>
             <Header />
             <Main />
-        
+            
+                {/* <ul>
+                    <li>
+                        <Link to="/time">Time</Link>
+                    </li>
+                    <li>
+                        <Link to="/goal">Goal</Link>
+                    </li>
+                </ul> */}
+                {/* <Switch>
+                    <Route path="/time" component={ Time } exact></Route>
+                    <Route path="/goal" component={ Goal } exact></Route>
+                </Switch> */}
+            
             <Footer />
+            </BrowserRouter>
         </div>
         
     )
