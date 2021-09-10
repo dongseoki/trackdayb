@@ -9,17 +9,16 @@ import Navigation from './Navigation';
 // import Login from "../routes/Login";
 // import Signup from "../routes/Signup";
 
-
-class Header extends Component {
-    render() {
-        return (
-            <div>
-                <header>
-                    <Navigation />
-                </header>
-            </div>
-        );
-    }
+function Header(props) {
+    return (
+        <div>
+            <header>
+                <Navigation />
+            </header>
+        </div>
+    );
 }
+
+
 
 export default Header;
