@@ -7,5 +7,4 @@ export { default as Community } from '../routes/Community';
 export { default as Login } from '../routes/Login';
 export { default as Signup } from '../routes/Signup';
 
-export { default as Lookup_period } from './Lookup_period';
-export { default as Goal_list } from './Goal_list';
+export { default as LeftNavigation } from './LeftNavigation';

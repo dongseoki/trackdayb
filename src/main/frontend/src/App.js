@@ -25,6 +25,9 @@
 // export default App;
 
 
+
+
+
 import React, {useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -68,24 +71,11 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 function App(){
     return (
+        
         <div>
             <BrowserRouter>
             <Header />
             <Main />
-            
-                {/* <ul>
-                    <li>
-                        <Link to="/time">Time</Link>
-                    </li>
-                    <li>
-                        <Link to="/goal">Goal</Link>
-                    </li>
-                </ul> */}
-                {/* <Switch>
-                    <Route path="/time" component={ Time } exact></Route>
-                    <Route path="/goal" component={ Goal } exact></Route>
-                </Switch> */}
-            
             <Footer />
             </BrowserRouter>
         </div>
