@@ -228,3 +228,75 @@ var result = {
   ],
 };
 
+
+function insertGoal(){
+
+}
+
+//ip:port/goalManage/insertGoal
+// POST
+
+var data = {
+ // goalId: "",
+  parentId: "",
+  title: "",
+  kind: "",
+  content: "",
+  startDatetime: "",
+  endDatetime: "",
+  progressRate: "",
+  modificationDatetime: "",
+  createDatetime: "",
+}
+
+var result = {
+  resultCode: "",
+  //resultMessage..?
+
+}
+
+
+
+
+function updateGoal(){
+
+}
+//ip:port/goalManage/updateGoal
+// POST
+
+var data = {
+   goalId: "", // 필수.
+   parentId: "",
+   title: "",
+   kind: "",
+   content: "",
+   startDatetime: "",
+   endDatetime: "",
+   progressRate: "",
+   modificationDatetime: "",
+   createDatetime: "",
+ }
+ 
+ var result = {
+   resultCode: "",
+   //resultMessage..?
+ 
+ }
+
+
+function deleteGoal(){
+
+}
+//ip:port/goalManage/deleteGoal
+// POST
+var data = {
+   goalId: "" // 필수.
+ }
+ 
+ var result = {
+   resultCode: "",
+   //resultMessage..?
+ 
+ }
+
+
