@@ -6,6 +6,7 @@ import { LeftNavigation } from '../components/index';
 import { makeStyles } from '@material-ui/core/styles';
 //time picker
 import TextField from '@material-ui/core/TextField';
+
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -18,16 +19,20 @@ function Time(props) {
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        <div>타임라인 검색</div>
         <LeftNavigation />
       </aside>
 
       {/* 참조데이터 */}
-      <div className="timeline">타임라인</div>
+      <div className="timeline">
+        타임라인
+      </div>
+      
 
       {/* 기록 */}
       <div className="write">
-        <div>
+        <div>2021-09-18</div>
+        <div className="cards"></div>
+        <div className="writeForm">
           <TimePickers id='starttime' label="시작시간"/>
           <TimePickers id='endtime' label="종료시간"/>
           <span>목표선택</span>
@@ -134,14 +139,13 @@ function GoalListModal() {
 
 
 
-
-
 function MultilineTextFields() {
   const useStyles = makeStyles((theme) => ({
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
         width: '40ch',
+        background: 'white',
       },
     },
   }));
@@ -163,4 +167,5 @@ function MultilineTextFields() {
     </form>
   );
 }
+
 export default Time;

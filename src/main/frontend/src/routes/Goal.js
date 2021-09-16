@@ -8,14 +8,22 @@ function Goal(props) {
     <div className="goal">
       {/* 사이드 */}
       <aside className="side">
-        <div>목표 검색</div>
         <LeftNavigation />
       </aside>
     
-    <div className="about__container">
-      <span>
-        목표관리
-      </span>
+    <div className="goal-content">
+      <h3>목표관리</h3>
+      <div className="goal-cards">
+        <div className="card">
+          책읽기
+        </div>
+        <div className="card">
+          책읽기
+        </div>
+        <div className="card">
+          책읽기
+        </div>
+      </div>
     </div>
 
     </div>
