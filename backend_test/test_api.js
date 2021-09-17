@@ -8,6 +8,8 @@
 // public final static String RESULT_CODE_ACCOUNT_LOCK = "0005";			// 아이디 잠김
 // public final static String RESULT_CODE_TEST_FAIL = "0006";				// 테스트 실패
 
+
+
 function apiExample(){
 
 }
@@ -47,9 +49,9 @@ function activityList(){
 var data = {
   searchStartDatetime: "",
   searchEndDatetime: "",
-  searchActivityIdList:[], // 활동 id 
+  searchActivityIdList:[4,5,6,7], // 활동 id 혹시몰라서.  
   searchGoalIdList: [], // 목표 id list
-  searchGoalTitleList: [], // 목표 제목 text 검색 list 
+  searchGoalTitleList:  [], // 목표 제목 text 검색 list 
 };
 
 var result = {
@@ -70,7 +72,7 @@ var result = {
           goalId: "1",
           parentId: "",
           title: "",
-          kind: "",
+          kind: "", 
           startDatetime: "",
           endDatetime: "",
           progressRate: "",
@@ -100,7 +102,7 @@ var data ={
   "shareStatus" : "", 
   "title" : "", 
   "goalIdList":[
-
+ 
   ]
 };
 
@@ -155,14 +157,14 @@ var result = {
 function goalTitleList(){
 
 }
-//ip:port/goalManage/goalFullList
+//ip:port/goalManage/goalTitleList
 // POST
 var data = {
   searchStartDatetime: "",
   searchEndDatetime: "",
-  searchGoalIdList: [], // 목표 id list
-  searchGoalTitleList: [], // 목표 제목 text 검색 list 
-  searchKind: "",
+  //searchGoalIdList: [], // 목표 id list
+  searchGoalTitleList: [], // 목표 제목 text     검색 list 
+  //searchKind: "", 
   searchPathList: [],
 };
 
@@ -224,6 +226,9 @@ var result = {
       progressRate: "",
       modificationDatetime: "",
       createDatetime: "",
+      regularInfo:{
+        "wef":""
+      }
     },
   ],
 };
@@ -300,3 +305,4 @@ var data = {
  }
 
 
+ 
