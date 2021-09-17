@@ -7,8 +7,7 @@ function LeftNavigation(){
         <nav className="left-nav">
             <LookupPeriod />
             <GoalList />
-            <Search />
-            
+            <SearchButton />
         </nav>
     )
 }
@@ -17,6 +16,7 @@ function LookupPeriod(props){
     return (
       <div>
           <p>조회기간</p>
+          <input type="date"></input>
       </div>
     )
   }
@@ -26,25 +26,25 @@ function GoalList(props){
     return (
         <div>
             <p>목표선택</p>
-            <ul>
-                <li>주 1회 에세이 쓰기</li>
-                <li>책 읽기</li>
-                <li>운동하기</li>
-                <li>달리기 30분</li>
-            </ul>
+            <div className="goal-list">
+                <ul>
+                    <li><p className="class-1">주 1회 에세이 쓰기</p><div className="color-tag"></div></li>
+                    <li><p className="class-2">주 1회 에세이 쓰기</p><div className="none-tag"></div></li>
+                    <li><p className="class-2">주 1회 에세이 쓰기</p><div className="none-tag"></div></li>
+                    <li><p className="class-1">주 1회 에세이 쓰기</p><div className="color-tag"></div></li>
+                    <li><p className="class-2">주 1회 에세이 쓰기</p><div className="none-tag"></div></li>
+                </ul>
+            </div>
         </div>
     )
 }
 
-function Search(props){
-    return(
+function SearchButton(props){
+    return (
         <div>
-            <p>검색</p>
-            <input type="text" />
+            <button>검색</button>
         </div>
     )
 }
-
-
 
 export default LeftNavigation;

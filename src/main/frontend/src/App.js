@@ -66,12 +66,11 @@ import './App.css';
 // import Navigation from './components/Navigation';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { Main, Time, Goal } from './components/index';
+import { Main } from './components/index';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 function App(){
     return (
-        
         <div>
             <BrowserRouter>
             <Header />
