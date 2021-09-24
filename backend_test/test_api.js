@@ -1,3 +1,6 @@
+// 주의사항.
+// 1. 자바스크립트 오브젝트 예시임을 감안한다.(실제 json문자열로 보낼경우, key는 모두 쌍따옴표가 포함된 문자열임.)
+
 // about resultCode
 // 0000 : successful.
 // public final static String RESULT_CODE_SUCESS = "0000";					// 성공
@@ -27,7 +30,7 @@ var result = {
   resultCode: "",
   goalTitleList: [
     {
-      goalId: "1",
+      goalId: "",
       parentId: "",
       title: "",
       kind: "",
@@ -44,8 +47,11 @@ function activityList(){
 
 }
 
-//ip:port/timeManage/activitylist
+//ip:port/timeManage/getActivitylist
 // POST
+
+// 유의사항 주기성 정보는 주어지지 않음.
+
 var data = {
   searchStartDatetime: "",
   searchEndDatetime: "",
@@ -58,30 +64,34 @@ var result = {
   resultCode: "",
   activityList: [
     {
-      "activityRecordId" : "", 
-      "startDatetime" : "", 
-      "endDatetime" : "", 
-      "content" : "", 
-      "activityScore" : "", 
-      "modificationDatetime" : "", 
-      "createDatetime" : "", 
-      "shareStatus" : "", 
-      "title" : "", 
-      "goalTitleList":[
-        {
-          goalId: "1",
-          parentId: "",
-          title: "",
-          kind: "", 
-          startDatetime: "",
-          endDatetime: "",
-          progressRate: "",
-          modificationDatetime: "",
-          createDatetime: "",
-        },
-      ]
+      "activityId" : "",
+      "goalId" : "",
+      "goalTitleInfo":{
+        "goalId" : "",
+        "parentId" : "",
+        "title" : "",
+        "kind" : "",
+        "content" : "",
+        "startDatetime" : "",
+        "endDatetime" : "",
+        "progressRate" : "",
+        "color" : "",
+        "createDatetime" : "",
+        "modificationDatetime" : "",
+      },
+      "title" : "",
+      "startDatetime" : "",
+      "endDatetime" : "",
+      "content" : "",
+      "activityScore" : "",
+      "shareStatus" : "",
+      "createDatetime" : "",
+      "modificationDatetime" : ""
     },
-  ],
+    {
+
+    }
+  ]
 }
 
 
@@ -89,21 +99,17 @@ function insertActivity(){
 
 }
 
-//ip:port/timeManage/insertActivity
+//ip:port/timeManage/activity
 // POST
 var data ={
-// activityRecordId is empty
-  "startDatetime" : "", 
-  "endDatetime" : "", 
-  "content" : "", 
-  "activityScore" : "", 
-  "modificationDatetime" : "", 
-  "createDatetime" : "", 
-  "shareStatus" : "", 
-  "title" : "", 
-  "goalIdList":[
- 
-  ]
+// activityId is empty
+  "goalId" : "", // value로 빈 문자열 가능.
+  "title" : "",
+  "startDatetime" : "",
+  "endDatetime" : "",
+  "content" : "",
+  "activityScore" : "",
+  "shareStatus" : ""
 };
 
 var result = {
@@ -114,21 +120,17 @@ function updateActivity(){
 
 }
 
-//ip:port/timeManage/updateActivity
-// POST
+//ip:port/timeManage/activity
+// PUT
 var data ={
-  activityRecordId : "",
-  "startDatetime" : "", 
-  "endDatetime" : "", 
-  "content" : "", 
-  "activityScore" : "", 
-  "modificationDatetime" : "", 
-  "createDatetime" : "", 
-  "shareStatus" : "", 
-  "title" : "", 
-  "goalIdList":[
-
-  ]
+  "activityId" : "",
+  "goalId" : "",
+  "title" : "",
+  "startDatetime" : "",
+  "endDatetime" : "",
+  "content" : "",
+  "activityScore" : "",
+  "shareStatus" : ""
 };
 
 var result = {
@@ -139,10 +141,10 @@ function deleteActivity(){
 
 }
 
-//ip:port/timeManage/deleteActivity
-// POST
+//ip:port/timeManage/activity
+// DELETE
 var data ={
-  activityRecordId : ""
+  "activityId" : ""
 };
 
 var result = {
@@ -157,31 +159,36 @@ var result = {
 function goalTitleList(){
 
 }
-//ip:port/goalManage/goalTitleList
+
+// 특징 : 목표 정보 리스트를 반환함.
+// 목표 정보는 content와, 주기성 정보가 포함하지 않음.
+
+//ip:port/goalManage/getGoalTitleList
 // POST
 var data = {
   searchStartDatetime: "",
   searchEndDatetime: "",
-  //searchGoalIdList: [], // 목표 id list
-  searchGoalTitleList: [], // 목표 제목 text     검색 list 
-  //searchKind: "", 
-  searchPathList: [],
 };
 
 var result = {
   resultCode: "",
   goalTitleList: [
     {
-      goalId: "1",
-      parentId: "",
-      title: "",
-      kind: "",
-      startDatetime: "",
-      endDatetime: "",
-      progressRate: "",
-      modificationDatetime: "",
-      createDatetime: "",
+      "goalId" : "",
+      "parentId" : "",
+      "title" : "",
+      "kind" : "",
+      // "content" : "",
+      "startDatetime" : "",
+      "endDatetime" : "",
+      "progressRate" : "",
+      "color" : "",
+      "createDatetime" : "",
+      "modificationDatetime" : "",
     },
+    {
+
+    }
   ],
 };
 
@@ -189,7 +196,9 @@ var result = {
 function goalFullList(){
 
 }
-//ip:port/goalManage/goalFullList
+// 특징 : 목표 정보와 주기성 정보를 포함.
+
+//ip:port/goalManage/getGoalFullList
 // POST
 
 var data = {
@@ -197,37 +206,56 @@ var data = {
   searchEndDatetime: "",
   searchGoalIdList: [], // 목표 id list
   searchKind: "",
-  searchPathList: [],
 };
 
 var result = {
   resultCode: "",
   goalFullList: [
     {
-      goalId: "",
-      parentId: "",
-      title: "",
-      kind: "",
-      content: "",
-      startDatetime: "",
-      endDatetime: "",
-      progressRate: "",
-      modificationDatetime: "",
-      createDatetime: "",
+      "goalId" : "",
+      "parentId" : "",
+      "title" : "",
+      "kind" : "",
+      "content" : "",
+      "startDatetime" : "",
+      "endDatetime" : "",
+      "progressRate" : "",
+      "color" : "",
+      "createDatetime" : "",
+      "modificationDatetime" : "",
+      "periodicityInfo":{
+// 기한 성 목표일 경우, value값이 오브젝트({})가 아니라 빈문자열 ""임.
+        "periodicityId" : "",
+        "goalId" : "",
+        "timeUnit" : "",
+        "type" : "",
+        "count" : "",
+        "sunYn" : "",
+        "monYn" : "",
+        "tueYn" : "",
+        "wedsYn" : "",
+        "thurYn" : "",
+        "friYn" : "",
+        "satYn" : "",
+        "createDatetime" : "",
+        "modificationDatetime" : "",
+        // "deletionStatus" : ""
+      }
     },
     {
-      goalId: "",
-      parentId: "",
-      title: "",
-      kind: "",
-      content: "",
-      startDatetime: "",
-      endDatetime: "",
-      progressRate: "",
-      modificationDatetime: "",
-      createDatetime: "",
-      regularInfo:{
-        "wef":""
+      "goalId" : "",
+      "parentId" : "",
+      "title" : "",
+      "kind" : "",
+      "content" : "",
+      "startDatetime" : "",
+      "endDatetime" : "",
+      "progressRate" : "",
+      "color" : "",
+      "createDatetime" : "",
+      "modificationDatetime" : "",
+      "periodicityInfo":{
+// 기한 성 목표일 경우, value값이 오브젝트({})가 아니라 빈문자열 ""임.
       }
     },
   ],
@@ -238,20 +266,39 @@ function insertGoal(){
 
 }
 
-//ip:port/goalManage/insertGoal
-// POST
+//ip:port/goalManage/goal
+//POST
 
 var data = {
- // goalId: "",
-  parentId: "",
-  title: "",
-  kind: "",
-  content: "",
-  startDatetime: "",
-  endDatetime: "",
-  progressRate: "",
-  modificationDatetime: "",
-  createDatetime: "",
+  // "goalId" : "",
+  "parentId" : "",
+  "title" : "",
+  "kind" : "",
+  "content" : "",
+  "startDatetime" : "",
+  "endDatetime" : "",
+  "progressRate" : "",
+  "color" : "",
+  // "createDatetime" : "",
+  // "modificationDatetime" : "",
+  "periodicityInfo":{
+// 기한 성 목표일 경우, value값이 오브젝트({})가 아니라 빈문자열 ""임.
+    "periodicityId" : "",
+    "goalId" : "",
+    "timeUnit" : "",
+    "type" : "",
+    "count" : "",
+    "sunYn" : "",
+    "monYn" : "",
+    "tueYn" : "",
+    "wedsYn" : "",
+    "thurYn" : "",
+    "friYn" : "",
+    "satYn" : "",
+    // "createDatetime" : "",
+    // "modificationDatetime" : "",
+    // "deletionStatus" : ""
+  }
 }
 
 var result = {
@@ -266,21 +313,40 @@ var result = {
 function updateGoal(){
 
 }
-//ip:port/goalManage/updateGoal
-// POST
+//ip:port/goalManage/goal
+// PUT
 
 var data = {
-   goalId: "", // 필수.
-   parentId: "",
-   title: "",
-   kind: "",
-   content: "",
-   startDatetime: "",
-   endDatetime: "",
-   progressRate: "",
-   modificationDatetime: "",
-   createDatetime: "",
- }
+  "goalId" : "",
+  "parentId" : "",
+  "title" : "",
+  "kind" : "",
+  "content" : "",
+  "startDatetime" : "",
+  "endDatetime" : "",
+  "progressRate" : "",
+  "color" : "",
+  // "createDatetime" : "",
+  // "modificationDatetime" : "",
+  "periodicityInfo":{
+// 기한 성 목표일 경우, value값이 오브젝트({})가 아니라 빈문자열 ""임.
+    "periodicityId" : "",
+    "goalId" : "",
+    "timeUnit" : "",
+    "type" : "",
+    "count" : "",
+    "sunYn" : "",
+    "monYn" : "",
+    "tueYn" : "",
+    "wedsYn" : "",
+    "thurYn" : "",
+    "friYn" : "",
+    "satYn" : "",
+    // "createDatetime" : "",
+    // "modificationDatetime" : "",
+    // "deletionStatus" : ""
+  }
+}
  
  var result = {
    resultCode: "",
@@ -292,8 +358,8 @@ var data = {
 function deleteGoal(){
 
 }
-//ip:port/goalManage/deleteGoal
-// POST
+//ip:port/goalManage/goal
+// DELETE
 var data = {
    goalId: "" // 필수.
  }
