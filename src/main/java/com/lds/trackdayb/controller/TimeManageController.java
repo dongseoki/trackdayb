@@ -1,14 +1,21 @@
 package com.lds.trackdayb.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.ClassificationDTO;
 import com.lds.trackdayb.dto.ReferenceFavoriteDTO;
 import com.lds.trackdayb.dto.ReferenceFavoriteDefaultSettingDTO;
+import com.lds.trackdayb.mvo.ActivityMVO;
 import com.lds.trackdayb.mvo.ReferenceFavoriteMVO;
+import com.lds.trackdayb.mvo.ResultMVO;
 import com.lds.trackdayb.mvo.TimeRecordMVO;
 import com.lds.trackdayb.service.SystemManageService;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.service.TimeManageService;
 import com.lds.trackdayb.util.CommonCodeUtil;
+import com.lds.trackdayb.util.ResponseCodeUtil;
+import com.lds.trackdayb.vo.ActivityVO;
 import com.lds.trackdayb.vo.TimeRecordVO;
 
 import org.slf4j.Logger;
@@ -27,9 +34,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-//@RestController
+@RestController
 @RequiredArgsConstructor
-@Controller
+// @Controller
 @RequestMapping("/timeManage")
 public class TimeManageController {
     private  final TestService testService;
@@ -157,6 +164,41 @@ public class TimeManageController {
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         return timeManageService.deleteTimeRecord(timeRecordVO);
+    }
+
+    @PostMapping("getActivityListTEST")
+    public String getActivityListTest(@RequestBody ActivityVO activityVO){
+        JsonObject jo = new JsonObject();
+        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        activityVO.setMemberSerialNumber(loginSerialNumber);
+        List<ActivityMVO> activityList = timeManageService.getActivityList(activityVO);
+        JsonArray activityListJsonArray = new Gson().toJsonTree(activityList).getAsJsonArray();
+        jo.add("activityList", activityListJsonArray);
+
+        return jo.toString();
+    }
+
+    @PostMapping("activityTEST")
+    public ResultMVO insertActivityTest(@RequestBody ActivityVO activityVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        return resultMVO;
+    }
+
+    @PutMapping("activityTEST")
+    public ResultMVO updateActivityTest(@RequestBody ActivityVO activityVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        return resultMVO;
+    }
+
+    @DeleteMapping("activityTEST")
+    public ResultMVO deleteActivityTest(ActivityVO activityVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        return resultMVO;
     }
 
 }

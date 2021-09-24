@@ -179,5 +179,38 @@
     <!--        deletion_status = 'N'-->
     <!--        limit 1;-->
     <!--    </select>-->
+    
+    <resultMap id="activityResultMap" type="com.lds.trackdayb.mvo.ActivityMVO">
+        <id column="activity_id" property="activityId"/>
+        <result column="g_goal_id" property="goalTitleInfo.goalId"/>
+        <result column="g_parent_id" property="goalTitleInfo.parentId"/>
+        <result column="g_member_serial_number" property="goalTitleInfo.memberSerialNumber"/>
+        <result column="g_title" property="goalTitleInfo.title"/>
+        <result column="g_kind" property="goalTitleInfo.kind"/>
+        <result column="g_start_datetime" property="goalTitleInfo.startDatetime"/>
+        <result column="g_end_datetime" property="goalTitleInfo.endDatetime"/>
+        <result column="g_progress_rate" property="goalTitleInfo.progressRate"/>
+        <result column="g_color" property="goalTitleInfo.color"/>
+        <result column="g_create_datetime" property="goalTitleInfo.createDatetime"/>
+        <result column="g_modification_datetime" property="goalTitleInfo.modificationDatetime"/> 
+    </resultMap>
+    <select id="getActivityList" resultMap="activityResultMap">
+        select
+            a.*,
+            g.goal_id as g_goal_id,
+            g.parent_id as g_parent_id,
+            g.member_serial_number as g_member_serial_number,
+            g.title as g_title,
+            g.kind as g_kind,
+            g.start_datetime as g_start_datetime,
+            g.end_datetime as g_end_datetime,
+            g.progress_rate as g_progress_rate,
+            g.color as g_color,
+            g.create_datetime as g_create_datetime,
+            g.modification_datetime as g_modification_datetime
+        from activity a 
+        left outer join goal g 
+        on a.goal_id = g.goal_id 
+    </select>
 
 </mapper>

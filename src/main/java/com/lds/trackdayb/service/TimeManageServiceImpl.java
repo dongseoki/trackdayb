@@ -3,9 +3,11 @@ package com.lds.trackdayb.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lds.trackdayb.mvo.ActivityMVO;
 import com.lds.trackdayb.mvo.TimeRecordMVO;
 import com.lds.trackdayb.repository.SystemManageRepository;
 import com.lds.trackdayb.repository.TimeManageRepository;
+import com.lds.trackdayb.vo.ActivityVO;
 import com.lds.trackdayb.vo.TimeRecordVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -99,5 +101,11 @@ public class TimeManageServiceImpl implements TimeManageService{
         }
         LOGGER.info("fullTimeRecordMVOs : {}", fullTimeRecordMVOs.toString());
         return fullTimeRecordMVOs;
+    }
+
+    @Override
+    public List<ActivityMVO> getActivityList(ActivityVO activityVO) {
+        // TODO Auto-generated method stub
+        return timeManageRepository.getActivityList(activityVO);
     }
 }

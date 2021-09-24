@@ -43,11 +43,11 @@ var result = {
   ],
 };
 
-function activityList(){
+function getActivityList(){
 
 }
 
-//ip:port/timeManage/getActivitylist
+//ip:port/timeManage/getActivityList
 // POST
 
 // 유의사항 주기성 정보는 주어지지 않음.
