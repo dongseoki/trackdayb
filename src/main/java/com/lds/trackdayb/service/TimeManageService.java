@@ -14,5 +14,5 @@ public interface TimeManageService {
 
     TimeRecordMVO deleteTimeRecord(TimeRecordVO timeRecordVO);
 
-    List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, int memberSerialNumber);
+    List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, String memberSerialNumber);
 }

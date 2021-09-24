@@ -86,7 +86,7 @@ public class TimeManageServiceImpl implements TimeManageService{
     }
 
     @Override
-    public List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, int memberSerialNumber) {
+    public List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, String memberSerialNumber) {
         TimeRecordVO timeRecordVO = new TimeRecordVO();
         timeRecordVO.setSelectedDateList(selectedDateList);
         timeRecordVO.setMemberSerialNumber(memberSerialNumber);

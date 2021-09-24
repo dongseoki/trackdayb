@@ -43,7 +43,7 @@ public class TimeManageController {
     public String recordPage(@RequestParam("selectionDate") @Nullable String selectionDate, @RequestParam("referenceName") @Nullable String referenceName, ModelMap model){
     // public String recordPage(){
         // 필요 없을듯..?
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
 
         // TODO 날짜의 유효성 검사? 고려 필요.
         // 
@@ -79,7 +79,7 @@ public class TimeManageController {
     @ResponseBody
     public String createTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         timeManageService.createTimeRecord(timeRecordVO);
         return "시간관리 - 기록하기 - 시간기록 삽입";
@@ -88,7 +88,7 @@ public class TimeManageController {
     @GetMapping("/viewTimeRecord")
     public String viewTimeRecord(@RequestParam("selectionDate") @Nullable String selectionDate, ModelMap model){
         // FIXME 로그인 아이디 조회.
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
 
         TimeRecordVO vo = new TimeRecordVO();
         vo.setMemberSerialNumber(loginSerialNumber);
@@ -106,7 +106,7 @@ public class TimeManageController {
     @GetMapping("/viewTimeRecordRegist")
     public String viewTimeRecordRegist(@RequestParam("selectionDate") @Nullable String selectionDate, ModelMap model){
         // FIXME 로그인 아이디 조회.
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
 
         TimeRecordVO vo = new TimeRecordVO();
         vo.setMemberSerialNumber(loginSerialNumber);
@@ -124,7 +124,7 @@ public class TimeManageController {
     @PostMapping("/viewTimeRecordList")
     // public String viewTimeRecordList(List<String> selectedDateList){
     public String viewTimeRecordList(TimeRecordVO timeRecordVO,ModelMap model){
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
 
         // FIXME 
@@ -145,7 +145,7 @@ public class TimeManageController {
     @ResponseBody
     public TimeRecordMVO modifyTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // TODO  로그인 아이디 조회.
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         return timeManageService.modifyTimeRecord(timeRecordVO);
     }
@@ -154,7 +154,7 @@ public class TimeManageController {
     @ResponseBody
     public TimeRecordMVO deleteTimeRecord(@Valid @RequestBody TimeRecordVO timeRecordVO, BindingResult bindingResult, ModelMap model){
         // TODO  로그인 아이디 조회.
-        int loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         return timeManageService.deleteTimeRecord(timeRecordVO);
     }

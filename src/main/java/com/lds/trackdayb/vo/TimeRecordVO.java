@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TimeRecordVO extends TimeRecordDTO {
-    int memberSerialNumber;
+    String memberSerialNumber;
     List<ActivityRecordDTO> activityRecordDTOList= new ArrayList<ActivityRecordDTO>();
     List<String> selectedDateList = new ArrayList<String>();
 
@@ -23,7 +23,7 @@ public class TimeRecordVO extends TimeRecordDTO {
 //        return memberSerialNumber;
 //    }
 //
-//    public void setMemberSerialNumber(int memberSerialNumber) {
+//    public void setMemberSerialNumber(String memberSerialNumber) {
 //        this.memberSerialNumber = memberSerialNumber;
 //    }
 //

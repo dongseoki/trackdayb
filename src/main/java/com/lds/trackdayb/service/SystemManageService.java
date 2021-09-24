@@ -9,11 +9,11 @@ import com.lds.trackdayb.mvo.ReferenceFavoriteMVO;
 
 public interface SystemManageService {
 
-    List<ReferenceFavoriteMVO> viewReferenceFavoriteList(String managementType, String timeUnit,int memberSerialNumber);
+    List<ReferenceFavoriteMVO> viewReferenceFavoriteList(String managementType, String timeUnit,String memberSerialNumber);
 
 
-    ReferenceFavoriteDefaultSettingDTO viewReferenceFavoriteDefaultSetting(String managementType, String timeUnit,int memberSerialNumber);
+    ReferenceFavoriteDefaultSettingDTO viewReferenceFavoriteDefaultSetting(String managementType, String timeUnit,String memberSerialNumber);
 
-    List<ClassificationDTO> viewClassificationList(String managementType, String timeUnit,int memberSerialNumber);
+    List<ClassificationDTO> viewClassificationList(String managementType, String timeUnit,String memberSerialNumber);
     
 }
