@@ -5,7 +5,7 @@ import java.util.List;
 import com.lds.trackdayb.mvo.GoalMVO;
 import com.lds.trackdayb.vo.GoalVO;
 
-public interface GoalService {
+public interface GoalManageService {
 
     void insertGoal(GoalVO goalVO) ;
 

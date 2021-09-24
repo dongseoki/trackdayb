@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lds.trackdayb.repository.GoalManageRepository">
+    <insert id="insertGoal" useGeneratedKeys="true" keyProperty="goalId">
+        INSERT INTO goal (
+            <if test="parentId != null and !parentId.equals('')">
+                parent_id,
+            </if>
+            <if test="content != null and !content.equals('')">
+                content,
+            </if>
+            <if test="startDatetime != null and !startDatetime.equals('')">
+                    start_datetime,
+            </if>
+            <if test="endDatetime != null and !endDatetime.equals('')">
+                    end_datetime,
+            </if>
+            <if test="progressRate != null and !progressRate.equals('')">
+                    progress_rate,
+            </if>
+            <if test="color != null and !color.equals('')">
+                    color,
+            </if>
+            member_serial_number,
+            title
+            )
+	    VALUES (
+            <if test="parentId != null and !parentId.equals('')">
+                #{parentId},
+            </if>
+            
+            <if test="content != null and !content.equals('')">
+                #{content},
+            </if>
+            <if test="startDatetime != null and !startDatetime.equals('')">
+                #{startDatetime},
+            </if>
+            <if test="endDatetime != null and !endDatetime.equals('')">
+                    #{endDatetime},
+            </if>
+            <if test="progressRate != null and !progressRate.equals('')">
+                    #{progressRate},
+            </if>
+            <if test="color != null and !color.equals('')">
+                    #{color},
+            </if>
+            #{memberSerialNumber},
+            #{title}
+            );
+    </insert>
+
+    <insert id="insertPeriodicityInfo">
+
+    </insert>
+
+    <update id=""></update>
+
+    <resultMap id="goalFullResultMap" type="com.lds.trackdayb.mvo.GoalMVO"> 
+        <id column="goal_id" property="goalId"/> 
+        <result column="pi_periodicity_id" property="periodicityInfo.periodicityId"/>
+        <result column="pi_goal_id" property="periodicityInfo.goalId"/>
+        <result column="pi_time_unit" property="periodicityInfo.timeUnit"/>
+        <result column="pi_type" property="periodicityInfo.type"/>
+        <result column="pi_count" property="periodicityInfo.count"/>
+        <result column="pi_sun_yn" property="periodicityInfo.sunYn"/>
+        <result column="pi_mon_yn" property="periodicityInfo.monYn"/>
+        <result column="pi_tue_yn" property="periodicityInfo.tueYn"/>
+        <result column="pi_weds_yn" property="periodicityInfo.wedsYn"/>
+        <result column="pi_thur_yn" property="periodicityInfo.thurYn"/>
+        <result column="pi_fri_yn" property="periodicityInfo.friYn"/>
+        <result column="pi_sat_yn" property="periodicityInfo.satYn"/>
+        <result column="pi_create_datetime" property="periodicityInfo.createDatetime"/>
+        <result column="pi_modification_datetime" property="periodicityInfo.modificationDatetime"/>
+        <result column="pi_deletion_status" property="periodicityInfo.deletionStatus"/>
+</resultMap>
+
+    <select id="getGoalFullList" resultMap="goalFullResultMap">
+        SELECT 
+                g.*, 
+                pi2.periodicity_id as pi_periodicity_id,
+                pi2.goal_id as pi_goal_id,
+                pi2.time_unit as pi_time_unit,
+                pi2.type as pi_type,
+                pi2.count as pi_count,
+                pi2.sun_yn as pi_sun_yn,
+                pi2.mon_yn as pi_mon_yn,
+                pi2.tue_yn as pi_tue_yn,
+                pi2.weds_yn as pi_weds_yn,
+                pi2.thur_yn as pi_thur_yn,
+                pi2.fri_yn as pi_fri_yn,
+                pi2.sat_yn as pi_sat_yn,
+                pi2.create_datetime as pi_create_datetime,
+                pi2.modification_datetime as pi_modification_datetime,
+                pi2.deletion_status as pi_deletion_status
+        FROM goal g 
+        left outer join periodicity_info pi2 
+        on g.goal_id =pi2.goal_id 
+    </select>
+    <select id="getGoalTitleList" resultType="GoalMVO">
+        select 
+        g.goal_id,
+        g.parent_id,
+        g.member_serial_number,
+        g.title,
+        g.kind,
+        g.start_datetime,
+        g.end_datetime,
+        g.progress_rate,
+        g.color,
+        g.create_datetime,
+        g.modification_datetime
+        from goal g 
+    </select>
+
+</mapper>
