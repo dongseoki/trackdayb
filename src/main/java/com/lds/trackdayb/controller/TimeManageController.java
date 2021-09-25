@@ -166,6 +166,16 @@ public class TimeManageController {
         return timeManageService.deleteTimeRecord(timeRecordVO);
     }
 
+
+        /**
+     * # 활동 리스트 테스트.
+     * 실제 데이터를 조회한다.
+     * 아직 검색 조건이 추가되지 않은 상태.
+     * 항상 성공코드를 반환한다.
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
     @PostMapping("getActivityListTEST")
     public String getActivityListTest(@RequestBody ActivityVO activityVO){
         JsonObject jo = new JsonObject();
@@ -180,6 +190,14 @@ public class TimeManageController {
         return jo.toString();
     }
 
+    /**
+     * # 활동 삽입 테스트.
+     * 실제 데이터 조작은 없다.
+     * 항상 성공코드를 반환한다.
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
     @PostMapping("activityTEST")
     public ResultMVO insertActivityTest(@RequestBody ActivityVO activityVO){
         ResultMVO resultMVO = new ResultMVO();
@@ -187,6 +205,14 @@ public class TimeManageController {
         return resultMVO;
     }
 
+    /**
+     * # 활동 수정 테스트.
+     * 실제 데이터 조작은 없다.
+     * 항상 성공코드를 반환한다.
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
     @PutMapping("activityTEST")
     public ResultMVO updateActivityTest(@RequestBody ActivityVO activityVO){
         ResultMVO resultMVO = new ResultMVO();
@@ -194,6 +220,15 @@ public class TimeManageController {
         return resultMVO;
     }
 
+       /**
+     * # 활동 삭제 테스트.
+     * 실제 데이터 조작은 없다.
+     * 항상 성공코드를 반환한다.
+     * 데이터는 query parameter로 넘겨야한다.(HTTP DELETE METHOD의 특징.)
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
     @DeleteMapping("activityTEST")
     public ResultMVO deleteActivityTest(ActivityVO activityVO){
         ResultMVO resultMVO = new ResultMVO();

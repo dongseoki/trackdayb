@@ -45,6 +45,15 @@ public class GoalManageController {
         List<GoalMVO> goalTitleList = goalService.getGoalTitleList(goalVO);
         return "";
     }
+
+    /**
+     * # 목표 제목 리스트 테스트.
+     * 검색 조회 조건이 반영되지 않았다.
+     * 항상 성공 코드를 반환한다.
+     * 제목 리스트 테스트 메서드는 목표의 내용, 목표에 연결된 주기성 정보는 반환하지 않는다.
+     * @param goalVO
+     * @return ResultMVO
+     */
     @PostMapping("/getGoalTitleListTEST")
     public String getGoalTitleListTest(GoalVO goalVO){
         JsonObject jo = new JsonObject();
@@ -58,6 +67,7 @@ public class GoalManageController {
         return jo.toString();
     }
 
+    
     @PostMapping("/getGoalFullList")
     public String getGoalFullList(GoalVO goalVO){
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
@@ -66,41 +76,25 @@ public class GoalManageController {
         JsonObject jo = new JsonObject();
         return "";
     }
+
+
+    /**
+     * # 목표 전체 리스트 테스트.
+     * 검색 조회 조건이 반영되지 않았다.
+     * 항상 성공 코드를 반환한다.
+     * @param goalVO
+     * @return jsonObject
+     */
     @PostMapping("/getGoalFullListTEST")
     public String getGoalFullListTest(@RequestBody GoalVO goalVO){
-        // String loginSerialNumber = testService.selectLoginMemberSerialNumber();
-        // goalVO.setMemberSerialNumber(loginSerialNumber);
-        // List<GoalMVO> goalFullList = goalService.getGoalFullList(goalVO);
         JsonObject jo = new JsonObject();
-
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
-        
-        // test1
-        ArrayList<String> camelCaseList = new ArrayList<String>();
-        camelCaseList.add("test1");
-        camelCaseList.add("test2");
-        // jo.addProperty("testList", gson.toJson(camelCaseList));
-        JsonArray jsonArray = new Gson().toJsonTree(camelCaseList).getAsJsonArray();
-        // jo.add("testList", jsonArray);
 
-        // test2
-        ArrayList<GoalMVO> test2 = new ArrayList<GoalMVO>();
-        GoalMVO g1 = new GoalMVO();
-        g1.setKind("test");
-        GoalMVO g2 = new GoalMVO();
-        g2.setKind("test");
-        test2.add(g1);
-        test2.add(g2);
-        JsonArray jsonArray2 = new Gson().toJsonTree(test2).getAsJsonArray();
-        // jo.add("testList2", jsonArray2);
-
-        // test3
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalFullList = goalService.getGoalFullList(goalVO);
         JsonArray goalFullListJsonArray = new Gson().toJsonTree(goalFullList).getAsJsonArray();
         jo.add("goalFullList", goalFullListJsonArray);
-        
         
         return jo.toString();
     }
@@ -116,12 +110,20 @@ public class GoalManageController {
         return "";
     }
 
+    /**
+     * # 목표 삽입 테스트.
+     * db 데이터 조작은 없다.
+     * 항상 성공 코드를 반환한다.
+     * @param goalVO
+     * @return ResultMVO
+     */
     @PostMapping("/goalTEST")
     public ResultMVO insertGoalTest(@RequestBody GoalVO goalVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         return resultMVO;
     }
+
 
     @PutMapping("/goal")
     public String updateGoal(@RequestBody GoalVO goalVO){
@@ -131,6 +133,13 @@ public class GoalManageController {
         return "";
     }
 
+    /**
+     * # 목표 수정 테스트.
+     * db 데이터 조작은 없다.
+     * 항상 성공 코드를 반환한다.
+     * @param goalVO
+     * @return ResultMVO
+     */
     @PutMapping("/goalTEST")
     public ResultMVO updateGoalTest(@RequestBody GoalVO goalVO){
         ResultMVO resultMVO = new ResultMVO();
@@ -146,6 +155,13 @@ public class GoalManageController {
         return "";
     }
 
+    /**
+     * # 목표 삭제 테스트.
+     * db 데이터 조작은 없다.
+     * 항상 성공 코드를 반환한다.
+     * @param goalVO
+     * @return ResultMVO
+     */
     @DeleteMapping("/goalTEST")
     public ResultMVO deleteGoalTest(GoalVO goalVO){
         ResultMVO resultMVO = new ResultMVO();
