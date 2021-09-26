@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Time.css";
 import { LeftNavigation } from '../components/index';
 
@@ -12,14 +12,21 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
+import axios from 'axios';
 
-function Time(props) {
-  console.log(props);
+function Time() {
+  const [goalList, setGoalList] = useState([]);
+  useEffect(() => {
+    axios
+      .post("/goalManage/getGoalTitleListTEST")
+      .then(({ data }) => setGoalList(data.goalTitleList));
+  }, []);
+
   return (
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        <LeftNavigation />
+        <LeftNavigation goalList={goalList}/>
       </aside>
 
       {/* 참조데이터 */}

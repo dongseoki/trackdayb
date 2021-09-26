@@ -2,11 +2,11 @@ import React, { useState } from "react"
 import "./LeftNavigation.css";
 
 
-function LeftNavigation(){
+function LeftNavigation(props){
     return (
         <nav className="left-nav">
             <LookupPeriod />
-            <GoalList />
+            <GoalList goalList={props.goalList}/>
             <SearchButton />
         </nav>
     )
@@ -28,17 +28,20 @@ function GoalList(props){
             <p>목표선택</p>
             <div className="goal-list">
                 <ul>
-                    <li><p className="class-1">주 1회 에세이 쓰기</p><div className="color-tag"></div></li>
-                    <li><p className="class-2">주 1회 에세이 쓰기</p><div className="none-tag"></div></li>
-                    <li><p className="class-2">주 1회 에세이 쓰기</p><div className="none-tag"></div></li>
-                    <li><p className="class-1">주 1회 에세이 쓰기</p><div className="color-tag"></div></li>
-                    <li><p className="class-2">주 1회 에세이 쓰기</p><div className="none-tag"></div></li>
+                    {props.goalList && props.goalList.map((goal, index) => (
+                        <GoalCards key={index}
+                            title={goal.title}></GoalCards>
+                    ))}
                 </ul>
             </div>
         </div>
     )
 }
-
+function GoalCards({title}) {
+    return (
+        <li><p className="class-2">{title}</p><div className="none-tag"></div></li>
+    )
+}
 function SearchButton(props){
     return (
         <div>
