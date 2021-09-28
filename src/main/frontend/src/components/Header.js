@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { HashRouter, Route } from "react-router-dom"; //BrouserRouter 사용시 # 없앨수있음
+import React from "react";
 import Navigation from './Navigation';
 // import Home from "../routes/Home";
 // import Time from "../routes/Time";

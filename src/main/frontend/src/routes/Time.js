@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Time.css";
 import { LeftNavigation } from '../components/index';
 
@@ -14,39 +14,101 @@ import Fade from '@material-ui/core/Fade';
 
 import axios from 'axios';
 
+//TimeLine
+import CustomizedTimeline from '../components/TimeLineCustom';
+
 function Time() {
-  const [goalList, setGoalList] = useState([]);
-  useEffect(() => {
+
+  //write Form
+  const [date, setDate] = useState(new Date());
+  const [startDatetime, setStartDatetime] = useState("");
+  const [endDatetime, setEndDatetime] = useState("");
+  const [content, setContent] = useState("");
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    alert(`Submitting date ${date}`)
+    alert(`Submitting Time ${startDatetime}`)
+    alert(`Submitting endDatetime ${endDatetime}`)
+    alert(`Submitting content ${content}`)
+    
+    let body = {
+      date : date,
+      startDatetime: startDatetime,
+      endDatetime: endDatetime,
+      content : content,
+    };
+
     axios
-      .post("/goalManage/getGoalTitleListTEST")
-      .then(({ data }) => setGoalList(data.goalTitleList));
-  }, []);
+    .post("http://localhost:5000/api/users/login", body)
+    .then((res) => console.log(res));
+  };
 
   return (
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        <LeftNavigation goalList={goalList}/>
+        {/* <LeftNavigation goalList={goalList}/> */}
+        <LeftNavigation/>
       </aside>
 
       {/* 참조데이터 */}
       <div className="timeline">
         타임라인
+        <CustomizedTimeline/>
       </div>
       
-
       {/* 기록 */}
       <div className="write">
-        <div>2021-09-18</div>
+        <div className="button-wrapper">
+          <button>import</button>
+          <button>export</button>
+          <button>도움말</button>
+          <button>양식다운로드</button>
+        </div>
+        <TextField
+        id="date"
+        type="date"
+        value={date}
+        onChange={e=> setDate(e.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
         <div className="cards"></div>
+
         <div className="writeForm">
-          <TimePickers id='starttime' label="시작시간"/>
-          <TimePickers id='endtime' label="종료시간"/>
-          <span>목표선택</span>
-          <span>목표 리스트 모달창</span>
-          <GoalListModal />
-          <MultilineTextFields />
-          <div>평가</div><span>점수선택(80%)</span>
+          {/* <form
+            onSubmit={submitHandler}
+            style={{ display: "flex", flexDirection: "Column" }}
+          >
+            <button type="submit">Login</button>
+          </form> */}
+
+          <form onSubmit={handleSubmit}>
+            <TimePickers 
+              id='starttime'
+              label='시작시간'
+              value={startDatetime}
+              setTime={setStartDatetime}
+            />
+            <TimePickers 
+              id='endtime'
+              label='종료시간'
+              value={endDatetime}
+              setTime={setEndDatetime}
+            />
+            <div>목표선택</div>
+            <GoalListModal />
+            <MultilineTextFields 
+              value={content}
+              setValue={setContent}/>
+            <div>평가</div><span>점수선택(80%)</span>
+
+
+            <input type="submit" value="Submit" />
+          </form>
+
         </div>
       </div>
     </div>
@@ -54,11 +116,11 @@ function Time() {
 }
 
 function TimePickers(props){
+  function setTime(e){
+    e.preventDefault();
+    props.setTime(e.target.value);
+  }
   const useStyles = makeStyles((theme) => ({
-    container: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
@@ -68,12 +130,12 @@ function TimePickers(props){
   const classes = useStyles();
 
   return (
-    <form className={classes.container} noValidate>
       <TextField
         id={props.id}
         label={props.label}
+        value={props.value}
         type="time"
-        defaultValue="07:30"
+        onChange={setTime}
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
@@ -82,7 +144,6 @@ function TimePickers(props){
           step: 300, // 5 min
         }}
       />
-    </form>
   );
 }
 
@@ -143,25 +204,12 @@ function GoalListModal() {
   );
 }
 
-
-
-
-function MultilineTextFields() {
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: '40ch',
-        background: 'white',
-      },
-    },
-  }));
-
-  const classes = useStyles();
-  const [value, setValue] = React.useState('Controlled');
-
+function MultilineTextFields(props) {
+  function setValue(e){
+    e.preventDefault();
+    props.setValue(e.target.value);
+  }
   return (
-    <form className={classes.root} noValidate autoComplete="off">
       <div>
         <TextField
           id="outlined-multiline-static"
@@ -169,10 +217,12 @@ function MultilineTextFields() {
           multiline
           rows={4}
           variant="outlined"
+          value={props.value}
+          onChange={setValue}
         />
       </div>
-    </form>
   );
 }
+
 
 export default Time;
