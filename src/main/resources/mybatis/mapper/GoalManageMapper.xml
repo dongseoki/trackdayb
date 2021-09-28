@@ -52,7 +52,16 @@
     </insert>
 
     <insert id="insertPeriodicityInfo">
-
+        INSERT INTO periodicity_info (
+            goal_id,
+            time_unit,
+            type
+            )
+            VALUES (
+                #{goalId},
+                #{timeUnit},
+                #{type}
+                );
     </insert>
 
     <update id=""></update>
