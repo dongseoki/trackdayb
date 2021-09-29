@@ -20,20 +20,21 @@ import CustomizedTimeline from '../components/TimeLineCustom';
 function Time() {
 
   //write Form
-  const [date, setDate] = useState(new Date());
+  const [writeDate, setWriteDate] = useState(new Date());
+  console.log("wirte", writeDate)
   const [startDatetime, setStartDatetime] = useState("");
   const [endDatetime, setEndDatetime] = useState("");
   const [content, setContent] = useState("");
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    alert(`Submitting date ${date}`)
+    alert(`Submitting writeDate ${writeDate}`)
     alert(`Submitting Time ${startDatetime}`)
     alert(`Submitting endDatetime ${endDatetime}`)
     alert(`Submitting content ${content}`)
     
     let body = {
-      date : date,
+      writeDate : writeDate,
       startDatetime: startDatetime,
       endDatetime: endDatetime,
       content : content,
@@ -48,7 +49,6 @@ function Time() {
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        {/* <LeftNavigation goalList={goalList}/> */}
         <LeftNavigation/>
       </aside>
 
@@ -67,14 +67,16 @@ function Time() {
           <button>양식다운로드</button>
         </div>
         <TextField
-        id="date"
-        type="date"
-        value={date}
-        onChange={e=> setDate(e.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
+          id="writeDate"
+          type="date"
+          // value={writeDate}
+          defaultValue="2021=09-12"
+          // onChange={e=> setWriteDate(e.target.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        
         <div className="cards"></div>
 
         <div className="writeForm">
