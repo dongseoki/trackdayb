@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `activity` (
   CONSTRAINT `FK_member_TO_activity_1` FOREIGN KEY (`member_serial_number`) REFERENCES `member` (`member_serial_number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
 
--- 테이블 데이터 trackday.activity:~0 rows (대략적) 내보내기
+-- 테이블 데이터 trackday.activity:~8 rows (대략적) 내보내기
 DELETE FROM `activity`;
 /*!40000 ALTER TABLE `activity` DISABLE KEYS */;
 INSERT INTO `activity` (`activity_id`, `member_serial_number`, `goal_id`, `title`, `start_datetime`, `end_datetime`, `content`, `activity_score`, `share_status`, `create_datetime`, `modification_datetime`, `deletion_status`) VALUES
@@ -74,14 +74,10 @@ CREATE TABLE IF NOT EXISTS `goal` (
   CONSTRAINT `FK_member_TO_goal_1` FOREIGN KEY (`member_serial_number`) REFERENCES `member` (`member_serial_number`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3;
 
--- 테이블 데이터 trackday.goal:~0 rows (대략적) 내보내기
+-- 테이블 데이터 trackday.goal:~12 rows (대략적) 내보내기
 DELETE FROM `goal`;
 /*!40000 ALTER TABLE `goal` DISABLE KEYS */;
 INSERT INTO `goal` (`goal_id`, `parent_id`, `member_serial_number`, `title`, `kind`, `content`, `start_datetime`, `end_datetime`, `progress_rate`, `color`, `create_datetime`, `modification_datetime`, `deletion_status`) VALUES
-	(2, NULL, 1, 'test', 'deadline', 'testtest', '2021-09-24 00:00:00', '2021-09-30 00:00:00', 0, 'test', '2021-09-24 06:56:00', '2021-09-24 06:56:00', 'N'),
-	(3, NULL, 1, 'test2', 'regular', '', NULL, NULL, NULL, '', '2021-09-24 07:06:00', '2021-09-24 07:06:00', 'N'),
-	(4, NULL, 1, '', 'deadline', '', NULL, NULL, NULL, '', '2021-09-24 08:07:00', '2021-09-24 08:07:00', 'N'),
-	(5, NULL, 1, 'test3', 'deadline', '', NULL, NULL, NULL, '', '2021-09-24 08:11:00', '2021-09-24 08:11:00', 'N'),
 	(6, NULL, 1, '더미 영어공부', 'deadline', 'Dummy영어공부 의 content 보라색을 가정', NULL, NULL, NULL, '#800080', '2021-09-24 09:12:00', '2021-09-24 09:12:00', 'N'),
 	(7, NULL, 1, '더미 책 읽기', 'regular', '일일 1독', '2021-09-01 00:00:00', '2021-09-30 00:00:00', NULL, '#DC143C', '2021-09-24 09:21:00', '2021-09-24 09:21:00', 'N'),
 	(8, NULL, 1, '더미 운동', 'deadline', '더미 임', NULL, NULL, NULL, '#00FF00', '2021-09-24 09:23:00', '2021-09-24 09:23:00', 'N'),
