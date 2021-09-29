@@ -1,11 +1,15 @@
 services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
   db: # 서비스 명
     image: mysql:8.0.24 # mysql 버전.
+    restart: always
     container_name: td-mysql # 컨테이너 이름 설정
     ports:
       - "3305:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
     environment: # -e 옵션
-      MYSQL_ROOT_PASSWORD: "test"  # MYSQL 패스워드 설정 옵션
+      MYSQL_ROOT_PASSWORD : "test"
+      TZ : "Asia/Seoul"
     command: # 명령어 실행
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+    volumes: 
+      - /c/data/mysql:/var/lib/mysql # -v 옵션 (다렉토리 마운트 설정 해당 폴더 생성 부탁드립니다.)
