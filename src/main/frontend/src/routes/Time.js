@@ -30,9 +30,7 @@ function toggleToString(value){
     return "N"
   }
 }
-
 function Time() {
-
   //write Form
   //toggle- 비공개
   const [toggleSelected, setToggleSelected] = useState(false)
@@ -86,24 +84,43 @@ function Time() {
           <button>도움말</button>
           <button>양식다운로드</button>
         </div>
+        <div className="date-picker-wrapper">
         <TextField
-        id="date"
-        label="작성일"
-        type="date"
-        defaultValue={writeDate}
-        sx={{ width: 220 }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={function(e){
-          setWriteDate(e.target.value)
-        }}
-      />
+          className="date-picker"
+          id="date"
+          label="작성일"
+          type="date"
+          defaultValue={writeDate}
+          sx={{ width: 220 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="outlined"
+          onChange={function(e){
+            setWriteDate(e.target.value)
+          }}
+        />
+        </div>
         <div className="cards"></div>
 
         <div className="writeForm">
           <form onSubmit={handleSubmit}>
-          <ToggleButton
+            <div className="top-wrapper">
+            <TimePickers 
+              id='starttime'
+              label='시작시간'
+              value={startDatetime}
+              setTime={setStartDatetime}
+            />
+            <p>~</p>
+            <TimePickers 
+              id='endtime'
+              label='종료시간'
+              value={endDatetime}
+              setTime={setEndDatetime}
+            />
+            <ToggleButton
+            color="primary"
             value="check"
             selected={toggleSelected}
             onChange={() => {
@@ -112,31 +129,33 @@ function Time() {
             }}
           ><FaLock/>
           </ToggleButton>
-            <TimePickers 
-              id='starttime'
-              label='시작시간'
-              value={startDatetime}
-              setTime={setStartDatetime}
-            />
-            <TimePickers 
-              id='endtime'
-              label='종료시간'
-              value={endDatetime}
-              setTime={setEndDatetime}
-            />
-            <div>목표선택</div>
+            </div>
+            <p>목표선택</p>
             <GoalListModal />
+            <div className="title-wrapper">
             <TextField 
+            className="textfield-title"
               id="title" 
               label="제목" 
-              variant="standard" 
+              size="small" 
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={function(e){
                 setTitle(e.target.value)
               }}/>
+              </div>
+              <div className="content-wrapper">
             <MultilineTextFields 
               value={content}
               setValue={setContent}/>
+              </div>
+              <div className="activityScore-wrapper">
+              <p>몰입도평가</p>
             <Slider
+              className="slider-score"
+              size="small"
               aria-label="activityScore"
               defaultValue={30}
               valueLabelDisplay="auto"
@@ -148,6 +167,7 @@ function Time() {
                 setActivityScore(e.target.value)
               }}
             />
+            </div>
             <input type="submit" value="Submit" />
           </form>
 
@@ -253,10 +273,14 @@ function MultilineTextFields(props) {
   return (
       <div>
         <TextField
-          id="outlined-multiline-static"
+          className="textfeild-content"
+          id="content"
           label="내용"
           multiline
           rows={4}
+          InputLabelProps={{
+            shrink: true,
+          }}
           variant="outlined"
           value={props.value}
           onChange={setValue}

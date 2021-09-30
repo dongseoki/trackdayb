@@ -22,6 +22,10 @@
   display: flex;
   justify-content: flex-end;
 }
+.time .write .date-picker-wrapper{
+  display: flex;
+  justify-content: center;
+}
 .time .write .cards{
   background-color: white;
   height: 100px;
@@ -29,4 +33,34 @@
 .time .write .writeForm{
   margin-top: 10px;
   background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+.time .write .writeForm .top-wrapper{
+  display: flex;
+  justify-content: space-between;
+}
+.time .write .writeForm .title-wrapper{
+  margin: 10px 0; 
+}
+.time .write .writeForm .title-wrapper .textfield-title{
+  width: 100%;
+}
+.time .write .writeForm .content-wrapper{
+  margin: 10px 0; 
+}
+.time .write .writeForm .content-wrapper .textfeild-content{
+  width :  100%;
+}
+.activityScore-wrapper{
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  align-items: center;
+  padding-right: 20px;
+}
+.activityScore-wrapper p{
+  font-size: 12px;
+}
+.activityScore-wrapper .slider-score{
+  
 }
