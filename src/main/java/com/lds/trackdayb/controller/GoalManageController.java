@@ -39,11 +39,16 @@ public class GoalManageController {
     }
 
     @PostMapping("/getGoalTitleList")
-    public String getGoalTitleList(GoalVO goalVO){
+    public String getGoalTitleList(@RequestBody GoalVO goalVO){
+        JsonObject jo = new JsonObject();
+        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalTitleList = goalService.getGoalTitleList(goalVO);
-        return "";
+        JsonArray goalTitleListJsonArray = new Gson().toJsonTree(goalTitleList).getAsJsonArray();
+        jo.add("goalTitleList", goalTitleListJsonArray);
+        return jo.toString();
     }
 
     /**
@@ -55,7 +60,7 @@ public class GoalManageController {
      * @return ResultMVO
      */
     @PostMapping("/getGoalTitleListTEST")
-    public String getGoalTitleListTest(GoalVO goalVO){
+    public String getGoalTitleListTest(@RequestBody GoalVO goalVO){
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
@@ -69,12 +74,17 @@ public class GoalManageController {
 
     
     @PostMapping("/getGoalFullList")
-    public String getGoalFullList(GoalVO goalVO){
+    public String getGoalFullList(@RequestBody GoalVO goalVO){
+        JsonObject jo = new JsonObject();
+        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalFullList = goalService.getGoalFullList(goalVO);
-        JsonObject jo = new JsonObject();
-        return "";
+        JsonArray goalFullListJsonArray = new Gson().toJsonTree(goalFullList).getAsJsonArray();
+        jo.add("goalFullList", goalFullListJsonArray);
+        
+        return jo.toString();
     }
 
 
@@ -102,12 +112,19 @@ public class GoalManageController {
     //ip:port/goalManage/goal
     //POST
     @PostMapping("/goal")
-    public String insertGoal(@RequestBody GoalVO goalVO){
-        // FIXME 로그인 아이디 조회.
+    public ResultMVO insertGoal(@RequestBody GoalVO goalVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
-        goalService.insertGoal(goalVO);
-        return "";
+        try {
+            goalService.insertGoal(goalVO);
+        } catch (Exception e) {
+            LOGGER.error("insertGoal error : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
+        return resultMVO;
     }
 
     /**
@@ -126,11 +143,19 @@ public class GoalManageController {
 
 
     @PutMapping("/goal")
-    public String updateGoal(@RequestBody GoalVO goalVO){
+    public ResultMVO updateGoal(@RequestBody GoalVO goalVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
-        goalService.updateGoal(goalVO);
-        return "";
+        try {
+            goalService.updateGoal(goalVO);
+        } catch (Exception e) {
+            LOGGER.error("update error : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
+
+        return resultMVO;
     }
 
     /**
@@ -148,11 +173,19 @@ public class GoalManageController {
     }
 
     @DeleteMapping("/goal")
-    public String deleteGoal(GoalVO goalVO){
+    public ResultMVO deleteGoal(GoalVO goalVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
-        goalService.deleteGoal(goalVO);
-        return "";
+        try {
+            goalService.deleteGoal(goalVO);
+        } catch (Exception e) {
+            LOGGER.error("deleteGoal error : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
+        return resultMVO;
     }
 
     /**

@@ -55,16 +55,153 @@
         INSERT INTO periodicity_info (
             goal_id,
             time_unit,
+            <if test="count != null and !count.equals('')">  
+                    count,
+            </if>
+            <if test="sunYn != null and !sunYn.equals('')">  
+                    sun_yn,
+            </if>
+            <if test="monYn != null and !monYn.equals('')">  
+                    mon_yn,
+            </if>
+            <if test="tueYn != null and !tueYn.equals('')">  
+                    tue_yn,
+            </if>
+            <if test="wedsYn != null and !wedsYn.equals('')">
+                    weds_yn,
+            </if>
+            <if test="thurYn != null and !thurYn.equals('')">
+                    thur_yn,
+            </if>
+            <if test="friYn != null and !friYn.equals('')">
+                    fri_yn,
+            </if>
+            <if test="satYn != null and !satYn.equals('')">
+                    sat_yn,
+            </if>
             type
             )
             VALUES (
                 #{goalId},
                 #{timeUnit},
+                <if test="count != null and !count.equals('')">
+                        #{count},
+                </if>
+                <if test="sunYn != null and !sunYn.equals('')">
+                        #{sunYn},
+                </if>
+                <if test="monYn != null and !monYn.equals('')">
+                        #{monYn},
+                </if>
+                <if test="tueYn != null and !tueYn.equals('')">
+                        #{tueYn},
+                </if>
+                <if test="wedsYn != null and !wedsYn.equals('')">
+                        #{wedsYn},
+                </if>
+                <if test="thurYn != null and !thurYn.equals('')">
+                        #{thurYn},
+                </if>
+                <if test="friYn != null and !friYn.equals('')">
+                        #{friYn},
+                </if>
+                <if test="satYn != null and !satYn.equals('')">
+                        #{satYn},
+                </if>
                 #{type}
                 );
     </insert>
 
-    <update id=""></update>
+    <update id="updateGoal">
+        UPDATE goal
+        SET
+        <if test="parentId != null and !parentId.equals('')">
+                parent_id = #{parentId},
+        </if>
+        <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
+                member_serial_number = #{memberSerialNumber},
+        </if>
+        <if test="title != null and !title.equals('')">
+                title = #{title},
+        </if>
+        <if test="kind != null and !kind.equals('')">
+                kind = #{kind},
+        </if>
+        <if test="content != null and !content.equals('')">
+                content = #{content},
+        </if>
+        <if test="startDatetime != null and !startDatetime.equals('')">
+                start_datetime = #{startDatetime},
+        </if>
+        <if test="endDatetime != null and !endDatetime.equals('')">
+                end_datetime = #{endDatetime},
+        </if>
+        <if test="progressRate != null and !progressRate.equals('')">
+                progress_rate = #{progressRate},
+        </if>
+        <if test="color != null and !color.equals('')">
+                color = #{color},
+        </if>
+            modification_datetime = now()
+        WHERE
+            goal_id = #{goalId}
+
+    </update>
+    <update id="updatePeriodicityInfo">
+        UPDATE periodicity_info
+        SET
+        <if test="timeUnit != null and !timeUnit.equals('')">
+                time_unit = #{timeUnit},
+        </if>
+        <if test="type != null and !type.equals('')">
+                type = #{type},
+        </if>
+        <if test="count != null and !count.equals('')">
+                count = #{count},
+        </if>
+        <if test="sunYn != null and !sunYn.equals('')">
+                sun_yn = #{sunYn},
+        </if>
+        <if test="monYn != null and !monYn.equals('')">
+                mon_yn = #{monYn},
+        </if>
+        <if test="tueYn != null and !tueYn.equals('')">
+                tue_yn = #{tueYn},
+        </if>
+        <if test="wedsYn != null and !wedsYn.equals('')">
+                weds_yn = #{wedsYn},
+        </if>
+        <if test="thurYn != null and !thurYn.equals('')">
+                thur_yn = #{thurYn},
+        </if>
+        <if test="friYn != null and !friYn.equals('')">
+                fri_yn = #{friYn},
+        </if>
+        <if test="satYn != null and !satYn.equals('')">
+                sat_yn = #{satYn},
+        </if>
+            modification_datetime = now()
+        WHERE
+            goal_id = #{goalId}
+    </update>
+
+    <update id="deleteGoal">
+        UPDATE goal
+        SET
+            deletion_status = 'Y',
+            modification_datetime = now()
+        WHERE
+            goal_id = #{goalId}
+    </update>
+
+    <update id="deletePeriodicityInfo">
+        UPDATE periodicity_info
+        SET
+            deletion_status = 'Y',
+            modification_datetime = now()
+        WHERE
+            goal_id = #{goalId}
+    </update>
 
     <resultMap id="goalFullResultMap" type="com.lds.trackdayb.mvo.GoalMVO"> 
         <id column="goal_id" property="goalId"/> 
@@ -84,6 +221,36 @@
         <result column="pi_modification_datetime" property="periodicityInfo.modificationDatetime"/>
         <result column="pi_deletion_status" property="periodicityInfo.deletionStatus"/>
 </resultMap>
+    <sql id="goalSearchConditionQuery">
+        WHERE 
+        1=1
+        <if test="searchStartDatetime != null and !searchStartDatetime.equals('')">
+            AND
+                #{searchStartDatetime} <![CDATA[<=]]> g.start_datetime
+        </if>
+        <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
+            AND 
+            g.end_datetime  <![CDATA[<=]]>  #{searchEndDatetime}
+        </if>
+        <if test="searchKind != null and !searchKind.equals('')">
+            AND 
+            g.kind = #{searchKind}
+        </if>
+		<if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
+            AND 
+            g.goal_id IN 
+            <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
+            AND 
+            g.member_serial_number = #{memberSerialNumber}
+        </if>
+        AND
+            g.deletion_status = 'N'
+
+    </sql>
 
     <select id="getGoalFullList" resultMap="goalFullResultMap">
         SELECT 
@@ -106,6 +273,8 @@
         FROM goal g 
         left outer join periodicity_info pi2 
         on g.goal_id =pi2.goal_id 
+        AND g.kind = 'regular'
+        <include refid="goalSearchConditionQuery" />
     </select>
     <select id="getGoalTitleList" resultType="GoalMVO">
         select 
@@ -121,6 +290,7 @@
         g.create_datetime,
         g.modification_datetime
         from goal g 
+        <include refid="goalSearchConditionQuery" />
     </select>
 
 </mapper>

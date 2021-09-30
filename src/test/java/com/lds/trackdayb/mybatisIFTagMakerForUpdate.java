@@ -14,7 +14,7 @@ import java.util.Arrays;
 //     #{startDatetime},
 // </if>
 
-public class mybatisIFTagMaker {
+public class mybatisIFTagMakerForUpdate {
     public static String camelCaseToUnderscores(String camel) {
         String underscore;/*from w w w  . ja  v  a 2  s. c  o  m*/
         underscore = String.valueOf(Character.toLowerCase(camel.charAt(0)));
@@ -32,7 +32,7 @@ public class mybatisIFTagMaker {
 
         ArrayList<String> camelCaseList = new ArrayList<String>();
         // String[] camelCaseStrArr = {"startDatetime", "endDatetime", "progressRate", "color"};
-        String[] camelCaseStrArr = {"count", "sunYn", "monYn", "tueYn", "wedsYn", "thurYn", "friYn", "satYn"};
+        String[] camelCaseStrArr = {"timeUnit", "type", "count", "sunYn", "monYn", "tueYn", "wedsYn", "thurYn", "friYn", "satYn"};
         camelCaseList = new ArrayList<>(Arrays.asList(camelCaseStrArr));
 // 출처: https://mommoo.tistory.com/32 [개발자로 홀로 서기]
 
@@ -53,8 +53,8 @@ public class mybatisIFTagMaker {
         for(String camelStr : camelCaseList){
             String snakeStr = camelCaseToUnderscores(camelStr);
             System.out.println(str1.replaceAll("camelStr", camelStr));
-            String str2 = "\t#{camelStr},";
-            System.out.println(str2.replaceAll("camelStr", camelStr));
+            String str2 = "\tsnakeStr = #{camelStr},";
+            System.out.println(str2.replaceAll("camelStr", camelStr).replaceAll("snakeStr", snakeStr));
             System.out.println("</if>");
             // System.out.println();
         }

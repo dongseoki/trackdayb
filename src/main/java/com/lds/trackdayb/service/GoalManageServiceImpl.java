@@ -1,7 +1,9 @@
 package com.lds.trackdayb.service;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.lds.trackdayb.dto.PeriodicityInfoDTO;
 import com.lds.trackdayb.mvo.GoalMVO;
 import com.lds.trackdayb.repository.GoalManageRepository;
 import com.lds.trackdayb.util.CommonCodeUtil;
@@ -11,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,24 +27,44 @@ public class GoalManageServiceImpl implements GoalManageService {
     public void insertGoal(GoalVO goalVO) {
         goalManageRepository.insertGoal(goalVO);
         if(StringUtils.equals(goalVO.getKind(), CommonCodeUtil.GOAL_KIND_REGULAR)){
-            goalManageRepository.insertPeriodicityInfo(goalVO);
+            PeriodicityInfoDTO param = goalVO.getPeriodicityInfo();
+            param.setGoalId(goalVO.getGoalId());
+            goalManageRepository.insertPeriodicityInfo(param);
         }
+    }
+    public boolean checkGoalOwnership(GoalVO goalVO){
+        String[] searchGoalIdArray = {goalVO.getGoalId()}; 
+        GoalVO param1 = new GoalVO();
+        param1.setMemberSerialNumber(goalVO.getMemberSerialNumber());
+        param1.setSearchGoalIdList(Arrays.asList(searchGoalIdArray));
+        List<GoalMVO> resultList = goalManageRepository.getGoalTitleList(param1);
+        if (resultList.size() == 0){
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void updateGoal(GoalVO goalVO) {
+        if (!checkGoalOwnership(goalVO)){
+            throw new IllegalStateException();
+        }
+
         goalManageRepository.updateGoal(goalVO);
         if(StringUtils.equals(goalVO.getKind(), CommonCodeUtil.GOAL_KIND_REGULAR)){
-            goalManageRepository.updatePeriodicityInfo(goalVO);
+            PeriodicityInfoDTO param = goalVO.getPeriodicityInfo();
+            param.setGoalId(goalVO.getGoalId());
+            goalManageRepository.updatePeriodicityInfo(param);
         }
     }
 
     @Override
     public void deleteGoal(GoalVO goalVO) {
-        goalManageRepository.deleteGoal(goalVO);
-        if(StringUtils.equals(goalVO.getKind(), CommonCodeUtil.GOAL_KIND_REGULAR)){
-            goalManageRepository.deletePeriodicityInfo(goalVO);
+        if (!checkGoalOwnership(goalVO)){
+            throw new IllegalStateException();
         }
+        goalManageRepository.deleteGoal(goalVO);
+        //PeriodicityInfo 는 삭제처리 되지 않음.
     }
 
     @Override
