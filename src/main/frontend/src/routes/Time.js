@@ -6,6 +6,10 @@ import { LeftNavigation } from '../components/index';
 import { makeStyles } from '@material-ui/core/styles';
 //time picker
 import TextField from '@material-ui/core/TextField';
+//toggle
+import ToggleButton from '@mui/material/ToggleButton';
+//slider-score
+import Slider from '@mui/material/Slider';
 
 //modal
 import Modal from '@material-ui/core/Modal';
@@ -16,29 +20,44 @@ import axios from 'axios';
 
 //TimeLine
 import CustomizedTimeline from '../components/TimeLineCustom';
+//icon
+import { FaLock } from "react-icons/fa";
 
+function toggleToString(value){
+  if(value){ //공개하겠다
+    return "Y"
+  }else{
+    return "N"
+  }
+}
 function Time() {
-
   //write Form
-  const [date, setDate] = useState(new Date());
+  //toggle- 비공개
+  const [toggleSelected, setToggleSelected] = useState(false)
+  const [shareStatus, setshareStatus] = useState("N");
+  const [writeDate, setWriteDate] = useState(makeYYMMDD(new Date()));
   const [startDatetime, setStartDatetime] = useState("");
   const [endDatetime, setEndDatetime] = useState("");
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [activityScore, setActivityScore] = useState("")
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    alert(`Submitting date ${date}`)
-    alert(`Submitting Time ${startDatetime}`)
-    alert(`Submitting endDatetime ${endDatetime}`)
-    alert(`Submitting content ${content}`)
+    console.log("제출", writeDate, startDatetime, endDatetime, title, content)
+    // alert(`Submitting Time ${startDatetime}`)
+    // alert(`Submitting endDatetime ${endDatetime}`)
+    // alert(`Submitting content ${content}`)
     
     let body = {
-      date : date,
-      startDatetime: startDatetime,
-      endDatetime: endDatetime,
+      title : title,
+      startDatetime: writeDate +' '+ startDatetime + ':00',
+      endDatetime: writeDate +' '+ endDatetime + ':00',
       content : content,
+      shareStatus : shareStatus,
+      activityScore : activityScore
     };
-
+    console.log("body", body)
     axios
     .post("http://localhost:5000/api/users/login", body)
     .then((res) => console.log(res));
@@ -48,7 +67,6 @@ function Time() {
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        {/* <LeftNavigation goalList={goalList}/> */}
         <LeftNavigation/>
       </aside>
 
@@ -66,46 +84,90 @@ function Time() {
           <button>도움말</button>
           <button>양식다운로드</button>
         </div>
+        <div className="date-picker-wrapper">
         <TextField
-        id="date"
-        type="date"
-        value={date}
-        onChange={e=> setDate(e.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
+          className="date-picker"
+          id="date"
+          label="작성일"
+          type="date"
+          defaultValue={writeDate}
+          sx={{ width: 220 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="outlined"
+          onChange={function(e){
+            setWriteDate(e.target.value)
+          }}
+        />
+        </div>
         <div className="cards"></div>
 
         <div className="writeForm">
-          {/* <form
-            onSubmit={submitHandler}
-            style={{ display: "flex", flexDirection: "Column" }}
-          >
-            <button type="submit">Login</button>
-          </form> */}
-
           <form onSubmit={handleSubmit}>
+            <div className="top-wrapper">
             <TimePickers 
               id='starttime'
               label='시작시간'
               value={startDatetime}
               setTime={setStartDatetime}
             />
+            <p>~</p>
             <TimePickers 
               id='endtime'
               label='종료시간'
               value={endDatetime}
               setTime={setEndDatetime}
             />
-            <div>목표선택</div>
+            <ToggleButton
+            color="primary"
+            value="check"
+            selected={toggleSelected}
+            onChange={() => {
+              setToggleSelected(!toggleSelected);
+              setshareStatus(toggleToString(toggleSelected));
+            }}
+          ><FaLock/>
+          </ToggleButton>
+            </div>
+            <p>목표선택</p>
             <GoalListModal />
+            <div className="title-wrapper">
+            <TextField 
+            className="textfield-title"
+              id="title" 
+              label="제목" 
+              size="small" 
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={function(e){
+                setTitle(e.target.value)
+              }}/>
+              </div>
+              <div className="content-wrapper">
             <MultilineTextFields 
               value={content}
               setValue={setContent}/>
-            <div>평가</div><span>점수선택(80%)</span>
-
-
+              </div>
+              <div className="activityScore-wrapper">
+              <p>몰입도평가</p>
+            <Slider
+              className="slider-score"
+              size="small"
+              aria-label="activityScore"
+              defaultValue={30}
+              valueLabelDisplay="auto"
+              step={10}
+              marks
+              min={0}
+              max={100}
+              onChange={function(e){
+                setActivityScore(e.target.value)
+              }}
+            />
+            </div>
             <input type="submit" value="Submit" />
           </form>
 
@@ -114,7 +176,6 @@ function Time() {
     </div>
   );
 }
-
 function TimePickers(props){
   function setTime(e){
     e.preventDefault();
@@ -212,10 +273,14 @@ function MultilineTextFields(props) {
   return (
       <div>
         <TextField
-          id="outlined-multiline-static"
+          className="textfeild-content"
+          id="content"
           label="내용"
           multiline
           rows={4}
+          InputLabelProps={{
+            shrink: true,
+          }}
           variant="outlined"
           value={props.value}
           onChange={setValue}
@@ -224,5 +289,9 @@ function MultilineTextFields(props) {
   );
 }
 
+// YYYY-MM-DD 형태로 반환
+function makeYYMMDD(value){
+  return value.toISOString().substring(0,10);
+}
 
 export default Time;
