@@ -1,0 +1,9 @@
+.activity-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+.time-card{
+    background-color: white;
+    width: 200px;
+    border-radius: 10px;
+}

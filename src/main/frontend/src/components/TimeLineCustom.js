@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react"
 import Timeline from '@material-ui/lab/Timeline';
 import TimelineItem from '@material-ui/lab/TimelineItem';
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
@@ -8,32 +8,131 @@ import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import TimelineDot from '@material-ui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 
-export default function CustomizedTimeline() {
+import "./TimeLineCustom.css";
+
+import axios from "axios";
+
+
+export default function CustomizedTimeline(props) {
+  // getActivityListTEST
+  // 검색결과(참조데이터:활동내역 리스트)
+  const [activityList, setActivityList] = useState([]);
+  const [dateList, setDateList] = useState(['2021-09-10', '2021-09-12', '2021-09-13']);
+  const [resultCode, setResultCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+      let body = {
+        searchStartDatetime : props.searchStartDatetime,
+        searchEndDatetime : props.searchEndDatetime,
+      }
+      const fetchActivityList = async () => {
+        try {
+          setError(null);
+          setActivityList(null);
+          setLoading(null);
+          const response = await axios.post("/timeManage/getActivityListTEST", body);
+          setActivityList(response.data.activityList);
+          setResultCode(response.data.resultCode);
+          console.log("resultCode : ", resultCode);
+          // let dateArray = []
+          // activityList.map((activity, index) => {
+          //   dateArray.push(activity.startDatetime)
+          // })
+          // setDateList(dateArray);
+        }
+        catch(e) {
+          setError(e);
+        }
+        setLoading(false);
+      }
+      fetchActivityList();
+  }, [props.searchStartDatetime, props.searchEndDatetime]);
+  if (loading) return <div> 로딩중...</div>;
+  if (error) return <div>에러발생</div>;
+  if (!activityList) return null;
+
+  console.log('dateList', dateList)
   return (
+    <>
+    
+      
     <Timeline position="alternate">
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          align="right"
-          variant="body2"
-          color="text.secondary"
-        >
-          9:30 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot>
-              dd
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Eat
-          </Typography>
-          <Typography>Because you need strength</Typography>
-        </TimelineContent>
-      </TimelineItem>
+      <p>TEST</p>
+      {dateList && dateList.map((d, index) => (
+      <div>
+      <TimelineItem key={index}>
+              <TimelineOppositeContent
+                sx={{ m: 'auto 0' }}
+                variant="body2"
+                color="text.secondary"
+              >
+                {d}
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot color="primary">
+                  11
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <div className="activity-wrapper">
+                <TimelineContent className="time-card" sx={{ py: '12px', px: 2 }}>
+                  <Typography variant="h6" component="span">
+                    hello
+                  </Typography>
+                  <Typography>content</Typography>
+                </TimelineContent>
+
+                <TimelineContent sx={{ py: '12px', px: 2 }}>
+                  <Typography variant="h6" component="span">
+                    hello
+                  </Typography>
+                  <Typography>content</Typography>
+                </TimelineContent>
+                
+                <TimelineContent sx={{ py: '12px', px: 2 }}>
+                  <Typography variant="h6" component="span">
+                    hello
+                  </Typography>
+                  <Typography>content</Typography>
+                </TimelineContent>
+              </div>
+            </TimelineItem>
+            </div>
+
+    ))}
+      <p>TEST</p>
+      {activityList && activityList.map((activity, index) => (
+              <TimelineItem key={activity.activityId}>
+              <TimelineOppositeContent
+                sx={{ m: 'auto 0' }}
+                variant="body2"
+                color="text.secondary"
+              >
+                {activity.startDatetime}
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineConnector />
+                <TimelineDot color="primary">
+                  11
+                </TimelineDot>
+                <TimelineConnector />
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
+                <Typography variant="h6" component="span">
+                  {activity.title}
+                </Typography>
+                <Typography>{activity.content}</Typography>
+              </TimelineContent>
+              <div>hello</div>
+            </TimelineItem>
+            
+            // <GoalTitleCards key={index}
+            //     title={goal.title}></GoalTitleCards>
+        ))}
+
       <TimelineItem>
         <TimelineOppositeContent
           sx={{ m: 'auto 0' }}
@@ -87,5 +186,6 @@ export default function CustomizedTimeline() {
         </TimelineContent>
       </TimelineItem>
     </Timeline>
+    </>
   );
 }

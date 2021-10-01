@@ -23,14 +23,12 @@ import CustomizedTimeline from '../components/TimeLineCustom';
 //icon
 import { FaLock } from "react-icons/fa";
 
-function toggleToString(value){
-  if(value){ //공개하겠다
-    return "Y"
-  }else{
-    return "N"
-  }
-}
+
 function Time() {
+  // 검색조건(조회기간)
+  const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
+  const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
+
   //write Form
   //toggle- 비공개
   const [toggleSelected, setToggleSelected] = useState(false)
@@ -67,13 +65,23 @@ function Time() {
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        <LeftNavigation/>
+        <LeftNavigation 
+          searchStartDatetime={searchStartDatetime}
+          searchEndDatetime={searchEndDatetime}
+          setSearchStartDatetime={setSearchStartDatetime}
+          setSearchEndDatetime={setSearchEndDatetime}
+          />
       </aside>
 
       {/* 참조데이터 */}
       <div className="timeline">
         타임라인
-        <CustomizedTimeline/>
+        <CustomizedTimeline
+          searchStartDatetime={searchStartDatetime}
+          searchEndDatetime={searchEndDatetime}
+          setSearchStartDatetime={setSearchStartDatetime}
+          setSearchEndDatetime={setSearchEndDatetime}
+        />
       </div>
       
       {/* 기록 */}
@@ -292,6 +300,14 @@ function MultilineTextFields(props) {
 // YYYY-MM-DD 형태로 반환
 function makeYYMMDD(value){
   return value.toISOString().substring(0,10);
+}
+
+function toggleToString(value){
+  if(value){ //공개하겠다
+    return "Y"
+  }else{
+    return "N"
+  }
 }
 
 export default Time;
