@@ -1,0 +1,6 @@
+# 컬럼명을 json object로 바꾸기.
+before
+\n
+
+after
+" : "",\n"

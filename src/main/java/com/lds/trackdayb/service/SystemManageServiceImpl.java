@@ -21,11 +21,11 @@ public class SystemManageServiceImpl implements SystemManageService{
     private final SystemManageRepository systemManageRepository;
 
     @Override
-    public List<ReferenceFavoriteMVO> viewReferenceFavoriteList(String managementType, String timeUnit,int memberSerialNumber) {
+    public List<ReferenceFavoriteMVO> viewReferenceFavoriteList(String managementType, String timeUnit,String memberSerialNumber) {
         HashMap<String, String> param = new HashMap<String, String>();
         param.put("managementType", managementType);
         param.put("timeUnit", timeUnit);
-        param.put("memberSerialNumber", Integer.toString(memberSerialNumber));
+        param.put("memberSerialNumber", memberSerialNumber);
         List<ReferenceFavoriteMVO> referenceFavoriteMVOs= systemManageRepository.selectReferenceFavoriteList(param);
         for(ReferenceFavoriteMVO item : referenceFavoriteMVOs){
             if(StringUtils.hasText(item.getContent())){
@@ -42,11 +42,11 @@ public class SystemManageServiceImpl implements SystemManageService{
 
     @Override
     public ReferenceFavoriteDefaultSettingDTO viewReferenceFavoriteDefaultSetting(String managementType,
-            String timeUnit, int memberSerialNumber) {
+            String timeUnit, String memberSerialNumber) {
                 HashMap<String, String> param = new HashMap<String, String>();
                 param.put("managementType", managementType);
                 param.put("timeUnit", timeUnit);
-                param.put("memberSerialNumber", Integer.toString(memberSerialNumber));
+                param.put("memberSerialNumber", memberSerialNumber);
         return systemManageRepository.selectReferenceFavoriteDefaultSetting(param);
     }
 
@@ -54,11 +54,11 @@ public class SystemManageServiceImpl implements SystemManageService{
 
     @Override
     public List<ClassificationDTO> viewClassificationList(String managementType, String timeUnit,
-            int memberSerialNumber) {
+            String memberSerialNumber) {
                 HashMap<String, String> param = new HashMap<String, String>();
                 param.put("managementType", managementType);
                 param.put("timeUnit", timeUnit);
-                param.put("memberSerialNumber", Integer.toString(memberSerialNumber));
+                param.put("memberSerialNumber", memberSerialNumber);
         return systemManageRepository.selectClassificationList(param);
     }
 

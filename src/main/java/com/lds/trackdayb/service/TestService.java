@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface TestService {
     List<Map<String, Object>> getCitys();
-    int selectLoginMemberSerialNumber();
+    String selectLoginMemberSerialNumber();
 }

@@ -6,47 +6,182 @@ import { LeftNavigation } from '../components/index';
 import { makeStyles } from '@material-ui/core/styles';
 //time picker
 import TextField from '@material-ui/core/TextField';
+//toggle
+import ToggleButton from '@mui/material/ToggleButton';
+//slider-score
+import Slider from '@mui/material/Slider';
+
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
+import axios from 'axios';
 
-function Time(props) {
-  console.log(props);
+//TimeLine
+import CustomizedTimeline from '../components/TimeLineCustom';
+//icon
+import { FaLock } from "react-icons/fa";
+
+function toggleToString(value){
+  if(value){ //공개하겠다
+    return "Y"
+  }else{
+    return "N"
+  }
+}
+function Time() {
+  //write Form
+  //toggle- 비공개
+  const [toggleSelected, setToggleSelected] = useState(false)
+  const [shareStatus, setshareStatus] = useState("N");
+  const [writeDate, setWriteDate] = useState(makeYYMMDD(new Date()));
+  const [startDatetime, setStartDatetime] = useState("");
+  const [endDatetime, setEndDatetime] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [activityScore, setActivityScore] = useState("")
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    console.log("제출", writeDate, startDatetime, endDatetime, title, content)
+    // alert(`Submitting Time ${startDatetime}`)
+    // alert(`Submitting endDatetime ${endDatetime}`)
+    // alert(`Submitting content ${content}`)
+    
+    let body = {
+      title : title,
+      startDatetime: writeDate +' '+ startDatetime + ':00',
+      endDatetime: writeDate +' '+ endDatetime + ':00',
+      content : content,
+      shareStatus : shareStatus,
+      activityScore : activityScore
+    };
+    console.log("body", body)
+    axios
+    .post("http://localhost:5000/api/users/login", body)
+    .then((res) => console.log(res));
+  };
+
   return (
     <div className="time">
       {/* 사이드 */}
       <aside className="side">
-        <div>타임라인 검색</div>
-        <LeftNavigation />
+        <LeftNavigation/>
       </aside>
 
       {/* 참조데이터 */}
-      <div className="timeline">타임라인</div>
-
+      <div className="timeline">
+        타임라인
+        <CustomizedTimeline/>
+      </div>
+      
       {/* 기록 */}
       <div className="write">
-        <div>
-          <TimePickers id='starttime' label="시작시간"/>
-          <TimePickers id='endtime' label="종료시간"/>
-          <span>목표선택</span>
-          <span>목표 리스트 모달창</span>
-          <GoalListModal />
-          <MultilineTextFields />
-          <div>평가</div><span>점수선택(80%)</span>
+        <div className="button-wrapper">
+          <button>import</button>
+          <button>export</button>
+          <button>도움말</button>
+          <button>양식다운로드</button>
+        </div>
+        <div className="date-picker-wrapper">
+        <TextField
+          className="date-picker"
+          id="date"
+          label="작성일"
+          type="date"
+          defaultValue={writeDate}
+          sx={{ width: 220 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="outlined"
+          onChange={function(e){
+            setWriteDate(e.target.value)
+          }}
+        />
+        </div>
+        <div className="cards"></div>
+
+        <div className="writeForm">
+          <form onSubmit={handleSubmit}>
+            <div className="top-wrapper">
+            <TimePickers 
+              id='starttime'
+              label='시작시간'
+              value={startDatetime}
+              setTime={setStartDatetime}
+            />
+            <p>~</p>
+            <TimePickers 
+              id='endtime'
+              label='종료시간'
+              value={endDatetime}
+              setTime={setEndDatetime}
+            />
+            <ToggleButton
+            color="primary"
+            value="check"
+            selected={toggleSelected}
+            onChange={() => {
+              setToggleSelected(!toggleSelected);
+              setshareStatus(toggleToString(toggleSelected));
+            }}
+          ><FaLock/>
+          </ToggleButton>
+            </div>
+            <p>목표선택</p>
+            <GoalListModal />
+            <div className="title-wrapper">
+            <TextField 
+            className="textfield-title"
+              id="title" 
+              label="제목" 
+              size="small" 
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={function(e){
+                setTitle(e.target.value)
+              }}/>
+              </div>
+              <div className="content-wrapper">
+            <MultilineTextFields 
+              value={content}
+              setValue={setContent}/>
+              </div>
+              <div className="activityScore-wrapper">
+              <p>몰입도평가</p>
+            <Slider
+              className="slider-score"
+              size="small"
+              aria-label="activityScore"
+              defaultValue={30}
+              valueLabelDisplay="auto"
+              step={10}
+              marks
+              min={0}
+              max={100}
+              onChange={function(e){
+                setActivityScore(e.target.value)
+              }}
+            />
+            </div>
+            <input type="submit" value="Submit" />
+          </form>
+
         </div>
       </div>
     </div>
   );
 }
-
 function TimePickers(props){
+  function setTime(e){
+    e.preventDefault();
+    props.setTime(e.target.value);
+  }
   const useStyles = makeStyles((theme) => ({
-    container: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
@@ -56,12 +191,12 @@ function TimePickers(props){
   const classes = useStyles();
 
   return (
-    <form className={classes.container} noValidate>
       <TextField
         id={props.id}
         label={props.label}
+        value={props.value}
         type="time"
-        defaultValue="07:30"
+        onChange={setTime}
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
@@ -70,7 +205,6 @@ function TimePickers(props){
           step: 300, // 5 min
         }}
       />
-    </form>
   );
 }
 
@@ -131,36 +265,33 @@ function GoalListModal() {
   );
 }
 
-
-
-
-
-
-function MultilineTextFields() {
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: '40ch',
-      },
-    },
-  }));
-
-  const classes = useStyles();
-  const [value, setValue] = React.useState('Controlled');
-
+function MultilineTextFields(props) {
+  function setValue(e){
+    e.preventDefault();
+    props.setValue(e.target.value);
+  }
   return (
-    <form className={classes.root} noValidate autoComplete="off">
       <div>
         <TextField
-          id="outlined-multiline-static"
+          className="textfeild-content"
+          id="content"
           label="내용"
           multiline
           rows={4}
+          InputLabelProps={{
+            shrink: true,
+          }}
           variant="outlined"
+          value={props.value}
+          onChange={setValue}
         />
       </div>
-    </form>
   );
 }
+
+// YYYY-MM-DD 형태로 반환
+function makeYYMMDD(value){
+  return value.toISOString().substring(0,10);
+}
+
 export default Time;

@@ -1,6 +1,8 @@
 package com.lds.trackdayb.repository;
 
+import com.lds.trackdayb.mvo.ActivityMVO;
 import com.lds.trackdayb.mvo.TimeRecordMVO;
+import com.lds.trackdayb.vo.ActivityVO;
 import com.lds.trackdayb.vo.TimeRecordVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -21,4 +23,5 @@ public interface TimeManageRepository {
     void deleteTimeRecord(TimeRecordVO timeRecordVO);
 	void deleteActivityRecords(TimeRecordVO timeRecordVO);
     List<TimeRecordMVO> selectTimeRecordList(TimeRecordVO timeRecordVO);
+    List<ActivityMVO> getActivityList(ActivityVO activityVO);
 }
