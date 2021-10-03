@@ -19,4 +19,10 @@ public interface TimeManageService {
     List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, String memberSerialNumber);
 
     List<ActivityMVO> getActivityList(ActivityVO activityVO);
+
+    void insertActivity(ActivityVO activityVO);
+
+    void updateActivity(ActivityVO activityVO);
+
+    void deleteActivity(ActivityVO activityVO);
 }

@@ -16,5 +16,7 @@ public interface GoalManageService {
     List<GoalMVO> getGoalTitleList(GoalVO goalVO);
 
     List<GoalMVO> getGoalFullList(GoalVO goalVO);
+
+    boolean checkGoalOwnership(GoalVO goalVO);
     
 }

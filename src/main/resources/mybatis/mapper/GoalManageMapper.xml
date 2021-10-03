@@ -23,6 +23,9 @@
             <if test="color != null and !color.equals('')">
                     color,
             </if>
+            <if test="shareStatus != null and !shareStatus.equals('')">
+                share_status,
+            </if>
             member_serial_number,
             title
             )
@@ -45,6 +48,9 @@
             </if>
             <if test="color != null and !color.equals('')">
                     #{color},
+            </if>
+            <if test="shareStatus != null and !shareStatus.equals('')">
+                    #{shareStatus},
             </if>
             #{memberSerialNumber},
             #{title}
@@ -142,6 +148,9 @@
         <if test="color != null and !color.equals('')">
                 color = #{color},
         </if>
+        <if test="shareStatus != null and !shareStatus.equals('')">
+                share_status = #{shareStatus},
+        </if>
             modification_datetime = now()
         WHERE
             goal_id = #{goalId}
@@ -236,7 +245,7 @@
             AND 
             g.kind = #{searchKind}
         </if>
-		<if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
+	<if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
             AND 
             g.goal_id IN 
             <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">
