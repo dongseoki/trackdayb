@@ -9,8 +9,6 @@ function LeftNavigation(props){
   // 검색결과(목표타이틀 리스트)
   const [goalTitleList, setGoalTitleList] = useState([]);
   const [resultCode, setResultCode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   
 
@@ -22,24 +20,19 @@ function LeftNavigation(props){
       
       const fetchGoalTitleList = async () => {
           try {
-              setError(null);
               setGoalTitleList(null);
-              setLoading(true);
-              const response = await axios.post(
+              const result = await axios.post(
                   "/goalManage/getGoalTitleListTEST", body);
-              setGoalTitleList(response.data.goalTitleList);
-              setResultCode(response.data.resultCode);
+              setGoalTitleList(result.data.goalTitleList);
+              setResultCode(result.data.resultCode);
               console.log("resultCode : ", resultCode);
           } 
-          catch(e){
-              setError(e);
+          catch(err){
+              console.error(err)
           }
-          setLoading(false);
       };
       fetchGoalTitleList();
   }, [props.searchStartDatetime, props.searchEndDatetime]);
-  if (loading) return <div> 로딩중...</div>;
-  if (error) return <div>에러발생</div>;
   if (!goalTitleList) return null;
 
     return (

@@ -21,7 +21,7 @@ function Goal(props) {
   console.log(props);
 
   // 검색결과(목표타이틀 리스트)
-  const [goalList, setGoalList] = useState([]);
+  const [goalFullList, setGoalFullList] = useState([]);
 
   useEffect(() => {
     let body = {
@@ -33,10 +33,16 @@ function Goal(props) {
         "3"],
       "searchKind":"deadline"
     }
-    axios
-    .post("/goalManage/getGoalFullListTEST", body)
-    .then(({ data }) => setGoalList(data.goalFullList))
-    .then(console.log("goalList", goalList));
+    const fetchGoalFullList = async () => {
+      try {
+        const result = await axios.post("/goalManage/getGoalFullListTEST", body);
+        setGoalFullList(result.data.goalFullList)
+        console.log("result", result)
+      } catch(err){
+        console.error(err)
+      }
+    }
+    fetchGoalFullList();
 }, []);
 
   return (
@@ -62,7 +68,7 @@ function Goal(props) {
       </div>
 
       <div className="goal-cards-list">
-        {goalList && goalList.map((goal, index) => (
+        {goalFullList && goalFullList.map((goal, index) => (
             <GoalCard
                 key={index}
                 title={goal.title}

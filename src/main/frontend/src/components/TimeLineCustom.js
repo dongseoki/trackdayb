@@ -19,8 +19,6 @@ export default function CustomizedTimeline(props) {
   const [activityList, setActivityList] = useState([]);
   const [dateList, setDateList] = useState(['2021-09-10', '2021-09-12', '2021-09-13']);
   const [resultCode, setResultCode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   
   useEffect(() => {
       let body = {
@@ -29,12 +27,10 @@ export default function CustomizedTimeline(props) {
       }
       const fetchActivityList = async () => {
         try {
-          setError(null);
           setActivityList(null);
-          setLoading(null);
-          const response = await axios.post("/timeManage/getActivityListTEST", body);
-          setActivityList(response.data.activityList);
-          setResultCode(response.data.resultCode);
+          const result = await axios.post("/timeManage/getActivityListTEST", body);
+          setActivityList(result.data.activityList);
+          setResultCode(result.data.resultCode);
           console.log("resultCode : ", resultCode);
           // let dateArray = []
           // activityList.map((activity, index) => {
@@ -42,15 +38,12 @@ export default function CustomizedTimeline(props) {
           // })
           // setDateList(dateArray);
         }
-        catch(e) {
-          setError(e);
+        catch(err) {
+          console.error(err)
         }
-        setLoading(false);
       }
       fetchActivityList();
   }, [props.searchStartDatetime, props.searchEndDatetime]);
-  if (loading) return <div> 로딩중...</div>;
-  if (error) return <div>에러발생</div>;
   if (!activityList) return null;
 
   console.log('dateList', dateList)
@@ -61,7 +54,6 @@ export default function CustomizedTimeline(props) {
     <Timeline position="alternate">
       <p>TEST</p>
       {dateList && dateList.map((d, index) => (
-      <div>
       <TimelineItem key={index}>
               <TimelineOppositeContent
                 sx={{ m: 'auto 0' }}
@@ -100,8 +92,6 @@ export default function CustomizedTimeline(props) {
                 </TimelineContent>
               </div>
             </TimelineItem>
-            </div>
-
     ))}
       <p>TEST</p>
       {activityList && activityList.map((activity, index) => (

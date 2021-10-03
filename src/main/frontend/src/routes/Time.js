@@ -40,25 +40,23 @@ function Time() {
   const [content, setContent] = useState("");
   const [activityScore, setActivityScore] = useState("")
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
-    console.log("제출", writeDate, startDatetime, endDatetime, title, content)
-    // alert(`Submitting Time ${startDatetime}`)
-    // alert(`Submitting endDatetime ${endDatetime}`)
-    // alert(`Submitting content ${content}`)
-    
-    let body = {
+    const formData = {
       title : title,
       startDatetime: writeDate +' '+ startDatetime + ':00',
       endDatetime: writeDate +' '+ endDatetime + ':00',
       content : content,
       shareStatus : shareStatus,
       activityScore : activityScore
-    };
-    console.log("body", body)
-    axios
-    .post("http://localhost:5000/api/users/login", body)
-    .then((res) => console.log(res));
+    };    
+    console.log("formData", formData)
+    try{
+      const result = await axios.post("/timeManage/activityTEST", formData);
+      console.log({result})
+    } catch(err){
+      console.error(err)
+    }
   };
 
   return (
