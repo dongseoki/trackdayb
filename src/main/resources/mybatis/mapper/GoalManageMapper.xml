@@ -23,6 +23,9 @@
             <if test="color != null and !color.equals('')">
                     color,
             </if>
+            <if test="shareStatus != null and !shareStatus.equals('')">
+                share_status,
+            </if>
             member_serial_number,
             title
             )
@@ -45,6 +48,9 @@
             </if>
             <if test="color != null and !color.equals('')">
                     #{color},
+            </if>
+            <if test="shareStatus != null and !shareStatus.equals('')">
+                    #{shareStatus},
             </if>
             #{memberSerialNumber},
             #{title}
@@ -141,6 +147,9 @@
         </if>
         <if test="color != null and !color.equals('')">
                 color = #{color},
+        </if>
+        <if test="shareStatus != null and !shareStatus.equals('')">
+                share_status = #{shareStatus},
         </if>
             modification_datetime = now()
         WHERE

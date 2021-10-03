@@ -230,12 +230,21 @@
             </foreach>
         </if>
 
-        <if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
-            AND 
-            g.goal_id IN 
-            <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
+        <if test="(searchGoalIdList != null and !searchGoalIdList.isEmpty()) or (otherIncludedYn != null and !otherIncludedYn.isEmpty())">
+            AND(
+                1!=1
+                <if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
+                    OR
+                    g.goal_id IN 
+                    <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test='otherIncludedYn != null and otherIncludedYn.equals("Y")'>
+                    OR 
+        			g.goal_id IS NULL
+                </if>
+            )
         </if>
         <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
             AND 
@@ -288,8 +297,16 @@
         UPDATE activity
         SET 
             modification_datetime = now()
-        <if test="goalId != null and !goalId.equals('')">
-                ,goal_id = #{goalId}
+        
+        <if test="goalId != null">
+            <choose>
+                <when test="goalId.equals('')">
+                     ,goal_id = NULL
+                </when>
+                <otherwise>
+                     ,goal_id = #{goalId}
+                </otherwise>
+             </choose>
         </if>
         <if test="title != null and !title.equals('')">
                 ,title = #{title}

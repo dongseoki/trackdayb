@@ -13,4 +13,5 @@ public class ActivityVO extends ActivityDTO {
     String searchEndDatetime = "";
     List<String> searchActivityIdList = new ArrayList<String>();
     List<String> searchGoalIdList = new ArrayList<String>();
+    String otherIncludedYn = ""; // 기타 포함 여부.
 }

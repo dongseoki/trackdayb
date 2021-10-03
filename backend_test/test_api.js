@@ -57,6 +57,7 @@ var data = {
   searchEndDatetime: "",
   searchActivityIdList:[4,5,6,7], // 활동 id 혹시몰라서.  
   searchGoalIdList: [], // 목표 id list
+  otherIncludedYn: "Y" // 목표 id 기타 포함 yn.
 };
 
 var result = {
@@ -123,7 +124,7 @@ function updateActivity(){
 // PUT
 var data ={
   "activityId" : "",
-  "goalId" : "",
+  "goalId" : "", // 값이 빈 문자열인 경우, NULL 설정.
   "title" : "",
   "startDatetime" : "",
   "endDatetime" : "",
