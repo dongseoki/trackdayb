@@ -32,7 +32,7 @@ public class mybatisIFTagMakerForUpdate {
 
         ArrayList<String> camelCaseList = new ArrayList<String>();
         // String[] camelCaseStrArr = {"startDatetime", "endDatetime", "progressRate", "color"};
-        String[] camelCaseStrArr = {"timeUnit", "type", "count", "sunYn", "monYn", "tueYn", "wedsYn", "thurYn", "friYn", "satYn"};
+        String[] camelCaseStrArr = {"memberSerialNumber", "goalId", "title", "startDatetime", "endDatetime", "content", "activityScore", "shareStatus"};
         camelCaseList = new ArrayList<>(Arrays.asList(camelCaseStrArr));
 // 출처: https://mommoo.tistory.com/32 [개발자로 홀로 서기]
 
@@ -53,7 +53,7 @@ public class mybatisIFTagMakerForUpdate {
         for(String camelStr : camelCaseList){
             String snakeStr = camelCaseToUnderscores(camelStr);
             System.out.println(str1.replaceAll("camelStr", camelStr));
-            String str2 = "\tsnakeStr = #{camelStr},";
+            String str2 = "\t,snakeStr = #{camelStr}";
             System.out.println(str2.replaceAll("camelStr", camelStr).replaceAll("snakeStr", snakeStr));
             System.out.println("</if>");
             // System.out.println();

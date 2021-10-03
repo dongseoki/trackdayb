@@ -236,7 +236,7 @@
             AND 
             g.kind = #{searchKind}
         </if>
-		<if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
+	<if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
             AND 
             g.goal_id IN 
             <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">

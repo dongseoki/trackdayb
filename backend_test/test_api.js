@@ -57,7 +57,6 @@ var data = {
   searchEndDatetime: "",
   searchActivityIdList:[4,5,6,7], // 활동 id 혹시몰라서.  
   searchGoalIdList: [], // 목표 id list
-  searchGoalTitleList:  [], // 목표 제목 text 검색 list 
 };
 
 var result = {
