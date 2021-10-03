@@ -46,6 +46,7 @@ public class GoalManageController {
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalTitleList = goalService.getGoalTitleList(goalVO);
+        
         JsonArray goalTitleListJsonArray = new Gson().toJsonTree(goalTitleList).getAsJsonArray();
         jo.add("goalTitleList", goalTitleListJsonArray);
         return jo.toString();
@@ -60,13 +61,16 @@ public class GoalManageController {
      * @return ResultMVO
      */
     @PostMapping("/getGoalTitleListTEST")
-    public String getGoalTitleListTest(@RequestBody GoalVO goalVO){
+    public String getGoalTitleListTest(){
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
-        goalVO.setMemberSerialNumber(loginSerialNumber);
-        List<GoalMVO> goalTitleList = goalService.getGoalTitleList(goalVO);
+        // @RequestBody GoalVO goalVO
+        GoalVO param = new GoalVO();
+        param.setMemberSerialNumber(loginSerialNumber);
+        List<GoalMVO> goalTitleList = goalService.getGoalTitleList(param);
+
         JsonArray goalTitleListJsonArray = new Gson().toJsonTree(goalTitleList).getAsJsonArray();
         jo.add("goalTitleList", goalTitleListJsonArray);
         return jo.toString();
