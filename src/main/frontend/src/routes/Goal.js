@@ -35,7 +35,12 @@ function Goal() {
     <div className="goal-content">
       <h3>목표관리</h3>
 
-      <GoalFullList />
+      <GoalFullList 
+        searchStartDatetime={searchStartDatetime}
+        searchEndDatetime={searchEndDatetime}
+        setSearchStartDatetime={setSearchStartDatetime}
+        setSearchEndDatetime={setSearchEndDatetime}
+      />
 
       
     </div>

@@ -17,10 +17,27 @@
   
   .card{
     border-radius: 10px;
-    border-left : 6px solid #4DB7F5;
+    border-left : 6px solid #cccccc;
     background-color: white;
     padding: 0 10px;
     width: 180px;
     height: 250px;
     margin : 10px;
+  }
+
+  .goal-insert-btn{
+    border-radius: 10px;
+    border : 3px solid #cccccc;
+    background-color: white;
+    padding: 0 10px;
+    width: 180px;
+    height: 250px;
+    margin : 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .goal-insert-btn:hover{
+    border : 3px solid #4EC3E0;
+    transition: 0.5s;
+    color : #4EC3E0;
   }

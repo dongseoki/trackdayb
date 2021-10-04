@@ -19,6 +19,7 @@ function LeftNavigation(props){
         searchStartDatetime : makeYYMMDD(props.searchStartDatetime) + defaultSearchTime,
         searchEndDatetime : makeYYMMDD(props.searchEndDatetime) + defaultSearchTime,
       }
+      console.log("body", body)
       const fetchGoalTitleList = async () => {
           try {
               setGoalTitleList(null);
