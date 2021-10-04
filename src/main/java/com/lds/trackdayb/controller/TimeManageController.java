@@ -1,10 +1,16 @@
 package com.lds.trackdayb.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.ClassificationDTO;
-import com.lds.trackdayb.dto.ReferenceFavoriteDTO;
 import com.lds.trackdayb.dto.ReferenceFavoriteDefaultSettingDTO;
 import com.lds.trackdayb.mvo.ActivityMVO;
 import com.lds.trackdayb.mvo.ReferenceFavoriteMVO;
@@ -21,18 +27,19 @@ import com.lds.trackdayb.vo.TimeRecordVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -166,7 +173,35 @@ public class TimeManageController {
         return timeManageService.deleteTimeRecord(timeRecordVO);
     }
 
+            /**
+     * # 활동 리스트 조회.
+     * 실제 데이터를 조회한다.
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
+    @PostMapping("getActivityList")
+    public String getActivityList(@RequestBody ActivityVO activityVO){
+        JsonObject jo = new JsonObject();
 
+
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        activityVO.setMemberSerialNumber(loginSerialNumber);
+
+        List<ActivityMVO> activityList = new ArrayList<ActivityMVO>();
+        try {
+            activityList = timeManageService.getActivityList(activityVO);
+        } catch (Exception e) {
+            LOGGER.error("getAcitivityList fail {}", e.toString());
+            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_FAIL);
+            return jo.toString();
+        }
+
+        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+        JsonArray activityListJsonArray = new Gson().toJsonTree(activityList).getAsJsonArray();
+        jo.add("activityList", activityListJsonArray);
+        return jo.toString();
+    }
         /**
      * # 활동 리스트 테스트.
      * 실제 데이터를 조회한다.
@@ -177,17 +212,45 @@ public class TimeManageController {
      * 
      */
     @PostMapping("getActivityListTEST")
-    public String getActivityListTest(@RequestBody ActivityVO activityVO){
+    public String getActivityListTest(){
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
+        // 파라미터 기본값 세팅.
+        ActivityVO activityVO = new ActivityVO();
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
+
         List<ActivityMVO> activityList = timeManageService.getActivityList(activityVO);
         JsonArray activityListJsonArray = new Gson().toJsonTree(activityList).getAsJsonArray();
         jo.add("activityList", activityListJsonArray);
 
         return jo.toString();
+    }
+
+
+
+        /**
+     * # 활동 삽입 .
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
+    @PostMapping("activity")
+    public ResultMVO insertActivity(@RequestBody ActivityVO activityVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        activityVO.setMemberSerialNumber(loginSerialNumber);
+        
+        try {
+            timeManageService.insertActivity(activityVO);
+        } catch (Exception e) {
+            LOGGER.error("insert activity fail : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
+        return resultMVO;
     }
 
     /**
@@ -205,6 +268,30 @@ public class TimeManageController {
         return resultMVO;
     }
 
+
+        /**
+     * # 활동 수정 
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
+    @PutMapping("activity")
+    public ResultMVO updateActivity(@RequestBody ActivityVO activityVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        activityVO.setMemberSerialNumber(loginSerialNumber);
+        
+        try {
+            timeManageService.updateActivity(activityVO);
+        } catch (Exception e) {
+            LOGGER.error("update activity fail : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
+        return resultMVO;
+    }
+
     /**
      * # 활동 수정 테스트.
      * 실제 데이터 조작은 없다.
@@ -217,6 +304,33 @@ public class TimeManageController {
     public ResultMVO updateActivityTest(@RequestBody ActivityVO activityVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        return resultMVO;
+    }
+
+
+
+
+           /**
+     * # 활동 삭제
+     * 데이터는 query parameter로 넘겨야한다.(HTTP DELETE METHOD의 특징.)
+     * @param activityVO
+     * @return ResultMVO
+     * 
+     */
+    @DeleteMapping("activity")
+    public ResultMVO deleteActivity(ActivityVO activityVO){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        
+        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        activityVO.setMemberSerialNumber(loginSerialNumber);
+        
+        try {
+            timeManageService.deleteActivity(activityVO);
+        } catch (Exception e) {
+            LOGGER.error("delete activity fail : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
         return resultMVO;
     }
 

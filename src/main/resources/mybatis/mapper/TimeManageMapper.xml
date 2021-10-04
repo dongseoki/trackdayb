@@ -211,6 +211,131 @@
         from activity a 
         left outer join goal g 
         on a.goal_id = g.goal_id 
+        WHERE
+        1=1
+        <if test="searchStartDatetime != null and !searchStartDatetime.equals('')">
+            AND
+                #{searchStartDatetime} <![CDATA[<=]]> a.start_datetime
+        </if>
+        <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
+            AND 
+            a.end_datetime  <![CDATA[<=]]>  #{searchEndDatetime}
+        </if>
+        
+        <if test="searchActivityIdList != null and !searchActivityIdList.isEmpty()">
+            AND 
+            a.activity_id IN 
+            <foreach collection="searchActivityIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="(searchGoalIdList != null and !searchGoalIdList.isEmpty()) or (otherIncludedYn != null and !otherIncludedYn.isEmpty())">
+            AND(
+                1!=1
+                <if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
+                    OR
+                    g.goal_id IN 
+                    <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test='otherIncludedYn != null and otherIncludedYn.equals("Y")'>
+                    OR 
+        			g.goal_id IS NULL
+                </if>
+            )
+        </if>
+        <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
+            AND 
+            a.member_serial_number = #{memberSerialNumber}
+        </if>
+        AND
+            a.deletion_status = 'N'
     </select>
+    
+    <insert id="insertActivity" useGeneratedKeys="true" keyProperty="activity_id">
+        INSERT INTO activity (
+            member_serial_number
+            <if test="goalId != null and !goalId.equals('')">
+                    ,goal_id
+            </if>
+            ,title
+            ,start_datetime
+            ,end_datetime
+            <if test="content != null and !content.equals('')">
+                    ,content
+            </if>
+            <if test="activityScore != null and !activityScore.equals('')">
+                    ,activity_score
+            </if>
+            <if test="shareStatus != null and !shareStatus.equals('')">
+                    ,share_status
+            </if>
+        )
+	VALUES (
+            #{memberSerialNumber}
+            <if test="goalId != null and !goalId.equals('')">
+                    ,#{goalId}
+            </if>
+                    ,#{title}
+                    ,#{startDatetime}
+                    ,#{endDatetime}
+            <if test="content != null and !content.equals('')">
+                    ,#{content}
+            </if>
+            <if test="activityScore != null and !activityScore.equals('')">
+                    ,#{activityScore}
+            </if>
+            <if test="shareStatus != null and !shareStatus.equals('')">
+                    ,#{shareStatus}
+            </if>
+        );
+    </insert>
+
+    <update id="updateActivity">
+        UPDATE activity
+        SET 
+            modification_datetime = now()
+        
+        <if test="goalId != null">
+            <choose>
+                <when test="goalId.equals('')">
+                     ,goal_id = NULL
+                </when>
+                <otherwise>
+                     ,goal_id = #{goalId}
+                </otherwise>
+             </choose>
+        </if>
+        <if test="title != null and !title.equals('')">
+                ,title = #{title}
+        </if>
+        <if test="startDatetime != null and !startDatetime.equals('')">
+                ,start_datetime = #{startDatetime}
+        </if>
+        <if test="endDatetime != null and !endDatetime.equals('')">
+                ,end_datetime = #{endDatetime}
+        </if>
+        <if test="content != null and !content.equals('')">
+                ,content = #{content}
+        </if>
+        <if test="activityScore != null and !activityScore.equals('')">
+                ,activity_score = #{activityScore}
+        </if>
+        <if test="shareStatus != null and !shareStatus.equals('')">
+                ,share_status = #{shareStatus}
+        </if>
+        WHERE 
+            activity_id=#{activityId};
+    </update>
+    <update id="deleteActivity">
+        UPDATE activity
+        SET
+            deletion_status = 'Y',
+            modification_datetime = now()
+        WHERE
+            activity_id = #{activityId}
+    </update>
 
 </mapper>

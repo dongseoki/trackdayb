@@ -14,6 +14,7 @@ public class GoalDTO {
     private String endDatetime = "";  // DATETIME   COMMENT '종료일'
     private String progressRate = "";  // INT   COMMENT '진행율(주기성 목표의 경우 NULL 가능)'
     private String color = "";  // VARCHAR(10)   COMMENT '컬러정보(최상위 목표 이외 NULL또는 빈값)'
+    private String shareStatus = "";  // ENUM('Y','N') NOT NULL  COMMENT '공유여부'
     private String createDatetime = "";  // DATETIME NOT NULL DEFAULT_GENERATED COMMENT '생성일시'
     private String modificationDatetime = "";  // DATETIME NOT NULL DEFAULT_GENERATED COMMENT '수정일시'
     private String deletionStatus = "";  // ENUM('Y','N') NOT NULL  COMMENT '삭제여부'
