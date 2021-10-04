@@ -19,7 +19,7 @@ import Fade from '@material-ui/core/Fade';
 import axios from 'axios';
 
 //TimeLine
-import CustomizedTimeline from '../components/TimeLineCustom';
+import CustomizedTimeline from '../components/CustomizedTimeline';
 //icon
 import { FaLock } from "react-icons/fa";
 

@@ -8,7 +8,7 @@ import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import TimelineDot from '@material-ui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 
-import "./TimeLineCustom.css";
+import "./CustomizedTimeline.css";
 
 import axios from "axios";
 

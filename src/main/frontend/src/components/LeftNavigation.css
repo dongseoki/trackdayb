@@ -17,7 +17,7 @@
 }
 .left-nav .goal-list ul li{
     display: grid;
-    grid-template-columns: 90% 10px;
+    grid-template-columns: 10px 90% 10px;
     margin : 3px;
     
 }
@@ -30,7 +30,7 @@
     margin : 0;
 }
 .left-nav .goal-list ul li .color-tag{
-    background-color: #FF5D5D;
+    background-color: yellow;
     padding: 10px;
 }
 
