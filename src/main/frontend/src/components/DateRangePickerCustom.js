@@ -8,21 +8,21 @@ function DateRangePickerCustom(props) {
     return (
       <>
         <DatePicker
-          selected={props.searchStartDatetime}
-          onChange={(date) => props.setSearchStartDatetime(date)}
+          selected={props.startDate}
+          onChange={(date) => props.setStartDate(date)}
           selectsStart
-          startDate={props.searchStartDatetime}
-          endDate={props.searchEndDatetime}
+          startDate={props.startDate}
+          endDate={props.endDate}
           locale={ko}
           dateFormat="yyyy년 MM월 dd일"
         />
         <DatePicker
-          selected={props.searchEndDatetime}
-          onChange={(date) => props.setSearchEndDatetime(date)}
+          selected={props.endDate}
+          onChange={(date) => props.setEndDate(date)}
           selectsEnd
-          startDate={props.searchStartDatetime}
-          endDate={props.searchEndDatetime}
-          minDate={props.searchStartDatetime}
+          startDate={props.startDate}
+          endDate={props.endDate}
+          minDate={props.startDate}
           locale={ko}
           dateFormat="yyyy년 MM월 dd일"
         />

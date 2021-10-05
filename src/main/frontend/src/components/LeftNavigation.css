@@ -10,37 +10,3 @@
 .left-nav p{
     font-weight: bold;
 }
-.left-nav .goal-list{
-    background-color: white;
-    border-radius: 10px;
-    padding : 10px;
-}
-.left-nav .goal-list ul li{
-    display: grid;
-    grid-template-columns: 10px 90% 10px;
-    margin : 3px;
-    
-}
-.left-nav .goal-list p{
-    font-size: 14px;
-}
-.left-nav .goal-list ul li .class-1{
-    background-color: rgba(255,93,93, 0.1);
-    padding: 10px;
-    margin : 0;
-}
-.left-nav .goal-list ul li .color-tag{
-    background-color: yellow;
-    padding: 10px;
-}
-
-.left-nav .goal-list ul li .class-2{
-    background-color: #EFEFEF;
-    padding: 7px 10px;
-    margin : 0;
-    font-size: 13px;
-}
-.left-nav .goal-list ul li .none-tag{
-    background-color: #EFEFEF;
-    padding: 7px 10px;
-}

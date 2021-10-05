@@ -41,3 +41,7 @@
     transition: 0.5s;
     color : #4EC3E0;
   }
+  .tag-color-preview{
+    width: 10px;
+    height: 10px;
+  }
