@@ -1,0 +1,15 @@
+SELECT CONCAT('private String ', COL_NM, ' = "";', '  // ', COL_TYPE, ' ', IS_NULLABLE, ' ', EXTRA, ' ', 'COMMENT ''',COL_COMMENT, '''') AS RTN
+   FROM (
+      SELECT LOWER(COLUMN_NAME) AS COL_NM
+           , UPPER(COLUMN_TYPE) AS COL_TYPE
+           , UPPER(COLUMN_DEFAULT) AS COL_DEFAULT
+           , UPPER(EXTRA) AS EXTRA
+           , UPPER(COLUMN_COMMENT) AS COL_COMMENT
+           , CASE WHEN IS_NULLABLE = 'NO' THEN 'NOT NULL' ELSE '' END AS IS_NULLABLE
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA='trackday' 
+         AND TABLE_NAME='member'
+         ORDER BY ORDINAL_POSITION ASC   
+   ) A
+;
+결과 복사 후, camercase 설정 필수.

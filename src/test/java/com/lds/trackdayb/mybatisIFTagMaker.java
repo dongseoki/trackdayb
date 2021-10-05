@@ -32,7 +32,7 @@ public class mybatisIFTagMaker {
 
         ArrayList<String> camelCaseList = new ArrayList<String>();
         // String[] camelCaseStrArr = {"startDatetime", "endDatetime", "progressRate", "color"};
-        String[] camelCaseStrArr = {"memberSerialNumber", "goalId", "title", "startDatetime", "endDatetime", "content", "activityScore", "shareStatus"};
+        String[] camelCaseStrArr = {"auth", "memberId", "name", "phoneNumber", "emailAddress", "introduction", "profilePhotoId", "backgroundPhotoId", "snsLinkStatus", "linkedEmail", "password", "failCount", "activeUserStatus", "lastLoginDatetime", "withdrawalDatetime", "remark"};
         camelCaseList = new ArrayList<>(Arrays.asList(camelCaseStrArr));
 // 출처: https://mommoo.tistory.com/32 [개발자로 홀로 서기]
 

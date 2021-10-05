@@ -1,8 +1,10 @@
 package com.lds.trackdayb.service;
 
-public class LoginServiceImpl implements LoginService {
+import org.springframework.stereotype.Service;
 
-    @Override
+@Service
+public class MemberServiceImpl{
+
     public String selectLoginMemberSerialNumber() {
         return null;
     }
