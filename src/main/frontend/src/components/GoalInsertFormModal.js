@@ -24,6 +24,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Slider from '@mui/material/Slider';
 import GoalTitleListModal from "./GoalTitleListModal";
 
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
 
 function GoalInsertFormModal(){
     const [title, setTitle] = useState("");
@@ -216,13 +218,69 @@ function GoalInsertFormModal(){
   }
   
   function PeriodicityInfo({kind}) {
+    const [timeUnit, setTimeUnit] = React.useState('');
+    const [isWeek, setIsWeek] = useState(false);
+
+    const handleChange = (event) => {
+      setTimeUnit(event.target.value);
+      // if(event.target.value === "D"){
+      //   setIsWeek(true)
+      // }else{
+      //   setIsWeek(false)
+      // }
+    };
+   
       if(kind === "regular"){
-          return(<div>매주 매월 어쩌구</div>)
+          return(
+            <div>
+              <select value={timeUnit} onChange={handleChange}>
+                <option value="D">일</option>
+                <option value="W">주</option>
+                <option value="M">월</option>
+              </select>
+                <WeekPeriodSelect timeUnit={timeUnit}/>
+              
+            </div>
+          )
       }else{
           return null
       }
   }
 
+  function WeekPeriodSelect({timeUnit}){
+    const [checked, setChecked] = useState([])
+
+    const handleChange = (evt)=>{
+      console.log(evt.target.value);
+      setChecked([false, false, false, false, false, false, false])
+    }
+    console.log("timeUnit", {timeUnit})
+    if(timeUnit === "W"){
+      return(
+        <div>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox checked={checked[0]} />} label="일" />
+            <FormControlLabel control={<Checkbox checked={checked[1]} />} label="월" />
+            <FormControlLabel control={<Checkbox checked={checked[2]} />} label="화" />
+            <FormControlLabel control={<Checkbox checked={checked[3]} />} label="수" />
+            <FormControlLabel control={<Checkbox checked={checked[4]} />} label="목" />
+            <FormControlLabel control={<Checkbox checked={checked[5]} />} label="금" />
+            <FormControlLabel control={<Checkbox checked={checked[6]} />} label="토" />
+          </FormGroup>
+
+          <FormControlLabel control={<Checkbox />} onChange={handleChange} label="요일미지정" />
+        </div>
+      )
+    } else{
+      return(
+        <div>
+          <div>횟수</div>
+          <input></input>
+        </div>
+      )
+    }
+    
+  }
 
   function MultilineTextFields(props) {
     function setValue(e){
