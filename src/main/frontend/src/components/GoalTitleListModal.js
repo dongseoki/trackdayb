@@ -42,11 +42,6 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   
     useEffect(()=>{
       let body = {
-        // searchStartDatetime : makeYYMMDD(startDatetime) + defaultSearchTime,
-        // searchEndDatetime : makeYYMMDD(endDatetime) + defaultSearchTime,
-        "searchStartDatetime": "2021-08-01 09:00:00",
-        "searchEndDatetime": "2021-10-31 09:00:00"
-
       }
       const fetchGoalTitleListModal = async () => {
         try{
