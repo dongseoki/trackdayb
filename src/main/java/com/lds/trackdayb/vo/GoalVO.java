@@ -14,5 +14,7 @@ public class GoalVO extends GoalDTO{
     String searchStartDatetime = "";
     String searchEndDatetime = "";
     String searchKind = "";
+    String orderColumn = "";
+    String orderType = "";
     List<String> searchGoalIdList = new ArrayList<String>();
 }

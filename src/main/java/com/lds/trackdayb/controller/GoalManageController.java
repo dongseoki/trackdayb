@@ -1,6 +1,5 @@
 package com.lds.trackdayb.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -12,6 +11,9 @@ import com.lds.trackdayb.service.GoalManageService;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.vo.GoalVO;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -38,12 +41,15 @@ public class GoalManageController {
         return "test";
     }
 
-    @PostMapping("/getGoalTitleList")
-    public String getGoalTitleList(@RequestBody GoalVO goalVO){
+    @GetMapping("/goalTitleList")
+    public String getGoalTitleList(@RequestParam (value = "searchGoalIdList", required = false) List<String> searchGoalIdList, GoalVO goalVO){
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        if(CollectionUtils.isNotEmpty(searchGoalIdList))
+            goalVO.setSearchGoalIdList(searchGoalIdList);
+
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalTitleList = goalService.getGoalTitleList(goalVO);
         
@@ -77,12 +83,17 @@ public class GoalManageController {
     }
 
     
-    @PostMapping("/getGoalFullList")
-    public String getGoalFullList(@RequestBody GoalVO goalVO){
+    @GetMapping("/goalFullList")
+    public String goalFullList(@RequestParam (value = "searchGoalIdList", required = false) List<String> searchGoalIdList, GoalVO goalVO){
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        if(CollectionUtils.isNotEmpty(searchGoalIdList))
+            goalVO.setSearchGoalIdList(searchGoalIdList);
+        
+        
+        
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalFullList = goalService.getGoalFullList(goalVO);
         JsonArray goalFullListJsonArray = new Gson().toJsonTree(goalFullList).getAsJsonArray();

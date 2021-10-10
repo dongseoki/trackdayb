@@ -219,7 +219,8 @@
         </if>
         <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
             AND 
-            a.end_datetime  <![CDATA[<=]]>  #{searchEndDatetime}
+            /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
+            a.end_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
         </if>
         
         <if test="searchActivityIdList != null and !searchActivityIdList.isEmpty()">
@@ -252,6 +253,17 @@
         </if>
         AND
             a.deletion_status = 'N'
+        <choose>
+            <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
+                    ORDER BY
+                            a.${orderColumn} ${orderType}
+            </when>
+            <otherwise>
+                    ORDER BY
+                            a.modification_datetime desc
+            </otherwise>
+        </choose>
+        
     </select>
     
     <insert id="insertActivity" useGeneratedKeys="true" keyProperty="activity_id">

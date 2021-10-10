@@ -177,9 +177,8 @@
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -200,26 +199,19 @@
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/goalManage/getGoalFullList"
+                  "path": "/goalManage/goalFullList"
                 },
                 "id": "5996e0b5-8cf1-4dc9-bbba-4bf72ce21859",
                 "name": "getGoalFullList_",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -233,33 +225,32 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchGoalIdList",
+                        "value": "7,8,9"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/goalManage/getGoalFullList"
+                  "path": "/goalManage/goalFullList"
                 },
                 "id": "392e45fd-ed34-41fb-be15-13824be5412f",
                 "name": "getGoalFullList_goalId",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -273,33 +264,37 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchStartDatetime",
+                        "value": "2021-10-01"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "searchEndDatetime",
+                        "value": "2021-10-30"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/goalManage/getGoalFullList"
+                  "path": "/goalManage/goalFullList"
                 },
                 "id": "549e71b0-aa2f-47de-9dce-3ece072cae69",
                 "name": "getGoalFullList_날짜",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -313,24 +308,24 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchKind",
+                        "value": "deadline"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/goalManage/getGoalFullList"
+                  "path": "/goalManage/goalFullList"
                 },
                 "id": "7ff8e73b-dfbf-4686-8027-6f213cf04c8a",
                 "name": "getGoalFullList_유형",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
@@ -377,49 +372,8 @@
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
-                },
-                "body": {
-                  "formBody": {
-                    "overrideContentType": true,
-                    "encoding": "application/x-www-form-urlencoded",
-                    "items": []
-                  },
-                  "bodyType": "Text",
-                  "textBody": "{\n  \"searchStartDatetime\": \"2021-08-01 09:00:00\",\n  \"searchEndDatetime\": \"2021-11-01 09:00:00\"\n}"
-                },
-                "uri": {
-                  "query": {
-                    "delimiter": "&",
-                    "items": []
-                  },
-                  "scheme": {
-                    "name": "http",
-                    "version": "V11"
-                  },
-                  "host": "127.0.0.1:8080",
-                  "path": "/goalManage/getGoalTitleList"
-                },
-                "id": "6d2d8365-0b3d-4250-9e0c-acbad0b769c7",
-                "name": "getGoalTitleList_",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
-              }
-            },
-            {
-              "entity": {
-                "type": "Request",
-                "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -433,24 +387,112 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchGoalIdList",
+                        "value": "7,8,9"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/goalManage/getGoalTitleList"
+                  "path": "/goalManage/goalTitleList"
                 },
                 "id": "6fbc3b31-1df8-4357-a9c5-0094ea29cd21",
                 "name": "getGoalTitleList_goalId",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"searchGoalIdList\": [\n    \"7\",\n    \"8\",\n    \"9\"]\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "orderColumn",
+                        "value": "start_datetime"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "orderType",
+                        "value": "asc"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/goalManage/goalTitleList"
+                },
+                "id": "7cf04bf5-4582-4ffc-8b41-966cf121da0f",
+                "name": "getGoalTitleList_goalId_정렬테스트",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"searchStartDatetime\": \"2021-08-01 09:00:00\",\n  \"searchEndDatetime\": \"2021-11-01 09:00:00\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchStartDatetime",
+                        "value": "2021-10-01"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "searchEndDatetime",
+                        "value": "2021-10-30"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/goalManage/goalTitleList"
+                },
+                "id": "6d2d8365-0b3d-4250-9e0c-acbad0b769c7",
+                "name": "getGoalTitleList_날짜조건포함",
+                "headers": []
               }
             },
             {
@@ -896,9 +938,8 @@
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -919,26 +960,19 @@
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/timeManage/getActivityList"
+                  "path": "/timeManage/activityList"
                 },
                 "id": "6dbe9fef-8c34-4841-a8a0-e9b8bd6f7025",
                 "name": "getActivityList_",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -952,33 +986,32 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "otherIncludedYn",
+                        "value": "Y"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/timeManage/getActivityList"
+                  "path": "/timeManage/activityList"
                 },
                 "id": "6d258da5-a6d7-45bd-b707-532b74686be1",
                 "name": "getActivityList_목표id 기타만",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -992,33 +1025,32 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchGoalIdList",
+                        "value": "10,11,3"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/timeManage/getActivityList"
+                  "path": "/timeManage/activityList"
                 },
                 "id": "544a733a-89a3-41a5-ba25-dc2cfbbcdd75",
                 "name": "getActivityList_목표id 리스트 테스트",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -1032,33 +1064,37 @@
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchGoalIdList",
+                        "value": "10,11,3"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "otherIncludedYn",
+                        "value": "Y"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/timeManage/getActivityList"
+                  "path": "/timeManage/activityList"
                 },
                 "id": "8e9bf45d-8804-468e-aa39-4820f8e68b08",
                 "name": "getActivityList_목표id 리스트_기타포함 테스트",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
               }
             },
             {
               "entity": {
                 "type": "Request",
                 "method": {
-                  "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
-                  "name": "POST"
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
                 },
                 "body": {
                   "formBody": {
@@ -1067,29 +1103,78 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"searchStartDatetime\": \"2021-09-01 09:00:00\",\n  \"searchEndDatetime\": \"2021-09-30 09:00:00\"\n}"
+                  "textBody": "{\n  \"searchStartDatetime\": \"2021-09-01 00:00:00\",\n  \"searchEndDatetime\": \"2021-09-30 00:00:00\"\n}"
                 },
                 "uri": {
                   "query": {
                     "delimiter": "&",
-                    "items": []
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchStartDatetime",
+                        "value": "2021-09-01"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "searchEndDatetime",
+                        "value": "2021-09-19"
+                      }
+                    ]
                   },
                   "scheme": {
                     "name": "http",
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/timeManage/getActivityList"
+                  "path": "/timeManage/activityList"
                 },
                 "id": "b9226507-cf32-495d-b51f-f4ce1641ed8f",
                 "name": "getActivityList_시작종료검색적용",
-                "headers": [
-                  {
-                    "enabled": true,
-                    "name": "Content-Type",
-                    "value": "application/json"
-                  }
-                ]
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"searchStartDatetime\": \"2021-09-01 09:00:00\",\n  \"searchEndDatetime\": \"2021-09-31 09:00:00\",\n  \"searchActivityIdList\":[\n  ],\n  \"searchGoalIdList\": [\n    \"1\",\n    \"2\",\n    \"3\"]\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "orderColumn",
+                        "value": "start_datetime"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "orderType",
+                        "value": "asc"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/timeManage/activityList"
+                },
+                "id": "76ea95c6-e4fe-4216-893f-1badbc290d1e",
+                "name": "getActivityList_정렬조건 포함",
+                "headers": []
               }
             },
             {
@@ -1227,7 +1312,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"goalId\":\"10\",\n  \"title\":\"삽입 테스트.\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\",\n  \"content\":\"모든 내용을 채워봄 더미 에세이 쓰기 목표를 선택함.\",\n  \"activity_score\":\"5\",\n  \"share_status\":\"Y\"\n}"
+                  "textBody": "{\n  \"goalId\":\"1023\",\n  \"title\":\"삽입 테스트.\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\",\n  \"content\":\"모든 내용을 채워봄 더미 에세이 쓰기 목표를 선택함.\",\n  \"activity_score\":\"5\",\n  \"share_status\":\"Y\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -1462,6 +1547,38 @@
             "name": "rest-test"
           },
           "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/rest-test/param-list"
+                },
+                "id": "f24e195f-dc4f-45fa-977d-d7bdcfe47502",
+                "name": "Copy of get방식으로 paramlist",
+                "headers": []
+              }
+            },
             {
               "entity": {
                 "type": "Request",

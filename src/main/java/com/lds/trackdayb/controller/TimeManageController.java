@@ -24,6 +24,8 @@ import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.vo.ActivityVO;
 import com.lds.trackdayb.vo.TimeRecordVO;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -180,12 +182,22 @@ public class TimeManageController {
      * @return ResultMVO
      * 
      */
-    @PostMapping("getActivityList")
-    public String getActivityList(@RequestBody ActivityVO activityVO){
+    @GetMapping("activityList")
+    public String getActivityList(
+        @RequestParam (value = "searchGoalIdList", required = false) List<String> searchGoalIdList,
+        @RequestParam (value = "searchActivityIdList", required = false) List<String> searchActivityIdList, 
+    ActivityVO activityVO){
         JsonObject jo = new JsonObject();
 
 
         String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+
+        if(CollectionUtils.isNotEmpty(searchGoalIdList))
+            activityVO.setSearchGoalIdList(searchGoalIdList);
+        if(CollectionUtils.isNotEmpty(searchActivityIdList))
+            activityVO.setSearchActivityIdList(searchActivityIdList);
+      
+
         activityVO.setMemberSerialNumber(loginSerialNumber);
 
         List<ActivityMVO> activityList = new ArrayList<ActivityMVO>();

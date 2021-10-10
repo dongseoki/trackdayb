@@ -239,7 +239,8 @@
         </if>
         <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
             AND 
-            g.end_datetime  <![CDATA[<=]]>  #{searchEndDatetime}
+            /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
+            g.end_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
         </if>
         <if test="searchKind != null and !searchKind.equals('')">
             AND 
@@ -284,6 +285,16 @@
         on g.goal_id =pi2.goal_id 
         AND g.kind = 'regular'
         <include refid="goalSearchConditionQuery" />
+        <choose>
+                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
+                        ORDER BY
+                                g.${orderColumn} ${orderType}
+                </when>
+                <otherwise>
+                        ORDER BY
+                                g.modification_datetime desc
+                </otherwise>
+        </choose>
     </select>
     <select id="getGoalTitleList" resultType="GoalMVO">
         select 
@@ -300,6 +311,17 @@
         g.modification_datetime
         from goal g 
         <include refid="goalSearchConditionQuery" />
+        <choose>
+                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
+                        ORDER BY
+                                g.${orderColumn} ${orderType}
+                </when>
+                <otherwise>
+                        ORDER BY
+                                g.modification_datetime desc
+                </otherwise>
+        </choose>
+
     </select>
 
 </mapper>
