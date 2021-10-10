@@ -7,14 +7,14 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
-
 //radio 버튼
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-
+//Tree 
+import Tree from '@naisutech/react-tree'
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -41,12 +41,11 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const defaultSearchTime =  " 09:00:00";
   
     useEffect(()=>{
-      let body = {
-      }
       const fetchGoalTitleListModal = async () => {
         try{
-          const result = await axios.post(
-            "/goalManage/getGoalTitleList", body);
+          const result = await axios.get(
+            "/goalManage/goalTitleList");
+            console.log("enqjsOEk---------------", result)
           setGoalTitleListModal(result.data.goalTitleList);
         } catch(err) {
           console.error(err);
@@ -82,15 +81,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
             <div className={classes.paper}>
               <h2 id="transition-modal-title">목표 리스트</h2>
               <p id="transition-modal-description">활동과 관련된 목표를 선택하세요</p>
-              <GoalTitleChoiceList 
-                goalTitleList = {goalTitleListModal} 
-                parentGoalTitle = {parentGoalTitle}
-                setParentGoalTitle = {setParentGoalTitle}
-                parentGoalId={parentGoalId}
-                setParentGoalId = {setParentGoalId}
-                parentGoalKind={parentGoalKind}
-                setParentGoalKind={setParentGoalKind}
-              />
+              <GoalTitleChoiceList goalTitleList= {goalTitleListModal}/>
               <button type="button" onClick={handleClose}>CLOSE</button>
             </div>
           </Fade>
@@ -100,119 +91,71 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   }
 
 
-function GoalTitleChoiceList({goalTitleList, parentGoalTitle, setParentGoalTitle, parentGoalId, setParentGoalId, parentGoalKind, setParentGoalKind}){
-    // 목표-부모&자식 묶기
-    const argGoalTitleObject = ArrangeGoalTitleList(goalTitleList)
+function GoalTitleChoiceList({goalTitleList}){
+  console.log('goalTitleList', goalTitleList)
+  const nodes = []
+  goalTitleList.map((goal, index)=>{
+      const goalObj = new Object();
+      goalObj.label = goal.title
+      goalObj.id = parseInt(goal.goalId)
+      if(goal.parentId){
+          goalObj.parentId = parseInt(goal.parentId)
+      }else{
+          goalObj.parentId = null
+      }
+      goalObj.color = goal.color
+      nodes.push(goalObj)
+  })
+  console.log('nodes', nodes)
 
-    return (
-        <div>
-            <p>목표선택</p>
-            <div className="goal-list">
-                <ul>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">부모 목표선택</FormLabel>
-                  <RadioGroup
-                    aria-label="parentGoal"
-                    defaultValue="female"
-                    name="radio-buttons-group"
-                    onChange= {(evt) => {
-                      setParentGoalTitle(evt.target.name)
-                      setParentGoalId(evt.target.value)
-                      ///기한성목표면 진도율도 입력할 수 있도록
-                      console.log('클릭 goalId', evt.target.value)
-                      goalTitleList.map((goal, index)=>{
-                        if(goal.goalId === evt.target.value){
-                          console.log('같은값 if문', goal.goalId, goal.kind)
-                          setParentGoalKind(goal.kind)
-                        }else{
-                          setParentGoalKind("")
-                        }
-                      })
-                    }}
-                  >
-                    <FormControlLabel value="" control={<Radio />} label="" name="선택안함"/>
-                    {argGoalTitleObject && Object.keys(argGoalTitleObject).map((key, index) => {
-                        
-                        if(argGoalTitleObject[key].children.length === 0){
-                            return (
-                                <GoalTitleParentCards 
-                                    key={argGoalTitleObject[key].goalId}
-                                    goalId = {argGoalTitleObject[key].goalId}
-                                    title={argGoalTitleObject[key].title}
-                                    parentId={argGoalTitleObject[key].parentId}
-                                    color ={argGoalTitleObject[key].color}
-                                    kind={argGoalTitleObject[key].kind}
-                                ></GoalTitleParentCards>
-                                )
-                        }else{
-                            return (
-                                <div>
-                                    <GoalTitleParentCards 
-                                        key={argGoalTitleObject[key].goalId}
-                                        goalId = {argGoalTitleObject[key].goalId}
-                                        title={argGoalTitleObject[key].title}
-                                        parentId={argGoalTitleObject[key].parentId}
-                                        color ={argGoalTitleObject[key].color}
-                                    ></GoalTitleParentCards>
+  const myThemes = {
+      modifiedDarkLarge: {
+        text: 'black', // text color
+        bg: '#EFEFEF', // background color of whole tree
+        indicator: null, // open folder indicator color
+        separator: "white", // row seperator color
+        icon: 'gold', // fill & stroke color of default icons - has no effect when using custom icons
+        selectedBg: '#3f464e', // background of selected element
+        selectedText: '#fafafa', // text color of selected element
+        hoverBg: '#505a63', // background of hovered element
+        hoverText: '#fafafa', // text color of hovered element
+        accentBg: '#2d3439', // background of empty folder element
+        accentText: '#999', // text color of empty folder element
+        textSize: '13px' // preferred text size
+      }
+    }
 
-                                    {argGoalTitleObject[key].children.map((child, index) => (
-                                        <GoalTitleChildCards 
-                                        key={child.goalId}
-                                        goalId = {child.goalId}
-                                        title={child.title}
-                                        parentId={child.parentId}
-                                        color ={child.color}
-                                    ></GoalTitleChildCards>
-                                    )
-                                    )}
-                                </div>
-                            )
-                        }
-                    })
-                }
-                </RadioGroup>
-                </FormControl>
 
-                </ul>
-            </div>
-        </div>
-    )
+  return (
+      <div>
+          <p>목표선택</p>
+          <div className="goal-list">
+  
+    <div style={{ display: 'flex', flexWrap: 'nowrap', flexGrow: 1 }}>
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+          <Tree 
+              nodes={nodes} 
+              theme="modifiedDarkLarge"
+              customTheme={myThemes}
+              // NodeRenderer={({
+              //     data: Node
+              // }) => {
+              //     return (
+              //         <li key={Node.id}>
+              //             <Checkbox {...label} defaultChecked />
+              //             <p className="class-2">{Node.label}</p>
+              //             <div className="color-tag" style={{ backgroundColor : Node.color}}></div>
+              //         </li>
+              //         )
+              //     }
+              // }
+          >
+</Tree>
+      </div>
+    </div>
+    </div>
+    </div>
+  )
 }
 
-function GoalTitleParentCards({title, goalId, color, kind}) {
-    return (
-        <li key={goalId}>
-          <FormControlLabel value={goalId} control={<Radio />} label="" name={title} kind={kind}/>
-            <p className="class-2">{title}</p>
-            <div className="color-tag" style={{ backgroundColor : color}}></div>
-        </li>
-    )
-}
-
-function GoalTitleChildCards({title, goalId}) {
-    return (
-        <li key={goalId}>
-          <FormControlLabel value={goalId} control={<Radio />} label="" name={title}/>
-            <p className="class-2">{title}</p>
-            <div className="none-tag"></div>
-        </li>
-    )
-}
-
-
-
-// 목표 부모-자식 묶기
-function ArrangeGoalTitleList(goalTitleList){
-    const arrangedObj = new Object();
-    goalTitleList.map((goal, index) => {
-        if(!goal.parentId) {
-            arrangedObj[goal.goalId] = goal
-            arrangedObj[goal.goalId]["children"] = []
-        }else if(Object.keys(arrangedObj).includes(goal.parentId)){
-            arrangedObj[goal.parentId]["children"].push(goal)
-        }
-    })
-    return arrangedObj
-}
-
-  export default GoalTitleListModal
+export default GoalTitleListModal

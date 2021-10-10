@@ -9,22 +9,25 @@ function LeftNavigation(props){
   // goalTitleLIst
   // 검색결과(목표타이틀 리스트)
   const [goalTitleList, setGoalTitleList] = useState([]);
-  const [resultCode, setResultCode] = useState("");
-  const defaultSearchTime = " 09:00:00";
   
   useEffect(() => {
     let body = {
-        searchStartDatetime : makeYYMMDD(props.searchStartDatetime) + defaultSearchTime,
-        searchEndDatetime : makeYYMMDD(props.searchEndDatetime) + defaultSearchTime,
+        searchStartDatetime : makeYYMMDD(props.searchStartDatetime),
+        searchEndDatetime : makeYYMMDD(props.searchEndDatetime),
       }
       console.log("body", body)
       const fetchGoalTitleList = async () => {
           try {
               setGoalTitleList(null);
-              const result = await axios.post(
-                  "/goalManage/getGoalTitleList", body);
+              const result = await axios.get("/goalManage/goalTitleList", {
+                  params:{
+                    // searchGoalIdList=1,2,3,
+                    searchStartDatetime:makeYYMMDD(props.searchStartDatetime),
+                    searchEndDatetime:makeYYMMDD(props.searchEndDatetime),
+                    // searchKind:"deadline",
+                  }
+              });
               setGoalTitleList(result.data.goalTitleList);
-              setResultCode(result.data.resultCode);
           } 
           catch(err){
               console.error(err)

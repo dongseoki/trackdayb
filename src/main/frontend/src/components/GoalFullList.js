@@ -9,18 +9,21 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 function GoalFullList(props) {
     // 검색결과(목표타이틀 리스트)
   const [goalFullList, setGoalFullList] = useState([]);
-  const defaultSearchTime = " 09:00:00";
 
   useEffect(() => {
-    let body = {
-      searchStartDatetime : makeYYMMDD(props.searchStartDatetime) + defaultSearchTime,
-      searchEndDatetime : makeYYMMDD(props.searchEndDatetime) + defaultSearchTime,
-    }
     const fetchGoalFullList = async () => {
       try {
-        const result = await axios.post("/goalManage/getGoalFullList", body);
+        const result = await axios.get("/goalManage/goalFullList", {
+          params: {
+            // searchGoalIdList=1,2,3,
+            searchStartDatetime:makeYYMMDD(props.searchStartDatetime),
+            searchEndDatetime:makeYYMMDD(props.searchEndDatetime),
+            // searchKind:"deadline",
+            orderColumn:"start_datetime",
+            orderType:"asc"
+          }
+        });
         setGoalFullList(result.data.goalFullList)
-        console.log("result", result)
       } catch(err){
         console.error(err)
       }

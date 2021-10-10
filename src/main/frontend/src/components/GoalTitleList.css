@@ -17,11 +17,9 @@
     padding: 10px;
     margin : 0;
 }
-.goal-list ul li .color-tag{
-    background-color: yellow;
+.color-tag{
     padding: 10px;
 }
-
 .goal-list ul li .class-2{
     background-color: #EFEFEF;
     padding: 7px 10px;
