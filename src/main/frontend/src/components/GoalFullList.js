@@ -7,19 +7,19 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 function GoalFullList(props) {
-    // 검색결과(목표타이틀 리스트)
+  // 검색결과(목표타이틀 리스트)
   const [goalFullList, setGoalFullList] = useState([]);
-
+  const [orderColumn, setOrderColumn] = useState("start_datetime");
   useEffect(() => {
     const fetchGoalFullList = async () => {
       try {
         const result = await axios.get("/goalManage/goalFullList", {
           params: {
-            // searchGoalIdList=1,2,3,
+            searchGoalIdList:props.searchGoalIdList.toString(),
             searchStartDatetime:makeYYMMDD(props.searchStartDatetime),
             searchEndDatetime:makeYYMMDD(props.searchEndDatetime),
             // searchKind:"deadline",
-            orderColumn:"start_datetime",
+            orderColumn: orderColumn,
             orderType:"asc"
           }
         });
@@ -29,16 +29,26 @@ function GoalFullList(props) {
       }
     }
     fetchGoalFullList();
-}, [props.searchStartDatetime, props.searchEndDatetime]);
+}, [props.searchStartDatetime, props.searchEndDatetime, props.searchGoalIdList, orderColumn]);
 
+const orderColumnHandler = (e, orderColumn)=>{
+  setOrderColumn(orderColumn)
+}
     return (
         <div>
             <div className="align-buttons">
             <button>목표 모아보기</button>
             
-            <ColorToggleButton 
-            defalutValue="시작일 순"
-            values={["시작일 순", "종료일 순","진행률 순"]}/>
+            <ToggleButtonGroup
+              color="primary"
+              value={orderColumn}
+              exclusive={true}
+              onChange={orderColumnHandler}
+            >
+              <ToggleButton value="start_datetime">시작일 순</ToggleButton>
+              <ToggleButton value="end_datetime">종료일 순</ToggleButton>
+              <ToggleButton value="progress_rate">진행률 순</ToggleButton>
+            </ToggleButtonGroup>
 
             <ColorToggleButton 
             defalutValue="카드"

@@ -7,19 +7,9 @@ function Goal() {
   // 검색조건(조회기간)
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
-
-  // goalFullList
-  // let body = {
-  //   "searchStartDatetime": "2021-09-01 09:00:00",
-  //   "searchEndDatetime": "2021-09-31 09:00:00",
-  //   "searchGoalIdList": [
-  //     "1",
-  //     "2",
-  //     "3"],
-  //   "searchKind":"deadline"
-  // }
-
-  
+  //체크박스 선택
+  const [searchGoalIdList, setSearchGoalIdList] = useState([]);
+   
   return (
     <div className="goal">
       {/* 사이드 */}
@@ -29,6 +19,8 @@ function Goal() {
           searchEndDatetime={searchEndDatetime}
           setSearchStartDatetime={setSearchStartDatetime}
           setSearchEndDatetime={setSearchEndDatetime}
+          searchGoalIdList={searchGoalIdList}
+          setSearchGoalIdList={setSearchGoalIdList}
         />
       </aside>
     
@@ -40,6 +32,8 @@ function Goal() {
         searchEndDatetime={searchEndDatetime}
         setSearchStartDatetime={setSearchStartDatetime}
         setSearchEndDatetime={setSearchEndDatetime}
+        searchGoalIdList={searchGoalIdList}
+        setSearchGoalIdList={setSearchGoalIdList}
       />
 
       

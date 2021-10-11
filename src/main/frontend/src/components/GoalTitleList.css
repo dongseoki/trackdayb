@@ -3,16 +3,15 @@
     border-radius: 10px;
     padding : 10px;
 }
-.goal-list ul li{
+.goal-list li{
     display: grid;
     grid-template-columns: 10px 90% 10px;
     margin : 3px;
-    
 }
 .goal-list p{
     font-size: 14px;
 }
-.goal-list ul li .class-1{
+.goal-list li .class-1{
     background-color: rgba(255,93,93, 0.1);
     padding: 10px;
     margin : 0;
@@ -20,13 +19,13 @@
 .color-tag{
     padding: 10px;
 }
-.goal-list ul li .class-2{
+.goal-list li .class-2{
     background-color: #EFEFEF;
     padding: 7px 10px;
     margin : 0;
     font-size: 13px;
 }
-.goal-list ul li .none-tag{
+.goal-list li .none-tag{
     background-color: #EFEFEF;
     padding: 7px 10px;
 }

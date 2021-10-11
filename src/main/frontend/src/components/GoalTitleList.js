@@ -6,8 +6,11 @@ import Tree from '@naisutech/react-tree'
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-function GoalTitleList({goalTitleList}) {
+function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
+
     console.log('goalTitleList', goalTitleList)
+    console.log('searchGoalIdList', searchGoalIdList)
+    
     const nodes = []
     goalTitleList.map((goal, index)=>{
         const goalObj = new Object();
@@ -19,9 +22,12 @@ function GoalTitleList({goalTitleList}) {
             goalObj.parentId = null
         }
         goalObj.color = goal.color
+        goalObj.index = index
         nodes.push(goalObj)
     })
     console.log('nodes', nodes)
+
+    
 
     const myThemes = {
         modifiedDarkLarge: {
@@ -40,36 +46,49 @@ function GoalTitleList({goalTitleList}) {
         }
       }
 
-
+    const changeHandler = (e, checked, id) => {
+        console.log('e.target', e.target)
+        e.stopPropagation() //이벤트 버블링 막기
+        e.preventDefault();
+        if (checked) {
+          setSearchGoalIdList([...searchGoalIdList, id]);
+        } else {
+          // 체크 해제
+          setSearchGoalIdList(searchGoalIdList.filter((el) => el !== id));
+        }
+      };
+      
     return (
         <div>
             <p>목표선택</p>
             <div className="goal-list">
-    
-      <div style={{ display: 'flex', flexWrap: 'nowrap', flexGrow: 1 }}>
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* <div style={{ display: 'flex', flexWrap: 'nowrap', flexGrow: 1 }}> */}
+        {/* <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}> */}
             <Tree 
                 nodes={nodes} 
                 theme="modifiedDarkLarge"
                 customTheme={myThemes}
-                // NodeRenderer={({
-                //     data: Node
-                // }) => {
-                //     return (
-                //         <li key={Node.id}>
-                //             <Checkbox {...label} defaultChecked />
-                //             <p className="class-2">{Node.label}</p>
-                //             <div className="color-tag" style={{ backgroundColor : Node.color}}></div>
-                //         </li>
-                //         )
-                //     }
-                // }
+                NodeRenderer={({
+                    data: Node
+                }) => {
+                    return (
+                        <li key={Node.id} >
+                            <Checkbox {...label} 
+                            onChange={(e)=>{changeHandler(e, e.currentTarget.checked, Node.id)}}
+                            checked={searchGoalIdList.includes(Node.id) ? true : false} 
+                            value={Node.id}/>
+                            <p className="class-2" name={Node.label}>{Node.label}</p>
+                            <div className="color-tag" style={{ backgroundColor : Node.color}}></div>
+                        </li>
+                        )
+                    }
+                }
             >
   </Tree>
         </div>
       </div>
-      </div>
-      </div>
+    //   </div>
+    //   </div>
     )
   }
 
