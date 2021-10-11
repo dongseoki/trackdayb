@@ -1,0 +1,22 @@
+.modal-goal-list li{
+    display: grid;
+    grid-template-columns: 90% 10px;
+    margin : 3px;
+}
+
+.modal-goal-list p{
+    font-size: 14px;
+}
+.modal-color-tag{
+    background-color: #EFEFEF;
+    padding: 7px 10px;
+    margin : 0;
+    font-size: 13px;
+}
+.prevGoalTitleList{
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    border-radius: 4px;
+    background-color: #eaf4fd;
+    height: 40px;
+    width: 80px;
+}

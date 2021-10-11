@@ -1,0 +1,20 @@
+.date-picker-wrapper{
+    display: flex;
+    flex-direction: row;
+}
+.date-picker{
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    font-size: 14px;
+    text-align:center;
+    height: 40px;
+    border-radius: 4px;
+    margin: 0;
+}
+.date-span{
+    padding-right: 14px;
+    display: flex;
+    align-items: center;
+}
+.dash-icon{
+    color :#7f7f7f;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 //css
 import { makeStyles } from '@material-ui/core/styles';
+import "./GoalTitleListModal.css"
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -18,7 +19,8 @@ import Tree from '@naisutech/react-tree'
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-  function GoalTitleListModal({parentGoalTitle, setParentGoalTitle, parentGoalId, setParentGoalId, parentGoalKind, setParentGoalKind}){
+  function GoalTitleListModal({
+    parentId, setParentId, parentGoalTitle, setParentGoalTitle, parentGoalKind, setParentGoalKind}){
     
     const useStyles = makeStyles((theme) => ({
       modal: {
@@ -38,7 +40,6 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const [open, setOpen] = useState(false);
     //목표 타이틀 리스트-부모 목표 고르기
     const [goalTitleListModal, setGoalTitleListModal] = useState([]);
-    const defaultSearchTime =  " 09:00:00";
   
     useEffect(()=>{
       const fetchGoalTitleListModal = async () => {
@@ -81,7 +82,13 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
             <div className={classes.paper}>
               <h2 id="transition-modal-title">목표 리스트</h2>
               <p id="transition-modal-description">활동과 관련된 목표를 선택하세요</p>
-              <GoalTitleChoiceList goalTitleList= {goalTitleListModal}/>
+              <GoalTitleChoiceList 
+                goalTitleList= {goalTitleListModal}
+                parentId={parentId}
+                setParentId={setParentId}
+                parentGoalTitle={parentGoalTitle}
+                setParentGoalTitle={setParentGoalTitle}
+              />
               <button type="button" onClick={handleClose}>CLOSE</button>
             </div>
           </Fade>
@@ -91,7 +98,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   }
 
 
-function GoalTitleChoiceList({goalTitleList}){
+function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTitle, setParentGoalTitle}){
   console.log('goalTitleList', goalTitleList)
   const nodes = []
   goalTitleList.map((goal, index)=>{
@@ -124,37 +131,64 @@ function GoalTitleChoiceList({goalTitleList}){
         textSize: '13px' // preferred text size
       }
     }
-
+ 
+    
+    const selectHandler = (e)=>{
+      setParentId(e.target.value)
+      if(!e.target.value){
+        setParentGoalTitle("없음")
+      }else{
+        let targetIndex = goalTitleList.findIndex((element)=>{
+          if(element.goalId === e.target.value){
+            return true
+          }
+        })
+        setParentGoalTitle(goalTitleList[targetIndex]["title"])
+      }
+      
+    }
 
   return (
       <div>
-          <p>목표선택</p>
-          <div className="goal-list">
+          <div className="modal-goal-list">
   
-    <div style={{ display: 'flex', flexWrap: 'nowrap', flexGrow: 1 }}>
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+    {/* <div style={{ display: 'flex', flexWrap: 'nowrap', flexGrow: 1 }}> */}
+      {/* <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}> */}
+      <FormControl component="fieldset">
+      <FormLabel component="legend">목표선택</FormLabel>
+      <RadioGroup
+        aria-label="목표선택"
+        defaultValue=""
+        name="radio-buttons-group"
+        value={parentId}
+        onChange={selectHandler}
+      >
+        <FormControlLabel value="" control={<Radio />} label="없음" />
           <Tree 
               nodes={nodes} 
               theme="modifiedDarkLarge"
               customTheme={myThemes}
-              // NodeRenderer={({
-              //     data: Node
-              // }) => {
-              //     return (
-              //         <li key={Node.id}>
-              //             <Checkbox {...label} defaultChecked />
-              //             <p className="class-2">{Node.label}</p>
-              //             <div className="color-tag" style={{ backgroundColor : Node.color}}></div>
-              //         </li>
-              //         )
-              //     }
-              // }
+              NodeRenderer={({
+                  data: Node
+              }) => {
+                  return (
+                      <li key={Node.id}>
+                        <FormControlLabel value={Node.id} control={<Radio />} label={Node.label} />
+                        {/* <p className="modal-goal-title">{Node.label}</p> */}
+                        <div className="modal-color-tag" style={{ backgroundColor : Node.color}}></div>
+                      </li>
+                      )
+                  }
+              }
           >
 </Tree>
+</RadioGroup>
+
+</FormControl>
       </div>
     </div>
-    </div>
-    </div>
+    // </div>
+    // </div>
   )
 }
 
