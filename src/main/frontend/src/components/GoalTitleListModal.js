@@ -46,7 +46,6 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
         try{
           const result = await axios.get(
             "/goalManage/goalTitleList");
-            console.log("enqjsOEk---------------", result)
           setGoalTitleListModal(result.data.goalTitleList);
         } catch(err) {
           console.error(err);
@@ -88,8 +87,9 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
                 setParentId={setParentId}
                 parentGoalTitle={parentGoalTitle}
                 setParentGoalTitle={setParentGoalTitle}
+                setParentGoalKind={setParentGoalKind}
               />
-              <button type="button" onClick={handleClose}>CLOSE</button>
+              <button type="button" onClick={handleClose}>확인</button>
             </div>
           </Fade>
         </Modal>
@@ -98,7 +98,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
   }
 
 
-function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTitle, setParentGoalTitle}){
+function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTitle, setParentGoalTitle, setParentGoalKind}){
   console.log('goalTitleList', goalTitleList)
   const nodes = []
   goalTitleList.map((goal, index)=>{
@@ -113,7 +113,6 @@ function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTi
       goalObj.color = goal.color
       nodes.push(goalObj)
   })
-  console.log('nodes', nodes)
 
   const myThemes = {
       modifiedDarkLarge: {
@@ -144,6 +143,7 @@ function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTi
           }
         })
         setParentGoalTitle(goalTitleList[targetIndex]["title"])
+        setParentGoalKind(goalTitleList[targetIndex]["kind"])
       }
       
     }

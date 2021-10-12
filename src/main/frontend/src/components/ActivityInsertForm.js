@@ -25,13 +25,13 @@ function ActivityInsertForm({writeDate}){
     const [content, setContent] = useState("");
     const [activityScore, setActivityScore] = useState("")
     const [parentGoalTitle, setParentGoalTitle] = useState("");
-    const [parentGoalId, setParentGoalId] = useState("");
+    const [parentId, setParentId] = useState("");
     const [parentGoalKind, setParentGoalKind] = useState("");
-
+    
     const handleSubmit = async (evt) => {
       evt.preventDefault();
       const formData = {
-        goalId:parentGoalId,
+        goalId:parentId,
         title : title,
         startDatetime: writeDate +' '+ startDatetime + ':00',
         endDatetime: writeDate +' '+ endDatetime + ':00',
@@ -75,16 +75,17 @@ function ActivityInsertForm({writeDate}){
       ><FaLock/>
       </ToggleButton>
         </div>
-        <p>목표선택</p>
-        <p>{parentGoalTitle}</p>
-        <GoalTitleListModal 
-          parentGoalTitle={parentGoalTitle}
-          setParentGoalTitle={setParentGoalTitle}
-          parentGoalId={parentGoalId}
-          setParentGoalId={setParentGoalId}
-          parentGoalKind = {parentGoalKind}
-          setParentGoalKind = {setParentGoalKind}
-        />     
+        <div className="parent-modal-wrapper">
+          <GoalTitleListModal 
+            parentGoalTitle={parentGoalTitle}
+            setParentGoalTitle={setParentGoalTitle}
+            parentId={parentId}
+            setParentId={setParentId}
+            parentGoalKind = {parentGoalKind}
+            setParentGoalKind = {setParentGoalKind}
+          />
+          <div className="parent-title">{parentGoalTitle}</div>
+        </div>
         <div className="title-wrapper">
         <TextField 
         className="textfield-title"
@@ -120,7 +121,7 @@ function ActivityInsertForm({writeDate}){
             setActivityScore(e.target.value)
           }}
         />
-        {/* <PeriodicityInfo kind={parentGoalKind}/> */}
+        <PeriodicityInfo kind={parentGoalKind}/>
         </div>
         <input type="submit" value="Submit" />
       </form>
@@ -128,14 +129,33 @@ function ActivityInsertForm({writeDate}){
   }
 
 
-//   function PeriodicityInfo({kind}) {
-//     console.log("kidn", kind)
-//     if(kind === "deadline"){
-//         return(<div>기한성은 진도율 수정가능</div>)
-//     }else{
-//         return null
-//     }
-// }
+  function PeriodicityInfo({kind}) {
+    console.log("kidn", kind)
+    if(kind === "deadline"){
+        return(
+          <div className="slider-wrapper">
+          <label className="modal-title">진행률</label>
+          <div className="slider-border">
+            {/* <Slider
+              style={{width:"90%"}}
+              aria-label="progressRate"
+              defaultValue={0}
+              valueLabelDisplay="auto"
+              step={10}
+              marks
+              min={0}
+              max={100}
+              onChange={function(e){
+                setProgressRate(e.target.value)
+              }}
+          /> */}
+          </div>
+        </div>
+        )
+    }else{
+        return null
+    }
+}
 
   
 function TimePickers(props){

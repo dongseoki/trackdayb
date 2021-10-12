@@ -41,3 +41,15 @@
     transition: 0.5s;
     color : #4EC3E0;
   }
+
+  .card .card-button-wrapper{
+    display: flex;
+  }
+  .card .card-button-wrapper .modifyBtn {
+    height: 30px;
+    font-size: 12px;
+  }
+  .card .card-button-wrapper .deleteBtn {
+    height: 30px;
+    font-size: 12px;
+  }

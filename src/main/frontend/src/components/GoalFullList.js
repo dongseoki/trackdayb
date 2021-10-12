@@ -13,6 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import GoalModifyFormModal from "./GoalModifyFormModal";
 
 function GoalFullList(props) {
   // 검색결과(목표타이틀 리스트)
@@ -112,17 +113,26 @@ function ColorToggleButton(props) {
 
 
 function GoalCard({title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, goalFullList, setGoalFullList}){
-  const modifyHandler = ()=>{
-    console.log('수정')
-  }
+  
     return(
         <div className="card" style={{ borderLeft : `6px solid`, borderColor : color}} id={goalId} >
-          <ModifyModal goalId={goalId} goalFullList={goalFullList}
-                setGoalFullList ={setGoalFullList}/>
-
-          <DeleteModal goalId={goalId} goalFullList={goalFullList}
-                setGoalFullList ={setGoalFullList}/>
           
+          <div className="card-button-wrapper">
+            <GoalModifyFormModal 
+            title={title}
+            startDatetime={startDatetime}
+            endDatetime={endDatetime}
+            content={content}
+            goalId={goalId}
+            kind={kind}
+            progressRate={progressRate}
+            color={color}
+            goalFullList={goalFullList}
+            setGoalFullList={setGoalFullList}
+            />
+            <DeleteModal goalId={goalId} goalFullList={goalFullList}
+                setGoalFullList ={setGoalFullList}/>
+          </div>
           <h2>{title}</h2>
           <span>시작일: </span><span>{startDatetime}</span><br/>
           <span>종료일: </span><span>{endDatetime}</span><br/>
@@ -133,57 +143,6 @@ function GoalCard({title, startDatetime, endDatetime, content, goalId, kind, pro
     )
 }
 
-function ModifyModal ({goalId, goalFullList, setGoalFullList}) {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const modifyHandler = async ()=>{
-    try{
-      const result= await axios.patch("/goalManage/goal222", {
-        params:{
-          goalId: goalId
-        }
-      })
-      console.log("수정결과", result);
-      setGoalFullList();
-
-    }catch(err){
-      console.error(err)
-    }
-  }
-  
-  return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        수정
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"정말 수정하시겠습니까?"}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose}>취소</Button>
-          <Button onClick={modifyHandler} autoFocus>
-            저장
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-
-}
 
 // 삭제 버튼 모달
 function DeleteModal({goalId, goalFullList, setGoalFullList}) {
@@ -213,7 +172,7 @@ function DeleteModal({goalId, goalFullList, setGoalFullList}) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button className="deleteBtn" variant="outlined" onClick={handleClickOpen}>
         삭제
       </Button>
       <Dialog
