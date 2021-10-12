@@ -5,6 +5,14 @@ import GoalInsertFormModal from "./GoalInsertFormModal";
 // 토글버튼
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+// 삭제버튼
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 function GoalFullList(props) {
   // 검색결과(목표타이틀 리스트)
@@ -65,9 +73,14 @@ const orderColumnHandler = (e, orderColumn)=>{
                         goalId={goal.goalId}
                         kind={goal.kind}
                         progressRate={goal.progressRate}
-                        color={goal.color}></GoalCard>
+                        color={goal.color}
+                        goalFullList={goalFullList}
+                        setGoalFullList={setGoalFullList}
+                        ></GoalCard>
                 ))}
-                <GoalInsertFormModal />
+                <GoalInsertFormModal 
+                goalFullList={goalFullList}
+                setGoalFullList ={setGoalFullList}/>
             </div>
       </div>
     )
@@ -98,18 +111,131 @@ function ColorToggleButton(props) {
   }
 
 
-function GoalCard({title, startDatetime, endDatetime, content, goalId, kind, progressRate, color}){
+function GoalCard({title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, goalFullList, setGoalFullList}){
+  const modifyHandler = ()=>{
+    console.log('수정')
+  }
     return(
-        <div className="card" style={{ borderLeft : `6px solid`, borderColor : color}} id={goalId}>
-        <h2>{title}</h2>
-        <span>시작일: </span><span>{startDatetime}</span><br/>
-        <span>종료일: </span><span>{endDatetime}</span><br/>
-        <span>내용: </span><span>{content}</span><br/>
-        <span>kind: </span><span>{kind}</span><br/>
-        <span>진행률: </span><span>{progressRate}</span><br/>
+        <div className="card" style={{ borderLeft : `6px solid`, borderColor : color}} id={goalId} >
+          <ModifyModal goalId={goalId} goalFullList={goalFullList}
+                setGoalFullList ={setGoalFullList}/>
+
+          <DeleteModal goalId={goalId} goalFullList={goalFullList}
+                setGoalFullList ={setGoalFullList}/>
+          
+          <h2>{title}</h2>
+          <span>시작일: </span><span>{startDatetime}</span><br/>
+          <span>종료일: </span><span>{endDatetime}</span><br/>
+          <span>내용: </span><span>{content}</span><br/>
+          <span>kind: </span><span>{kind}</span><br/>
+          <span>진행률: </span><span>{progressRate}</span><br/>
         </div>
     )
 }
+
+function ModifyModal ({goalId, goalFullList, setGoalFullList}) {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const modifyHandler = async ()=>{
+    try{
+      const result= await axios.patch("/goalManage/goal222", {
+        params:{
+          goalId: goalId
+        }
+      })
+      console.log("수정결과", result);
+      setGoalFullList();
+
+    }catch(err){
+      console.error(err)
+    }
+  }
+  
+  return (
+    <div>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        수정
+      </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"정말 수정하시겠습니까?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>취소</Button>
+          <Button onClick={modifyHandler} autoFocus>
+            저장
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+
+}
+
+// 삭제 버튼 모달
+function DeleteModal({goalId, goalFullList, setGoalFullList}) {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const deleteHandler = async ()=>{
+    try{
+      const result= await axios.delete("/goalManage/goal", {
+        params:{
+          goalId: goalId
+        }
+      })
+      console.log("삭제결과", result)
+      setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
+    }catch(err){
+      console.error(err)
+    }
+  }
+
+  return (
+    <div>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        삭제
+      </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"정말 삭제하시겠습니까?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>취소</Button>
+          <Button onClick={deleteHandler} autoFocus>
+            삭제
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
 
 // YYYY-MM-DD 형태로 반환
 function makeYYMMDD(value){

@@ -31,7 +31,7 @@ import GoalTitleListModal from "./GoalTitleListModal";
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 
-function GoalInsertFormModal(){
+function GoalInsertFormModal({goalFullList, setGoalFullList}){
   const [ parentId, setParentId ] = useState("")
   const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
   const [title, setTitle] = useState("");
@@ -113,6 +113,8 @@ function GoalInsertFormModal(){
       try{
         const result = await axios.post("/goalManage/goal", formData);
         console.log("제출결과", {result})
+        setOpen(false);
+        setGoalFullList([...goalFullList, result.data])
       }catch(err){
         console.error(err)
       }
