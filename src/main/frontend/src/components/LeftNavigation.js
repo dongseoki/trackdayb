@@ -19,6 +19,7 @@ function LeftNavigation(props){
                   }
               });
               setGoalTitleList(result.data.goalTitleList);
+              console.log("골 타이틀 리스트", result.data.goalTitleList)
               let tempGoalIdList = new Array();
               result.data.goalTitleList.map((goal)=>{
                 tempGoalIdList.push(parseInt(goal.goalId))

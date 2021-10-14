@@ -33,14 +33,15 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 
   function GoalInsertForm({
-    parentId, setParentId, title, setTitle, content, setContent, startDatetime, setStartDatetime,
-    endDatetime, setEndDatetime, toggleSelected, setToggleSelected, 
-  shareStatus, setshareStatus, color, setColor, kind, setKind, 
-  progressRate, setProgressRate, parentGoalTitle, setParentGoalTitle,
+    parentId, setParentId, parentGoalTitle, setParentGoalTitle, title, setTitle, content, setContent, startDatetime, setStartDatetime,
+    endDatetime, setEndDatetime, shareStatus, setshareStatus, color, setColor, kind, setKind, 
+  progressRate, setProgressRate,
   timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
 
-    console.log('startDatetime', startDatetime)
+    
+
+    
     return (
       <>
         <div className="top-wrapper">  
@@ -53,14 +54,13 @@ import Checkbox from '@mui/material/Checkbox';
             setEndDate={setEndDatetime}/>
           </div>
           <div className="modal-share-toggle">
-            <div className="modal-title">공개여부</div>
+            <div className="modal-title">비공개</div>
           <ToggleButton
           color="primary"
           value="check"
-          selected={toggleSelected}
+          selected={shareStatus}
           onChange={() => {
-            setToggleSelected(!toggleSelected);
-            setshareStatus(toggleToString(toggleSelected));
+            setshareStatus(!shareStatus);
           }}
         ><FaLock/>
         </ToggleButton>
@@ -277,6 +277,7 @@ import Checkbox from '@mui/material/Checkbox';
             label="횟수" 
             size="small" 
             variant="outlined"
+            value={count}
             InputLabelProps={{
               shrink: true,
             }}
@@ -348,14 +349,6 @@ import Checkbox from '@mui/material/Checkbox';
       )
     } else{
       return null
-    }
-  }
-
-  function toggleToString(value){
-    if(value){ //공개하겠다
-      return "Y"
-    }else{
-      return "N"
     }
   }
 

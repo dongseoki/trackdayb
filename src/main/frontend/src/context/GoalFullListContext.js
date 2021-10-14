@@ -19,7 +19,6 @@ export const GoalFullListProvider = (props) => {
               }
             });
             setGoalFullList(result.data.goalFullList)
-            console.log("GoalFullList",result.data.goalFullList )
           } catch(err){
             console.error(err)
           }

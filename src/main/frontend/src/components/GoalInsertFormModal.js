@@ -10,33 +10,14 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 //goalInsertForm
-import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
 import randomColor from "randomcolor";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-//color picker
-import { HexColorPicker } from "react-colorful";
-
-// 토글버튼
-import ToggleButton from '@mui/material/ToggleButton';
-
-//slider-score
-import Slider from '@mui/material/Slider';
-import GoalTitleListModal from "./GoalTitleListModal";
-
-import FormGroup from '@mui/material/FormGroup';
-import Checkbox from '@mui/material/Checkbox';
 import GoalInsertForm from "./GoalInsertForm";
 
 
 function GoalInsertFormModal({goalFullList, setGoalFullList}){
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
-  const [shareStatus, setshareStatus] = useState("N");
+  const [shareStatus, setshareStatus] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [kind, setKind] = useState('regular');
@@ -55,7 +36,6 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
   
   const [ parentId, setParentId ] = useState("")
   const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
-  const [toggleSelected, setToggleSelected] = useState(false)
   const [color, setColor] = useState(randomColor());
   const defaultSearchTime = " 09:00:00";
   
@@ -68,7 +48,6 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
       },
       paper: {
         backgroundColor: theme.palette.background.paper,
-        // border: '2px solid #000',
         borderRadius: "10px",
         boxShadow: theme.shadows[5],
         padding: theme.spacing(1, 3, 2),
@@ -97,7 +76,8 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
         "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
         "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
         "progressRate":progressRate,
-        "color":color
+        "color":color,
+        "shareStatus": shareStatus ? "N":"Y",
       }
       if(kind === "regular"){
         formData['periodicityInfo'] = {
@@ -115,7 +95,7 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
       }
       console.log('제출', formData)
       try{
-        const result = await axios.post("/goalManage/goal", formData);
+        const result = await axios.post("/goalManage/goal2", formData);
         console.log("제출결과", {result})
         setOpen(false);
         setGoalFullList([...goalFullList, result.data])
@@ -172,15 +152,12 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
                 setProgressRate={setProgressRate}
                 parentId={parentId}
                 setParentId={setParentId}
-                
-                toggleSelected={toggleSelected}
-                setToggleSelected={setToggleSelected}
-                
-                color={color}
-                setColor = {setColor}
                 parentGoalTitle={parentGoalTitle}
                 setParentGoalTitle={setParentGoalTitle}
-                           
+                 
+                color={color}
+                setColor = {setColor}
+                          
               />
               <div className="button-wrapper">
                 <button type="submit" className="submitBtn" onClick={handleSubmit}>제출</button>
