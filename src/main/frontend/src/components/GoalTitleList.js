@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import Checkbox from '@mui/material/Checkbox';
 import "./GoalTitleList.css"
 //Tree 
@@ -7,10 +7,6 @@ import Tree from '@naisutech/react-tree'
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
-
-    console.log('goalTitleList', goalTitleList)
-    console.log('searchGoalIdList', searchGoalIdList)
-    
     const nodes = []
     goalTitleList.map((goal, index)=>{
         const goalObj = new Object();
@@ -25,9 +21,6 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
         goalObj.index = index
         nodes.push(goalObj)
     })
-    console.log('nodes', nodes)
-
-    
 
     const myThemes = {
         modifiedDarkLarge: {
@@ -123,9 +116,5 @@ function GoalTitleChildCards({title, goalId}) {
     )
 }
 
-// YYYY-MM-DD 형태로 반환
-function makeYYMMDD(value){
-    return value.toISOString().substring(0,10);
-}
 
 export default GoalTitleList;

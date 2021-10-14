@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
@@ -35,7 +35,41 @@ import GoalInsertForm from "./GoalInsertForm";
 import Button from '@mui/material/Button';
 
 
-function GoalModifyFormModal(title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, goalFullList, setGoalFullList){
+function GoalModifyFormModal({modifyData, index, goalFullList, setGoalFullList}){
+    const YNtoTF = (value)=>{
+        if(value === "Y"){
+            return true
+        }else{
+            return false
+        }
+    }
+
+    const [startDatetime, setStartDatetime] = useState(new Date(modifyData.startDatetime));
+    const [endDatetime, setEndDatetime] = useState(new Date(modifyData.endDatetime));
+    const [shareStatus, setshareStatus] = useState("N");
+    const [title, setTitle] = useState(modifyData.title);
+    const [content, setContent] = useState(modifyData.content);
+    const [kind, setKind] = useState(modifyData.kind);
+    //주기정보
+    const [timeUnit, setTimeUnit] = useState(modifyData.periodicityInfo.timeUnit);
+    const [type, setType] = useState(modifyData.periodicityInfo.type);
+    const [count, setCount] = useState(modifyData.periodicityInfo.count);
+    const [sun, setSun] = useState(YNtoTF(modifyData.periodicityInfo.sunYn))
+    const [mon, setMon] = useState(YNtoTF(modifyData.periodicityInfo.monYn))
+    const [tue, setTue] = useState(YNtoTF(modifyData.periodicityInfo.tueYn))
+    const [wed, setWed] = useState(YNtoTF(modifyData.periodicityInfo.wedsYn))
+    const [thu, setThu] = useState(YNtoTF(modifyData.periodicityInfo.thurYn))
+    const [fri, setFri] = useState(YNtoTF(modifyData.periodicityInfo.fryYn))
+    const [sat, setSat] = useState(YNtoTF(modifyData.periodicityInfo.satYn))
+    const [progressRate, setProgressRate] = useState(parseInt(modifyData.progressRate));
+    const [ parentId, setParentId ] = useState(modifyData.parentId)
+    // const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
+    // const [toggleSelected, setToggleSelected] = useState(false)
+    // const [color, setColor] = useState(randomColor());
+    // const defaultSearchTime = " 09:00:00";
+
+    console.log('모달데이터', modifyData)
+    console.log('시작일', new Date(modifyData.startDatetime))
     const useStyles = makeStyles((theme) => ({
         modal: {
           display: 'flex',
@@ -83,17 +117,40 @@ function GoalModifyFormModal(title, startDatetime, endDatetime, content, goalId,
             <Fade in={open}>
               <div className={classes.paper}>
                 <h3 id="transition-modal-title">목표 수정</h3>
+                
                 <GoalInsertForm
+                startDatetime = {startDatetime}
+                setStartDatetime = {setStartDatetime}
+                endDatetime={endDatetime}
+                setEndDatetime = {setEndDatetime}
+                shareStatus={shareStatus}
+                setshareStatus={setshareStatus}
                 title={title}
-                // startDatetime={startDatetime}
-                // endDatetime={endDatetime}
-                content={content}
-                goalId={goalId}
+                setTitle={setTitle}
+                content = {content}
+                setContent = {setContent}
                 kind={kind}
+                setKind={setKind}
+                timeUnit={timeUnit}
+                setTimeUnit={setTimeUnit}
+                type={type}
+                setType={setType}
+                count={count}
+                setCount={setCount} 
+                sun={sun} setSun={setSun}
+                mon={mon} setMon={setMon}
+                tue={tue} setTue={setTue}
+                wed={wed} setWed={setWed}
+                thu={thu} setThu={setThu}
+                fri={fri} setFri={setFri}
+                sat={sat} setSat={setSat}  
                 progressRate={progressRate}
-                color={color}
-                goalFullList={goalFullList}
-                setGoalFullList={setGoalFullList}
+                setProgressRate={setProgressRate}
+                
+                parentId={parentId}
+                setParentId={setParentId}
+                // progressRate={modifyData.progressRate}
+                // color={modifyData.color}
                 />
                 <div className="button-wrapper">
                   <button type="submit" className="submitBtn" onClick={handleClose}>제출</button>
@@ -104,9 +161,6 @@ function GoalModifyFormModal(title, startDatetime, endDatetime, content, goalId,
           </Modal>
         </div>
       );
-
-
 }
 
-
-  export default GoalModifyFormModal;
+export default GoalModifyFormModal;

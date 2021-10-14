@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import "./GoalFullList.css";
 import axios from "axios";
 import GoalInsertFormModal from "./GoalInsertFormModal";
@@ -9,126 +9,65 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import GoalModifyFormModal from "./GoalModifyFormModal";
 
-function GoalFullList(props) {
-  // 검색결과(목표타이틀 리스트)
-  const [goalFullList, setGoalFullList] = useState([]);
-  const [orderColumn, setOrderColumn] = useState("start_datetime");
-  useEffect(() => {
-    const fetchGoalFullList = async () => {
-      try {
-        const result = await axios.get("/goalManage/goalFullList", {
-          params: {
-            searchGoalIdList:props.searchGoalIdList.toString(),
-            searchStartDatetime:makeYYMMDD(props.searchStartDatetime),
-            searchEndDatetime:makeYYMMDD(props.searchEndDatetime),
-            // searchKind:"deadline",
-            orderColumn: orderColumn,
-            orderType:"asc"
-          }
-        });
-        setGoalFullList(result.data.goalFullList)
-      } catch(err){
-        console.error(err)
-      }
-    }
-    fetchGoalFullList();
-}, [props.searchStartDatetime, props.searchEndDatetime, props.searchGoalIdList, orderColumn]);
+import { GoalFullListContext } from "../context/GoalFullListContext";
 
-const orderColumnHandler = (e, orderColumn)=>{
-  setOrderColumn(orderColumn)
-}
-    return (
-        <div>
-            <div className="align-buttons">
-            <button>목표 모아보기</button>
-            
-            <ToggleButtonGroup
-              color="primary"
-              value={orderColumn}
-              exclusive={true}
-              onChange={orderColumnHandler}
-            >
-              <ToggleButton value="start_datetime">시작일 순</ToggleButton>
-              <ToggleButton value="end_datetime">종료일 순</ToggleButton>
-              <ToggleButton value="progress_rate">진행률 순</ToggleButton>
-            </ToggleButtonGroup>
-
-            <ColorToggleButton 
-            defalutValue="카드"
-            values={["카드", "차트"]}/>
-            </div>
-            <div className="goal-cards-list">
-                {goalFullList && goalFullList.map((goal, index) => (
-                    <GoalCard
-                        key={index}
-                        title={goal.title}
-                        startDatetime={goal.startDatetime}
-                        endDatetime={goal.endDatetime}
-                        content={goal.content}
-                        goalId={goal.goalId}
-                        kind={goal.kind}
-                        progressRate={goal.progressRate}
-                        color={goal.color}
-                        goalFullList={goalFullList}
-                        setGoalFullList={setGoalFullList}
-                        ></GoalCard>
-                ))}
-                <GoalInsertFormModal 
-                goalFullList={goalFullList}
-                setGoalFullList ={setGoalFullList}/>
-            </div>
+function GoalFullList({orderColumn, setOrderColumn}) {
+  const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
+  return (
+    <div>
+      <div className="align-buttons">
+        <button>목표 모아보기</button>
+        <ToggleButtonGroup
+          color="primary"
+          value={orderColumn}
+          exclusive={true}
+          onChange={(event, changeColumn) => {
+            setOrderColumn(changeColumn)
+          }}
+        >
+          <ToggleButton value="modification_datetime">최종수정일 순</ToggleButton>
+          <ToggleButton value="start_datetime">시작일 순</ToggleButton>
+          <ToggleButton value="end_datetime">종료일 순</ToggleButton>
+          <ToggleButton value="progress_rate">진행률 순</ToggleButton>
+        </ToggleButtonGroup>
       </div>
-    )
+      <div className="goal-cards-list">
+        {goalFullList && goalFullList.map((goal, index) => (
+          <GoalCard
+            key={index}
+            index={index}
+            title={goal.title}
+            startDatetime={goal.startDatetime}
+            endDatetime={goal.endDatetime}
+            content={goal.content}
+            goalId={goal.goalId}
+            kind={goal.kind}
+            progressRate={goal.progressRate}
+            color={goal.color}
+            goalFullList={goalFullList}
+            setGoalFullList={setGoalFullList}
+          ></GoalCard>
+        ))}
+        <GoalInsertFormModal 
+          goalFullList={goalFullList}
+          setGoalFullList ={setGoalFullList}/>
+      </div>
+    </div>
+  )
 }
 
-
-function ColorToggleButton(props) {
-    const [alignment, setAlignment] = React.useState(props.defalutValue);
-  
-    const handleChange = (event, newAlignment) => {
-      setAlignment(newAlignment);
-    };
-  
-    return (
-      <ToggleButtonGroup
-        color="primary"
-        value={alignment}
-        exclusive
-        onChange={handleChange}
-        size='small'
-      >
-        {props.values && props.values.map((value, index) => (
-          <ToggleButton key={index}
-            value={value}>{value}</ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-    );
-  }
-
-
-function GoalCard({title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, goalFullList, setGoalFullList}){
+function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, goalFullList, setGoalFullList}){
   
     return(
         <div className="card" style={{ borderLeft : `6px solid`, borderColor : color}} id={goalId} >
           
           <div className="card-button-wrapper">
             <GoalModifyFormModal 
-            title={title}
-            startDatetime={startDatetime}
-            endDatetime={endDatetime}
-            content={content}
-            goalId={goalId}
-            kind={kind}
-            progressRate={progressRate}
-            color={color}
-            goalFullList={goalFullList}
-            setGoalFullList={setGoalFullList}
+              modifyData = {goalFullList[index]}
             />
             <DeleteModal goalId={goalId} goalFullList={goalFullList}
                 setGoalFullList ={setGoalFullList}/>
@@ -194,13 +133,6 @@ function DeleteModal({goalId, goalFullList, setGoalFullList}) {
     </div>
   );
 }
-
-
-// YYYY-MM-DD 형태로 반환
-function makeYYMMDD(value){
-  return value.toISOString().substring(0,10);
-}
-
 
 
 export default GoalFullList;

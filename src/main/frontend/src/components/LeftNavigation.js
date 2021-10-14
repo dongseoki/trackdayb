@@ -5,9 +5,6 @@ import axios from "axios";
 import GoalTitleList from "./GoalTitleList";
 
 function LeftNavigation(props){
-    
-  // goalTitleLIst
-  // 검색결과(목표타이틀 리스트)
   const [goalTitleList, setGoalTitleList] = useState([]);
 
   useEffect(() => {
@@ -40,10 +37,10 @@ function LeftNavigation(props){
             <div className="search-date-range">
                 <p>조회기간</p>
                 <DateRangePickerCustom 
-                startDate={props.searchStartDatetime}
-                endDate={props.searchEndDatetime}
-                setStartDate={props.setSearchStartDatetime} 
-                setEndDate={props.setSearchEndDatetime}/>
+                    startDate={props.searchStartDatetime}
+                    endDate={props.searchEndDatetime}
+                    setStartDate={props.setSearchStartDatetime} 
+                    setEndDate={props.setSearchEndDatetime}/>
             </div>
             <GoalTitleList 
                 goalTitleList={goalTitleList}

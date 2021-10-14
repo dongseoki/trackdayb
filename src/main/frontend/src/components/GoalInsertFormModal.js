@@ -34,18 +34,12 @@ import GoalInsertForm from "./GoalInsertForm";
 
 
 function GoalInsertFormModal({goalFullList, setGoalFullList}){
-  const [ parentId, setParentId ] = useState("")
-  const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
-  const [toggleSelected, setToggleSelected] = useState(false)
   const [shareStatus, setshareStatus] = useState("N");
-  const [color, setColor] = useState(randomColor());
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [kind, setKind] = useState('regular');
-  const [progressRate, setProgressRate] = useState("");
-  const defaultSearchTime = " 09:00:00";
   //주기정보
   const [timeUnit, setTimeUnit] = useState('D');
   const [type, setType] = useState('count');
@@ -57,6 +51,14 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
   const [thu, setThu] = useState(false)
   const [fri, setFri] = useState(false)
   const [sat, setSat] = useState(false)
+  const [progressRate, setProgressRate] = useState("");
+  
+  const [ parentId, setParentId ] = useState("")
+  const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
+  const [toggleSelected, setToggleSelected] = useState(false)
+  const [color, setColor] = useState(randomColor());
+  const defaultSearchTime = " 09:00:00";
+  
   
     const useStyles = makeStyles((theme) => ({
       modal: {
@@ -141,28 +143,18 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
             <div className={classes.paper}>
               <h3 id="transition-modal-title">목표 추가</h3>
               <GoalInsertForm
-                parentId={parentId}
-                setParentId={setParentId}
-                title={title}
-                setTitle={setTitle}
-                content = {content}
-                setContent = {setContent}
                 startDatetime = {startDatetime}
                 setStartDatetime = {setStartDatetime}
                 endDatetime={endDatetime}
                 setEndDatetime = {setEndDatetime}
-                toggleSelected={toggleSelected}
-                setToggleSelected={setToggleSelected}
                 shareStatus={shareStatus}
                 setshareStatus={setshareStatus}
-                color={color}
-                setColor = {setColor}
+                title={title}
+                setTitle={setTitle}
+                content = {content}
+                setContent = {setContent}
                 kind={kind}
                 setKind={setKind}
-                progressRate={progressRate}
-                setProgressRate={setProgressRate}
-                parentGoalTitle={parentGoalTitle}
-                setParentGoalTitle={setParentGoalTitle}
                 timeUnit={timeUnit}
                 setTimeUnit={setTimeUnit}
                 type={type}
@@ -175,7 +167,20 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
                 wed={wed} setWed={setWed}
                 thu={thu} setThu={setThu}
                 fri={fri} setFri={setFri}
-                sat={sat} setSat={setSat}            
+                sat={sat} setSat={setSat} 
+                progressRate={progressRate}
+                setProgressRate={setProgressRate}
+                parentId={parentId}
+                setParentId={setParentId}
+                
+                toggleSelected={toggleSelected}
+                setToggleSelected={setToggleSelected}
+                
+                color={color}
+                setColor = {setColor}
+                parentGoalTitle={parentGoalTitle}
+                setParentGoalTitle={setParentGoalTitle}
+                           
               />
               <div className="button-wrapper">
                 <button type="submit" className="submitBtn" onClick={handleSubmit}>제출</button>

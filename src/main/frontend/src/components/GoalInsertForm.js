@@ -40,6 +40,7 @@ import Checkbox from '@mui/material/Checkbox';
   timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
 
+    console.log('startDatetime', startDatetime)
     return (
       <>
         <div className="top-wrapper">  
@@ -68,6 +69,7 @@ import Checkbox from '@mui/material/Checkbox';
         <TextField 
           id="title" 
           label="제목" 
+          value={title}
           size="small" 
           variant="outlined"
           style={{width:"100%", marginBottom:"10px"}}
@@ -121,6 +123,7 @@ import Checkbox from '@mui/material/Checkbox';
                 marks
                 min={0}
                 max={100}
+                value={parseInt(progressRate)}
                 onChange={function(e){
                   setProgressRate(e.target.value)
                 }}

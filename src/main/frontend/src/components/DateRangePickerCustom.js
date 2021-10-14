@@ -11,7 +11,7 @@ function DateRangePickerCustom(props) {
       <>
       <div className="date-picker-wrapper">
         <DatePicker
-        className="date-picker"
+          className="date-picker"
           selected={props.startDate}
           onChange={(date) => props.setStartDate(date)}
           selectsStart
@@ -22,7 +22,7 @@ function DateRangePickerCustom(props) {
         />
         <span className="date-span"><FaMinus className="dash-icon"/></span>
         <DatePicker
-        className="date-picker"
+          className="date-picker"
           selected={props.endDate}
           onChange={(date) => props.setEndDate(date)}
           selectsEnd
