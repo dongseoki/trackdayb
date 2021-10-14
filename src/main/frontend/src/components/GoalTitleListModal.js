@@ -19,10 +19,7 @@ import Tree from '@naisutech/react-tree'
 
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
   function GoalTitleListModal({parentId, setParentId, parentGoalTitle, setParentGoalTitle}){
-    
     const useStyles = makeStyles((theme) => ({
       modal: {
         display: 'flex',

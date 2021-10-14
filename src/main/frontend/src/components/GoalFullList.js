@@ -5,6 +5,9 @@ import GoalInsertFormModal from "./GoalInsertFormModal";
 // 토글버튼
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+//icon
+import { RiDeleteBinLine } from "react-icons/ri";
+import { BiLock } from "react-icons/bi";
 // 삭제버튼
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -17,6 +20,7 @@ import { GoalFullListContext } from "../context/GoalFullListContext";
 
 function GoalFullList({orderColumn, setOrderColumn}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
+  console.log('goalFullList', goalFullList)
   return (
     <div>
       <div className="align-buttons">
@@ -48,6 +52,8 @@ function GoalFullList({orderColumn, setOrderColumn}) {
             kind={goal.kind}
             progressRate={goal.progressRate}
             color={goal.color}
+            shareStatus={goal.shareStatus}
+            periodicityInfo = {goal.periodicityInfo}
             goalFullList={goalFullList}
             setGoalFullList={setGoalFullList}
           ></GoalCard>
@@ -60,26 +66,52 @@ function GoalFullList({orderColumn, setOrderColumn}) {
   )
 }
 
-function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, goalFullList, setGoalFullList}){
-  
+function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalFullList, setGoalFullList}){
     return(
-        <div className="card" style={{ borderLeft : `6px solid`, borderColor : color}} id={goalId} >
-          
+        <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">
+            {(shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
             <GoalModifyFormModal 
               modifyData = {goalFullList[index]}
             />
             <DeleteModal goalId={goalId} goalFullList={goalFullList}
                 setGoalFullList ={setGoalFullList}/>
           </div>
-          <h2>{title}</h2>
-          <span>시작일: </span><span>{startDatetime}</span><br/>
-          <span>종료일: </span><span>{endDatetime}</span><br/>
-          <span>내용: </span><span>{content}</span><br/>
-          <span>kind: </span><span>{kind}</span><br/>
-          <span>진행률: </span><span>{progressRate}</span><br/>
+          <div className="title">{title}</div>
+          <div className="content">{content}</div>
+          <div className="datetime">{startDatetime.substring(0,10)} ~ {endDatetime.substring(0,10)}</div>
+          <div>{(kind==="regular") ? (<><span className="tag">주기성</span> <PeriodicityInfo periodicityInfo ={periodicityInfo} /></>) : (<span className="tag">기한성</span>)}</div>
+          {progressRate ? <div className="progressRate">{progressRate}%</div> : null}
         </div>
     )
+}
+
+function PeriodicityInfo({periodicityInfo}){
+  console.log("함수안에 들어갔다", periodicityInfo)
+  const timeUnitToString = (value)=>{
+    if(value === "D"){
+      return "매일"
+    }else if(value === "W"){
+      return "매주"
+    }else if(value === "M"){
+      return "매월"
+    }else{
+      return null
+    }
+  }
+  return (
+    <>
+    <span className="tag">{timeUnitToString(periodicityInfo.timeUnit)}</span>
+    {periodicityInfo.count ? <span className="tag">{periodicityInfo.count}회</span> : null}
+    {(periodicityInfo.sunYn === "Y") ? <span className="tag">일</span>: null}
+    {(periodicityInfo.monYn === "Y") ? <span className="tag">월</span>: null}
+    {(periodicityInfo.tueYn === "Y") ? <span className="tag">화</span>: null}
+    {(periodicityInfo.wedsYn === "Y") ? <span className="tag">수</span>: null}
+    {(periodicityInfo.thurYn === "Y") ? <span className="tag">목</span>: null}
+    {(periodicityInfo.friYn === "Y") ? <span className="tag">금</span>: null}
+    {(periodicityInfo.satYn === "Y") ? <span className="tag">토</span>: null}
+    </>
+  )
 }
 
 
@@ -110,10 +142,10 @@ function DeleteModal({goalId, goalFullList, setGoalFullList}) {
   }
 
   return (
-    <div>
-      <Button className="deleteBtn" variant="outlined" onClick={handleClickOpen}>
-        삭제
-      </Button>
+    <>
+      <button className="deleteBtn" variant="outlined" onClick={handleClickOpen}>
+        <RiDeleteBinLine style={{verticalAlign:"middle"}} title="삭제"/>
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -130,7 +162,7 @@ function DeleteModal({goalId, goalFullList, setGoalFullList}) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
 

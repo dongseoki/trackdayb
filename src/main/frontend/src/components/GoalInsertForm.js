@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
 import axios from "axios";
 //icon
-import { FaPlus, FaLock } from "react-icons/fa";
+import { BiLock } from "react-icons/bi";
+
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -62,7 +63,8 @@ import Checkbox from '@mui/material/Checkbox';
           onChange={() => {
             setshareStatus(!shareStatus);
           }}
-        ><FaLock/>
+        >
+            <BiLock className="lock-icon"/>
         </ToggleButton>
         </div>
       </div>

@@ -1,55 +1,119 @@
-
 .goal-content{
     padding: 10px;
     border : 1px solid red;
     margin : 20px;
   }
-  .align-buttons{
-    display: flex;
-    justify-content: flex-end;
-  }
-  .goal-content .goal-cards-list{
-    padding : 20px 0;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  
-  .card{
-    border-radius: 10px;
-    border-left : 6px solid #cccccc;
-    background-color: white;
-    padding: 0 10px;
-    width: 180px;
-    height: 250px;
-    margin : 10px;
-  }
+.align-buttons{
+  display: flex;
+  justify-content: flex-end;
+}
+.goal-content .goal-cards-list{
+  padding : 20px 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 
-  .goal-insert-btn{
-    border-radius: 10px;
-    border : 3px solid #cccccc;
-    background-color: white;
-    padding: 0 10px;
-    width: 180px;
-    height: 250px;
-    margin : 10px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  .goal-insert-btn:hover{
-    border : 3px solid #4EC3E0;
-    transition: 0.5s;
-    color : #4EC3E0;
-  }
+.card{
+  border-radius: 6px 10px 10px 6px;
+  border-left : 6px solid #cccccc;
+  background-color: white;
+  padding: 5px 12px 10px 14px;
+  width: 180px;
+  height: 250px;
+  margin : 10px;
+  display: grid;
+  grid-template-rows: 1fr 3fr 60px 36px 44px 24px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
 
-  .card .card-button-wrapper{
-    display: flex;
-  }
-  .card .card-button-wrapper .modifyBtn {
-    height: 30px;
-    font-size: 12px;
-  }
-  .card .card-button-wrapper .deleteBtn {
-    height: 30px;
-    font-size: 12px;
-  }
+.goal-insert-btn{
+  border-radius: 10px;
+  border : 3px solid #cccccc;
+  background-color: white;
+  padding: 0 10px;
+  width: 180px;
+  height: 250px;
+  margin : 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.goal-insert-btn:hover{
+  border : 3px solid #4EC3E0;
+  transition: 0.5s;
+  color : #4EC3E0;
+}
+.card .card-button-wrapper{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.card .card-button-wrapper .modifyBtn {
+  height: 30px;
+  font-size: 12px;
+}
+.card .card-button-wrapper .deleteBtn {
+  border: none;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  color: rgba(5, 23, 42, 0.6);
+}
+.card .card-button-wrapper .deleteBtn:hover{
+  color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.04);
+  border-radius: 4px;
+}
+
+.card .card-button-wrapper .modifyBtn {
+  border: none;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  color: rgba(5, 23, 42, 0.6);
+}
+.card .card-button-wrapper .modifyBtn:hover{
+  color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.04);
+  border-radius: 4px;
+}
+.card .card-button-wrapper .lock-icon{
+  font-size: 19px;
+  color: #1976d2;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.card .title{
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card .content{
+  font-size: 0.9em;
+  margin: 5px 0;
+  overflow: hidden;
+  display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; 
+}
+.card .datetime{
+  font-size: 0.8em;
+  margin: 10px 0 ;
+}
+.card .tag{
+  border-radius: 10px;
+  background-color: rgba(25, 118, 210, 0.1);
+  padding: 2px 6px;
+  margin-right: 1px;
+  font-size: 0.8em;
+}
+.card .progressRate{
+  font-size: 1.2em;
+  text-align: center;
+}
+.modal-share-toggle .lock-icon{
+  font-size: 20px;
+}

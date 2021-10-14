@@ -4,32 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
 import axios from "axios";
 //icon
-import { FaPlus, FaLock } from "react-icons/fa";
+import { BiLock, BiEdit } from "react-icons/bi";
+import { RiEditLine } from "react-icons/ri";
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-//goalInsertForm
-import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
-import randomColor from "randomcolor";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-//color picker
-import { HexColorPicker } from "react-colorful";
-
-// 토글버튼
-import ToggleButton from '@mui/material/ToggleButton';
-
-//slider-score
-import Slider from '@mui/material/Slider';
-import GoalTitleListModal from "./GoalTitleListModal";
-
-import FormGroup from '@mui/material/FormGroup';
-import Checkbox from '@mui/material/Checkbox';
 import GoalInsertForm from "./GoalInsertForm";
 
 import Button from '@mui/material/Button';
@@ -148,11 +128,10 @@ function GoalModifyFormModal({modifyData}){
 
     }
     return (
-        <div>
-            <Button className="modifyBtn" variant="outlined" onClick={handleOpen}>
-        수정
-      </Button>
-          {/* <button className="goal-insert-btn" onClick={handleOpen}><FaPlus /></button> */}
+        <>
+          <button className="modifyBtn" variant="outlined" onClick={handleOpen}>
+            <BiEdit style={{verticalAlign:"middle"}} title="수정"/>
+          </button>
           <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
@@ -210,7 +189,7 @@ function GoalModifyFormModal({modifyData}){
               </div>
             </Fade>
           </Modal>
-        </div>
+        </>
       );
 }
 
