@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 //css
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,11 +17,9 @@ import FormLabel from '@mui/material/FormLabel';
 //Tree 
 import Tree from '@naisutech/react-tree'
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
-  function GoalTitleListModal({
-    parentId, setParentId, parentGoalTitle, setParentGoalTitle, parentGoalKind, setParentGoalKind}){
-    
+  function GoalTitleListModal({parentId, setParentId, parentGoalTitle, setParentGoalTitle}){
     const useStyles = makeStyles((theme) => ({
       modal: {
         display: 'flex',
@@ -38,22 +36,9 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const classes = useStyles();
   
     const [open, setOpen] = useState(false);
-    //목표 타이틀 리스트-부모 목표 고르기
-    const [goalTitleListModal, setGoalTitleListModal] = useState([]);
-  
-    useEffect(()=>{
-      const fetchGoalTitleListModal = async () => {
-        try{
-          const result = await axios.get(
-            "/goalManage/goalTitleList");
-          setGoalTitleListModal(result.data.goalTitleList);
-        } catch(err) {
-          console.error(err);
-        }
-      };
-      fetchGoalTitleListModal();
-    }, [])
-   
+
+    const [ goalTotalTitleList] = useContext(GoalTotalTitleListContext);
+    
    
   const handleOpen = () => {
     setOpen(true);
@@ -82,12 +67,12 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
               <h2 id="transition-modal-title">목표 리스트</h2>
               <p id="transition-modal-description">활동과 관련된 목표를 선택하세요</p>
               <GoalTitleChoiceList 
-                goalTitleList= {goalTitleListModal}
+                goalTitleList= {goalTotalTitleList}
                 parentId={parentId}
                 setParentId={setParentId}
                 parentGoalTitle={parentGoalTitle}
                 setParentGoalTitle={setParentGoalTitle}
-                setParentGoalKind={setParentGoalKind}
+                // setParentGoalKind={setParentGoalKind}
               />
               <button type="button" onClick={handleClose}>확인</button>
             </div>
@@ -143,7 +128,7 @@ function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTi
           }
         })
         setParentGoalTitle(goalTitleList[targetIndex]["title"])
-        setParentGoalKind(goalTitleList[targetIndex]["kind"])
+        // setParentGoalKind(goalTitleList[targetIndex]["kind"])
       }
       
     }

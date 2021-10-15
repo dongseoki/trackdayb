@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
 import axios from "axios";
 //icon
-import { FaPlus, FaLock } from "react-icons/fa";
+import { BiLock } from "react-icons/bi";
+
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -33,13 +34,15 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 
   function GoalInsertForm({
-    parentId, setParentId, title, setTitle, content, setContent, startDatetime, setStartDatetime,
-    endDatetime, setEndDatetime, toggleSelected, setToggleSelected, 
-  shareStatus, setshareStatus, color, setColor, kind, setKind, 
-  progressRate, setProgressRate, parentGoalTitle, setParentGoalTitle,
+    parentId, setParentId, parentGoalTitle, setParentGoalTitle, title, setTitle, content, setContent, startDatetime, setStartDatetime,
+    endDatetime, setEndDatetime, shareStatus, setshareStatus, color, setColor, kind, setKind, 
+  progressRate, setProgressRate,
   timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
 
+    
+
+    
     return (
       <>
         <div className="top-wrapper">  
@@ -52,22 +55,23 @@ import Checkbox from '@mui/material/Checkbox';
             setEndDate={setEndDatetime}/>
           </div>
           <div className="modal-share-toggle">
-            <div className="modal-title">공개여부</div>
+            <div className="modal-title">비공개</div>
           <ToggleButton
           color="primary"
           value="check"
-          selected={toggleSelected}
+          selected={shareStatus}
           onChange={() => {
-            setToggleSelected(!toggleSelected);
-            setshareStatus(toggleToString(toggleSelected));
+            setshareStatus(!shareStatus);
           }}
-        ><FaLock/>
+        >
+            <BiLock className="lock-icon"/>
         </ToggleButton>
         </div>
       </div>
         <TextField 
           id="title" 
           label="제목" 
+          value={title}
           size="small" 
           variant="outlined"
           style={{width:"100%", marginBottom:"10px"}}
@@ -121,6 +125,7 @@ import Checkbox from '@mui/material/Checkbox';
                 marks
                 min={0}
                 max={100}
+                value={parseInt(progressRate)}
                 onChange={function(e){
                   setProgressRate(e.target.value)
                 }}
@@ -274,6 +279,7 @@ import Checkbox from '@mui/material/Checkbox';
             label="횟수" 
             size="small" 
             variant="outlined"
+            value={count}
             InputLabelProps={{
               shrink: true,
             }}
@@ -345,14 +351,6 @@ import Checkbox from '@mui/material/Checkbox';
       )
     } else{
       return null
-    }
-  }
-
-  function toggleToString(value){
-    if(value){ //공개하겠다
-      return "Y"
-    }else{
-      return "N"
     }
   }
 
