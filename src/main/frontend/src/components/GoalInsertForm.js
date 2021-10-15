@@ -1,20 +1,10 @@
 import React, { useState } from "react";
-//css
-import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
-import axios from "axios";
 //icon
 import { BiLock } from "react-icons/bi";
-
-//modal
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-
 //goalInsertForm
 import TextField from '@material-ui/core/TextField';
 import DateRangePickerCustom from './DateRangePickerCustom';
-import randomColor from "randomcolor";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -40,7 +30,7 @@ import Checkbox from '@mui/material/Checkbox';
   timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
 
-    
+    console.log("title", title)
 
     
     return (

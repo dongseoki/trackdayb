@@ -71,11 +71,15 @@ function GoalFullList({orderColumn, setOrderColumn}) {
 }
 
 function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList}){
-    return(
+  const find4 = goalFullList.find((e) => e.goalId == goalId);
+
+  console.log("인덱스 찾기", find4)
+  return(
         <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">
             {(shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
             <GoalModifyFormModal 
+              // modifyData = {goalFullList.find((e) => e.goalId == goalId)}
               modifyData = {goalFullList[index]}
             />
             <DeleteModal 

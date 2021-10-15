@@ -1,22 +1,22 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
 import axios from "axios";
 //icon
-import { BiLock, BiEdit } from "react-icons/bi";
-import { RiEditLine } from "react-icons/ri";
+import { BiEdit } from "react-icons/bi";
 //modal
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import GoalInsertForm from "./GoalInsertForm";
 
-import Button from '@mui/material/Button';
-
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
 function GoalModifyFormModal({modifyData}){
+  console.log("모달 수정데이터", modifyData)
+  console.log("모달 수정 타이틀", modifyData.title)
+  
     const [ goalTotalTitleList, setGoalTotalTitleList ] = useContext(GoalTotalTitleListContext);
     const YNtoTF = (value)=>{
         if(value === "Y"){
@@ -148,39 +148,39 @@ function GoalModifyFormModal({modifyData}){
               <div className={classes.paper}>
                 <h3 id="transition-modal-title">목표 수정</h3>
                 <GoalInsertForm
-                    startDatetime = {startDatetime}
-                    setStartDatetime = {setStartDatetime}
-                    endDatetime={endDatetime}
-                    setEndDatetime = {setEndDatetime}
-                    shareStatus={shareStatus}
-                    setshareStatus={setshareStatus}
-                    title={title}
-                    setTitle={setTitle}
-                    content = {content}
-                    setContent = {setContent}
-                    kind={kind}
-                    setKind={setKind}
-                    timeUnit={timeUnit}
-                    setTimeUnit={setTimeUnit}
-                    type={type}
-                    setType={setType}
-                    count={count}
-                    setCount={setCount} 
-                    sun={sun} setSun={setSun}
-                    mon={mon} setMon={setMon}
-                    tue={tue} setTue={setTue}
-                    wed={wed} setWed={setWed}
-                    thu={thu} setThu={setThu}
-                    fri={fri} setFri={setFri}
-                    sat={sat} setSat={setSat}  
-                    progressRate={progressRate}
-                    setProgressRate={setProgressRate}
-                    parentId={parentId}
-                    setParentId={setParentId}
-                    parentGoalTitle={parentGoalTitle}
-                    setParentGoalTitle={setParentGoalTitle}
-                    color={color}
-                    setColor={setColor}
+                  startDatetime = {startDatetime}
+                  setStartDatetime = {setStartDatetime}
+                  endDatetime={endDatetime}
+                  setEndDatetime = {setEndDatetime}
+                  shareStatus={shareStatus}
+                  setshareStatus={setshareStatus}
+                  title={title}
+                  setTitle={setTitle}
+                  content = {content}
+                  setContent = {setContent}
+                  kind={kind}
+                  setKind={setKind}
+                  timeUnit={timeUnit}
+                  setTimeUnit={setTimeUnit}
+                  type={type}
+                  setType={setType}
+                  count={count}
+                  setCount={setCount} 
+                  sun={sun} setSun={setSun}
+                  mon={mon} setMon={setMon}
+                  tue={tue} setTue={setTue}
+                  wed={wed} setWed={setWed}
+                  thu={thu} setThu={setThu}
+                  fri={fri} setFri={setFri}
+                  sat={sat} setSat={setSat}  
+                  progressRate={progressRate}
+                  setProgressRate={setProgressRate}
+                  parentId={parentId}
+                  setParentId={setParentId}
+                  parentGoalTitle={parentGoalTitle}
+                  setParentGoalTitle={setParentGoalTitle}
+                  color={color}
+                  setColor={setColor}
                 />
                 <div className="button-wrapper">
                   <button type="submit" className="submitBtn" onClick={handleSubmit}>제출</button>
