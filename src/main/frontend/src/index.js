@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 
-
+import { GoalTotalTitleListProvider } from "./context/GoalTotalTitleListContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GoalTotalTitleListProvider>
+      <App />
+    </GoalTotalTitleListProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

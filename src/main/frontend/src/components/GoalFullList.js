@@ -17,10 +17,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import GoalModifyFormModal from "./GoalModifyFormModal";
 
 import { GoalFullListContext } from "../context/GoalFullListContext";
+import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext";
 
 function GoalFullList({orderColumn, setOrderColumn}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
-  console.log('goalFullList', goalFullList)
+  const [goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
+  
   return (
     <div>
       <div className="align-buttons">
@@ -54,6 +56,8 @@ function GoalFullList({orderColumn, setOrderColumn}) {
             color={goal.color}
             shareStatus={goal.shareStatus}
             periodicityInfo = {goal.periodicityInfo}
+            goalSearchTitleList={goalSearchTitleList}
+            setGoalSearchTitleList={setGoalSearchTitleList}
             goalFullList={goalFullList}
             setGoalFullList={setGoalFullList}
           ></GoalCard>
@@ -66,7 +70,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
   )
 }
 
-function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalFullList, setGoalFullList}){
+function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList}){
     return(
         <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">
@@ -74,8 +78,12 @@ function GoalCard({index, title, startDatetime, endDatetime, content, goalId, ki
             <GoalModifyFormModal 
               modifyData = {goalFullList[index]}
             />
-            <DeleteModal goalId={goalId} goalFullList={goalFullList}
-                setGoalFullList ={setGoalFullList}/>
+            <DeleteModal 
+              goalId={goalId} 
+              goalSearchTitleList={goalSearchTitleList}
+              setGoalSearchTitleList={setGoalSearchTitleList}
+              goalFullList={goalFullList}
+              setGoalFullList ={setGoalFullList}/>
           </div>
           <div className="title">{title}</div>
           <div className="content">{content}</div>
@@ -116,7 +124,7 @@ function PeriodicityInfo({periodicityInfo}){
 
 
 // 삭제 버튼 모달
-function DeleteModal({goalId, goalFullList, setGoalFullList}) {
+function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList}) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -135,7 +143,9 @@ function DeleteModal({goalId, goalFullList, setGoalFullList}) {
         }
       })
       console.log("삭제결과", result)
+      handleClose()
       setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
+      setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))
     }catch(err){
       console.error(err)
     }

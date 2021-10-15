@@ -31,7 +31,6 @@ export default function CustomizedTimeline(props) {
           const result = await axios.post("/timeManage/getActivityListTEST", body);
           setActivityList(result.data.activityList);
           setResultCode(result.data.resultCode);
-          console.log("resultCode : ", resultCode);
           // let dateArray = []
           // activityList.map((activity, index) => {
           //   dateArray.push(activity.startDatetime)
@@ -46,7 +45,6 @@ export default function CustomizedTimeline(props) {
   }, [props.searchStartDatetime, props.searchEndDatetime]);
   if (!activityList) return null;
 
-  console.log('dateList', dateList)
   return (
     <>
     

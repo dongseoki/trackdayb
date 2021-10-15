@@ -3,18 +3,20 @@ import "./Goal.css";
 import LeftNavigation from "../components/LeftNavigation";
 import GoalFullList from "../components/GoalFullList";
 import { GoalFullListProvider } from "../context/GoalFullListContext";
-import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
+import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
 
 function Goal() {
-  // 검색조건(조회기간)
+  // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [orderColumn, setOrderColumn] = useState("modification_datetime");
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
-   
+
   return (
     <div className="goal">
-      <GoalTotalTitleListProvider>
+      <GoalSearchTitleListProvider
+        searchStartDatetime={searchStartDatetime}
+        searchEndDatetime={searchEndDatetime}>
         <GoalFullListProvider
           searchStartDatetime={searchStartDatetime}
           searchEndDatetime={searchEndDatetime}
@@ -39,7 +41,7 @@ function Goal() {
             />
           </div>
         </GoalFullListProvider>
-      </GoalTotalTitleListProvider>
+      </GoalSearchTitleListProvider>
     </div>
   );
 }

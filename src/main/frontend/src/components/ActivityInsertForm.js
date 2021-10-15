@@ -130,7 +130,6 @@ function ActivityInsertForm({writeDate}){
 
 
   function PeriodicityInfo({kind}) {
-    console.log("kidn", kind)
     if(kind === "deadline"){
         return(
           <div className="slider-wrapper">

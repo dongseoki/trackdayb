@@ -6,70 +6,70 @@ import ActivityInsertForm from "../components/ActivityInsertForm";
 import TextField from '@material-ui/core/TextField';
 //TimeLine
 import CustomizedTimeline from '../components/CustomizedTimeline';
-
-
+import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
 
 function Time() {
   // 검색조건(조회기간)
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
-
+  const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [writeDate, setWriteDate] = useState(makeYYMMDD(new Date()));
 
   return (
     <div className="time">
-      {/* 사이드 */}
-      <aside className="side">
-        <LeftNavigation 
-          searchStartDatetime={searchStartDatetime}
-          searchEndDatetime={searchEndDatetime}
-          setSearchStartDatetime={setSearchStartDatetime}
-          setSearchEndDatetime={setSearchEndDatetime}
+      <GoalSearchTitleListProvider
+        searchStartDatetime={searchStartDatetime}
+        searchEndDatetime={searchEndDatetime}>
+        <aside className="side">
+          <LeftNavigation 
+            searchStartDatetime={searchStartDatetime}
+            searchEndDatetime={searchEndDatetime}
+            setSearchStartDatetime={setSearchStartDatetime}
+            setSearchEndDatetime={setSearchEndDatetime}
+            searchGoalIdList={searchGoalIdList}
+            setSearchGoalIdList={setSearchGoalIdList}
+            />
+        </aside>
+        <div className="timeline">
+          타임라인
+          <CustomizedTimeline
+            searchStartDatetime={searchStartDatetime}
+            searchEndDatetime={searchEndDatetime}
+            setSearchStartDatetime={setSearchStartDatetime}
+            setSearchEndDatetime={setSearchEndDatetime}
           />
-      </aside>
+        </div>
+        <div className="write">
+          <div className="button-wrapper">
+            <button>import</button>
+            <button>export</button>
+            <button>도움말</button>
+            <button>양식다운로드</button>
+          </div>
+          <div className="date-picker-wrapper">
+          <TextField
+            className="date-picker"
+            id="date"
+            label="작성일"
+            type="date"
+            defaultValue={writeDate}
+            sx={{ width: 220 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="outlined"
+            onChange={function(e){
+              setWriteDate(e.target.value)
+            }}
+          />
+          </div>
+          <div className="cards"></div>
 
-      {/* 참조데이터 */}
-      <div className="timeline">
-        타임라인
-        <CustomizedTimeline
-          searchStartDatetime={searchStartDatetime}
-          searchEndDatetime={searchEndDatetime}
-          setSearchStartDatetime={setSearchStartDatetime}
-          setSearchEndDatetime={setSearchEndDatetime}
-        />
-      </div>
-      
-      {/* 기록 */}
-      <div className="write">
-        <div className="button-wrapper">
-          <button>import</button>
-          <button>export</button>
-          <button>도움말</button>
-          <button>양식다운로드</button>
+          <div className="writeForm">
+            <ActivityInsertForm writeDate={writeDate}/>
+          </div>
         </div>
-        <div className="date-picker-wrapper">
-        <TextField
-          className="date-picker"
-          id="date"
-          label="작성일"
-          type="date"
-          defaultValue={writeDate}
-          sx={{ width: 220 }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          variant="outlined"
-          onChange={function(e){
-            setWriteDate(e.target.value)
-          }}
-        />
-        </div>
-        <div className="cards"></div>
-
-        <div className="writeForm">
-          <ActivityInsertForm writeDate={writeDate}/>
-        </div>
-      </div>
+      </GoalSearchTitleListProvider>
     </div>
   );
 }
