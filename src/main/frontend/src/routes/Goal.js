@@ -34,7 +34,6 @@ function Goal() {
             />
           </aside>
           <div className="goal-content">
-            <h3>목표관리</h3>
             <GoalFullList 
               orderColumn={orderColumn}
               setOrderColumn={setOrderColumn}

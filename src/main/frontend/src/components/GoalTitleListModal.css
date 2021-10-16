@@ -1,22 +1,49 @@
-.modal-goal-list li{
-    display: grid;
-    grid-template-columns: 90% 10px;
-    margin : 3px;
-}
 
-.modal-goal-list p{
-    font-size: 14px;
-}
-.modal-color-tag{
-    background-color: #EFEFEF;
-    padding: 7px 10px;
-    margin : 0;
-    font-size: 13px;
-}
 .prevGoalTitleList{
     border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
     background-color: #eaf4fd;
     height: 40px;
     width: 80px;
+}
+.modal-goalList-title{
+    font-size: 16px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+.modal-goalList-desc{
+    font-size: 14px;
+}
+.modal-goal-list{
+    margin: 10px 0;
+    width: 100%;
+}
+.modal-goal-list p{
+    font-size: 14px;
+}
+.modal-goal-list span{
+    font-size: 12px;
+}
+.modal-goal-list .goal-choice{
+    background-color: white;
+    border-radius: 2px;
+    padding : 5px;
+    max-height: 300px;
+    overflow: auto;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+.modal-goal-list .MuiFormControlLabel-label{
+    display: none;
+}
+.modal-goal-list .none-choice{
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 14px;
+}
+.modal-goal-list .MuiFormControlLabel-root{
+    margin-right: 0px;
+}
+.modal-goal-list .goal-title-wrapper .custom-node{
+    width: 240px;
 }

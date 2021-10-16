@@ -9,7 +9,6 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
-  console.log("goalTitleList", goalTitleList)
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
   useEffect(()=>{
@@ -45,7 +44,6 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
       goalObj.index = index
       nodes.push(goalObj)
   })
-  console.log('node', nodes)
 
   // 체크박스 연동 searchGoalIdList 만들기
   useEffect(()=>{

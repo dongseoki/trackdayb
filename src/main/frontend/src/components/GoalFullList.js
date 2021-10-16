@@ -25,7 +25,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
   
   return (
     <div>
-      <div className="align-buttons">
+      <div className="button-wrapper">
         <button>목표 모아보기</button>
         <ToggleButtonGroup
           color="primary"
@@ -62,9 +62,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
             setGoalFullList={setGoalFullList}
           ></GoalCard>
         ))}
-        <GoalInsertFormModal 
-          goalFullList={goalFullList}
-          setGoalFullList ={setGoalFullList}/>
+        <GoalInsertFormModal/>
       </div>
     </div>
   )
