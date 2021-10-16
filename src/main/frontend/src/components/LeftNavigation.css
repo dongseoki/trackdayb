@@ -9,4 +9,29 @@
 
 .left-nav p{
     font-weight: bold;
+    font-size: 16px;
+}
+
+.left-nav .search-dateRange-area .date-picker-wrapper{
+    display: flex;
+    justify-content: space-around;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 14px;
+    background-color: white;
+}
+.left-nav .search-dateRange-area .date-picker-wrapper .date-picker{
+    border : none;
+    width: 125px;
+    text-align: center;
+    font-size: 14px;
+    background-color: transparent;
+}
+.left-nav .search-dateRange-area .date-picker-wrapper .date-picker:focus{
+    font-weight: bolder;
+    outline: none;
+}
+.left-nav .search-goalTitle-area .goal-list{
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }

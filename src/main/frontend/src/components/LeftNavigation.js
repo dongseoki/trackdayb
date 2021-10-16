@@ -8,7 +8,7 @@ function LeftNavigation(props){
     const [goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
     return (
         <nav className="left-nav">
-            <div className="search-date-range">
+            <div className="search-dateRange-area">
                 <p>조회기간</p>
                 <DateRangePickerCustom 
                 startDate={props.searchStartDatetime}
@@ -16,11 +16,13 @@ function LeftNavigation(props){
                 setStartDate={props.setSearchStartDatetime} 
                 setEndDate={props.setSearchEndDatetime}/>
             </div>
+            <div className="search-goalTitle-area">
             <GoalTitleList 
             goalTitleList={goalSearchTitleList}
             searchGoalIdList={props.searchGoalIdList}
             setSearchGoalIdList={props.setSearchGoalIdList}
             />
+            </div>
         </nav>
     )
 }

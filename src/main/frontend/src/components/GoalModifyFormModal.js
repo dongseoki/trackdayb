@@ -9,7 +9,9 @@ import { BiEdit } from "react-icons/bi";
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import GoalInsertForm from "./GoalInsertForm";
+import GoalModifyForm from "./GoalModifyForm";
+
+import TextField from '@material-ui/core/TextField';
 
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
@@ -38,23 +40,23 @@ function GoalModifyFormModal({modifyData}){
             return "없음"
         }
     }
-    const [startDatetime, setStartDatetime] = useState(new Date(modifyData.startDatetime));
+    const [startDatetime, setStartDatetime] = useState("");
     const [endDatetime, setEndDatetime] = useState(new Date(modifyData.endDatetime));
     const [shareStatus, setshareStatus] = useState(!YNtoTF(modifyData.shareStatus));
-    const [title, setTitle] = useState(modifyData.title);
-    const [content, setContent] = useState(modifyData.content);
-    const [kind, setKind] = useState(modifyData.kind);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [kind, setKind] = useState("");
     //주기정보
-    const [timeUnit, setTimeUnit] = useState(modifyData.periodicityInfo.timeUnit);
-    const [type, setType] = useState(modifyData.periodicityInfo.type);
-    const [count, setCount] = useState(modifyData.periodicityInfo.count);
-    const [sun, setSun] = useState(YNtoTF(modifyData.periodicityInfo.sunYn))
-    const [mon, setMon] = useState(YNtoTF(modifyData.periodicityInfo.monYn))
-    const [tue, setTue] = useState(YNtoTF(modifyData.periodicityInfo.tueYn))
-    const [wed, setWed] = useState(YNtoTF(modifyData.periodicityInfo.wedsYn))
-    const [thu, setThu] = useState(YNtoTF(modifyData.periodicityInfo.thurYn))
-    const [fri, setFri] = useState(YNtoTF(modifyData.periodicityInfo.fryYn))
-    const [sat, setSat] = useState(YNtoTF(modifyData.periodicityInfo.satYn))
+    const [timeUnit, setTimeUnit] = useState("");
+    const [type, setType] = useState("");
+    const [count, setCount] = useState("");
+    const [sun, setSun] = useState("")
+    const [mon, setMon] = useState("")
+    const [tue, setTue] = useState("")
+    const [wed, setWed] = useState("")
+    const [thu, setThu] = useState("")
+    const [fri, setFri] = useState("")
+    const [sat, setSat] = useState("")
     const [progressRate, setProgressRate] = useState(parseInt(modifyData.progressRate));
     const [ parentId, setParentId ] = useState(modifyData.parentId);
     const [ parentGoalTitle, setParentGoalTitle ] = useState(pIdtoTitle(modifyData.parentId));
@@ -146,14 +148,17 @@ function GoalModifyFormModal({modifyData}){
           >
             <Fade in={open}>
               <div className={classes.paper}>
-                <h3 id="transition-modal-title">목표 수정</h3>
-                <GoalInsertForm
+                  <h3 id="transition-modal-title">목표 수정</h3>
+                  
+                <GoalModifyForm
+                  modifyData = {modifyData}
                   startDatetime = {startDatetime}
                   setStartDatetime = {setStartDatetime}
                   endDatetime={endDatetime}
                   setEndDatetime = {setEndDatetime}
                   shareStatus={shareStatus}
                   setshareStatus={setshareStatus}
+                  
                   title={title}
                   setTitle={setTitle}
                   content = {content}
@@ -165,7 +170,7 @@ function GoalModifyFormModal({modifyData}){
                   type={type}
                   setType={setType}
                   count={count}
-                  setCount={setCount} 
+                  setCount={setCount}
                   sun={sun} setSun={setSun}
                   mon={mon} setMon={setMon}
                   tue={tue} setTue={setTue}
@@ -173,6 +178,7 @@ function GoalModifyFormModal({modifyData}){
                   thu={thu} setThu={setThu}
                   fri={fri} setFri={setFri}
                   sat={sat} setSat={setSat}  
+
                   progressRate={progressRate}
                   setProgressRate={setProgressRate}
                   parentId={parentId}
