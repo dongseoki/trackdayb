@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import React, { useState, useContext } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalTitleListModal.css"
@@ -84,9 +83,9 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 
 
 function GoalTitleChoiceList({goalTitleList, parentId, setParentId, parentGoalTitle, setParentGoalTitle, setParentGoalKind}){
-  console.log('goalTitleList', goalTitleList)
+  // console.log('goalTitleList', goalTitleList)
   const nodes = []
-  goalTitleList.map((goal, index)=>{
+  goalTitleList.map((goal, index) => {
       const goalObj = new Object();
       goalObj.label = goal.title
       goalObj.id = parseInt(goal.goalId)

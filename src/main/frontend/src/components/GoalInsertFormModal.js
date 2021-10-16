@@ -93,10 +93,10 @@ function GoalInsertFormModal({goalFullList, setGoalFullList}){
           "satYn":sat ? "Y":"N"
         }
       }
-      console.log('제출', formData)
+      // console.log('제출', formData)
       try{
         const result = await axios.post("/goalManage/goal", formData);
-        console.log("제출결과", {result})
+        // console.log("제출결과", {result})
         setOpen(false);
         // setGoalFullList([...goalFullList, result.data])
       }catch(err){

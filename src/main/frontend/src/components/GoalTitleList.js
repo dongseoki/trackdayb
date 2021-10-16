@@ -1,129 +1,134 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Checkbox from '@mui/material/Checkbox';
 import "./GoalTitleList.css"
 //Tree 
 import Tree from '@naisutech/react-tree'
+//icon
+import { RiArrowDropDownLine } from "react-icons/ri";
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
-  // searchGoalId 만들기
+  console.log("goalTitleList", goalTitleList)
+  // TreeNode를 위한 goalIdList
+  const [goalIdList, setGoalIdList] = useState([])
   useEffect(()=>{
     let tempGoalIdList = [];
-    goalTitleList.map((goal) =>{
+    goalTitleList.forEach((goal) =>{
         tempGoalIdList.push(parseInt(goal.goalId))
     })
-    setSearchGoalIdList(tempGoalIdList)
+    setGoalIdList(tempGoalIdList)
   }, [goalTitleList]);
-
+  
   let nodes = []
-  goalTitleList.map((goal, index)=>{
+  goalTitleList.forEach((goal, index)=>{
       const goalObj = new Object();
       goalObj.label = goal.title
       goalObj.id = parseInt(goal.goalId)
+      goalObj.dropdown=false
       if(goal.parentId){
+        if(goalIdList.includes(parseInt(goal.parentId))){ //부모아이디가 검색결과 리스트에 있음
           goalObj.parentId = parseInt(goal.parentId)
+        }else{
+          goalObj.parentId = null
+        }
       }else{
           goalObj.parentId = null
       }
+      goalTitleList.forEach((goal2)=>{
+        if(goal.goalId === goal2.parentId){
+          console.log("goal1", goal.goalId)
+          goalObj.dropdown = true
+        }
+      })
       goalObj.color = goal.color
       goalObj.index = index
       nodes.push(goalObj)
   })
+  console.log('node', nodes)
 
+  // 체크박스 연동 searchGoalIdList 만들기
+  useEffect(()=>{
+    let tempGoalIdList = [];
+    goalTitleList.forEach((goal) =>{
+        tempGoalIdList.push(parseInt(goal.goalId))
+    })
+    setSearchGoalIdList(tempGoalIdList)
+  }, [goalTitleList]);
+  
   const myThemes = {
       modifiedDarkLarge: {
         text: 'black', // text color
-        bg: '#EFEFEF', // background color of whole tree
-        indicator: null, // open folder indicator color
-        separator: "white", // row seperator color
-        icon: 'gold', // fill & stroke color of default icons - has no effect when using custom icons
-        selectedBg: '#3f464e', // background of selected element
-        selectedText: '#fafafa', // text color of selected element
-        hoverBg: '#505a63', // background of hovered element
-        hoverText: '#fafafa', // text color of hovered element
-        accentBg: '#2d3439', // background of empty folder element
-        accentText: '#999', // text color of empty folder element
-        textSize: '13px' // preferred text size
+        bg: 'white', // background color of whole tree
       }
     }
 
-  const changeHandler = (e, checked, id) => {
-      console.log('e.target', e.target)
-      e.stopPropagation() //이벤트 버블링 막기
-      e.preventDefault();
-      if (checked) {
-        setSearchGoalIdList([...searchGoalIdList, id]);
-      } else {
-        // 체크 해제
-        setSearchGoalIdList(searchGoalIdList.filter((el) => el !== id));
-      }
-    };
-      
+ const checkHandler = (e, checked, id)=>{
+  e.stopPropagation() //이벤트 버블링 막기
+  if (checked) {
+    setSearchGoalIdList([...searchGoalIdList, id]);
+  } else {
+    // 체크 해제
+    setSearchGoalIdList(searchGoalIdList.filter((el) => el !== id));
+  }
+ }
   return (
     <div>
       <p>목표선택</p>
       <div className="goal-list">
-    {/* <div style={{ display: 'flex', flexWrap: 'nowrap', flexGrow: 1 }}> */}
-      {/* <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}> */}
-        <Tree 
-            nodes={nodes} 
-            theme="modifiedDarkLarge"
-            customTheme={myThemes}
-            NodeRenderer={({
-                data: Node
-            }) => {
-                return (
-                    <li key={Node.id} >
-                        <Checkbox {...label} 
-                        onChange={(e)=>{changeHandler(e, e.currentTarget.checked, Node.id)}}
-                        checked={searchGoalIdList.includes(Node.id) ? true : false}
-                        value={Node.id}/>
-                        <p className="class-2" name={Node.label}>{Node.label}</p>
-                        <div className="color-tag" style={{ backgroundColor : Node.color}}></div>
-                    </li>
-                    )
-                }
-            }
+        <Tree
+        nodes={nodes} 
+        theme="modifiedDarkLarge"
+        customTheme={myThemes}
+        noDataString="조회기간에 해당하는 목표가 없습니다."
+        NodeRenderer={({ data, isOpen, level, selected }) => {
+          const classes = ['custom-node', isOpen ? 'open' : undefined, selected ? 'selected' : undefined].join(' ')
+          return (
+            <div className="goal-title-wrapper">
+              <div className="checkbox-wrapper" onClick={(e) => {checkHandler(e, e.target.checked, data.id)}}> 
+                <Checkbox {...label} 
+                checked={searchGoalIdList.includes(data.id) ? true : false}
+                value={data.id}/>
+              </div>
+              <div className={classes} style={{ width: '100%', ['--icon-pos']: `calc(2px + ${level * 25}px)`,backgroundColor : hexToRgba(data.color)}}>
+                <div className="goal-title" style={{paddingLeft: `calc(10px + ${level * 10}px)`}}>{data.label}</div>
+                <div className="color-tag" style={{ backgroundColor : data.color}}>
+                  {data.dropdown ? <RiArrowDropDownLine className="arrow-icon"/> : null}
+                </div>
+              </div>
+            </div>
+          )
+        }}
         >
         </Tree>
       </div>
     </div>
-  //   </div>
-  //   </div>
   )
 }
 
-
-function GoalTitleParentCards({title, goalId, color}) {
-    return (
-        <li key={goalId}>
-            <Checkbox {...label} defaultChecked />
-            <p className="class-2">{title}</p>
-            <div className="color-tag" style={{ backgroundColor : color}}></div>
-        </li>
-    )
-}
-
-function GoalTitleChildCards({title, goalId}) {
-    const [checked, setChecked] = React.useState(true);
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
-
-    return (
-        <li key={goalId}>
-            <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            inputProps={{ 'aria-label': 'controlled' }}
-            />
-            <p className="class-2">{title}</p>
-            <div className="none-tag"></div>
-        </li>
-    )
-}
+// hex to rgba
+function hexToRgba ( hexType ){ 
+  if(!hexType){
+    return "rgba(130,143,146, 0.08)";
+  }else{
+  /* 맨 앞의 "#" 기호를 삭제하기. */ 
+  var hex = hexType.trim().replace( "#", "" ); 
+  
+  /* rgb로 각각 분리해서 배열에 담기. */ 
+  var rgb = ( 3 === hex.length ) ? 
+  hex.match( /[a-f\d]/gi ) : hex.match( /[a-f\d]{2}/gi );     
+  
+  rgb.forEach(function (str, x, arr){     
+      /* rgb 각각의 헥사값이 한자리일 경우, 두자리로 변경하기. */ 
+      if ( str.length === 1 ) str = str + str; 
+      
+      /* 10진수로 변환하기. */ 
+      arr[ x ] = parseInt( str, 16 ); 
+  }); 
+  
+  return "rgba(" + rgb.join(", ") + ", 0.1)"; 
+  }
+} 
 
 
 export default GoalTitleList;

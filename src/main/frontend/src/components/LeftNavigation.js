@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext } from "react"
 import "./LeftNavigation.css";
 import DateRangePickerCustom from './DateRangePickerCustom';
 import GoalTitleList from "./GoalTitleList";
 import { GoalSearchTitleListContext } from "../context/GoalSearchTitleListContext";
 
 function LeftNavigation(props){
-    const [goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
+    const [goalSearchTitleList ] = useContext(GoalSearchTitleListContext);
     return (
         <nav className="left-nav">
             <div className="search-dateRange-area">

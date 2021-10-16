@@ -73,7 +73,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
 function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList}){
   const find4 = goalFullList.find((e) => e.goalId == goalId);
 
-  console.log("인덱스 찾기", find4)
+  // console.log("인덱스 찾기", find4)
   return(
         <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">
@@ -99,7 +99,7 @@ function GoalCard({index, title, startDatetime, endDatetime, content, goalId, ki
 }
 
 function PeriodicityInfo({periodicityInfo}){
-  console.log("함수안에 들어갔다", periodicityInfo)
+  // console.log("함수안에 들어갔다", periodicityInfo)
   const timeUnitToString = (value)=>{
     if(value === "D"){
       return "매일"
@@ -146,7 +146,7 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
           goalId: goalId
         }
       })
-      console.log("삭제결과", result)
+      // console.log("삭제결과", result)
       handleClose()
       setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
       setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))
