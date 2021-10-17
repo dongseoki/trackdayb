@@ -5,7 +5,8 @@ export const GoalTotalTitleListContext = createContext();
 
 export const GoalTotalTitleListProvider = (props) =>{
     const [ goalTotalTitleList, setGoalTotalTitleList ] = useState([]);
-    
+    const [ updateTotalTitle, setUpdateTotalTitle ] = useState(false);
+
     useEffect(()=>{
         const fetchGoalTotalTitleList = async () => {
           try{
@@ -17,10 +18,10 @@ export const GoalTotalTitleListProvider = (props) =>{
           }
         };
         fetchGoalTotalTitleList();
-      }, [])
+      }, [updateTotalTitle])
 
     return (
-        <GoalTotalTitleListContext.Provider value={[ goalTotalTitleList, setGoalTotalTitleList ]}>
+        <GoalTotalTitleListContext.Provider value={[ goalTotalTitleList, setGoalTotalTitleList, updateTotalTitle, setUpdateTotalTitle ]}>
             {props.children}
         </GoalTotalTitleListContext.Provider>
     )

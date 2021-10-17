@@ -5,6 +5,7 @@
     background-color: #eaf4fd;
     height: 40px;
     width: 80px;
+    cursor: pointer;
 }
 .modal-goalList-title{
     font-size: 16px;

@@ -16,8 +16,9 @@ import FormControl from '@mui/material/FormControl';
 import Tree from '@naisutech/react-tree'
 
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
+import randomColor from "randomcolor";
 
-function GoalTitleListModal({setParentId, setParentGoalTitle}){
+function GoalTitleListModal({parentId, setParentId, setParentGoalTitle, setColor}){
   const [ goalTotalTitleList ] = useContext(GoalTotalTitleListContext);
   const [ tempParentId, setTempParentId ] = useState("")
   const [ tempParentTitle, setTempParentTitle ] = useState("없음")
@@ -36,36 +37,37 @@ function GoalTitleListModal({setParentId, setParentGoalTitle}){
     },
   }));
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(true);
+  const [openInside, setOpenInside] = useState(false);
+  const handleOpenInside = (e) => {
+    e.preventDefault();
+    setOpenInside(true);
+    setTempParentId(parentId)
   };
-  const handleClose = () => {
-    setOpen(false);
-    setParentId("");
-    setParentGoalTitle("없음");
+  const handleCloseInside = () => {
+    setOpenInside(false);
   };
-  const handleSubmit = () =>{
+  const handleSubmitInside = () =>{
     setParentId(tempParentId);
     setParentGoalTitle(tempParentTitle);
-    setOpen(false);
+    setColor(randomColor())
+    setOpenInside(false);
   }
   return(
     <>
-      <button className="prevGoalTitleList" onClick={handleOpen}>목표분류</button>
+      <button className="prevGoalTitleList" onClick={handleOpenInside}>목표분류</button>
       <Modal
         aria-labelledby="transition-modal-prevGoalTitleList"
         aria-describedby="transition-modal-prevGoalTitleList"
         className={classes.modal}
-        open={open}
-        onClose={handleClose}
+        open={openInside}
+        onClose={handleCloseInside}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={openInside}>
           <div className={classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
             <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
@@ -76,8 +78,8 @@ function GoalTitleListModal({setParentId, setParentGoalTitle}){
               setTempParentTitle={setTempParentTitle}
             />
             <div className="button-wrapper">
-              <button type="button" className="submitBtn" onClick={handleSubmit}>확인</button>
-              <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
+              <button type="button" className="submitBtn" onClick={handleSubmitInside}>확인</button>
+              <button type="button" className="cancleBtn" onClick={handleCloseInside}>취소</button>
             </div>
           </div>
         </Fade>

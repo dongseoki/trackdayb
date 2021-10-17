@@ -58,6 +58,7 @@
 .slider-wrapper{
     display: flex;
     flex-direction: column;
+    margin-top: 5px;
 }
 .slider-border{
     border : 1px solid rgba(0, 0, 0, 0.12);
@@ -82,6 +83,7 @@
 .color-picker-area{
     display: flex;
     flex-direction: row;
+    margin-top : 15px;
 }
 .color-picker-btn{
     border :none;
@@ -91,6 +93,7 @@
     color : white;
     font-size: 20px;
     margin-right: 2px;
+    cursor: pointer;
 }
 .color-tag-wrapper{
     position: relative;
@@ -122,7 +125,7 @@ height: 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 .submitBtn{
     border: 1px solid #3292EB;
@@ -133,6 +136,7 @@ height: 20px;
     color : white;
     font-size: 14px;
     margin-right: 2px;
+    cursor: pointer;
 }
 .cancleBtn{
     border: 1px solid rgba(0, 0, 0, 0.22);
@@ -141,4 +145,5 @@ height: 20px;
     height: 40px;
     width: 50%;
     margin-left: 2px;
+    cursor: pointer;
 }

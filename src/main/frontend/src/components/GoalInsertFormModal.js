@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 //css
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,8 +26,11 @@ import Checkbox from '@mui/material/Checkbox';
 import { HexColorPicker } from "react-colorful";
 // 전체목표제목리스트
 import GoalTitleListModal from "./GoalTitleListModal";
+import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
-function GoalInsertFormModal(){
+function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
+  const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
+
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
@@ -52,7 +55,30 @@ function GoalInsertFormModal(){
   const [color, setColor] = useState(randomColor());
   const defaultSearchTime = " 09:00:00";
   
-  
+  const InitializeForm = ()=>{
+    setStartDatetime(new Date());
+    setEndDatetime(new Date());
+    setshareStatus(false);
+    setTitle("");
+    setContent("");
+    setKind('regular');
+    //주기정보
+    setTimeUnit('D');
+    setType('count');
+    setCount('');
+    setSun(false)
+    setMon(false)
+    setTue(false)
+    setWed(false)
+    setThu(false)
+    setFri(false)
+    setSat(false)
+    setProgressRate("");
+    setParentId("")
+    setParentGoalTitle("없음");
+    setColor(randomColor());
+  }
+
   const useStyles = makeStyles((theme) => ({
     modal: {
       display: 'flex',
@@ -74,13 +100,15 @@ function GoalInsertFormModal(){
 
   const handleOpen = () => {
     setOpen(true);
+    InitializeForm()
   };
 
   const handleClose = () => {
     setOpen(false);
+    InitializeForm()
   };
 
-  const handleSubmit = async (evt) => {
+  const handleFormSubmit = async (evt) => {
     evt.preventDefault();
 
     const formData = {
@@ -110,10 +138,12 @@ function GoalInsertFormModal(){
     }
     console.log('제출', formData)
     try{
-      const result = await axios.post("/goalManage/goal2", formData);
+      const result = await axios.post("/goalManage/goal", formData);
       console.log("제출결과", {result})
-      setOpen(false);
-      // setGoalFullList([...goalFullList, result.data])
+      handleClose();
+      setGoalFullList([...goalFullList, formData]);
+      setGoalSearchTitleList([...goalSearchTitleList, formData]);
+      setUpdateTotalTitle(!updateTotalTitle)
     }catch(err){
       console.error(err)
     }
@@ -137,6 +167,7 @@ function GoalInsertFormModal(){
         <Fade in={open}>
           <div className={classes.paper}>
             <h3 id="transition-modal-title">목표 추가</h3>
+            <form onSubmit={handleFormSubmit}>
             <div className="top-wrapper">  
               <div className="modal-date-picker">
                 <div className="modal-title">진행기간</div>
@@ -161,6 +192,7 @@ function GoalInsertFormModal(){
               </div>
             </div>
             <TextField 
+              required
               id="title" 
               label="제목" 
               value={title}
@@ -242,6 +274,7 @@ function GoalInsertFormModal(){
                 setParentId={setParentId}
                 parentGoalTitle={parentGoalTitle}
                 setParentGoalTitle={setParentGoalTitle}
+                setColor={setColor}
               />   
               <div className="parent-title">{parentGoalTitle}</div>
             </div>
@@ -251,9 +284,10 @@ function GoalInsertFormModal(){
               setColor={setColor}
             />
             <div className="button-wrapper">
-              <button type="submit" className="submitBtn" onClick={handleSubmit}>저장</button>
+              <button type="submit" className="submitBtn">저장</button>
               <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
             </div>
+            </form>
           </div>
         </Fade>
       </Modal>
@@ -263,11 +297,21 @@ function GoalInsertFormModal(){
   
 function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}) {
-    
+  
+  const [none, setNone] = useState(false)
   const timeUnitChangeHandler = (event) => {
     setTimeUnit(event.target.value);
+    setCount("")
     if(event.target.value === "D" || event.target.value === "M" ){
       setType("count")
+      setSun(false)
+      setMon(false)
+      setTue(false)
+      setWed(false)
+      setThu(false)
+      setFri(false)
+      setSat(false)
+      setNone(false)
     }
   };
   
@@ -285,6 +329,7 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
           setType={setType}
           count={count}
           setCount={setCount}
+          none={none} setNone={setNone}
           sun={sun} setSun={setSun}
           mon={mon} setMon={setMon}
           tue={tue} setTue={setTue}
@@ -300,10 +345,10 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
   }
 }
 
-function WeekPeriodSelect({timeUnit, type, setType, count, setCount,
+function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNone,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
   
-  const [none, setNone] = useState(false)
+  
 
   const sunCheckHandler=(e)=>{
     setSun(e.target.checked)
@@ -368,6 +413,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount,
           <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} onChange={noneCheckHandler} label="요일미지정" />
           <TextField 
             disabled={!none}
+            type="number"
             id="count" 
             label="횟수" 
             size="small" 
@@ -387,6 +433,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount,
       <div>
         <TextField 
           id="count" 
+          type="number"
           label="횟수" 
           size="small" 
           variant="outlined"
@@ -434,6 +481,7 @@ function ColorTag({parentGoalTitle, color, setColor}){
       </>
     )
   } else{
+    setColor("")
     return null
   }
 }

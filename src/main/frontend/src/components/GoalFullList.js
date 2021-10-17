@@ -18,11 +18,13 @@ import GoalModifyFormModal from "./GoalModifyFormModal";
 
 import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext";
+import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
 function GoalFullList({orderColumn, setOrderColumn}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
-  
+  const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
+
   return (
     <div>
       <div className="button-wrapper">
@@ -60,24 +62,25 @@ function GoalFullList({orderColumn, setOrderColumn}) {
             setGoalSearchTitleList={setGoalSearchTitleList}
             goalFullList={goalFullList}
             setGoalFullList={setGoalFullList}
+            updateTotalTitle={updateTotalTitle}
+            setUpdateTotalTitle={setUpdateTotalTitle}
           ></GoalCard>
         ))}
-        <GoalInsertFormModal/>
+        <GoalInsertFormModal goalFullList={goalFullList}
+            setGoalFullList={setGoalFullList}
+            goalSearchTitleList={goalSearchTitleList}
+            setGoalSearchTitleList={setGoalSearchTitleList}/>
       </div>
     </div>
   )
 }
 
-function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList}){
-  const find4 = goalFullList.find((e) => e.goalId == goalId);
-
-  // console.log("인덱스 찾기", find4)
+function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}){
   return(
         <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">
             {(shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
             <GoalModifyFormModal 
-              // modifyData = {goalFullList.find((e) => e.goalId == goalId)}
               modifyData = {goalFullList[index]}
             />
             <DeleteModal 
@@ -85,7 +88,9 @@ function GoalCard({index, title, startDatetime, endDatetime, content, goalId, ki
               goalSearchTitleList={goalSearchTitleList}
               setGoalSearchTitleList={setGoalSearchTitleList}
               goalFullList={goalFullList}
-              setGoalFullList ={setGoalFullList}/>
+              setGoalFullList ={setGoalFullList}
+              updateTotalTitle={updateTotalTitle}
+              setUpdateTotalTitle={setUpdateTotalTitle}/>
           </div>
           <div className="title">{title}</div>
           <div className="content">{content}</div>
@@ -126,7 +131,7 @@ function PeriodicityInfo({periodicityInfo}){
 
 
 // 삭제 버튼 모달
-function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList}) {
+function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -144,10 +149,11 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
           goalId: goalId
         }
       })
-      // console.log("삭제결과", result)
+      console.log("삭제결과", result)
       handleClose()
       setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
       setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))
+      setUpdateTotalTitle(!updateTotalTitle)
     }catch(err){
       console.error(err)
     }
