@@ -31,8 +31,8 @@ import Checkbox from '@mui/material/Checkbox';
   timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
 
-    console.log("title- Modify", title)
-    console.log("modyData", modifyData)
+    // console.log("title- Modify", title)
+    // console.log("modyData", modifyData)
 
     
     return (

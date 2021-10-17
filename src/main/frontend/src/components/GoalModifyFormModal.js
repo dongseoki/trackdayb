@@ -16,8 +16,8 @@ import TextField from '@material-ui/core/TextField';
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
 function GoalModifyFormModal({modifyData}){
-  console.log("모달 수정데이터", modifyData)
-  console.log("모달 수정 타이틀", modifyData.title)
+  // console.log("모달 수정데이터", modifyData)
+  // console.log("모달 수정 타이틀", modifyData.title)
   
     const [ goalTotalTitleList, setGoalTotalTitleList ] = useContext(GoalTotalTitleListContext);
     const YNtoTF = (value)=>{
@@ -35,7 +35,8 @@ function GoalModifyFormModal({modifyData}){
                     return true
                 }
             })
-            return goalTotalTitleList[targetIndex]["title"]
+            // return goalTotalTitleList[targetIndex]["title"]
+            return "부모제목TEST"
         }else{
             return "없음"
         }

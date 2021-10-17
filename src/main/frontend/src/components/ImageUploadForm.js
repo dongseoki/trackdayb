@@ -49,7 +49,7 @@ function ImageUploadForm() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <img src={imgSrc} className={`image-preview ${imgSrc && "image-preview-show"}`} />
+            <img src={imgSrc} alt="hellow" className={`image-preview ${imgSrc && "image-preview-show"}`} />
             <ProgressBar percent={percent}/>
             <div className="file-dropper">
                 {fileName}

@@ -1,11 +1,15 @@
 .goal-content{
-    padding: 10px;
-    border : 1px solid red;
-    margin : 20px;
-  }
-.align-buttons{
+  margin : 20px;
+  padding: 20px;
+  background-color: rgba(130,143,146, 0.08);
+  border-radius: 10px;
+  box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
+}
+
+.goal-content .button-wrapper{
   display: flex;
   justify-content: flex-end;
+  height: 40px;
 }
 .goal-content .goal-cards-list{
   padding : 20px 0;
@@ -14,7 +18,7 @@
   flex-wrap: wrap;
 }
 
-.card{
+.goal-content .card{
   border-radius: 6px 10px 10px 6px;
   border-left : 6px solid #cccccc;
   background-color: white;
@@ -113,7 +117,4 @@
 .card .progressRate{
   font-size: 1.2em;
   text-align: center;
-}
-.modal-share-toggle .lock-icon{
-  font-size: 20px;
 }

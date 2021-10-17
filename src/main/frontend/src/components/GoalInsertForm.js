@@ -1,27 +1,27 @@
-import React, { useState } from "react";
-import "./GoalInsertFormModal.css"
-//icon
-import { BiLock } from "react-icons/bi";
-//goalInsertForm
-import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-//color picker
-import { HexColorPicker } from "react-colorful";
+// import React, { useState } from "react";
+// import "./GoalInsertFormModal.css"
+// //icon
+// import { BiLock } from "react-icons/bi";
+// //goalInsertForm
+// import TextField from '@material-ui/core/TextField';
+// import DateRangePickerCustom from './DateRangePickerCustom';
+// import Radio from '@mui/material/Radio';
+// import RadioGroup from '@mui/material/RadioGroup';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormControl from '@mui/material/FormControl';
+// import FormLabel from '@mui/material/FormLabel';
+// //color picker
+// import { HexColorPicker } from "react-colorful";
 
-// 토글버튼
-import ToggleButton from '@mui/material/ToggleButton';
+// // 토글버튼
+// import ToggleButton from '@mui/material/ToggleButton';
 
-//slider-score
-import Slider from '@mui/material/Slider';
-import GoalTitleListModal from "./GoalTitleListModal";
+// //slider-score
+// import Slider from '@mui/material/Slider';
+// import GoalTitleListModal from "./GoalTitleListModal";
 
-import FormGroup from '@mui/material/FormGroup';
-import Checkbox from '@mui/material/Checkbox';
+// import FormGroup from '@mui/material/FormGroup';
+// import Checkbox from '@mui/material/Checkbox';
 
   function GoalInsertForm({
     parentId, setParentId, parentGoalTitle, setParentGoalTitle, title, setTitle, content, setContent, startDatetime, setStartDatetime,
@@ -30,7 +30,7 @@ import Checkbox from '@mui/material/Checkbox';
   timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
 
-    console.log("title", title)
+    // console.log("title", title)
 
     
     return (

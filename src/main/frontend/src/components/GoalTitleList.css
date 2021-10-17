@@ -1,31 +1,42 @@
 .goal-list{
     background-color: white;
     border-radius: 10px;
-    padding : 10px;
-}
-.goal-list li{
-    display: grid;
-    grid-template-columns: 10px 90% 10px;
-    margin : 3px;
+    padding : 15px 10px 10px 0;
 }
 .goal-list p{
     font-size: 14px;
 }
-.goal-list li .class-1{
-    background-color: rgba(255,93,93, 0.1);
-    padding: 10px;
-    margin : 0;
+.goal-list span{
+    font-size: 12px;
 }
-.color-tag{
-    padding: 10px;
+.goal-title-wrapper{
+    display: flex;
+    margin-bottom: 2px;
 }
-.goal-list li .class-2{
-    background-color: #EFEFEF;
-    padding: 7px 10px;
-    margin : 0;
-    font-size: 13px;
+.goal-title-wrapper .checkbox-wrapper{
+    /* border: 1px solid red; */
 }
-.goal-list li .none-tag{
-    background-color: #EFEFEF;
-    padding: 7px 10px;
+.goal-title-wrapper .custom-node{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.goal-title-wrapper .goal-title{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+.goal-title-wrapper .color-tag{
+    width: 22px;
+    height: 100%;
+}
+.goal-title-wrapper .color-tag .arrow-icon{
+    font-size: 22px;
+    padding : 0;
+    height: 100%;
+}
+.goal-title-wrapper .open .arrow-icon {
+    transform: rotate( 180deg )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 //toggle
 import ToggleButton from '@mui/material/ToggleButton';
 //slider-score
@@ -39,10 +39,10 @@ function ActivityInsertForm({writeDate}){
         activityScore : activityScore,
         shareStatus : shareStatus,
       };    
-      console.log("formData", formData)
+      // console.log("formData", formData)
       try{
-        const result = await axios.post("/timeManage/activityTEST", formData);
-        console.log({result})
+        // const result = await axios.post("/timeManage/activityTEST", formData);
+        // console.log({result})
       } catch(err){
         console.error(err)
       }
