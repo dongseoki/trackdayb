@@ -1,5 +1,6 @@
 package com.lds.trackdayb.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -13,11 +14,11 @@ import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.vo.GoalVO;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -135,10 +136,21 @@ public class GoalManageController {
         goalVO.setMemberSerialNumber(loginSerialNumber);
         try {
             goalService.insertGoal(goalVO);
+
+            //set Goal Info
+            String[] searchGoalIdArray = {goalVO.getGoalId()}; 
+            GoalVO param1 = new GoalVO();
+            param1.setMemberSerialNumber(goalVO.getMemberSerialNumber());
+            param1.setSearchGoalIdList(Arrays.asList(searchGoalIdArray));
+            resultMVO.setGoalInfo(goalService.getGoalFullList(param1).get(0));
         } catch (Exception e) {
             LOGGER.error("insertGoal error : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
         }
+        LOGGER.info("insertGoal Id : {}", goalVO.getGoalId());
+
+
+
         return resultMVO;
     }
 
@@ -157,7 +169,7 @@ public class GoalManageController {
     }
 
 
-    @PutMapping("/goal")
+    @PatchMapping("/goal")
     public ResultMVO updateGoal(@RequestBody GoalVO goalVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
@@ -165,10 +177,20 @@ public class GoalManageController {
         goalVO.setMemberSerialNumber(loginSerialNumber);
         try {
             goalService.updateGoal(goalVO);
+            
+            // set goalInfo
+            String[] searchGoalIdArray = {goalVO.getGoalId()}; 
+            GoalVO param1 = new GoalVO();
+            param1.setMemberSerialNumber(goalVO.getMemberSerialNumber());
+            param1.setSearchGoalIdList(Arrays.asList(searchGoalIdArray));
+            resultMVO.setGoalInfo(goalService.getGoalFullList(param1).get(0));
+
         } catch (Exception e) {
             LOGGER.error("update error : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
         }
+
+
 
         return resultMVO;
     }

@@ -266,7 +266,7 @@
         
     </select>
     
-    <insert id="insertActivity" useGeneratedKeys="true" keyProperty="activity_id">
+    <insert id="insertActivity" useGeneratedKeys="true" keyProperty="activityId">
         INSERT INTO activity (
             member_serial_number
             <if test="goalId != null and !goalId.equals('')">
