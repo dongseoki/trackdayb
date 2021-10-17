@@ -8,6 +8,9 @@
             <if test="parentId != null and !parentId.equals('')">
                 parent_id,
             </if>
+            <if test="kind != null and !kind.equals('')">
+                kind,
+            </if>
             <if test="content != null and !content.equals('')">
                 content,
             </if>
@@ -33,7 +36,9 @@
             <if test="parentId != null and !parentId.equals('')">
                 #{parentId},
             </if>
-            
+            <if test="kind != null and !kind.equals('')">
+                #{kind},
+            </if>
             <if test="content != null and !content.equals('')">
                 #{content},
             </if>
@@ -121,9 +126,14 @@
     <update id="updateGoal">
         UPDATE goal
         SET
-        <if test="parentId != null and !parentId.equals('')">
-                parent_id = #{parentId},
-        </if>
+        <choose>
+                <when test="!parentId.equals('')">
+                        parent_id = #{parentId},
+                </when>
+                <otherwise>
+                        parent_id = NULL,
+                </otherwise>
+        </choose>
         <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
                 member_serial_number = #{memberSerialNumber},
         </if>

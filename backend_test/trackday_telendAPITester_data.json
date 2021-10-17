@@ -303,6 +303,50 @@
                     "items": []
                   },
                   "bodyType": "Text",
+                  "textBody": "{\n  \"searchStartDatetime\": \"2021-08-01 09:00:00\",\n  \"searchEndDatetime\": \"2021-10-30 09:00:00\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "searchStartDatetime",
+                        "value": "2021-10-30"
+                      },
+                      {
+                        "enabled": true,
+                        "name": "searchEndDatetime",
+                        "value": "2021-10-30"
+                      }
+                    ]
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/goalManage/goalFullList"
+                },
+                "id": "fb508d79-f4ef-4dd3-9567-447e2304fb68",
+                "name": "getGoalFullList_날짜C타입",
+                "headers": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
                   "textBody": "{\n  \"searchKind\":\"deadline\"\n}"
                 },
                 "uri": {
@@ -582,7 +626,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"periodicityInfo\":{\n    \"timeUnit\":\"W\",\n    \"type\":\"count\",\n    \"count\":\"7\",\n    \"sunYn\":\"N\",\n    \"monYn\":\"N\",\n    \"tueYn\":\"N\",\n    \"wedsYn\":\"N\",\n    \"thurYn\":\"N\",\n    \"friYn\":\"N\",\n    \"satYn\":\"N\"\n  },\n  \"parentId\":\"\",\n  \"title\":\"회사 출근\",\n  \"kind\":\"regular\",\n  \"content\":\"일일 1독\",\n  \"startDatetime\":\"2021-09-01 00:00:00\",\n  \"endDatetime\":\"2021-09-30 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\"\n}"
+                  "textBody": "{\n  \"periodicityInfo\":{\n    \"timeUnit\":\"W\",\n    \"type\":\"count\",\n    \"count\":\"7\",\n    \"sunYn\":\"N\",\n    \"monYn\":\"N\",\n    \"tueYn\":\"N\",\n    \"wedsYn\":\"N\",\n    \"thurYn\":\"N\",\n    \"friYn\":\"N\",\n    \"satYn\":\"N\"\n  },\n  \"parentId\":\"\",\n  \"title\":\"test5\",\n  \"kind\":\"regular\",\n  \"content\":\"일일 1독\",\n  \"startDatetime\":\"2021-10-17 00:00:00\",\n  \"endDatetime\":\"2021-10-17 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -662,6 +706,46 @@
                     "items": []
                   },
                   "bodyType": "Text",
+                  "textBody": "{\n  \"parentId\":\"\",\n  \"title\":\"프로젝트 배포\",\n  \"kind\":\"deadline\",\n  \"content\":\"사이드 프로젝트의 성공\",\n  \"startDatetime\":\"2021-09-01 00:00:00\",\n  \"endDatetime\":\"2021-12-31 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/goalManage/goal"
+                },
+                "id": "38cee9f4-441f-4154-9600-afe2456cd8ba",
+                "name": "insertGoal_기한성 목표",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
                   "textBody": "{\n  \"periodicityInfo\":{\n    \"timeUnit\":\"W\",\n    \"type\":\"day\",\n    \"count\":\"\",\n    \"sunYn\":\"N\",\n    \"monYn\":\"Y\",\n    \"tueYn\":\"N\",\n    \"wedsYn\":\"Y\",\n    \"thurYn\":\"N\",\n    \"friYn\":\"Y\",\n    \"satYn\":\"N\"\n  },\n  \"parentId\":\"\",\n  \"title\":\"운동test\",\n  \"kind\":\"regular\",\n  \"content\":\"근력운동\",\n  \"startDatetime\":\"2021-09-01 00:00:00\",\n  \"endDatetime\":\"2021-09-30 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\"\n}"
                 },
                 "uri": {
@@ -692,8 +776,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {
@@ -732,8 +816,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {
@@ -742,7 +826,47 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"periodicityInfo\":{\n    \"timeUnit\":\"Y\",\n    \"type\":\"count\",\n    \"count\":\"6\",\n    \"sunYn\":\"N\",\n    \"monYn\":\"N\",\n    \"tueYn\":\"N\",\n    \"wedsYn\":\"N\",\n    \"thurYn\":\"N\",\n    \"friYn\":\"N\",\n    \"satYn\":\"N\"\n  },\n  \"goalId\":\"20\",\n  \"parentId\":\"\",\n  \"title\":\"이제 공유 안함.\",\n  \"kind\":\"regular\",\n  \"content\":\"일일 1독\",\n  \"startDatetime\":\"2021-09-01 00:00:00\",\n  \"endDatetime\":\"2021-09-30 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\",\n  \"shareStatus\":\"N\"\n}"
+                  "textBody": "{\n  \"periodicityInfo\":{\n    \"timeUnit\":\"Y\",\n    \"type\":\"count\",\n    \"count\":\"6\",\n    \"sunYn\":\"N\",\n    \"monYn\":\"N\",\n    \"tueYn\":\"N\",\n    \"wedsYn\":\"N\",\n    \"thurYn\":\"N\",\n    \"friYn\":\"N\",\n    \"satYn\":\"N\"\n  },\n  \"goalId\":\"13\",\n  \"parentId\":\"\",\n  \"title\":\"테스트테스트\",\n  \"kind\":\"regular\",\n  \"content\":\"일일 1독\",\n  \"startDatetime\":\"2021-09-01 00:00:00\",\n  \"endDatetime\":\"2021-09-30 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\",\n  \"shareStatus\":\"N\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "host": "127.0.0.1:8080",
+                  "path": "/goalManage/goal"
+                },
+                "id": "1af09a9c-3003-4daa-9ff5-83f313b0a71a",
+                "name": "updateGoal_parentID 수정 테스트",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"periodicityInfo\":{\n    \"timeUnit\":\"Y\",\n    \"type\":\"count\",\n    \"count\":\"6\",\n    \"sunYn\":\"N\",\n    \"monYn\":\"N\",\n    \"tueYn\":\"N\",\n    \"wedsYn\":\"N\",\n    \"thurYn\":\"N\",\n    \"friYn\":\"N\",\n    \"satYn\":\"N\"\n  },\n  \"goalId\":\"20\",\n  \"parentId\":\"\",\n  \"title\":\"이제 공유 안함수정.2\",\n  \"kind\":\"regular\",\n  \"content\":\"일일 1독\",\n  \"startDatetime\":\"2021-09-01 00:00:00\",\n  \"endDatetime\":\"2021-09-30 00:00:00\",\n  \"progressRate\":\"\",\n  \"color\":\"#DC143C\",\n  \"shareStatus\":\"N\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -772,8 +896,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {
@@ -1029,7 +1153,7 @@
                       {
                         "enabled": true,
                         "name": "searchGoalIdList",
-                        "value": "10,11,3"
+                        "value": "12"
                       }
                     ]
                   },
@@ -1312,7 +1436,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"goalId\":\"1023\",\n  \"title\":\"삽입 테스트.\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\",\n  \"content\":\"모든 내용을 채워봄 더미 에세이 쓰기 목표를 선택함.\",\n  \"activity_score\":\"5\",\n  \"share_status\":\"Y\"\n}"
+                  "textBody": "{\n  \"goalId\":\"\",\n  \"title\":\"삽입 테스트1017-3.\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\",\n  \"content\":\"모든 내용을 채워봄 더미 에세이 쓰기 목표를 선택함.\",\n  \"activity_score\":\"5\",\n  \"share_status\":\"Y\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -1352,7 +1476,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"title\":\"삽입 테스트.2\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\"\n}"
+                  "textBody": "{\n  \"title\":\"삽입 테스트.233\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -1382,8 +1506,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {
@@ -1422,8 +1546,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {
@@ -1462,8 +1586,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {
@@ -1472,7 +1596,7 @@
                     "items": []
                   },
                   "bodyType": "Text",
-                  "textBody": "{\n  \"activityId\":\"12\",\n  \"goalId\":\"10\",\n  \"title\":\"삽입 테스트를 수정 테스트로 변경.\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\",\n  \"content\":\"모든 내용을 채워봄 더미 에세이 쓰기 목표를 선택함.\",\n  \"activity_score\":\"5\",\n  \"share_status\":\"Y\"\n}"
+                  "textBody": "{\n  \"activityId\":\"12\",\n  \"goalId\":\"10\",\n  \"title\":\"삽입 테스트를 수정 테스트로 변경23.\",\n  \"startDatetime\":\"2021-09-19 13:30:00\",\n  \"endDatetime\":\"2021-09-19 15:30:00\",\n  \"content\":\"모든 내용을 채워봄 더미 에세이 쓰기 목표를 선택함.\",\n  \"activity_score\":\"5\",\n  \"share_status\":\"Y\"\n}"
                 },
                 "uri": {
                   "query": {
@@ -1502,8 +1626,8 @@
                 "type": "Request",
                 "method": {
                   "requestBody": true,
-                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
-                  "name": "PUT"
+                  "link": "http://tools.ietf.org/html/rfc5789",
+                  "name": "PATCH"
                 },
                 "body": {
                   "formBody": {

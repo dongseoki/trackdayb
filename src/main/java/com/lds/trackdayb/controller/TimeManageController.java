@@ -2,6 +2,7 @@ package com.lds.trackdayb.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,6 @@ import com.lds.trackdayb.vo.ActivityVO;
 import com.lds.trackdayb.vo.TimeRecordVO;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -33,6 +33,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -258,10 +259,21 @@ public class TimeManageController {
         
         try {
             timeManageService.insertActivity(activityVO);
+            LOGGER.info("insertActivity Id : {}", activityVO.getActivityId());
+
+            //set activity Info
+            String[] searchGoalIdArray = {activityVO.getActivityId()}; 
+            ActivityVO param1 = new ActivityVO();
+            param1.setMemberSerialNumber(param1.getMemberSerialNumber());
+            param1.setSearchActivityIdList(Arrays.asList(searchGoalIdArray));
+            resultMVO.setActivityInfo(timeManageService.getActivityList(param1).get(0));
         } catch (Exception e) {
             LOGGER.error("insert activity fail : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
         }
+
+
+
         return resultMVO;
     }
 
@@ -287,7 +299,7 @@ public class TimeManageController {
      * @return ResultMVO
      * 
      */
-    @PutMapping("activity")
+    @PatchMapping("activity")
     public ResultMVO updateActivity(@RequestBody ActivityVO activityVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
@@ -297,10 +309,21 @@ public class TimeManageController {
         
         try {
             timeManageService.updateActivity(activityVO);
+
+            //set activity Info
+            String[] searchGoalIdArray = {activityVO.getActivityId()}; 
+            ActivityVO param1 = new ActivityVO();
+            param1.setMemberSerialNumber(param1.getMemberSerialNumber());
+            param1.setSearchActivityIdList(Arrays.asList(searchGoalIdArray));
+            resultMVO.setActivityInfo(timeManageService.getActivityList(param1).get(0));
+
         } catch (Exception e) {
             LOGGER.error("update activity fail : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
         }
+
+
+
         return resultMVO;
     }
 
