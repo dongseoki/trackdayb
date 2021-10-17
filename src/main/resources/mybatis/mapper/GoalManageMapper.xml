@@ -235,12 +235,12 @@
         1=1
         <if test="searchStartDatetime != null and !searchStartDatetime.equals('')">
             AND
-                #{searchStartDatetime} <![CDATA[<=]]> g.start_datetime
+                #{searchStartDatetime} <![CDATA[<=]]> g.end_datetime
         </if>
         <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
             AND 
             /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
-            g.end_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
+            g.start_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
         </if>
         <if test="searchKind != null and !searchKind.equals('')">
             AND 
