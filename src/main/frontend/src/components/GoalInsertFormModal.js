@@ -141,8 +141,8 @@ function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList
       const result = await axios.post("/goalManage/goal", formData);
       console.log("제출결과", {result})
       handleClose();
-      setGoalFullList([...goalFullList, formData]);
-      setGoalSearchTitleList([...goalSearchTitleList, formData]);
+      setGoalFullList([...goalFullList, result.data.goalInfo]);
+      setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
       setUpdateTotalTitle(!updateTotalTitle)
     }catch(err){
       console.error(err)

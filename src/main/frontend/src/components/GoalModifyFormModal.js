@@ -37,7 +37,6 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 import { GoalFullListContext } from "../context/GoalFullListContext";
 
 function GoalModifyFormModal({modifyData, targetIndex}){
-  console.log('targetIndex', targetIndex)
   const [ goalTotalTitleList, setGoalTotalTitleList ] = useContext(GoalTotalTitleListContext);
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
 
@@ -171,19 +170,15 @@ function GoalModifyFormModal({modifyData, targetIndex}){
       "satYn":sat ? "Y":"N"
       }
     }
-
     console.log('제출', formData)
-    console.log('targetIndex', targetIndex)
     try{
-      const result = await axios.put("/goalManage/goal", formData);
+      const result = await axios.patch("/goalManage/goal", formData);
       console.log("제출결과", {result})
       setOpen(false);
       // 수정한 데이터 반영
       let tempArray = [...goalFullList];
-      tempArray[targetIndex] = formData;
+      tempArray[targetIndex] = result.data.goalInfo;
       setGoalFullList(tempArray);
-
-      // setGoalFullList([...goalFullList, result.data])
     }catch(err){
       console.error(err)
     }
