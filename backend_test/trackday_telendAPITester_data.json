@@ -87,7 +87,7 @@
                     "version": "V11"
                   },
                   "host": "127.0.0.1:8080",
-                  "path": "/goalManage/goal"
+                  "path": ""
                 },
                 "id": "8cd8021d-0332-4193-9b4c-f06f316275f2",
                 "name": "deleteGoal_",
