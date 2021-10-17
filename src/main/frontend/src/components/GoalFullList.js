@@ -82,6 +82,7 @@ function GoalCard({index, title, startDatetime, endDatetime, content, goalId, ki
             {(shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
             <GoalModifyFormModal 
               modifyData = {goalFullList[index]}
+              targetIndex={index}
             />
             <DeleteModal 
               goalId={goalId} 

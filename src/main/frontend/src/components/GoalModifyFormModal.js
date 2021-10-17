@@ -34,9 +34,12 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
+import { GoalFullListContext } from "../context/GoalFullListContext";
 
-function GoalModifyFormModal({modifyData}){
+function GoalModifyFormModal({modifyData, targetIndex}){
+  console.log('targetIndex', targetIndex)
   const [ goalTotalTitleList, setGoalTotalTitleList ] = useContext(GoalTotalTitleListContext);
+  const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
 
   const YNtoTF = (value)=>{
       if(value === "Y"){
@@ -53,8 +56,7 @@ function GoalModifyFormModal({modifyData}){
                   return true
               }
           })
-          // return goalTotalTitleList[targetIndex]["title"]
-          return "부모제목TEST"
+          return goalTotalTitleList[targetIndex]["title"]
       }else{
           return "없음"
       }
@@ -76,6 +78,7 @@ function GoalModifyFormModal({modifyData}){
   const [thu, setThu] = useState(false)
   const [fri, setFri] = useState(false)
   const [sat, setSat] = useState(false)
+  const [none, setNone] = useState(false) //내부생성(요일미지정)
   const [progressRate, setProgressRate] = useState(0);
   const [ parentId, setParentId ] = useState("");
   const [ parentGoalTitle, setParentGoalTitle ] = useState("");
@@ -105,6 +108,9 @@ function GoalModifyFormModal({modifyData}){
     setParentId(modifyData.parentId)
     setParentGoalTitle(pIdtoTitle(modifyData.parentId));
     setColor(modifyData.color);
+    if(modifyData.periodicityInfo.timeUnit === "W" && modifyData.periodicityInfo.type ==="day"){
+      setNone(true);
+    }
   }
 
   const useStyles = makeStyles((theme) => ({
@@ -135,43 +141,48 @@ function GoalModifyFormModal({modifyData}){
     setOpen(false);
   };
 
-  const [formData, setFormData] = useState({"goalId" : modifyData.goalId})
 
-  const handleSubmit = async (evt) =>{
+  const handleFormSubmit = async (evt) =>{
     evt.preventDefault();
 
-    // const formData = {
-    //   "goalId" : modifyData.goalId,
-    //   "parentId": parentId,
-    //   "title": title,
-    //   "kind":kind,
-    //   "content":content,
-      // "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
-      // "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
-    //   "progressRate":progressRate,
-    //   "color":color,
-    //   "shareStatus": shareStatus ? "N":"Y",
-    // }
-    // if(kind === "regular"){
-    //   formData['periodicityInfo'] = {
-    //   "timeUnit":timeUnit,
-    //   "type":type,
-    //   "count":count,
-    //   "sunYn":sun ? "Y":"N",
-    //   "monYn":mon ? "Y":"N",
-    //   "tueYn":tue ? "Y":"N",
-    //   "wedsYn":wed ? "Y":"N",
-    //   "thurYn":thu ? "Y":"N",
-    //   "friYn":fri ? "Y":"N",
-    //   "satYn":sat ? "Y":"N"
-    //   }
-    // }
+    const formData = {
+      "goalId" : modifyData.goalId,
+      "parentId": parentId,
+      "title": title,
+      "kind":kind,
+      "content":content,
+      "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
+      "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
+      "progressRate":progressRate,
+      "color":color,
+      "shareStatus": shareStatus ? "N":"Y",
+    }
+    if(kind === "regular"){
+      formData['periodicityInfo'] = {
+      "timeUnit":timeUnit,
+      "type":type,
+      "count":count,
+      "sunYn":sun ? "Y":"N",
+      "monYn":mon ? "Y":"N",
+      "tueYn":tue ? "Y":"N",
+      "wedsYn":wed ? "Y":"N",
+      "thurYn":thu ? "Y":"N",
+      "friYn":fri ? "Y":"N",
+      "satYn":sat ? "Y":"N"
+      }
+    }
 
     console.log('제출', formData)
+    console.log('targetIndex', targetIndex)
     try{
       const result = await axios.put("/goalManage/goal", formData);
       console.log("제출결과", {result})
       setOpen(false);
+      // 수정한 데이터 반영
+      let tempArray = [...goalFullList];
+      tempArray[targetIndex] = formData;
+      setGoalFullList(tempArray);
+
       // setGoalFullList([...goalFullList, result.data])
     }catch(err){
       console.error(err)
@@ -197,7 +208,7 @@ function GoalModifyFormModal({modifyData}){
         <Fade in={open}>
           <div className={classes.paper}>
             <h3 id="transition-modal-title">목표 수정</h3>
-            {/* <form onSubmit={handleFormSubmit}> */}
+            <form onSubmit={handleFormSubmit}>
             <div className="top-wrapper">  
               <div className="modal-date-picker">
                 <div className="modal-title">진행기간</div>
@@ -216,7 +227,6 @@ function GoalModifyFormModal({modifyData}){
                   selected={shareStatus}
                   onChange={() => {
                     setshareStatus(!shareStatus);
-                    setFormData({...formData, "shareStatus": !shareStatus ? "N":"Y"})
                   }}
                   >
                     <BiLock className="lock-icon"/>
@@ -235,7 +245,6 @@ function GoalModifyFormModal({modifyData}){
                 }}
                 onChange={function(e){
                   setTitle(e.target.value)
-                  setFormData({...formData, "title" :e.target.value})
                 }}/>
                 <TextField
                 style={{width:"100%", marginBottom:"10px"}}
@@ -250,7 +259,6 @@ function GoalModifyFormModal({modifyData}){
                 value={content}
                 onChange={function(e){
                   setContent(e.target.value)
-                  setFormData( {...formData, "content" :e.target.value})
                 }}
               />
               <div className="goal-type-radio">
@@ -260,7 +268,6 @@ function GoalModifyFormModal({modifyData}){
                   value={kind} 
                   onChange={(e)=>{
                     setKind(e.target.value)
-                    setFormData({...formData, "kind" :e.target.value})
                   }} >
                     <FormControlLabel value="regular" control={<Radio />} label="주기성 목표" />
                     <FormControlLabel value="deadline" control={<Radio />} label="기한성 목표" />
@@ -281,9 +288,8 @@ function GoalModifyFormModal({modifyData}){
                 wed={wed} setWed={setWed}
                 thu={thu} setThu={setThu}
                 fri={fri} setFri={setFri}
-                sat={sat} setSat={setSat} 
-                formData={formData}
-                setFormData={setFormData}
+                sat={sat} setSat={setSat}
+                none={none} setNone={setNone}
               />
               <div className="slider-wrapper">
                 <label className="modal-title">진행률</label>
@@ -300,7 +306,6 @@ function GoalModifyFormModal({modifyData}){
                     value={parseInt(progressRate)}
                     onChange={function(e){
                       setProgressRate(e.target.value)
-                      setFormData({...formData, "progressRate" :e.target.value})
                     }}
                 />
                 </div>
@@ -311,6 +316,7 @@ function GoalModifyFormModal({modifyData}){
                   setParentId={setParentId}
                   parentGoalTitle={parentGoalTitle}
                   setParentGoalTitle={setParentGoalTitle}
+                  setColor={setColor}
                 />   
                 <div className="parent-title">{parentGoalTitle}</div>
               </div>
@@ -320,10 +326,10 @@ function GoalModifyFormModal({modifyData}){
                 setColor={setColor}
               />
               <div className="button-wrapper">
-                <button type="submit" className="submitBtn" onClick={handleSubmit}>제출</button>
+                <button type="submit" className="submitBtn">수정</button>
                 <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
               </div>
-            {/* </form> */}
+            </form>
           </div>
         </Fade>
       </Modal>
@@ -332,15 +338,14 @@ function GoalModifyFormModal({modifyData}){
 }
 
 function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, setCount,
-  sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat, formData, setFormData}) {
-  const [none, setNone] = useState(false)
+  sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat, none, setNone}) {
+  // const [none, setNone] = useState(false)
   const timeUnitChangeHandler = (event) => {
+    console.log("timeUnit 변경")
     setTimeUnit(event.target.value);
-    setFormData({...formData, "timeUnit" : event.target.value})
     setCount("")
     if(event.target.value === "D" || event.target.value === "M" ){
       setType("count")
-      setFormData({...formData, "type" : "count"})
       setSun(false)
       setMon(false)
       setTue(false)
@@ -388,30 +393,37 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
   const sunCheckHandler=(e)=>{
     setSun(e.target.checked)
     setType("day")
+    setCount("")
   }
   const monCheckHandler=(e)=>{
     setMon(e.target.checked)
     setType("day")
+    setCount("")
   }
   const tueCheckHandler=(e)=>{
     setTue(e.target.checked)
     setType("day")
+    setCount("")
   }
   const wedCheckHandler=(e)=>{
     setWed(e.target.checked)
     setType("day")
+    setCount("")
   }
   const thuCheckHandler=(e)=>{
     setThu(e.target.checked)
     setType("day")
+    setCount("")
   }
   const friCheckHandler=(e)=>{
     setFri(e.target.checked)
     setType("day")
+    setCount("")
   }
   const satCheckHandler=(e)=>{
     setSat(e.target.checked)
     setType("day")
+    setCount("")
   }
   const noneCheckHandler = (e)=>{
     setNone(e.target.checked)
@@ -426,6 +438,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
       setType("count")
     }else{
       setType("day")
+      setCount("")
     }
   }
   const checkboxStyle={
@@ -445,7 +458,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
         </FormGroup>
 
         <div className="none-count-wrapper">
-          <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} onChange={noneCheckHandler} label="요일미지정" />
+          <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} checked={none} onChange={noneCheckHandler} label="요일미지정" />
           <TextField 
             disabled={!none}
             type="number"
@@ -453,6 +466,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
             label="횟수" 
             size="small" 
             variant="outlined"
+            value={count}
             style={{width:"200px", height:"30px"}}
             InputLabelProps={{
               shrink: true,
