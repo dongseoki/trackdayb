@@ -31,4 +31,14 @@ public class TestController {
     public String testPage() {
         return "/test/testPage";
     }
+    @GetMapping(value="/login")
+    public String loginPage(){
+      return "/test/login";
+    }
+
+    @GetMapping(value="/signup")
+    public String signupPage(){
+      return "/test/signup";
+    }
+
 }
