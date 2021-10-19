@@ -31,6 +31,12 @@ public class TestController {
     public String testPage() {
         return "/test/testPage";
     }
+
+    @GetMapping("/testLogoutPage")
+    public String testLogoutPage() {
+        return "/test/testLogoutPage";
+    }
+
     @GetMapping(value="/login")
     public String loginPage(){
       return "/test/login";
