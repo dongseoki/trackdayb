@@ -13,3 +13,7 @@ Release 0.1.1
  Release 0.2.0
   - swagger 적용 : api 문서 자동화.()
   (http://localhost:8080/swagger-ui.html#/)
+
+Release 0.2.1
+  - goalTitleList와 goalFullList 호출시, 목표 id 와 제목 full path를 포함하도록 반환.
+  - 자세한 내용 api 명세서 참조.
