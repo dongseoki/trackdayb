@@ -8,3 +8,8 @@ Release 0.1.1
  - 목표 수정시, parentID 널 수정 가능하도록 변경.
  - 관련된 talend test data 수정.
  - 수정 api의 http method를 patch로 수정
+
+
+ Release 0.2.0
+  - swagger 적용 : api 문서 자동화.()
+  (http://localhost:8080/swagger-ui.html#/)
