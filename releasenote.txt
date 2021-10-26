@@ -17,6 +17,13 @@ Release 0.1.2
 - 목표 모달에서 상위목표 선택시 자기꺼를 제외하도록
 - 목표 카드 : 전체체크 해제시 카드 리스트 null 처리
 
+Release 0.1.3
+- LeftNavigation : 목표 타이틀 검색 기능 구현
+- GoalTitleListModal : 목표 타이틀 검색 기능 구현
+- colorTag 누르면 자동제출 에러 처리
+- 최상위 목표를 하위 목표로 바꾸면 color = ""로 전송
+- 목표 카드 : 부모 트리 정보 추가
+
  Release 0.2.0
   - swagger 적용 : api 문서 자동화.()
   (http://localhost:8080/swagger-ui.html#/)
@@ -24,3 +31,5 @@ Release 0.1.2
 Release 0.2.1
   - goalTitleList와 goalFullList 호출시, 목표 id 와 제목 full path를 포함하도록 반환.
   - 자세한 내용 api 명세서 참조.
+
+
