@@ -8,3 +8,11 @@ Release 0.1.1
  - 목표 수정시, parentID 널 수정 가능하도록 변경.
  - 관련된 talend test data 수정.
  - 수정 api의 http method를 patch로 수정
+
+Release 0.1.2
+- 목표 제목 리스트 : 길어진 경우 말줄임표 표시
+- 목표 제목 리스트 : 체크박스 들여쓰기 표현
+- 목표 제목 리스트 : 전체선택 체크박스 추가
+- 목표 분류 선택 모달 : 기간 조건 적용(GoalModalSearchTitleListContext)
+- 목표 모달에서 상위목표 선택시 자기꺼를 제외하도록
+- 목표 카드 : 전체체크 해제시 카드 리스트 null 처리
