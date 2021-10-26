@@ -11,4 +11,6 @@ import lombok.Data;
 @Data
 public class GoalMVO extends GoalDTO {
     PeriodicityInfoDTO periodicityInfo = new PeriodicityInfoDTO();
+    String goalIdPath;
+    String goalTitlePath;
 }
