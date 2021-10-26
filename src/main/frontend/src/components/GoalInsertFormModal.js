@@ -27,12 +27,14 @@ import { HexColorPicker } from "react-colorful";
 // 전체목표제목리스트
 import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
+import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
 function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
+  const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
-  const [startDatetime, setStartDatetime] = useState(new Date());
-  const [endDatetime, setEndDatetime] = useState(new Date());
+  // const [startDatetime, setStartDatetime] = useState(new Date());
+  // const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");

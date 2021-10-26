@@ -8,6 +8,9 @@ export const GoalFullListProvider = (props) => {
     useEffect(() => {
         const fetchGoalFullList = async () => {
           try {
+            if (!props.searchGoalIdList.length){
+              setGoalFullList([])
+            }else{
             const result = await axios.get("/goalManage/goalFullList", {
               params: {
                 searchStartDatetime:makeYYMMDD(props.searchStartDatetime),
@@ -19,6 +22,7 @@ export const GoalFullListProvider = (props) => {
               }
             });
             setGoalFullList(result.data.goalFullList)
+          }
           } catch(err){
             console.error(err)
           }

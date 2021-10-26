@@ -1,7 +1,7 @@
 .goal-list{
     background-color: white;
     border-radius: 10px;
-    padding : 15px 10px 10px 0;
+    padding : 15px 5px 10px 5px;
 }
 .goal-list p{
     font-size: 14px;
@@ -13,6 +13,17 @@
     display: flex;
     margin-bottom: 2px;
 }
+
+.total-check-wrapper{
+    display: flex;
+    margin: 0 5px 10px 5px;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+.total-check-wrapper .total-check{
+    font-size: 14px;
+}
+
 .goal-title-wrapper .checkbox-wrapper{
     /* border: 1px solid red; */
 }
@@ -27,6 +38,8 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 14px;
+    width: 180px;
+    padding-left: 10px;
 }
 .goal-title-wrapper .color-tag{
     width: 22px;

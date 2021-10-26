@@ -35,10 +35,12 @@ import Checkbox from '@mui/material/Checkbox';
 
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 import { GoalFullListContext } from "../context/GoalFullListContext";
+import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
 function GoalModifyFormModal({modifyData, targetIndex}){
-  const [ goalTotalTitleList, setGoalTotalTitleList ] = useContext(GoalTotalTitleListContext);
+  const [ goalTotalTitleList, setGoalTotalTitleList] = useContext(GoalTotalTitleListContext);
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
+  const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
   const YNtoTF = (value)=>{
       if(value === "Y"){
@@ -60,8 +62,8 @@ function GoalModifyFormModal({modifyData, targetIndex}){
           return "없음"
       }
   }
-  const [startDatetime, setStartDatetime] = useState(new Date());
-  const [endDatetime, setEndDatetime] = useState(new Date());
+  // const [startDatetime, setStartDatetime] = useState(new Date());
+  // const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -307,6 +309,7 @@ function GoalModifyFormModal({modifyData, targetIndex}){
               </div>
               <div className="parent-modal-wrapper">
                 <GoalTitleListModal 
+                  goalId = {modifyData.goalId}
                   parentId={parentId}
                   setParentId={setParentId}
                   parentGoalTitle={parentGoalTitle}
@@ -495,7 +498,8 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
 
 function ColorTag({parentGoalTitle, color, setColor}){
   const [pickerShow, setPickerShow] = useState(false)
-  const pickerHandler = ()=>{
+  const pickerHandler = (e)=>{
+    e.preventDefault();
     setPickerShow(!pickerShow)
   }
   if(parentGoalTitle === "없음"){

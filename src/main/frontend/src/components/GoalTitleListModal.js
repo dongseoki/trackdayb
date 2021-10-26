@@ -15,14 +15,15 @@ import FormControl from '@mui/material/FormControl';
 //Tree 
 import Tree from '@naisutech/react-tree'
 
-import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
+import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext"; //기간검색 제목리스트
+
 import randomColor from "randomcolor";
 
-function GoalTitleListModal({parentId, setParentId, setParentGoalTitle, setColor}){
-  const [ goalTotalTitleList ] = useContext(GoalTotalTitleListContext);
+function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor}){
+  const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
   const [ tempParentId, setTempParentId ] = useState("")
   const [ tempParentTitle, setTempParentTitle ] = useState("없음")
-
+  
   const useStyles = makeStyles((theme) => ({
     modal: {
       display: 'flex',
@@ -71,8 +72,9 @@ function GoalTitleListModal({parentId, setParentId, setParentGoalTitle, setColor
           <div className={classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
             <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
-            <GoalTitleChoiceList 
-              goalTitleList= {goalTotalTitleList}
+            <GoalTitleChoiceList
+              goalId = {goalId}
+              goalTitleList = {goalModalSearchTitleList} // 기간검색 제목리스트
               tempParentId={tempParentId}
               setTempParentId={setTempParentId}
               setTempParentTitle={setTempParentTitle}
@@ -88,7 +90,8 @@ function GoalTitleListModal({parentId, setParentId, setParentGoalTitle, setColor
   )
 }
 
-function GoalTitleChoiceList({goalTitleList, tempParentId,setTempParentId,setTempParentTitle}){
+function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle}){
+  console.log('자기자신아이디', goalId)
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
   useEffect(()=>{
@@ -101,27 +104,31 @@ function GoalTitleChoiceList({goalTitleList, tempParentId,setTempParentId,setTem
 
   const nodes = []
   goalTitleList.map((goal, index) => {
-    const goalObj = new Object();
-    goalObj.label = goal.title
-    goalObj.id = parseInt(goal.goalId)
-    goalObj.dropdown=false
-    if(goal.parentId){
-      if(goalIdList.includes(parseInt(goal.parentId))){ //부모아이디가 검색결과 리스트에 있음
-        goalObj.parentId = parseInt(goal.parentId)
+    if(goal.goalId == goalId){ // 자기자신은 제외하기
+    } else if (goal.parentId == goalId){ // 자기자신을 부모로 갖고있는 애들도 제외
+    } else {
+      const goalObj = new Object();
+      goalObj.label = goal.title
+      goalObj.id = parseInt(goal.goalId)
+      goalObj.dropdown=false
+      if(goal.parentId){
+        if(goalIdList.includes(parseInt(goal.parentId))){ //부모아이디가 검색결과 리스트에 있음
+          goalObj.parentId = parseInt(goal.parentId)
+        }else{
+          goalObj.parentId = null
+        }
       }else{
-        goalObj.parentId = null
+          goalObj.parentId = null
       }
-    }else{
-        goalObj.parentId = null
+      goalTitleList.forEach((goal2)=>{
+        if(goal.goalId === goal2.parentId){
+          goalObj.dropdown = true
+        }
+      })
+      goalObj.color = goal.color
+      goalObj.index = index
+      nodes.push(goalObj)
     }
-    goalTitleList.forEach((goal2)=>{
-      if(goal.goalId === goal2.parentId){
-        goalObj.dropdown = true
-      }
-    })
-    goalObj.color = goal.color
-    goalObj.index = index
-    nodes.push(goalObj)
   })
 
   const myThemes = {
@@ -144,7 +151,7 @@ function GoalTitleChoiceList({goalTitleList, tempParentId,setTempParentId,setTem
       setTempParentTitle(goalTitleList[targetIndex]["title"])
     }
   }
-
+console.log('nodes', nodes)
   return (
     <div>
       <div className="modal-goal-list">

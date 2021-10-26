@@ -6,7 +6,7 @@ export const GoalTotalTitleListContext = createContext();
 export const GoalTotalTitleListProvider = (props) =>{
     const [ goalTotalTitleList, setGoalTotalTitleList ] = useState([]);
     const [ updateTotalTitle, setUpdateTotalTitle ] = useState(false);
-
+    
     useEffect(()=>{
         const fetchGoalTotalTitleList = async () => {
           try{

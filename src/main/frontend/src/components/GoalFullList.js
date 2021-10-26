@@ -20,13 +20,16 @@ import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
+import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
+
 function GoalFullList({orderColumn, setOrderColumn}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
-  const [goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
+  const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
   return (
     <div>
+      <GoalModalSearchTitleListProvider>
       <div className="button-wrapper">
         <button>목표 모아보기</button>
         <ToggleButtonGroup
@@ -71,6 +74,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
             goalSearchTitleList={goalSearchTitleList}
             setGoalSearchTitleList={setGoalSearchTitleList}/>
       </div>
+      </GoalModalSearchTitleListProvider>
     </div>
   )
 }

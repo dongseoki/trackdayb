@@ -70,10 +70,30 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
     setSearchGoalIdList(searchGoalIdList.filter((el) => el !== id));
   }
  }
+ const AllcheckHandler = (e, checked) =>{
+   e.stopPropagation() //이벤트 버블링 막기
+   if(checked){
+     let tempGoalIdList = [];
+    goalTitleList.forEach((goal) =>{
+        tempGoalIdList.push(parseInt(goal.goalId))
+    })
+    setSearchGoalIdList(tempGoalIdList)
+   }else{
+    setSearchGoalIdList([]);
+   }
+ }
   return (
     <div>
       <p>목표선택</p>
       <div className="goal-list">
+      <div className="total-check-wrapper">
+        <div className="checkbox-wrapper" onClick={(e) => {AllcheckHandler(e, e.target.checked)}}> 
+          <Checkbox {...label} 
+          checked={searchGoalIdList.length === goalTitleList.length ? true : false}
+          />
+        </div>
+        <div className="total-check">전체체크</div>
+      </div>
         <Tree
         nodes={nodes} 
         theme="modifiedDarkLarge"
@@ -83,13 +103,13 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
           const classes = ['custom-node', isOpen ? 'open' : undefined, selected ? 'selected' : undefined].join(' ')
           return (
             <div className="goal-title-wrapper">
-              <div className="checkbox-wrapper" onClick={(e) => {checkHandler(e, e.target.checked, data.id)}}> 
+              <div className="checkbox-wrapper" style={{paddingLeft: `calc(${level* 10}px)`}} onClick={(e) => {checkHandler(e, e.target.checked, data.id)}}> 
                 <Checkbox {...label} 
                 checked={searchGoalIdList.includes(data.id) ? true : false}
                 value={data.id}/>
               </div>
               <div className={classes} style={{ width: '100%', ['--icon-pos']: `calc(2px + ${level * 25}px)`,backgroundColor : hexToRgba(data.color)}}>
-                <div className="goal-title" style={{paddingLeft: `calc(10px + ${level * 10}px)`}}>{data.label}</div>
+                <div className="goal-title" style={{width:`calc(180px - ${level * 10}px)` }}>{data.label}</div>
                 <div className="color-tag" style={{ backgroundColor : data.color}}>
                   {data.dropdown ? <RiArrowDropDownLine className="arrow-icon"/> : null}
                 </div>
