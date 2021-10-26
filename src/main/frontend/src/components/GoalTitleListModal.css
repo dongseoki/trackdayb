@@ -26,8 +26,9 @@
     font-size: 12px;
 }
 .modal-goal-list .goal-choice{
+    width: 290px;
     background-color: white;
-    border-radius: 2px;
+    border-radius: 10px;
     padding : 5px;
     max-height: 300px;
     overflow: auto;
@@ -47,4 +48,29 @@
 }
 .modal-goal-list .goal-title-wrapper .custom-node{
     width: 240px;
+}
+
+
+.modal-goal-list .search-input-wrapper{
+    margin-bottom: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.modal-goal-list .search-input-wrapper input{
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border : none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    outline: none;
+}
+.modal-goal-list .search-input-wrapper .search-icon{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 20px;    
+    color: rgba(5, 23, 42, 0.6);
+    padding-right: 10px;
+    padding-bottom: 2px;
 }

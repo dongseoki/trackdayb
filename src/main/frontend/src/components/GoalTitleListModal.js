@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalTitleListModal.css"
@@ -14,16 +14,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 //Tree 
 import Tree from '@naisutech/react-tree'
-
+//icon
+import { BiSearch } from "react-icons/bi";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext"; //기간검색 제목리스트
 
 import randomColor from "randomcolor";
 
 function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor}){
   const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
-  const [ tempParentId, setTempParentId ] = useState("")
-  const [ tempParentTitle, setTempParentTitle ] = useState("없음")
-  
+  const [ tempParentId, setTempParentId ] = useState("");
+  const [ tempParentTitle, setTempParentTitle ] = useState("없음");
+  const [searchTerm, setSearchTerm] = useState("") //검색어
+  const [searchResults, setSearchResults] = useState([]) //검색결과
+
   const useStyles = makeStyles((theme) => ({
     modal: {
       display: 'flex',
@@ -35,6 +38,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3),
+      width: "355px",
     },
   }));
   const classes = useStyles();
@@ -50,8 +54,22 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   const handleSubmitInside = () =>{
     setParentId(tempParentId);
     setParentGoalTitle(tempParentTitle);
-    setColor(randomColor())
+    setColor(tempParentId ? "" : randomColor())
     setOpenInside(false);
+  }
+  const searchHandler = (searchTerm)=>{
+    setSearchTerm(searchTerm);
+    if(searchTerm !== ""){
+        const newGoalSearchTitleList = goalModalSearchTitleList.filter((goal) =>{
+          return Object.values(goal)
+          .join(" ")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      });
+      setSearchResults(newGoalSearchTitleList);
+    } else{
+      setSearchResults(goalModalSearchTitleList);
+    }
   }
   return(
     <>
@@ -72,12 +90,15 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
           <div className={classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
             <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
+            
             <GoalTitleChoiceList
               goalId = {goalId}
-              goalTitleList = {goalModalSearchTitleList} // 기간검색 제목리스트
+              goalTitleList = {searchTerm.length < 1 ? goalModalSearchTitleList : searchResults} // 기간검색 제목리스트
               tempParentId={tempParentId}
               setTempParentId={setTempParentId}
               setTempParentTitle={setTempParentTitle}
+              searchTerm={searchTerm}
+              searchHandler={searchHandler}
             />
             <div className="button-wrapper">
               <button type="button" className="submitBtn" onClick={handleSubmitInside}>확인</button>
@@ -90,10 +111,11 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   )
 }
 
-function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle}){
-  console.log('자기자신아이디', goalId)
+function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler}){
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
+  const inputEl = useRef("")
+
   useEffect(()=>{
     let tempGoalIdList = [];
     goalTitleList.forEach((goal) =>{
@@ -151,7 +173,10 @@ function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentI
       setTempParentTitle(goalTitleList[targetIndex]["title"])
     }
   }
-console.log('nodes', nodes)
+
+  const getSearchTerm = ()=>{
+    searchHandler(inputEl.current.value)
+  }
   return (
     <div>
       <div className="modal-goal-list">
@@ -167,6 +192,12 @@ console.log('nodes', nodes)
               <FormControlLabel value="" control={<Radio />} label="없음" />
               <div>없음</div>
             </div>
+
+            <div className="search-input-wrapper">
+                <input ref={inputEl} type="text" placeholder="검색어를 입력하세요" value={searchTerm} onChange={getSearchTerm}/>
+                <i className="search-icon"><BiSearch/></i>
+            </div>
+
             <div className="goal-choice">
               <Tree 
                 nodes={nodes} 

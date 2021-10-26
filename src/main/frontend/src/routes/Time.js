@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 //TimeLine
 import CustomizedTimeline from '../components/CustomizedTimeline';
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
+import { GoalModalSearchTitleListProvider} from "../context/GoalModalSearchTitleListContext";
 
 function Time() {
   // 검색조건(조회기간)
@@ -40,34 +41,37 @@ function Time() {
           />
         </div>
         <div className="write">
-          <div className="button-wrapper">
-            <button>import</button>
-            <button>export</button>
-            <button>도움말</button>
-            <button>양식다운로드</button>
-          </div>
-          <div className="date-picker-wrapper">
-          <TextField
-            className="date-picker"
-            id="date"
-            label="작성일"
-            type="date"
-            defaultValue={writeDate}
-            sx={{ width: 220 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
-            onChange={function(e){
-              setWriteDate(e.target.value)
-            }}
-          />
-          </div>
-          <div className="cards"></div>
+          <GoalModalSearchTitleListProvider
+            writeDate={writeDate}>
+            <div className="button-wrapper">
+              <button>import</button>
+              <button>export</button>
+              <button>도움말</button>
+              <button>양식다운로드</button>
+            </div>
+            <div className="date-picker-wrapper">
+              <TextField
+                className="date-picker"
+                id="date"
+                label="작성일"
+                type="date"
+                defaultValue={writeDate}
+                sx={{ width: 220 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                onChange={function(e){
+                  setWriteDate(e.target.value)
+                }}
+              />
+            </div>
+            <div className="cards"></div>
 
-          <div className="writeForm">
-            <ActivityInsertForm writeDate={writeDate}/>
-          </div>
+            <div className="writeForm">
+              <ActivityInsertForm writeDate={writeDate}/>
+            </div>
+          </GoalModalSearchTitleListProvider>
         </div>
       </GoalSearchTitleListProvider>
     </div>

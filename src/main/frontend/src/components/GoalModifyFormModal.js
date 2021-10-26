@@ -318,11 +318,8 @@ function GoalModifyFormModal({modifyData, targetIndex}){
                 />   
                 <div className="parent-title">{parentGoalTitle}</div>
               </div>
-              <ColorTag
-                parentGoalTitle={parentGoalTitle}
-                color={color}
-                setColor={setColor}
-              />
+              {parentId ?  null : <ColorTag color={color} setColor={setColor} />}
+              
               <div className="button-wrapper">
                 <button type="submit" className="submitBtn">수정</button>
                 <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
@@ -496,13 +493,12 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
   }
 }
 
-function ColorTag({parentGoalTitle, color, setColor}){
+function ColorTag({color, setColor}){
   const [pickerShow, setPickerShow] = useState(false)
   const pickerHandler = (e)=>{
     e.preventDefault();
     setPickerShow(!pickerShow)
   }
-  if(parentGoalTitle === "없음"){
     return (
       <>
       <div className="color-picker-area">
@@ -528,10 +524,6 @@ function ColorTag({parentGoalTitle, color, setColor}){
       </div>
       </>
     )
-  } else{
-    setColor("")
-    return null
-  }
 }
   // YYYY-MM-DD 형태로 반환
   function makeYYMMDD(value){

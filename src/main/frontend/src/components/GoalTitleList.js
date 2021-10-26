@@ -36,7 +36,6 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
       }
       goalTitleList.forEach((goal2)=>{
         if(goal.goalId === goal2.parentId){
-          console.log("goal1", goal.goalId)
           goalObj.dropdown = true
         }
       })
@@ -84,7 +83,6 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
  }
   return (
     <div>
-      <p>목표선택</p>
       <div className="goal-list">
       <div className="total-check-wrapper">
         <div className="checkbox-wrapper" onClick={(e) => {AllcheckHandler(e, e.target.checked)}}> 

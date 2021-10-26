@@ -75,7 +75,7 @@ function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList
     setThu(false)
     setFri(false)
     setSat(false)
-    setProgressRate("");
+    setProgressRate(0);
     setParentId("")
     setParentGoalTitle("없음");
     setColor(randomColor());
@@ -280,11 +280,8 @@ function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList
               />   
               <div className="parent-title">{parentGoalTitle}</div>
             </div>
-            <ColorTag
-              parentGoalTitle={parentGoalTitle}
-              color={color}
-              setColor={setColor}
-            />
+            {parentId ?  null : <ColorTag color={color} setColor={setColor} />}
+              
             <div className="button-wrapper">
               <button type="submit" className="submitBtn">저장</button>
               <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
@@ -451,41 +448,37 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
   }
 }
 
-function ColorTag({parentGoalTitle, color, setColor}){
+function ColorTag({color, setColor}){
   const [pickerShow, setPickerShow] = useState(false)
-  const pickerHandler = ()=>{
+  const pickerHandler = (e)=>{
+    e.preventDefault();
     setPickerShow(!pickerShow)
   }
-  if(parentGoalTitle === "없음"){
-    return (
-      <>
-      <div className="color-picker-area">
-        <TextField 
-          className="textfield-title"
-          id="color" 
-          label="태그컬러" 
-          size="small" 
-          variant="outlined"
-          value={color}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          onChange={function(e){
-            setColor(e.target.value)
-          }}/>
-          <div className="color-tag-wrapper">
-            <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
-            {pickerShow ? (<div className="color-picker small">
-              <HexColorPicker  color={color} onChange={setColor} />
-            </div>) : null}
-          </div>
-      </div>
-      </>
-    )
-  } else{
-    setColor("")
-    return null
-  }
+  return (
+    <>
+    <div className="color-picker-area">
+      <TextField 
+        className="textfield-title"
+        id="color" 
+        label="태그컬러" 
+        size="small" 
+        variant="outlined"
+        value={color}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={function(e){
+          setColor(e.target.value)
+        }}/>
+        <div className="color-tag-wrapper">
+          <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
+          {pickerShow ? (<div className="color-picker small">
+            <HexColorPicker  color={color} onChange={setColor} />
+          </div>) : null}
+        </div>
+    </div>
+    </>
+  )
 }
   // YYYY-MM-DD 형태로 반환
 function makeYYMMDD(value){

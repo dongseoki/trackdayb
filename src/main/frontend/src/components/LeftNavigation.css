@@ -18,7 +18,7 @@
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     width: 100%;
     padding: 7px 10px;
-    border-radius: 14px;
+    border-radius: 10px;
     background-color: white;
 }
 .left-nav .search-dateRange-area .date-picker-wrapper .date-picker{
@@ -31,6 +31,29 @@
 .left-nav .search-dateRange-area .date-picker-wrapper .date-picker:focus{
     font-weight: bolder;
     outline: none;
+}
+.left-nav .search-goalTitle-area .search-input-wrapper{
+    margin-bottom: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.left-nav .search-goalTitle-area .search-input-wrapper input{
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border : none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    outline: none;
+}
+.left-nav .search-input-wrapper .search-icon{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 20px;    
+    color: rgba(5, 23, 42, 0.6);
+    padding-right: 10px;
+    padding-bottom: 2px;
 }
 .left-nav .search-goalTitle-area .goal-list{
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;

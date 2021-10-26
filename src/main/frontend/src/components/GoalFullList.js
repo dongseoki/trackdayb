@@ -27,6 +27,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
+  console.log('goalFullList', goalFullList)
   return (
     <div>
       <GoalModalSearchTitleListProvider>
@@ -51,6 +52,7 @@ function GoalFullList({orderColumn, setOrderColumn}) {
           <GoalCard
             key={index}
             index={index}
+            goalTitlePath={goal.goalTitlePath}
             title={goal.title}
             startDatetime={goal.startDatetime}
             endDatetime={goal.endDatetime}
@@ -79,7 +81,11 @@ function GoalFullList({orderColumn, setOrderColumn}) {
   )
 }
 
-function GoalCard({index, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}){
+function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}){
+  let goalTitlePathList = goalTitlePath.split("/")
+  goalTitlePathList.pop()
+  console.log('goalTitlePathList', goalTitlePathList)
+  
   return(
         <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">
@@ -97,6 +103,14 @@ function GoalCard({index, title, startDatetime, endDatetime, content, goalId, ki
               updateTotalTitle={updateTotalTitle}
               setUpdateTotalTitle={setUpdateTotalTitle}/>
           </div>
+          <div className="path-tag-wrapper">
+            {goalTitlePathList.length>0 ? goalTitlePathList.map((goal, index) => (
+              <>
+                <span className="path-tag" title={goal}>{goal.substring(0,2)}...</span><span>/</span>              
+              </>
+            )): <span></span> }
+          </div>
+
           <div className="title">{title}</div>
           <div className="content">{content}</div>
           <div className="datetime">{startDatetime.substring(0,10)} ~ {endDatetime.substring(0,10)}</div>
