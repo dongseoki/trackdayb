@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lds.trackdayb.repository.MemberRepository">
+    <select id="findByMemberIdAndPassword" resultType="MemberDTO">
+        SELECT *
+        FROM member
+        WHERE
+        member_id = #{memberId}
+        and
+        password=#{password}
+        LIMIT 1;
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="memberSerialNumber">
+        insert into member(
+                    auth
+                    ,member_id
+                    ,name
+                    ,phone_number
+                    ,email_address
+            <if test="introduction != null and !introduction.equals('')">
+                    ,introduction
+            </if>
+            <if test="profilePhotoId != null and !profilePhotoId.equals('')">
+                    ,profile_photo_id
+            </if>
+            <if test="backgroundPhotoId != null and !backgroundPhotoId.equals('')">
+                    ,background_photo_id
+            </if>
+            <if test="snsLinkStatus != null and !snsLinkStatus.equals('')">
+                    ,sns_link_status
+            </if>
+            <if test="linkedEmail != null and !linkedEmail.equals('')">
+                    ,linked_email
+            </if>
+            <if test="password != null and !password.equals('')">
+                    ,password
+            </if>
+            <if test="remark != null and !remark.equals('')">
+                    ,remark
+            </if>
+        )
+        values(
+                    #{auth}
+                    ,#{memberId}
+                    ,#{name}
+                    ,#{phoneNumber}
+                    ,#{emailAddress}
+            <if test="introduction != null and !introduction.equals('')">
+                    ,#{introduction}
+            </if>
+            <if test="profilePhotoId != null and !profilePhotoId.equals('')">
+                    ,#{profilePhotoId}
+            </if>
+            <if test="backgroundPhotoId != null and !backgroundPhotoId.equals('')">
+                    ,#{backgroundPhotoId}
+            </if>
+            <if test="snsLinkStatus != null and !snsLinkStatus.equals('')">
+                    ,#{snsLinkStatus}
+            </if>
+            <if test="linkedEmail != null and !linkedEmail.equals('')">
+                    ,#{linkedEmail}
+            </if>
+            <if test="password != null and !password.equals('')">
+                    ,#{password}
+            </if>
+            <if test="remark != null and !remark.equals('')">
+                    ,#{remark}
+            </if>
+        )
+
+    </insert>
+</mapper>

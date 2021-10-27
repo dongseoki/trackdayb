@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <script	src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+
+    <script>
+      var response;
+      function ajax_send(){
+        response = fetch("http://127.0.0.1:8080/member/login", {
+          method: 'post',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            memberId : document.querySelectorAll("[name=memberId]")[0].value,            
+            password : sha256(document.querySelectorAll("[name=password]")[0].value)
+          })
+        }).then((response) => response.json())
+      .then((data) => console.log(data));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Login</h1> <hr>
+    <img src="/img/info.jpeg" />
+
+    <!-- <form action="/member/login" method="POST">
+      <input type="hidden" />
+      memberId : <input type="text" name="username"> <br>
+      password : <input type="password" name="password"> <br>
+      <button type="submit">Login</button>
+    </form> <br> -->
+
+    <form id="loginForm">
+      memberId : <input type="text" name="memberId"> <br>
+      password : <input type="password" name="password"> <br>
+      <input type="button" onclick="ajax_send()" value="login">Login</input>
+    </form> <br>
+
+    <a href="/test/signup">Go to join! →</a>
+  </body>
+</html>

@@ -8,4 +8,5 @@ public class ResultMVO {
     String message = "";
     GoalMVO goalInfo = null;
     ActivityMVO activityInfo = null;
+    String memberId = null;
 }

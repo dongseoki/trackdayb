@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8">
+    <title>sign up</title>
+    <script	src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+    <script>
+      function ajax_send(){
+        fetch("http://127.0.0.1:8080/member/signup", {
+          method: 'post',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            memberId : document.querySelectorAll("[name=memberId]")[0].value,            
+            password : sha256(document.querySelectorAll("[name=password]")[0].value),            
+            name : document.querySelectorAll("[name=name]")[0].value,            
+            phoneNumber : document.querySelectorAll("[name=phoneNumber]")[0].value,            
+            emailAddress : document.querySelectorAll("[name=emailAddress]")[0].value
+          })
+        }).then((response) => response.json())
+      .then((data) => console.log(data));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Sign Up</h1> <hr>
+
+    <!-- <form action="/member/signup" method="POST" content>
+      memberId : <input type="text" name="memberId"> <br>
+      password : <input type="password" name="password"> <br>
+      name : <input type="text" name="name"> <br>
+      phoneNumber : <input type="text" name="phoneNumber"> <br>
+      emailAddress : <input type="text" name="emailAddress"> <br>
+      <button type="submit">Join</button>
+    </form> <br> -->
+
+    <form id="signupForm">
+      memberId : <input type="text" name="memberId"> <br>
+      password : <input type="password" name="password"> <br>
+      name : <input type="text" name="name"> <br>
+      phoneNumber : <input type="text" name="phoneNumber"> <br>
+      emailAddress : <input type="text" name="emailAddress"> <br>
+      <!-- <button type="submit">Join</button> -->
+      <input type="button" onclick="ajax_send()" >
+    </form> <br>
+
+    <a href="/test/login">Go to login →</a>
+  </body>
+</html>

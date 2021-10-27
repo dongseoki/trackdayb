@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello, world!</title>
+    <script>
+        var response;
+        function ajax_send(){
+          response = fetch("http://127.0.0.1:8080/member/logout", {
+            method: 'post',
+            headers: {
+              "Content-Type": "application/json",
+            }
+          }).then((response) => response.json())
+        .then((data) => console.log(data));
+        }
+      </script>
+  </head>
+  <body>
+    <div layout:fragment="content">
+      <h1>Hello, world!</h1>
+      <button type="button"> 기본버튼</button>
+      <button type="button" class="btn">BS버튼1</button>
+      <button type="button" class="btn">Basic</button>
+      <button type="button" class="btn btn-primary">Primary</button>
+      <button type="button" class="btn btn-secondary">Secondary</button>
+      <button type="button" class="btn btn-success">Success</button>
+      <button type="button" class="btn btn-info">Info</button>
+      <button type="button" class="btn btn-warning">Warning</button>
+      <button type="button" class="btn btn-danger">Danger</button>
+      <button type="button" class="btn btn-dark">Dark</button>
+      <button type="button" class="btn btn-light">Light</button>
+      <button type="button" class="btn btn-link">Link</button>  
+      <input type="button" onclick="ajax_send()" value="loginout"></input>
+    </div>
+  </body>
+</html>
