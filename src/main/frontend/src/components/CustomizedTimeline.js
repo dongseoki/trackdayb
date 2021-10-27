@@ -17,25 +17,26 @@ export default function CustomizedTimeline(props) {
   // getActivityListTEST
   // 검색결과(참조데이터:활동내역 리스트)
   const [activityList, setActivityList] = useState([]);
-  const [dateList, setDateList] = useState(['2021-09-10', '2021-09-12', '2021-09-13']);
-  const [resultCode, setResultCode] = useState("");
   
+  
+  // YYYY-MM-DD 형태로 반환
+  function makeYYMMDD(value){
+    return value.toISOString().substring(0,10);
+}
+
+
   useEffect(() => {
-      let body = {
-        searchStartDatetime : props.searchStartDatetime,
-        searchEndDatetime : props.searchEndDatetime,
-      }
       const fetchActivityList = async () => {
         try {
           setActivityList(null);
-          const result = await axios.post("/timeManage/getActivityListTEST", body);
+          const result = await axios.get("/timeManage/activityList", {
+            params:{
+              searchStartDatetime :props.searchStartDatetime,
+              searchEndDatetime : props.searchEndDatetime,
+            }
+          });
           setActivityList(result.data.activityList);
-          setResultCode(result.data.resultCode);
-          // let dateArray = []
-          // activityList.map((activity, index) => {
-          //   dateArray.push(activity.startDatetime)
-          // })
-          // setDateList(dateArray);
+          console.log("액티비티 리스트",result.data.activityList)
         }
         catch(err) {
           console.error(err)
@@ -47,50 +48,7 @@ export default function CustomizedTimeline(props) {
 
   return (
     <>
-    
-      
     <Timeline position="alternate">
-      <p>TEST</p>
-      {dateList && dateList.map((d, index) => (
-      <TimelineItem key={index}>
-              <TimelineOppositeContent
-                sx={{ m: 'auto 0' }}
-                variant="body2"
-                color="text.secondary"
-              >
-                {d}
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot color="primary">
-                  11
-                </TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-              <div className="activity-wrapper">
-                <TimelineContent className="time-card" sx={{ py: '12px', px: 2 }}>
-                  <Typography variant="h6" component="span">
-                    hello
-                  </Typography>
-                  <Typography>content</Typography>
-                </TimelineContent>
-
-                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                  <Typography variant="h6" component="span">
-                    hello
-                  </Typography>
-                  <Typography>content</Typography>
-                </TimelineContent>
-                
-                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                  <Typography variant="h6" component="span">
-                    hello
-                  </Typography>
-                  <Typography>content</Typography>
-                </TimelineContent>
-              </div>
-            </TimelineItem>
-    ))}
       <p>TEST</p>
       {activityList && activityList.map((activity, index) => (
               <TimelineItem key={activity.activityId}>
@@ -103,18 +61,23 @@ export default function CustomizedTimeline(props) {
               </TimelineOppositeContent>
               <TimelineSeparator>
                 <TimelineConnector />
-                <TimelineDot color="primary">
+                <TimelineDot style={{backgroundColor:activity.goalTitleInfo.color}}>
                   11
                 </TimelineDot>
                 <TimelineConnector />
               </TimelineSeparator>
-              <TimelineContent sx={{ py: '12px', px: 2 }}>
+
+              <TimelineContent className="time-card" sx={{ py: '12px', px: 2 }}>
+                <div className="datetime-wrapper">
+                  <Typography>{activity.startDatetime.substring(11,16)}-</Typography>
+                  <Typography>{activity.endDatetime.substring(11,16)}</Typography>
+                </div>
                 <Typography variant="h6" component="span">
                   {activity.title}
                 </Typography>
                 <Typography>{activity.content}</Typography>
               </TimelineContent>
-              <div>hello</div>
+
             </TimelineItem>
             
             // <GoalTitleCards key={index}

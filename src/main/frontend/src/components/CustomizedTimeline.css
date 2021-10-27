@@ -6,4 +6,12 @@
     background-color: white;
     width: 200px;
     border-radius: 10px;
+    margin-bottom: 5px;
+}
+.timeline .MuiTimelineDot-root{
+    color : black;
+}
+.time-card .datetime-wrapper{
+    display: flex;
+    flex-direction: row;
 }
