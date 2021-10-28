@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer{
-  @Autowired
-  LoginInterceptor loginInterceptor;
+  // @Autowired
+  // LoginInterceptor loginInterceptor;
 
     // 요청 - 뷰 연결.
   public void addViewControllers(ViewControllerRegistry registry) {
@@ -21,12 +21,14 @@ public class MvcConfig implements WebMvcConfigurer{
     // registry.addView
     ///timeManage/record
   }
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-      registry.addInterceptor(loginInterceptor)
-              .excludePathPatterns("/post/page")
-              .addPathPatterns("/timeManage/**")
-              .addPathPatterns("/goalManage/**");
-  }
+  
+  // test
+  // @Override
+  // public void addInterceptors(InterceptorRegistry registry) {
+  //     registry.addInterceptor(loginInterceptor)
+  //             .excludePathPatterns("/post/page")
+  //             .addPathPatterns("/timeManage/**")
+  //             .addPathPatterns("/goalManage/**");
+  // }
     
 }

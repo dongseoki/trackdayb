@@ -2,8 +2,10 @@ package com.lds.trackdayb.service;
 
 import com.lds.trackdayb.dto.MemberDTO;
 
-public interface MemberService {
-    public String save(MemberDTO memberDTO);
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-    public MemberDTO login(String memberId, String password);
+public abstract class MemberService implements UserDetailsService{
+    public abstract String save(MemberDTO memberDTO);
+
+    public abstract MemberDTO login(String memberId, String password);
 }
