@@ -12,5 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository {
     void save(MemberDTO memberDTO);
 
+    MemberDTO findByMemberId(String memberId);
     MemberDTO findByMemberIdAndPassword(HashMap<String, String> param);
 }
