@@ -17,13 +17,29 @@ export default function CustomizedTimeline(props) {
   // getActivityListTEST
   // 검색결과(참조데이터:활동내역 리스트)
   const [activityList, setActivityList] = useState([]);
-  
+  const [tmpList, setTmpList ] = useState({});
   
   // YYYY-MM-DD 형태로 반환
   function makeYYMMDD(value){
     return value.toISOString().substring(0,10);
 }
 
+var groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+
+console.log('Object.entries(tmpList)', Object.entries(tmpList))
+for (const [key, value] of Object.entries(tmpList)){
+  // console.log('ke', key)
+  // console.log('va', value)
+}
+
+Object.entries(tmpList).forEach((activityPerDay, index)=>{
+  console.log('activityPerDya', activityPerDay[0])
+})
 
   useEffect(() => {
       const fetchActivityList = async () => {
@@ -35,21 +51,42 @@ export default function CustomizedTimeline(props) {
               searchEndDatetime : props.searchEndDatetime,
             }
           });
+
+          // 날짜만 뽑아서 key값으로 추가해두기
+          let tmpActivityList = result.data.activityList;
+          tmpActivityList.forEach((activity, index)=>{
+            activity['writeDate'] = activity['startDatetime'].substring(0, 10)
+          })
+          console.log(tmpActivityList)
+
+          // 정렬 (오름차순으로 정렬이 안댐)          
+          let test = result.data.activityList.sort((a, b)=>{
+            return a.startDatetime - b.startDatetime
+          })
+          console.log("test", test)
+          
+          // 그룹바이
+          tmpActivityList = groupBy(tmpActivityList, 'writeDate')
+          console.log("tmpActivityList", tmpActivityList)
+          setTmpList(tmpActivityList)
+
+          // 리스트에 세팅하기
           setActivityList(result.data.activityList);
-          console.log("액티비티 리스트",result.data.activityList)
         }
         catch(err) {
           console.error(err)
         }
       }
       fetchActivityList();
+      console.log("tmpList", tmpList)
   }, [props.searchStartDatetime, props.searchEndDatetime]);
   if (!activityList) return null;
 
   return (
     <>
     <Timeline position="alternate">
-      <p>TEST</p>
+      <p>TEST2</p>
+      
       {activityList && activityList.map((activity, index) => (
               <TimelineItem key={activity.activityId}>
               <TimelineOppositeContent
@@ -76,6 +113,7 @@ export default function CustomizedTimeline(props) {
                   {activity.title}
                 </Typography>
                 <Typography>{activity.content}</Typography>
+
               </TimelineContent>
 
             </TimelineItem>
