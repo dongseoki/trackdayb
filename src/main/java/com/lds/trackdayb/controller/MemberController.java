@@ -34,6 +34,6 @@ public class MemberController {
     @PostMapping(value = "/signup")
     public String signup(MemberDTO memberDTO){
         memberService.save(memberDTO);
-        return "redirect:/login";
+        return "redirect:/member/login";
     }
 }
