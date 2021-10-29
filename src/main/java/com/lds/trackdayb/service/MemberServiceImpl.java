@@ -1,15 +1,20 @@
 package com.lds.trackdayb.service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import com.lds.trackdayb.dto.MemberDTO;
+import com.lds.trackdayb.exception.DuplicateMemberException;
 import com.lds.trackdayb.repository.MemberRepository;
+import com.lds.trackdayb.util.SecurityUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,6 +62,18 @@ public class MemberServiceImpl extends MemberService{
         return memberDTO;
     }
 
+    @Override
+    public MemberDTO signup(MemberDTO memberDTO) {
+        if(!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
+            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        }
+        memberDTO.setAuth("ROLE_USER");
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        memberDTO.setPassword(encoder.encode(memberDTO.getPassword()));
+        memberRepository.save(memberDTO);
+        return memberDTO;
+    }
+
     // public User signup(UserDto userDto) {
     //     if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
     //         throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
@@ -78,14 +95,12 @@ public class MemberServiceImpl extends MemberService{
     //     return userRepository.save(user);
     // }
 
-    // @Transactional(readOnly = true)
-    // public Optional<User> getUserWithAuthorities(String username) {
-    //     return userRepository.findOneWithAuthoritiesByUsername(username);
-    // }
+    public MemberDTO getUserWithAuthorities(String memberId) {
+        return memberRepository.findByMemberId(memberId);
+    }
 
-    // @Transactional(readOnly = true)
-    // public Optional<User> getMyUserWithAuthorities() {
-    //     return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername);
-    // }
+    public MemberDTO getMyUserWithAuthorities() {
+        return memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().get());
+    }
     
 }

@@ -17,10 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -98,19 +101,44 @@ public class MemberController {
         return new ResponseEntity<>(new TokenDTO(jwt), httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/signup")
-    public ResultMVO signup(@RequestBody MemberDTO memberDTO){
-        ResultMVO resultMVO = new ResultMVO();
-        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-        try {
-            memberService.save(memberDTO);
-        } catch (Exception e) {
-            LOGGER.error("signup error : {}", e.toString());
-            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-            resultMVO.setMessage("signup fail.");
-        }
+    // @PostMapping(value = "/signup")
+    // public ResultMVO signup(@RequestBody MemberDTO memberDTO){
+    //     ResultMVO resultMVO = new ResultMVO();
+    //     resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+    //     try {
+    //         memberService.save(memberDTO);
+    //     } catch (Exception e) {
+    //         LOGGER.error("signup error : {}", e.toString());
+    //         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+    //         resultMVO.setMessage("signup fail.");
+    //     }
 
-        return resultMVO;
+    //     return resultMVO;
+    // }
+
+    @PostMapping(value = "/signup")
+    public ResponseEntity<MemberDTO> signup(@RequestBody MemberDTO memberDTO){
+        return ResponseEntity.ok(memberService.signup(memberDTO));
+    }
+
+
+    // @PostMapping("/signup")
+    // public ResponseEntity<User> signup(
+    //         @Valid @RequestBody UserDto userDto
+    // ) {
+    //     return ResponseEntity.ok(userService.signup(userDto));
+    // }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<MemberDTO> getMyUserInfo(HttpServletRequest request) {
+        return ResponseEntity.ok(memberService.getMyUserWithAuthorities());
+    }
+
+    @GetMapping("/user/{username}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
+        return ResponseEntity.ok(memberService.getUserWithAuthorities(username));
     }
     
 }
