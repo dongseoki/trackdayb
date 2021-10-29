@@ -2,11 +2,15 @@
     display: flex;
     flex-direction: column;
 }
+.activity-card-wrapper .MuiTimelineContent-root{
+    padding : 10px 15px;
+}
 .time-card{
     background-color: white;
     width: 200px;
     border-radius: 10px;
     margin-bottom: 5px;
+    padding : 10px;
 }
 .timeline .MuiTimelineDot-root{
     color : black;
@@ -14,4 +18,29 @@
 .time-card .datetime-wrapper{
     display: flex;
     flex-direction: row;
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+.time-card .datetime-wrapper .css-ahj2mt-MuiTypography-root{
+    font-size: 12px;
+}
+.time-card .activity-title{
+    font-size: 16px;
+    font-weight: bold;
+}
+.time-card .activity-content{
+    font-size: 14px;
+}
+.activityPerDay-wrapper{
+    display: flex;
+    flex-direction: column;
+}
+.activity-card-wrapper{
+    display: flex;
+    flex-direction: row;
+}
+.activity-circle{
+    width: 20px;
+    height: 20px;
+    margin: 10px;
 }
