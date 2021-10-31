@@ -17,6 +17,7 @@ import com.lds.trackdayb.mvo.ActivityMVO;
 import com.lds.trackdayb.mvo.ReferenceFavoriteMVO;
 import com.lds.trackdayb.mvo.ResultMVO;
 import com.lds.trackdayb.mvo.TimeRecordMVO;
+import com.lds.trackdayb.service.MemberService;
 import com.lds.trackdayb.service.SystemManageService;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.service.TimeManageService;
@@ -50,6 +51,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/timeManage")
 public class TimeManageController {
     private  final TestService testService;
+    private final MemberService memberService;
     private final TimeManageService timeManageService;
     private final SystemManageService systemManageService;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
@@ -60,7 +62,7 @@ public class TimeManageController {
     public String recordPage(@RequestParam("selectionDate") @Nullable String selectionDate, @RequestParam("referenceName") @Nullable String referenceName, ModelMap model){
     // public String recordPage(){
         // 필요 없을듯..?
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
 
         // TODO 날짜의 유효성 검사? 고려 필요.
         // 
@@ -96,7 +98,7 @@ public class TimeManageController {
     @ResponseBody
     public String createTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // FIXME 로그인 아이디 조회.
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         timeManageService.createTimeRecord(timeRecordVO);
         return "시간관리 - 기록하기 - 시간기록 삽입";
@@ -105,7 +107,7 @@ public class TimeManageController {
     @GetMapping("/viewTimeRecord")
     public String viewTimeRecord(@RequestParam("selectionDate") @Nullable String selectionDate, ModelMap model){
         // FIXME 로그인 아이디 조회.
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
 
         TimeRecordVO vo = new TimeRecordVO();
         vo.setMemberSerialNumber(loginSerialNumber);
@@ -123,7 +125,7 @@ public class TimeManageController {
     @GetMapping("/viewTimeRecordRegist")
     public String viewTimeRecordRegist(@RequestParam("selectionDate") @Nullable String selectionDate, ModelMap model){
         // FIXME 로그인 아이디 조회.
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
 
         TimeRecordVO vo = new TimeRecordVO();
         vo.setMemberSerialNumber(loginSerialNumber);
@@ -141,7 +143,7 @@ public class TimeManageController {
     @PostMapping("/viewTimeRecordList")
     // public String viewTimeRecordList(List<String> selectedDateList){
     public String viewTimeRecordList(TimeRecordVO timeRecordVO,ModelMap model){
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
 
         // FIXME 
@@ -162,7 +164,7 @@ public class TimeManageController {
     @ResponseBody
     public TimeRecordMVO modifyTimeRecord(@RequestBody TimeRecordVO timeRecordVO){
         // TODO  로그인 아이디 조회.
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         return timeManageService.modifyTimeRecord(timeRecordVO);
     }
@@ -171,7 +173,7 @@ public class TimeManageController {
     @ResponseBody
     public TimeRecordMVO deleteTimeRecord(@Valid @RequestBody TimeRecordVO timeRecordVO, BindingResult bindingResult, ModelMap model){
         // TODO  로그인 아이디 조회.
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         timeRecordVO.setMemberSerialNumber(loginSerialNumber);
         return timeManageService.deleteTimeRecord(timeRecordVO);
     }
@@ -191,7 +193,7 @@ public class TimeManageController {
         JsonObject jo = new JsonObject();
 
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
 
         if(CollectionUtils.isNotEmpty(searchGoalIdList))
             activityVO.setSearchGoalIdList(searchGoalIdList);
@@ -231,7 +233,7 @@ public class TimeManageController {
 
         // 파라미터 기본값 세팅.
         ActivityVO activityVO = new ActivityVO();
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
 
         List<ActivityMVO> activityList = timeManageService.getActivityList(activityVO);
@@ -254,7 +256,7 @@ public class TimeManageController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
         
         try {
@@ -304,7 +306,7 @@ public class TimeManageController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
         
         try {
@@ -357,7 +359,7 @@ public class TimeManageController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
         
         try {

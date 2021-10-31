@@ -4,8 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.MemberDTO;
 import com.lds.trackdayb.dto.TokenDTO;
+import com.lds.trackdayb.exception.DuplicateMemberException;
 import com.lds.trackdayb.jwt.JwtFilter;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.mvo.ResultMVO;
@@ -85,20 +88,29 @@ public class MemberController {
     // }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> authorize(@Valid @RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<ResultMVO> authorize(@Valid @RequestBody MemberDTO memberDTO) {
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), memberDTO.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken;
+        Authentication authentication;
+        String jwt="";
+        HttpHeaders httpHeaders;
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        authenticationToken =
+        new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), memberDTO.getPassword());
+
+        authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.createToken(authentication);
+        jwt = tokenProvider.createToken(authentication);
+        resultMVO.setToken(jwt);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new TokenDTO(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
 
     // @PostMapping(value = "/signup")
@@ -117,8 +129,22 @@ public class MemberController {
     // }
 
     @PostMapping(value = "/signup")
-    public ResponseEntity<MemberDTO> signup(@RequestBody MemberDTO memberDTO){
-        return ResponseEntity.ok(memberService.signup(memberDTO));
+    public String signup(@RequestBody MemberDTO memberDTO){
+        JsonObject jo = new JsonObject();
+        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+        try {
+            MemberDTO memberInfo =memberService.signup(memberDTO);
+            jo.addProperty("memberId", memberInfo.getMemberId());
+        } catch (DuplicateMemberException e) {
+            LOGGER.error("signup error : {}", e.toString());
+            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER);
+            jo.addProperty("message", "signup fail. duplicate error");
+        } catch (Exception e) {
+            LOGGER.error("signup error : {}", e.toString());
+            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_FAIL);
+            jo.addProperty("message", "signup fail. server error");
+        }
+        return jo.toString();
     }
 
 

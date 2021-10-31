@@ -94,6 +94,7 @@ public class TokenProvider implements InitializingBean {
    // 토큰과 가지고 있던 키값을 이용하여, 유효성을 검증한다.
    public boolean validateToken(String token) {
       try {
+         logger.info("토큰 값 확인 : {}", token);
          Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
          return true;
       } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {

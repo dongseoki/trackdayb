@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -60,12 +61,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 // 인가 (권한) 실패.
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
+
+                // 세션을 사용하지 않기 때문에 STATELESS로 설정
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
                 .authorizeRequests()
+
+                // no jwt test code.
+                // 테스트 시 아래 [1]번 주석을 풀고, 하단 [2]번을 주석처리 하시면 됩니다.
+                // 테스트 완료 후 원상복구 하면 됩니다.
+                //[1]
+                // .antMatchers("/**").permitAll()
+                //[1] end.
+                //[2]
                 .antMatchers("/rest-test/param-list").permitAll()
                 .antMatchers("/test").permitAll()
                 .antMatchers("/member/login").permitAll()
                 .antMatchers("/member/signup").permitAll()
+                //[2] end.
+
                 .anyRequest().authenticated()
 
                 // jwtConfig 설정 적용.

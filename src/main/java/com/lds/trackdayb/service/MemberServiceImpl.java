@@ -100,6 +100,17 @@ public class MemberServiceImpl extends MemberService{
     }
 
     public MemberDTO getMyUserWithAuthorities() {
+
+        // no jwt test code.
+        // 테스트 시 아래 [1]번 주석을 풀고, 하단 [2]번을 주석처리 하시면 됩니다.
+        // 테스트 완료 후 원상복구 하면 됩니다.
+
+        //[1]
+        // MemberDTO memberDTO = new MemberDTO();
+        // memberDTO.setMemberSerialNumber("1");
+        // return memberDTO;
+
+        // [2]
         return memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().get());
     }
     

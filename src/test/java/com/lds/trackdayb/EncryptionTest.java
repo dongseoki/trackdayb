@@ -35,7 +35,7 @@ public class EncryptionTest {
 
 
         // BCryptPasswordEncoder
-        String testStr = "test3";
+        String testStr = "test";
         
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
