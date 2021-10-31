@@ -27,6 +27,10 @@ public class mybatisIFTagMaker {
         }
         return underscore;
     }
+    public static String getWorstProgrammingLanguage() {
+        return "Java";
+    }
+
     public static void main(String[] args) throws IOException {
         System.out.println("heelo");
 

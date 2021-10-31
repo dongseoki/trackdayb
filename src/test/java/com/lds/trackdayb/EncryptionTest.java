@@ -3,6 +3,8 @@ package com.lds.trackdayb;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public class EncryptionTest {
     // 128 크기
     public static String getSHA512(String input){
@@ -24,13 +26,22 @@ public class EncryptionTest {
 
     public static void main(String[] args) {
 
-        System.out.println(getSHA512("Hello"));
-        System.out.println(getSHA512("test"));
-        System.out.println(getSHA512("Hello"));
-        System.out.println(getSHA512("A"));
-        System.out.println(getSHA512("B"));
-        System.out.println(getSHA512("C"));
+        // System.out.println(getSHA512("Hello"));
+        // System.out.println(getSHA512("test"));
+        // System.out.println(getSHA512("Hello"));
+        // System.out.println(getSHA512("A"));
+        // System.out.println(getSHA512("B"));
+        // System.out.println(getSHA512("C"));
 
+
+        // BCryptPasswordEncoder
+        String testStr = "test";
+        
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
+        String encodeStr = passwordEncoder.encode(testStr);
+        System.out.println(encodeStr);
 
     }
 }

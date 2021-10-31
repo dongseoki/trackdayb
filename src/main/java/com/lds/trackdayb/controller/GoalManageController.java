@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.lds.trackdayb.mvo.GoalMVO;
 import com.lds.trackdayb.mvo.ResultMVO;
 import com.lds.trackdayb.service.GoalManageService;
+import com.lds.trackdayb.service.MemberService;
 import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.vo.GoalVO;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class GoalManageController {
     private  final TestService testService;
     private final GoalManageService goalService;
+    private final MemberService memberService;
     // private final SystemManageService systemManageService;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
 
@@ -47,7 +49,9 @@ public class GoalManageController {
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        // String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
+        LOGGER.info("getGoalTitleList getMyUserWithAuthorities loginSerialNumber test: " + loginSerialNumber);
         if(CollectionUtils.isNotEmpty(searchGoalIdList))
             goalVO.setSearchGoalIdList(searchGoalIdList);
 
@@ -56,6 +60,7 @@ public class GoalManageController {
         
         JsonArray goalTitleListJsonArray = new Gson().toJsonTree(goalTitleList).getAsJsonArray();
         jo.add("goalTitleList", goalTitleListJsonArray);
+
         return jo.toString();
     }
 
@@ -72,7 +77,7 @@ public class GoalManageController {
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         // @RequestBody GoalVO goalVO
         GoalVO param = new GoalVO();
         param.setMemberSerialNumber(loginSerialNumber);
@@ -89,7 +94,7 @@ public class GoalManageController {
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         if(CollectionUtils.isNotEmpty(searchGoalIdList))
             goalVO.setSearchGoalIdList(searchGoalIdList);
         
@@ -116,7 +121,7 @@ public class GoalManageController {
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         List<GoalMVO> goalFullList = goalService.getGoalFullList(goalVO);
         JsonArray goalFullListJsonArray = new Gson().toJsonTree(goalFullList).getAsJsonArray();
@@ -132,7 +137,7 @@ public class GoalManageController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         try {
             goalService.insertGoal(goalVO);
@@ -173,7 +178,7 @@ public class GoalManageController {
     public ResultMVO updateGoal(@RequestBody GoalVO goalVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         try {
             goalService.updateGoal(goalVO);
@@ -214,7 +219,7 @@ public class GoalManageController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        String loginSerialNumber = testService.selectLoginMemberSerialNumber();
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         goalVO.setMemberSerialNumber(loginSerialNumber);
         try {
             goalService.deleteGoal(goalVO);
