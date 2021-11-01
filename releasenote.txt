@@ -44,3 +44,7 @@ Release 0.3.0
 Release 0.3.1
   - auth 컬럼 문제 해결.
   - 목표 수정 문제 (색이 빈문자열인 경우 저장이 안되는 문제) 해결.
+
+Release 0.3.2
+  - 로그인 간단 폼 구현(login.js)
+  - access token header 저장 테스트
