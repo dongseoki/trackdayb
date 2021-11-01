@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class MemberServiceImpl extends MemberService{
+public class MemberServiceImpl extends MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -28,9 +28,9 @@ public class MemberServiceImpl extends MemberService{
     public String save(MemberDTO memberDTO) {
         // MessageDigest md = null;
         // try {
-        //     md = MessageDigest.getInstance("SHA-512");
+        // md = MessageDigest.getInstance("SHA-512");
         // } catch (NoSuchAlgorithmException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
         // md.update(memberDTO.getPassword().getBytes());
         // String hex = String.format("%0128x", new BigInteger(1, md.digest()));
@@ -55,16 +55,16 @@ public class MemberServiceImpl extends MemberService{
     public MemberDTO loadUserByUsername(String memberId) throws UsernameNotFoundException {
         // 시큐리티에서 지정한 서비스이기 때문에 이 메소드를 필수로 구현
         MemberDTO memberDTO = memberRepository.findByMemberId(memberId);
-        if(memberDTO ==null || StringUtils.isEmpty(memberDTO.getMemberId())){
+        if (memberDTO == null || StringUtils.isEmpty(memberDTO.getMemberId())) {
             new UsernameNotFoundException(memberId);
         }
-  
+
         return memberDTO;
     }
 
     @Override
     public MemberDTO signup(MemberDTO memberDTO) {
-        if(!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
+        if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
         memberDTO.setAuth("ROLE_USER");
@@ -75,24 +75,26 @@ public class MemberServiceImpl extends MemberService{
     }
 
     // public User signup(UserDto userDto) {
-    //     if (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null) {
-    //         throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
-    //     }
+    // if
+    // (userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null)
+    // != null) {
+    // throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+    // }
 
-    //     //빌더 패턴의 장점
-    //     Authority authority = Authority.builder()
-    //             .authorityName("ROLE_USER")
-    //             .build();
+    // //빌더 패턴의 장점
+    // Authority authority = Authority.builder()
+    // .authorityName("ROLE_USER")
+    // .build();
 
-    //     User user = User.builder()
-    //             .username(userDto.getUsername())
-    //             .password(passwordEncoder.encode(userDto.getPassword()))
-    //             .nickname(userDto.getNickname())
-    //             .authorities(Collections.singleton(authority))
-    //             .activated(true)
-    //             .build();
+    // User user = User.builder()
+    // .username(userDto.getUsername())
+    // .password(passwordEncoder.encode(userDto.getPassword()))
+    // .nickname(userDto.getNickname())
+    // .authorities(Collections.singleton(authority))
+    // .activated(true)
+    // .build();
 
-    //     return userRepository.save(user);
+    // return userRepository.save(user);
     // }
 
     public MemberDTO getUserWithAuthorities(String memberId) {
@@ -105,13 +107,14 @@ public class MemberServiceImpl extends MemberService{
         // 테스트 시 아래 [1]번 주석을 풀고, 하단 [2]번을 주석처리 하시면 됩니다.
         // 테스트 완료 후 원상복구 하면 됩니다.
 
-        //[1]
-        // MemberDTO memberDTO = new MemberDTO();
-        // memberDTO.setMemberSerialNumber("1");
-        // return memberDTO;
+        // [1]
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberSerialNumber("1");
+        return memberDTO;
 
         // [2]
-        return memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().get());
+        // return
+        // memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().get());
     }
-    
+
 }
