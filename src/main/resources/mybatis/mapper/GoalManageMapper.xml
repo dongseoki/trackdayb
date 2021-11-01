@@ -155,9 +155,7 @@
         <if test="progressRate != null and !progressRate.equals('')">
                 progress_rate = #{progressRate},
         </if>
-        <if test="color != null and !color.equals('')">
-                color = #{color},
-        </if>
+        color = #{color},
         <if test="shareStatus != null and !shareStatus.equals('')">
                 share_status = #{shareStatus},
         </if>
