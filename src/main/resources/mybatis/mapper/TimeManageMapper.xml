@@ -215,14 +215,31 @@
         1=1
         <if test="searchStartDatetime != null and !searchStartDatetime.equals('')">
             AND
-                #{searchStartDatetime} <![CDATA[<=]]> a.end_datetime
+            #{searchStartDatetime} <![CDATA[<=]]>
+            <choose>
+                <when test='searchRangeOption != null and searchRangeOption.equals(@com.lds.trackdayb.util.CommonCodeUtil@SEARCH_RANGE_CORRECT)'>
+                    a.start_datetime
+                </when>
+                <otherwise>
+                    a.end_datetime
+                </otherwise>
+            </choose>
         </if>
+
         <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
             AND 
             /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
-            a.start_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
+            <choose>
+                    <when test='searchRangeOption != null and searchRangeOption.equals(@com.lds.trackdayb.util.CommonCodeUtil@SEARCH_RANGE_CORRECT)'>
+                            a.end_datetime
+                    </when>
+                    <otherwise>
+                            a.start_datetime
+                    </otherwise>
+            </choose>
+            <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
         </if>
-        
+
         <if test="searchActivityIdList != null and !searchActivityIdList.isEmpty()">
             AND 
             a.activity_id IN 

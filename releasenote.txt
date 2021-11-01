@@ -48,3 +48,6 @@ Release 0.3.1
 Release 0.3.2
   - 로그인 간단 폼 구현(login.js)
   - access token header 저장 테스트
+
+Release 0.3.3
+  - 검색 범위 옵션 추가.(C : correct, E : exist 를 의미. api 명세서 참조.)

@@ -242,13 +242,32 @@
         WHERE 
         1=1
         <if test="searchStartDatetime != null and !searchStartDatetime.equals('')">
-            AND
-                #{searchStartDatetime} <![CDATA[<=]]> g.end_datetime
+            <choose>
+                <when test='searchRangeOption != null and searchRangeOption.equals(@com.lds.trackdayb.util.CommonCodeUtil@SEARCH_RANGE_CORRECT)'>
+                        AND
+                        #{searchStartDatetime} <![CDATA[<=]]> g.start_datetime
+                </when>
+                <otherwise>
+                        AND
+                        #{searchStartDatetime} <![CDATA[<=]]> g.end_datetime
+                </otherwise>
+            </choose>
+
         </if>
         <if test="searchEndDatetime != null and !searchEndDatetime.equals('')">
-            AND 
-            /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
-            g.start_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
+                <choose>
+                        <when test='searchRangeOption != null and searchRangeOption.equals(@com.lds.trackdayb.util.CommonCodeUtil@SEARCH_RANGE_CORRECT)'>
+                                AND 
+                                /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
+                                g.end_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
+                        </when>
+                        <otherwise>
+                                AND 
+                                /*시분초가 없는 종료 날짜를 포함하기 위한 조치.*/
+                                g.start_datetime  <![CDATA[<]]>  DATE_ADD(#{searchEndDatetime}, INTERVAL 1 DAY)
+                        </otherwise>
+                </choose>
+
         </if>
         <if test="searchKind != null and !searchKind.equals('')">
             AND 
