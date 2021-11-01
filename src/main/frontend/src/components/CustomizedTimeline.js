@@ -31,15 +31,6 @@ var groupBy = function(xs, key) {
   }, {});
 };
 
-console.log('Object.entries(tmpList)', Object.entries(tmpList))
-for (const [key, value] of Object.entries(tmpList)){
-  // console.log('ke', key)
-  // console.log('va', value)
-}
-
-Object.entries(tmpList).forEach((activityPerDay, index)=>{
-  console.log('activityPerDya', activityPerDay[0])
-})
 
   useEffect(() => {
       const fetchActivityList = async () => {
@@ -49,23 +40,21 @@ Object.entries(tmpList).forEach((activityPerDay, index)=>{
             params:{
               searchStartDatetime :props.searchStartDatetime,
               searchEndDatetime : props.searchEndDatetime,
+              orderColumn: "start_datetime",
+              orderType: "asc",
             }
           });
+
+          console.log('result.data.activityList', result.data.activityList)
 
           // 날짜만 뽑아서 key값으로 추가해두기
           let tmpActivityList = result.data.activityList;
           tmpActivityList.forEach((activity, index)=>{
             activity['writeDate'] = activity['startDatetime'].substring(0, 10)
           })
-          console.log(tmpActivityList)
-
-          // 정렬 (오름차순으로 정렬이 안댐)          
-          let test = result.data.activityList.sort((a, b)=>{
-            return a.startDatetime - b.startDatetime
-          })
-          console.log("test", test)
+          // console.log(tmpActivityList)
           
-          // 그룹바이
+          // writeDate 기준 그룹바이 
           tmpActivityList = groupBy(tmpActivityList, 'writeDate')
           console.log("tmpActivityList", tmpActivityList)
           setTmpList(tmpActivityList)
@@ -82,25 +71,28 @@ Object.entries(tmpList).forEach((activityPerDay, index)=>{
   }, [props.searchStartDatetime, props.searchEndDatetime]);
   if (!activityList) return null;
 
+  console.log('Object.entries(tmpList)', Object.entries(tmpList))
+  
   return (
     <>
     <Timeline position="alternate">
-      <p>TEST2</p>
-      
-      {activityList && activityList.map((activity, index) => (
-              <TimelineItem key={activity.activityId}>
-              <TimelineOppositeContent
-                sx={{ m: 'auto 0' }}
-                variant="body2"
-                color="text.secondary"
-              >
-                {activity.startDatetime}
-              </TimelineOppositeContent>
+      {Object.entries(tmpList).map((activityPerDay, index) => (
+        <TimelineItem key={index}>
+          <TimelineOppositeContent
+            sx={{ m: 'auto 0' }}
+            color="text.secondary"
+          >
+            {activityPerDay[0]}
+          </TimelineOppositeContent>
+
+        <div className="activityPerDay-wrapper">
+          {activityPerDay[1].map((activity, index) => (
+            <>
+            <div key={activity} className="activity-card-wrapper">
               <TimelineSeparator>
                 <TimelineConnector />
-                <TimelineDot style={{backgroundColor:activity.goalTitleInfo.color}}>
-                  11
-                </TimelineDot>
+                  <TimelineDot className="activity-circle" style={{backgroundColor:activity.goalTitleInfo.color}}>
+                  </TimelineDot>
                 <TimelineConnector />
               </TimelineSeparator>
 
@@ -109,71 +101,18 @@ Object.entries(tmpList).forEach((activityPerDay, index)=>{
                   <Typography>{activity.startDatetime.substring(11,16)}-</Typography>
                   <Typography>{activity.endDatetime.substring(11,16)}</Typography>
                 </div>
-                <Typography variant="h6" component="span">
-                  {activity.title}
-                </Typography>
-                <Typography>{activity.content}</Typography>
-
+                <Typography className="activity-title" component="span">{activity.title}</Typography>
+                <Typography className="activity-content">{activity.content}</Typography>
               </TimelineContent>
+            </div>
+          </>
 
-            </TimelineItem>
+              ))}
+</div>
+              </TimelineItem>
+
             
-            // <GoalTitleCards key={index}
-            //     title={goal.title}></GoalTitleCards>
         ))}
-
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          variant="body2"
-          color="text.secondary"
-        >
-          10:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary">
-            11
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Code
-          </Typography>
-          <Typography>Because it&apos;s awesome!</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary" variant="outlined">
-            33
-          </TimelineDot>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Sleep
-          </Typography>
-          <Typography>Because you need rest</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-          <TimelineDot color="secondary">
-            44
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Repeat
-          </Typography>
-          <Typography>Because this is the life you love!</Typography>
-        </TimelineContent>
-      </TimelineItem>
     </Timeline>
     </>
   );
