@@ -112,45 +112,57 @@ function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList
 
   const handleFormSubmit = async (evt) => {
     evt.preventDefault();
-
-    const formData = {
-      "parentId": parentId,
-      "title": title,
-      "kind":kind,
-      "content":content,
-      "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
-      "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
-      "progressRate":progressRate,
-      "color":color,
-      "shareStatus": shareStatus ? "N":"Y",
+    //제목 슬래시 검사
+    const titleValidation = () => {
+      var reg = /\//gi
+      if(reg.test(title)){
+        setTitle(title.replace(reg, ""))
+        return false;    
+      } else {
+        return true;
+      }  
     }
-    if(kind === "regular"){
-      formData['periodicityInfo'] = {
-        "timeUnit":timeUnit,
-        "type":type,
-        "count":count,
-        "sunYn":sun ? "Y":"N",
-        "monYn":mon ? "Y":"N",
-        "tueYn":tue ? "Y":"N",
-        "wedsYn":wed ? "Y":"N",
-        "thurYn":thu ? "Y":"N",
-        "friYn":fri ? "Y":"N",
-        "satYn":sat ? "Y":"N"
+    if(!titleValidation()){
+      alert("제목에 슬래시(/)를 포함할 수 없습니다.")
+    }else{
+      const formData = {
+        "parentId": parentId,
+        "title": title,
+        "kind":kind,
+        "content":content,
+        "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
+        "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
+        "progressRate":progressRate,
+        "color":color,
+        "shareStatus": shareStatus ? "N":"Y",
+      }
+      if(kind === "regular"){
+        formData['periodicityInfo'] = {
+          "timeUnit":timeUnit,
+          "type":type,
+          "count":count,
+          "sunYn":sun ? "Y":"N",
+          "monYn":mon ? "Y":"N",
+          "tueYn":tue ? "Y":"N",
+          "wedsYn":wed ? "Y":"N",
+          "thurYn":thu ? "Y":"N",
+          "friYn":fri ? "Y":"N",
+          "satYn":sat ? "Y":"N"
+        }
+      }
+      console.log('제출', formData)
+      try{
+        const result = await axios.post("/goalManage/goal", formData);
+        console.log("제출결과", {result})
+        handleClose();
+        setGoalFullList([...goalFullList, result.data.goalInfo]);
+        setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
+        setUpdateTotalTitle(!updateTotalTitle)
+      }catch(err){
+        console.error(err)
       }
     }
-    console.log('제출', formData)
-    try{
-      const result = await axios.post("/goalManage/goal", formData);
-      console.log("제출결과", {result})
-      handleClose();
-      setGoalFullList([...goalFullList, result.data.goalInfo]);
-      setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
-      setUpdateTotalTitle(!updateTotalTitle)
-    }catch(err){
-      console.error(err)
-    }
   };
-  
   return (
     <div className="insert-form">
       <button className="goal-insert-btn" onClick={handleOpen}><FaPlus /></button>

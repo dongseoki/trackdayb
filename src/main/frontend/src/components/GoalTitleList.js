@@ -97,6 +97,7 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
         theme="modifiedDarkLarge"
         customTheme={myThemes}
         noDataString="조회기간에 해당하는 목표가 없습니다."
+        animations={true}
         NodeRenderer={({ data, isOpen, level, selected }) => {
           const classes = ['custom-node', isOpen ? 'open' : undefined, selected ? 'selected' : undefined].join(' ')
           return (

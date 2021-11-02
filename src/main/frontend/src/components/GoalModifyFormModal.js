@@ -145,44 +145,57 @@ function GoalModifyFormModal({modifyData, targetIndex}){
 
   const handleFormSubmit = async (evt) =>{
     evt.preventDefault();
-
-    const formData = {
-      "goalId" : modifyData.goalId,
-      "parentId": parentId,
-      "title": title,
-      "kind":kind,
-      "content":content,
-      "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
-      "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
-      "progressRate":progressRate,
-      "color":color,
-      "shareStatus": shareStatus ? "N":"Y",
+    //제목 슬래시 검사
+    const titleValidation = () => {
+      var reg = /\//gi
+      if(reg.test(title)){
+        setTitle(title.replace(reg, ""))
+        return false;    
+      } else {
+        return true;
+      }  
     }
-    if(kind === "regular"){
-      formData['periodicityInfo'] = {
-      "timeUnit":timeUnit,
-      "type":type,
-      "count":count,
-      "sunYn":sun ? "Y":"N",
-      "monYn":mon ? "Y":"N",
-      "tueYn":tue ? "Y":"N",
-      "wedsYn":wed ? "Y":"N",
-      "thurYn":thu ? "Y":"N",
-      "friYn":fri ? "Y":"N",
-      "satYn":sat ? "Y":"N"
+    if(!titleValidation()){
+      alert("제목에 슬래시(/)를 포함할 수 없습니다.")
+    }else{
+      const formData = {
+        "goalId" : modifyData.goalId,
+        "parentId": parentId,
+        "title": title,
+        "kind":kind,
+        "content":content,
+        "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
+        "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
+        "progressRate":progressRate,
+        "color":color,
+        "shareStatus": shareStatus ? "N":"Y",
       }
-    }
-    console.log('제출', formData)
-    try{
-      const result = await axios.patch("/goalManage/goal", formData);
-      console.log("제출결과", {result})
-      setOpen(false);
-      // 수정한 데이터 반영
-      let tempArray = [...goalFullList];
-      tempArray[targetIndex] = result.data.goalInfo;
-      setGoalFullList(tempArray);
-    }catch(err){
-      console.error(err)
+      if(kind === "regular"){
+        formData['periodicityInfo'] = {
+        "timeUnit":timeUnit,
+        "type":type,
+        "count":count,
+        "sunYn":sun ? "Y":"N",
+        "monYn":mon ? "Y":"N",
+        "tueYn":tue ? "Y":"N",
+        "wedsYn":wed ? "Y":"N",
+        "thurYn":thu ? "Y":"N",
+        "friYn":fri ? "Y":"N",
+        "satYn":sat ? "Y":"N"
+        }
+      }
+      console.log('제출', formData)
+      try{
+        const result = await axios.patch("/goalManage/goal", formData);
+        console.log("제출결과", {result})
+        setOpen(false);
+        // 수정한 데이터 반영
+        let tempArray = [...goalFullList];
+        tempArray[targetIndex] = result.data.goalInfo;
+        setGoalFullList(tempArray);
+      }catch(err){
+        console.error(err)
+      }
     }
   }
   return (

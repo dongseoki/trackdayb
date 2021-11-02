@@ -204,11 +204,12 @@ function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentI
                 theme="modifiedDarkLarge"
                 customTheme={myThemes}
                 noDataString="목표를 등록해주세요."
+                animations={true}
                 NodeRenderer={({ data, isOpen, level, selected }) => {
                   const classes = ['custom-node', isOpen ? 'open' : undefined, selected ? 'selected' : undefined].join(' ')
                   return (
                     <div className="goal-title-wrapper">
-                      <FormControlLabel value={data.id} control={<Radio />} label={data.label} />
+                      <FormControlLabel value={data.id} control={<Radio />} label={data.label}/>
                       <div className={classes} style={{ ['--icon-pos']: `calc(2px + ${level * 25}px)`,backgroundColor : hexToRgba(data.color)}}>
                         <div className="goal-title" style={{paddingLeft: `calc(10px + ${level * 10}px)`}}>{data.label}</div>
                         <div className="color-tag" style={{ backgroundColor : data.color}}>
