@@ -51,3 +51,6 @@ Release 0.3.2
 
 Release 0.3.3
   - 검색 범위 옵션 추가.(C : correct, E : exist 를 의미. api 명세서 참조.)
+
+Release 0.3.4
+  - 제목 슬래시(/) 불가 validation check
