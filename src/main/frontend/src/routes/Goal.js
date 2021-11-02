@@ -9,8 +9,9 @@ function Goal() {
   // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
-  const [orderColumn, setOrderColumn] = useState("modification_datetime");
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
+  const [orderColumn, setOrderColumn] = useState("modification_datetime");
+  const [orderType, setOrderType] = useState("desc");
 
   return (
     <div className="goal">
@@ -22,6 +23,7 @@ function Goal() {
           searchEndDatetime={searchEndDatetime}
           searchGoalIdList={searchGoalIdList}
           orderColumn={orderColumn}
+          orderType={orderType}
         >
           <aside className="side">
             <LeftNavigation 
@@ -37,6 +39,8 @@ function Goal() {
             <GoalFullList 
               orderColumn={orderColumn}
               setOrderColumn={setOrderColumn}
+              orderType={orderType}
+              setOrderType={setOrderType}
             />
           </div>
         </GoalFullListProvider>

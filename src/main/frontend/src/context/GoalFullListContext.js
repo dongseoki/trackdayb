@@ -17,7 +17,7 @@ export const GoalFullListProvider = (props) => {
                 searchEndDatetime:makeYYMMDD(props.searchEndDatetime),
                 // searchKind:"deadline",
                 orderColumn: props.orderColumn,
-                orderType:"asc",
+                orderType: props.orderType,
                 searchGoalIdList:props.searchGoalIdList.toString(),
               }
             });
@@ -28,7 +28,7 @@ export const GoalFullListProvider = (props) => {
           }
         }
         fetchGoalFullList();
-    }, [props.searchStartDatetime, props.searchEndDatetime, props.orderColumn, props.searchGoalIdList]);
+    }, [props.searchStartDatetime, props.searchEndDatetime, props.orderColumn, props.orderType, props.searchGoalIdList]);
 
     // YYYY-MM-DD 형태로 반환
     function makeYYMMDD(value){

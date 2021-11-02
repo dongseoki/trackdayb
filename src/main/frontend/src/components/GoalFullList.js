@@ -8,6 +8,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 //icon
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BiLock } from "react-icons/bi";
+import { CgArrowDown } from 'react-icons/cg';
+import { CgArrowUp } from 'react-icons/cg';
+
 // 삭제버튼
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -22,12 +25,19 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 
 import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
 
-function GoalFullList({orderColumn, setOrderColumn}) {
+function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
   console.log('goalFullList', goalFullList)
+  const toggleOrderType = (preValue)=>{
+    if (preValue === 'asc'){
+      return 'desc'
+    }else {
+      return 'asc'
+    }
+  }
   return (
     <div>
       <GoalModalSearchTitleListProvider>
@@ -37,14 +47,31 @@ function GoalFullList({orderColumn, setOrderColumn}) {
           color="primary"
           value={orderColumn}
           exclusive={true}
-          onChange={(event, changeColumn) => {
-            setOrderColumn(changeColumn)
-          }}
+          // onChange={(event, changeColumn) => {
+          //   setOrderColumn(changeColumn)
+          // }}
         >
-          <ToggleButton value="modification_datetime">최종수정일 순</ToggleButton>
-          <ToggleButton value="start_datetime">시작일 순</ToggleButton>
-          <ToggleButton value="end_datetime">종료일 순</ToggleButton>
-          <ToggleButton value="progress_rate">진행률 순</ToggleButton>
+          <ToggleButton value="modification_datetime" 
+            onClick={(e) =>{
+              setOrderType(toggleOrderType(orderType))
+              setOrderColumn("modification_datetime")
+              }}>최종수정일 순 {orderColumn === 'modification_datetime' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}
+          </ToggleButton>
+          <ToggleButton value="start_datetime"
+            onClick={(e) =>{
+              setOrderType(toggleOrderType(orderType))
+              setOrderColumn("start_datetime")
+              }}>시작일 순 {orderColumn === 'start_datetime' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
+          <ToggleButton value="end_datetime"
+            onClick={(e) =>{
+              setOrderType(toggleOrderType(orderType))
+              setOrderColumn("end_datetime")
+              }}>종료일 순 {orderColumn === 'end_datetime' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
+          <ToggleButton value="progress_rate"
+            onClick={(e) =>{
+              setOrderType(toggleOrderType(orderType))
+              setOrderColumn("progress_rate")
+              }}>진행률 순 {orderColumn === 'progress_rate' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
         </ToggleButtonGroup>
       </div>
       <div className="goal-cards-list">
