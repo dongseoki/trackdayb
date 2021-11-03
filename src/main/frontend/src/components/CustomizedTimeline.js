@@ -10,8 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import "./CustomizedTimeline.css";
 
-import axios from "axios";
-
+import axiosInstance from "../axiosConfig";
 
 export default function CustomizedTimeline(props) {
   // getActivityListTEST
@@ -31,18 +30,22 @@ var groupBy = function(xs, key) {
   }, {});
 };
 
+// let access_token = sessionStorage.getItem('jwt-token');
 
   useEffect(() => {
       const fetchActivityList = async () => {
         try {
           setActivityList(null);
-          const result = await axios.get("/timeManage/activityList", {
+          const result = await axiosInstance.get("/timeManage/activityList", {
             params:{
               searchStartDatetime :props.searchStartDatetime,
               searchEndDatetime : props.searchEndDatetime,
               orderColumn: "start_datetime",
               orderType: "asc",
-            }
+            },
+            // headers:{
+            //   'Authorization' : access_token
+            // }
           });
 
           console.log('result.data.activityList', result.data.activityList)

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import "./GoalFullList.css";
 import axios from "axios";
+import axiosInstance from "../axiosConfig";
 import GoalInsertFormModal from "./GoalInsertFormModal";
 // 토글버튼
 import ToggleButton from '@mui/material/ToggleButton';
@@ -190,7 +191,7 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
 
   const deleteHandler = async ()=>{
     try{
-      const result= await axios.delete("/goalManage/goal", {
+      const result= await axiosInstance.delete("/goalManage/goal", {
         params:{
           goalId: goalId
         }

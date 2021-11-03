@@ -27,11 +27,13 @@ function Login() {
     try{
       const result = await axios.post("/member/login", data);
       console.log("제출결과", result)
-      const { accessToken } = result.data.token;
       // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-  
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
       // accessToken을 localStorage, cookie 등에 저장하지 않는다!
+
+      //세션 스토리지에 저장하기
+      sessionStorage.setItem("jwt-token", result.data.token)
+      window.location = '/time'
     }catch(err){
       console.error(err)
     }

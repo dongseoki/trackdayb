@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
+import axiosInstance from "../axiosConfig";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
@@ -152,7 +152,7 @@ function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList
       }
       console.log('제출', formData)
       try{
-        const result = await axios.post("/goalManage/goal", formData);
+        const result = await axiosInstance.post("/goalManage/goal", formData);
         console.log("제출결과", {result})
         handleClose();
         setGoalFullList([...goalFullList, result.data.goalInfo]);

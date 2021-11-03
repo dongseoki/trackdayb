@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import axios from "axios";
-
+import axiosInstance from "../axiosConfig";
 export const GoalSearchTitleListContext = createContext();
 
 export const GoalSearchTitleListProvider = (props) =>{
@@ -9,7 +8,7 @@ export const GoalSearchTitleListProvider = (props) =>{
     useEffect(()=>{
         const fetchGoalSearchTitleList = async () => {
           try{
-            const result = await axios.get(
+            const result = await axiosInstance.get(
               "/goalManage/goalTitleList", {
                 params:{
                   searchStartDatetime:makeYYMMDD(props.searchStartDatetime),

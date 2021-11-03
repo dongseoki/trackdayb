@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import axios from "axios";
-
+import axiosInstance from "../axiosConfig";
 export const GoalModalSearchTitleListContext = createContext();
 
 export const GoalModalSearchTitleListProvider = (props) =>{
@@ -11,7 +10,7 @@ export const GoalModalSearchTitleListProvider = (props) =>{
   useEffect(()=>{
       const fetchGoalModalSearchTitleList = async () => {
         try{
-          const result = await axios.get(
+          const result = await axiosInstance.get(
             "/goalManage/goalTitleList",
             {
                 params : {

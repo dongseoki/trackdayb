@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
-import axios from "axios";
+import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
 import { BiLock } from "react-icons/bi";
@@ -186,7 +186,7 @@ function GoalModifyFormModal({modifyData, targetIndex}){
       }
       console.log('제출', formData)
       try{
-        const result = await axios.patch("/goalManage/goal", formData);
+        const result = await axiosInstance.patch("/goalManage/goal", formData);
         console.log("제출결과", {result})
         setOpen(false);
         // 수정한 데이터 반영
