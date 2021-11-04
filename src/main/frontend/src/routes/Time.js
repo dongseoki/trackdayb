@@ -4,6 +4,10 @@ import { LeftNavigation } from '../components/index';
 import ActivityInsertForm from "../components/ActivityInsertForm";
 //time picker
 import TextField from '@material-ui/core/TextField';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"
+import { ko } from 'date-fns/esm/locale';
+
 //TimeLine
 import CustomizedTimeline from '../components/CustomizedTimeline';
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
@@ -14,7 +18,7 @@ function Time() {
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
-  const [writeDate, setWriteDate] = useState(makeYYMMDD(new Date()));
+  const [writeDate, setWriteDate] = useState(new Date());
 
   return (
     <div className="time">
@@ -42,34 +46,25 @@ function Time() {
         <div className="write">
           <GoalModalSearchTitleListProvider
             writeDate={writeDate}>
-            <div className="button-wrapper">
-              <button>import</button>
-              <button>export</button>
-              <button>도움말</button>
-              <button>양식다운로드</button>
-            </div>
+                          
             <div className="date-picker-wrapper">
-              <TextField
+              <DatePicker
                 className="date-picker"
-                id="date"
-                label="작성일"
-                type="date"
-                defaultValue={writeDate}
-                sx={{ width: 220 }}
-                InputLabelProps={{
-                  shrink: true,
+                selected={writeDate}
+                onChange={(date) => {
+                  setWriteDate(date);
                 }}
-                variant="outlined"
-                onChange={function(e){
-                  setWriteDate(e.target.value)
-                }}
+                locale={ko}
+                dateFormat="yyyy년 MM월 dd일"
               />
             </div>
+
             <div className="cards"></div>
 
             <div className="writeForm">
               <ActivityInsertForm writeDate={writeDate}/>
             </div>
+
           </GoalModalSearchTitleListProvider>
         </div>
       </GoalSearchTitleListProvider>

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import "./ActivityInsertForm.css"
 //toggle
 import ToggleButton from '@mui/material/ToggleButton';
 //slider-score
@@ -6,9 +7,14 @@ import Slider from '@mui/material/Slider';
 import axios from 'axios';
 //icon
 import { FaLock } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
+import { BiLock } from "react-icons/bi";
 //css
 import { makeStyles } from '@material-ui/core/styles';
-
+//modal
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 //time picker
 import TextField from '@material-ui/core/TextField';
 
@@ -16,21 +22,54 @@ import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
 function ActivityInsertForm({writeDate}){
+  console.log("작성일", writeDate)
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
     //write Form
     //toggle- 비공개
-    const [toggleSelected, setToggleSelected] = useState(false)
-    const [shareStatus, setshareStatus] = useState("N");
+    // const [toggleSelected, setToggleSelected] = useState(false)
+    const [shareStatus, setshareStatus] = useState(false);
     // const [startDatetime, setStartDatetime] = useState("");
     // const [endDatetime, setEndDatetime] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [activityScore, setActivityScore] = useState("")
+    const [activityScore, setActivityScore] = useState(0)
     const [parentGoalTitle, setParentGoalTitle] = useState("");
     const [parentId, setParentId] = useState("");
     const [parentGoalKind, setParentGoalKind] = useState("");
+
+    const [progressRate, setProgressRate] = useState(0);
     
+    // 모달 설정
+    const useStyles = makeStyles((theme) => ({
+      modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      paper: {
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: "10px",
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(1, 3, 2),
+        width: "470px",
+        fontSize: "14px"
+      },
+    }));
+    
+    const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleOpen = () => {
+      setOpen(true);
+      // InitializeForm()
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+      // InitializeForm()
+    };
+
     const handleSubmit = async (evt) => {
       evt.preventDefault();
       const formData = {
@@ -52,115 +91,142 @@ function ActivityInsertForm({writeDate}){
     };
   
     return(
-      <div>
-          <form onSubmit={handleSubmit}>
-            <div className="top-wrapper">
-            <TimePickers 
-              id='starttime'
-              label='시작시간'
-              value={startDatetime}
-              setTime={setStartDatetime}
-            />
-            <p>~</p>
-            <TimePickers 
-              id='endtime'
-              label='종료시간'
-              value={endDatetime}
-              setTime={setEndDatetime}
-            />
-            <ToggleButton
-            color="primary"
-            value="check"
-            selected={toggleSelected}
-            onChange={() => {
-              setToggleSelected(!toggleSelected);
-              setshareStatus(toggleToString(toggleSelected));
+      <div className="insert-form">
+        <button className="acitvity-insert-btn" onClick={handleOpen}><FaPlus /></button>
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
             }}
-          ><FaLock/>
-          </ToggleButton>
+          >
+          <Fade in={open}>
+            <div className={classes.paper}>
+              <h3 id="transition-modal-title">활동 추가</h3>
+              {/* <div>작성일 : {writeDate}</div> */}
+              <form onSubmit={handleSubmit}>
+                <div className="top-wrapper">
+                  <TimePickers 
+                    id='starttime'
+                    label='시작시간'
+                    value={startDatetime}
+                    setTime={setStartDatetime}
+                  />
+                  <p>~</p>
+                  <TimePickers 
+                    id='endtime'
+                    label='종료시간'
+                    value={endDatetime}
+                    setTime={setEndDatetime}
+                  />
+                  <div className="modal-share-toggle">
+                    <div className="modal-title">비공개</div>
+                      <ToggleButton
+                      color="primary"
+                      value="check"
+                      selected={shareStatus}
+                      onChange={() => {
+                        setshareStatus(!shareStatus);
+                      }}
+                      >
+                        <BiLock className="lock-icon"/>
+                      </ToggleButton>
+                    </div>
+                  </div>
+                  <TextField 
+                    required
+                    id="title" 
+                    label="제목" 
+                    size="small" 
+                    variant="outlined"
+                    style={{width:"100%", marginBottom:"10px"}}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={function(e){
+                      setTitle(e.target.value)
+                    }}/>
+                  <TextField
+                    style={{width:"100%", marginBottom:"10px"}}
+                    id="content"
+                    label="내용"
+                    multiline
+                    rows={4}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    variant="outlined"
+                    value={content}
+                    onChange={function(e){
+                      setContent(e.target.value)
+                    }}
+                  />
+                <div className="slider-wrapper">
+                  <label className="modal-title">몰입도</label>
+                  <div className="slider-border">
+                    <Slider
+                      style={{width:"90%"}}
+                      aria-label="activityScore"
+                      defaultValue={0}
+                      valueLabelDisplay="auto"
+                      step={1}
+                      marks
+                      min={0}
+                      max={10}
+                      value={parseInt(activityScore)}
+                      onChange={function(e){
+                        setActivityScore(e.target.value)
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="parent-modal-wrapper">
+                  <GoalTitleListModal 
+                    parentGoalTitle={parentGoalTitle}
+                    setParentGoalTitle={setParentGoalTitle}
+                    parentId={parentId}
+                    setParentId={setParentId}
+                    parentGoalKind = {parentGoalKind}
+                    setParentGoalKind = {setParentGoalKind}
+                  />
+                  <div className="parent-title">{parentGoalTitle}</div>
+                </div>
+                
+                <div className="slider-wrapper">
+                  <label className="modal-title">진행률</label>
+                  <div className="slider-border">
+                    <Slider
+                      style={{width:"90%"}}
+                      aria-label="progressRate"
+                      defaultValue={0}
+                      valueLabelDisplay="auto"
+                      step={10}
+                      marks
+                      min={0}
+                      max={100}
+                      value={parseInt(progressRate)}
+                      onChange={function(e){
+                        setProgressRate(e.target.value)
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="button-wrapper">
+                  <button type="submit" className="submitBtn">저장</button>
+                  <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
+                </div>
+              </form>
             </div>
-            <div className="parent-modal-wrapper">
-              <GoalTitleListModal 
-                parentGoalTitle={parentGoalTitle}
-                setParentGoalTitle={setParentGoalTitle}
-                parentId={parentId}
-                setParentId={setParentId}
-                parentGoalKind = {parentGoalKind}
-                setParentGoalKind = {setParentGoalKind}
-              />
-              <div className="parent-title">{parentGoalTitle}</div>
-            </div>
-            <div className="title-wrapper">
-            <TextField 
-            className="textfield-title"
-              id="title" 
-              label="제목" 
-              size="small" 
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={function(e){
-                setTitle(e.target.value)
-              }}/>
-              </div>
-              <div className="content-wrapper">
-            <MultilineTextFields 
-              value={content}
-              setValue={setContent}/>
-              </div>
-              <div className="activityScore-wrapper">
-              <p>몰입도평가</p>
-            <Slider
-              className="slider-score"
-              size="small"
-              aria-label="activityScore"
-              defaultValue={30}
-              valueLabelDisplay="auto"
-              step={10}
-              marks
-              min={0}
-              max={100}
-              onChange={function(e){
-                setActivityScore(e.target.value)
-              }}
-            />
-            <PeriodicityInfo kind={parentGoalKind}/>
-            </div>
-            <input type="submit" value="Submit" />
-          </form>
+          </Fade>  
+        </Modal>
       </div>
     )
   }
-
-
-  function PeriodicityInfo({kind}) {
-    if(kind === "deadline"){
-        return(
-          <div className="slider-wrapper">
-          <label className="modal-title">진행률</label>
-          <div className="slider-border">
-            {/* <Slider
-              style={{width:"90%"}}
-              aria-label="progressRate"
-              defaultValue={0}
-              valueLabelDisplay="auto"
-              step={10}
-              marks
-              min={0}
-              max={100}
-              onChange={function(e){
-                setProgressRate(e.target.value)
-              }}
-          /> */}
-          </div>
-        </div>
-        )
-    }else{
-        return null
-    }
-}
-
   
 function TimePickers(props){
     function setTime(e){
@@ -194,31 +260,6 @@ function TimePickers(props){
     );
   }
   
-  
-function MultilineTextFields(props) {
-    function setValue(e){
-      e.preventDefault();
-      props.setValue(e.target.value);
-    }
-    return (
-        <div>
-          <TextField
-            className="textfeild-content"
-            id="content"
-            label="내용"
-            multiline
-            rows={4}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            variant="outlined"
-            value={props.value}
-            onChange={setValue}
-          />
-        </div>
-    );
-  }
-
   function toggleToString(value){
     if(value){ //공개하겠다
       return "Y"
