@@ -32,7 +32,6 @@ function Time() {
             />
         </aside>
         <div className="timeline">
-          타임라인
           <CustomizedTimeline
             searchStartDatetime={searchStartDatetime}
             searchEndDatetime={searchEndDatetime}

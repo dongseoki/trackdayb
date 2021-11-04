@@ -31,12 +31,9 @@ var groupBy = function(xs, key) {
   }, {});
 };
 
-// let access_token = sessionStorage.getItem('jwt-token');
-
   useEffect(() => {
       const fetchActivityList = async () => {
         try {
-          setActivityList(null);
           const result = await axios.get("/timeManage/activityList", {
             params:{
               searchStartDatetime :props.searchStartDatetime,
@@ -44,80 +41,81 @@ var groupBy = function(xs, key) {
               orderColumn: "start_datetime",
               orderType: "asc",
             },
-            // headers:{
-            //   'Authorization' : access_token
-            // }
           });
-
-          console.log('result.data.activityList', result.data.activityList)
+          // 리스트에 세팅하기(원본)
+          setActivityList(result.data.activityList);
 
           // 날짜만 뽑아서 key값으로 추가해두기
           let tmpActivityList = result.data.activityList;
           tmpActivityList.forEach((activity, index)=>{
             activity['writeDate'] = activity['startDatetime'].substring(0, 10)
           })
-          // console.log(tmpActivityList)
-          
           // writeDate 기준 그룹바이 
           tmpActivityList = groupBy(tmpActivityList, 'writeDate')
           console.log("tmpActivityList", tmpActivityList)
+          // 그룹바이 데이터 (실제 랜더링할 때 사용)
           setTmpList(tmpActivityList)
-
-          // 리스트에 세팅하기
-          setActivityList(result.data.activityList);
         }
         catch(err) {
           console.error(err)
         }
       }
       fetchActivityList();
-      console.log("tmpList", tmpList)
   }, [props.searchStartDatetime, props.searchEndDatetime]);
-  if (!activityList) return null;
 
-  console.log('Object.entries(tmpList)', Object.entries(tmpList))
   
-  return (
-    <>
-    <Timeline position="alternate">
-      {Object.entries(tmpList).map((activityPerDay, index) => (
-        <TimelineItem key={index}>
-          <TimelineOppositeContent
-            sx={{ m: 'auto 0' }}
-            color="text.secondary"
-          >
-            {activityPerDay[0]}
-          </TimelineOppositeContent>
+  console.log('activityList', activityList)
+  console.log('tmpList', tmpList)
 
-        <div className="activityPerDay-wrapper">
-          {activityPerDay[1].map((activity, index) => (
-            <>
-            <div key={activity} className="activity-card-wrapper">
-              <TimelineSeparator>
-                <TimelineConnector />
-                  <TimelineDot className="activity-circle" style={{backgroundColor:activity.goalTitleInfo.color}}>
-                  </TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
+  if (activityList.length === 0) {
+    return (<div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>)
+  }
 
-              <TimelineContent className="time-card" sx={{ py: '12px', px: 2 }}>
-                <div className="datetime-wrapper">
-                  <Typography>{activity.startDatetime.substring(11,16)}-</Typography>
-                  <Typography>{activity.endDatetime.substring(11,16)}</Typography>
+  else{
+    return (
+      <>
+      <Timeline position="alternate">
+        {activityList && Object.entries(tmpList).map((activityPerDay, index) => (
+          <TimelineItem key={index}>
+            <TimelineOppositeContent
+              sx={{ m: 'auto 0' }}
+              color="text.secondary"
+            >
+              <div className="date-wrapper">
+                <div className="yearMonth-wrapper"><span>{activityPerDay[0].split('-')[0]}-</span><span>{activityPerDay[0].split('-')[1]}</span></div>
+                <div className="day-wrapper">{activityPerDay[0].split('-')[2]}</div>
+              </div>
+            </TimelineOppositeContent>
+
+          <div className="activityPerDay-wrapper">
+            {activityPerDay[1].map((activity, index) => (
+              <>
+                <div key={index} name={activityPerDay[1].length} className="activity-card-wrapper">
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                      <TimelineDot className="activity-circle" style={{backgroundColor:activity.goalTitleInfo.color}}>
+                      </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: '12px', px: 2 }} className="time-card">
+                    <div className="datetime-wrapper">
+                      <Typography>{activity.startDatetime.substring(11,16)}-</Typography>
+                      <Typography>{activity.endDatetime.substring(11,16)}</Typography>
+                    </div>
+                    <Typography className="activity-title" component="span">{activity.title}</Typography>
+                    <Typography className="activity-content">{activity.content}</Typography>
+                  </TimelineContent>
                 </div>
-                <Typography className="activity-title" component="span">{activity.title}</Typography>
-                <Typography className="activity-content">{activity.content}</Typography>
-              </TimelineContent>
-            </div>
-          </>
+              </>
+              )
+            )}
+          </div>
+                </TimelineItem>
 
-              ))}
-</div>
-              </TimelineItem>
-
-            
-        ))}
-    </Timeline>
-    </>
-  );
+              
+          ))}
+      </Timeline>
+      </>
+    );
+  }
 }
