@@ -354,5 +354,8 @@
         </choose>
 
     </select>
+    <select id="argListTest" resultType="String">
+        SELECT CONCAT(#{array[0]}, #{array[1]}, #{array[2]})
+    </select>
 
 </mapper>

@@ -28,5 +28,7 @@ public interface GoalManageRepository {
     List<GoalMVO> getGoalTitleList(GoalVO goalVO);
 
     List<GoalMVO> getGoalFullList(GoalVO goalVO);
+
+    String argListTest(String[] args);
     
 }

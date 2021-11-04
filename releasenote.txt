@@ -58,3 +58,6 @@ Release 0.3.4
 Release 0.3.5
   - login 시 세션스토리지에 토큰저장
   - axios intercepter 설정 : 모든 api 요청에 헤더 담기
+
+Release 0.3.5.1
+  - spring security 관련 보안 해제.
