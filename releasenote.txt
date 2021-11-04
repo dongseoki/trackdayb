@@ -61,3 +61,6 @@ Release 0.3.5
 
 Release 0.3.5.1
   - spring security 관련 보안 해제.
+
+Release 0.3.5.2
+  - deploy.sh 작성.
