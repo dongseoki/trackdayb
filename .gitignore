@@ -36,5 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
+## logs ##
+logs/
+
 ### security information
 application.yml
