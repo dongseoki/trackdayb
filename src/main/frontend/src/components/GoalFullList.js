@@ -191,7 +191,7 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
 
   const deleteHandler = async ()=>{
     try{
-      const result= await axiosInstance.delete("/goalManage/goal", {
+      const result= await axios.delete("/goalManage/goal", {
         params:{
           goalId: goalId
         }

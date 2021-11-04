@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import axios from "axios";
 import axiosInstance from "../axiosConfig";
 export const GoalTotalTitleListContext = createContext();
 
@@ -9,7 +10,7 @@ export const GoalTotalTitleListProvider = (props) =>{
     useEffect(()=>{
         const fetchGoalTotalTitleList = async () => {
           try{
-            const result = await axiosInstance.get(
+            const result = await axios.get(
               "/goalManage/goalTitleList");
             setGoalTotalTitleList(result.data.goalTitleList);
           } catch(err) {

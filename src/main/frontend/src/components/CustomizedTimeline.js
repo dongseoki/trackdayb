@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import "./CustomizedTimeline.css";
 
 import axiosInstance from "../axiosConfig";
+import axios from "axios";
 
 export default function CustomizedTimeline(props) {
   // getActivityListTEST
@@ -36,7 +37,7 @@ var groupBy = function(xs, key) {
       const fetchActivityList = async () => {
         try {
           setActivityList(null);
-          const result = await axiosInstance.get("/timeManage/activityList", {
+          const result = await axios.get("/timeManage/activityList", {
             params:{
               searchStartDatetime :props.searchStartDatetime,
               searchEndDatetime : props.searchEndDatetime,

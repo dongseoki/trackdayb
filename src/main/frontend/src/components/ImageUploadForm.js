@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import axiosInstance from "../axiosConfig";
 import "./ImageUploadForm.css";
 import ProgressBar from "./ProgressBar";
@@ -25,7 +26,7 @@ function ImageUploadForm() {
         const formData = new FormData();
         formData.append("image", file)
         try {
-            const result = await axiosInstance.post("/upload", formData, {
+            const result = await axios.post("/upload", formData, {
                 headers: {"Content-Type" : "multipart/form-data"},
                 onUploadProgress : (e) => {
                     setPercent(Math.round((100 * e.loaded) / e.total));
