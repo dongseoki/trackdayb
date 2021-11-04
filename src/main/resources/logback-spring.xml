@@ -26,7 +26,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="com.ldstr.gateway" level="INFO">
+    <logger name="com.lds.trackdayb" level="DEBUG">
         <appender-ref ref="DAILY_ROLLING_FILE_APPENDER" />
     </logger>
     <root level="INFO">
