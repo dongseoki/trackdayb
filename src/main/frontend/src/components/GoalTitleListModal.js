@@ -54,7 +54,11 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   const handleSubmitInside = () =>{
     setParentId(tempParentId);
     setParentGoalTitle(tempParentTitle);
-    setColor(tempParentId ? "" : randomColor())
+    console.log("주소", window.location.pathname)
+    // 목표관리 탭에서만 setColor
+    if(window.location.pathname === '/goal'){
+      setColor(tempParentId ? "" : randomColor())
+    }
     setOpenInside(false);
   }
   const searchHandler = (searchTerm)=>{

@@ -19,26 +19,35 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 
 import GoalTitleListModal from "./GoalTitleListModal";
-import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
 function ActivityInsertForm({writeDate}){
-  console.log("작성일", writeDate)
-  const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
-
     //write Form
-    //toggle- 비공개
-    // const [toggleSelected, setToggleSelected] = useState(false)
+    const [startDatetime, setStartDatetime] = useState("");
+    const [endDatetime, setEndDatetime] = useState("");
     const [shareStatus, setshareStatus] = useState(false);
-    // const [startDatetime, setStartDatetime] = useState("");
-    // const [endDatetime, setEndDatetime] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [activityScore, setActivityScore] = useState(0)
     const [parentGoalTitle, setParentGoalTitle] = useState("");
     const [parentId, setParentId] = useState("");
-    const [parentGoalKind, setParentGoalKind] = useState("");
-
     const [progressRate, setProgressRate] = useState(0);
+    
+    // YYYY-MM-DD 형태로 반환
+    function makeYYMMDD(value){
+      return value.toISOString().substring(0,10);
+    }
+    
+    const InitializeForm = ()=>{
+      setStartDatetime("");
+      setEndDatetime("");
+      setshareStatus(false);
+      setTitle("");
+      setContent("");
+      setActivityScore(0);
+      setParentGoalTitle('없음');
+      setParentId("");
+      setProgressRate(0);
+    }
     
     // 모달 설정
     const useStyles = makeStyles((theme) => ({
@@ -62,29 +71,34 @@ function ActivityInsertForm({writeDate}){
 
     const handleOpen = () => {
       setOpen(true);
-      // InitializeForm()
+      InitializeForm()
     };
 
     const handleClose = () => {
       setOpen(false);
-      // InitializeForm()
+      InitializeForm()
     };
 
     const handleSubmit = async (evt) => {
       evt.preventDefault();
-      const formData = {
+      const formData_activity = {
         goalId:parentId,
         title : title,
-        startDatetime: writeDate +' '+ startDatetime + ':00',
-        endDatetime: writeDate +' '+ endDatetime + ':00',
+        startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
+        endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
         content : content,
         activityScore : activityScore,
-        shareStatus : shareStatus,
-      };    
-      // console.log("formData", formData)
+        shareStatus: shareStatus ? "N":"Y",
+      }; 
+      const formData_goal = {
+        goalId : parentId,
+        progressRate : progressRate
+      }   
+      console.log("formData_activity", formData_activity)
+      console.log("formData_goal", formData_goal)
       try{
-        // const result = await axios.post("/timeManage/activityTEST", formData);
-        // console.log({result})
+        const result = await axios.post("/timeManage/activity", formData_activity);
+        console.log('방금 추가한 것', result.data.activityInfo)
       } catch(err){
         console.error(err)
       }
@@ -191,14 +205,12 @@ function ActivityInsertForm({writeDate}){
                     setParentGoalTitle={setParentGoalTitle}
                     parentId={parentId}
                     setParentId={setParentId}
-                    parentGoalKind = {parentGoalKind}
-                    setParentGoalKind = {setParentGoalKind}
                   />
                   <div className="parent-title">{parentGoalTitle}</div>
                 </div>
                 
                 <div className="slider-wrapper">
-                  <label className="modal-title">진행률</label>
+                  <label className="modal-title">목표 진행률</label>
                   <div className="slider-border">
                     <Slider
                       style={{width:"90%"}}
@@ -244,6 +256,7 @@ function TimePickers(props){
   
     return (
         <TextField
+          required
           id={props.id}
           label={props.label}
           value={props.value}
@@ -258,14 +271,6 @@ function TimePickers(props){
           }}
         />
     );
-  }
-  
-  function toggleToString(value){
-    if(value){ //공개하겠다
-      return "Y"
-    }else{
-      return "N"
-    }
   }
   
   

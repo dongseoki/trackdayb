@@ -7,6 +7,9 @@ import { GoalSearchTitleListContext } from "../context/GoalSearchTitleListContex
 import { BiSearch } from "react-icons/bi";
 
 function LeftNavigation(props){
+    // 시간관리(time) 탭에서만 작동    
+    const currentURI = window.location.pathname;
+  
     const [goalSearchTitleList ] = useContext(GoalSearchTitleListContext);
     const [searchTerm, setSearchTerm] = useState("") //검색어
     const [searchResults, setSearchResults] = useState([]) //검색결과
@@ -49,6 +52,8 @@ function LeftNavigation(props){
                 setSearchGoalIdList={props.setSearchGoalIdList}
                 />
             </div>
+            {currentURI === "/time" ? <div>기타포함</div> : null}
+            
         </nav>
     )
 }

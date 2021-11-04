@@ -3,23 +3,22 @@ import "./Time.css";
 import { LeftNavigation } from '../components/index';
 import ActivityInsertForm from "../components/ActivityInsertForm";
 //time picker
-import TextField from '@material-ui/core/TextField';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import { ko } from 'date-fns/esm/locale';
 
 //TimeLine
-import CustomizedTimeline from '../components/CustomizedTimeline';
+import ActivitySearchTimeline from '../components/ActivitySearchTimeline';
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
 import { GoalModalSearchTitleListProvider} from "../context/GoalModalSearchTitleListContext";
+import ActivityTimeline from "../components/ActivityTimeline";
 
 function Time() {
-  // 검색조건(조회기간)
+  // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [writeDate, setWriteDate] = useState(new Date());
-
   return (
     <div className="time">
       <GoalSearchTitleListProvider
@@ -36,11 +35,13 @@ function Time() {
             />
         </aside>
         <div className="timeline">
-          <CustomizedTimeline
+          <ActivitySearchTimeline
             searchStartDatetime={searchStartDatetime}
             searchEndDatetime={searchEndDatetime}
             setSearchStartDatetime={setSearchStartDatetime}
             setSearchEndDatetime={setSearchEndDatetime}
+            searchGoalIdList={searchGoalIdList}
+            setSearchGoalIdList={setSearchGoalIdList}
           />
         </div>
         <div className="write">
@@ -59,7 +60,9 @@ function Time() {
               />
             </div>
 
-            <div className="cards"></div>
+            <div className="cards">
+              <ActivityTimeline writeDate={writeDate}/>
+            </div>
 
             <div className="writeForm">
               <ActivityInsertForm writeDate={writeDate}/>
