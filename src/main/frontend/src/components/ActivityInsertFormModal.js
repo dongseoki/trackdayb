@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import "./ActivityInsertForm.css"
+import "./ActivityInsertFormModal.css"
 //toggle
 import ToggleButton from '@mui/material/ToggleButton';
 //slider-score
@@ -20,7 +20,7 @@ import TextField from '@material-ui/core/TextField';
 
 import GoalTitleListModal from "./GoalTitleListModal";
 
-function ActivityInsertForm({writeDate}){
+function ActivityInsertFormModal({writeDate, activityList, setActivityList, activitySearchList, setActivitySearchList}){
     //write Form
     const [startDatetime, setStartDatetime] = useState("");
     const [endDatetime, setEndDatetime] = useState("");
@@ -30,7 +30,7 @@ function ActivityInsertForm({writeDate}){
     const [activityScore, setActivityScore] = useState(0)
     const [parentGoalTitle, setParentGoalTitle] = useState("");
     const [parentId, setParentId] = useState("");
-    const [progressRate, setProgressRate] = useState(0);
+    const [parentProgressRate, setParentProgressRate] = useState(0);
     
     // YYYY-MM-DD 형태로 반환
     function makeYYMMDD(value){
@@ -46,7 +46,7 @@ function ActivityInsertForm({writeDate}){
       setActivityScore(0);
       setParentGoalTitle('없음');
       setParentId("");
-      setProgressRate(0);
+      setParentProgressRate(0);
     }
     
     // 모달 설정
@@ -90,15 +90,24 @@ function ActivityInsertForm({writeDate}){
         activityScore : activityScore,
         shareStatus: shareStatus ? "N":"Y",
       }; 
-      const formData_goal = {
-        goalId : parentId,
-        progressRate : progressRate
-      }   
-      console.log("formData_activity", formData_activity)
-      console.log("formData_goal", formData_goal)
       try{
-        const result = await axios.post("/timeManage/activity", formData_activity);
-        console.log('방금 추가한 것', result.data.activityInfo)
+        //활동 추가
+        const result_activity = await axios.post("/timeManage/activity", formData_activity);
+        console.log('방금 추가한 것(활동)', result_activity.data)
+
+        //목표진행률 업데이트
+        if(parentId){
+          const formData_goal = {
+            goalId : parentId,
+            progressRate : parentProgressRate
+          }
+          const result_goal = await axios.patch("/goalManage/goal", formData_goal)
+          console.log('방금 추가한 것(목표)', result_goal.data)
+        }
+        handleClose();
+        // 기존 리스트들에 추가 업데이트
+        // setActivityList([...activityList, result_activity.data.activityInfo])
+        // setActivitySearchList([...activitySearchList, result_activity.data.activityInfo])
       } catch(err){
         console.error(err)
       }
@@ -205,29 +214,33 @@ function ActivityInsertForm({writeDate}){
                     setParentGoalTitle={setParentGoalTitle}
                     parentId={parentId}
                     setParentId={setParentId}
+                    setParentProgressRate={setParentProgressRate}
                   />
                   <div className="parent-title">{parentGoalTitle}</div>
                 </div>
-                
-                <div className="slider-wrapper">
+
+                {/* 관련 목표가 없음이면 목표 진행률 노출 없음 */}
+                {parentGoalTitle === '없음' ? null : <div className="slider-wrapper">
                   <label className="modal-title">목표 진행률</label>
                   <div className="slider-border">
                     <Slider
                       style={{width:"90%"}}
-                      aria-label="progressRate"
+                      aria-label="parentProgressRate"
                       defaultValue={0}
                       valueLabelDisplay="auto"
                       step={10}
                       marks
                       min={0}
                       max={100}
-                      value={parseInt(progressRate)}
+                      value={parseInt(parentProgressRate)}
                       onChange={function(e){
-                        setProgressRate(e.target.value)
+                        setParentProgressRate(e.target.value)
                       }}
                     />
                   </div>
-                </div>
+                </div>}
+
+                
                 <div className="button-wrapper">
                   <button type="submit" className="submitBtn">저장</button>
                   <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
@@ -274,4 +287,4 @@ function TimePickers(props){
   }
   
   
-  export default ActivityInsertForm
+  export default ActivityInsertFormModal

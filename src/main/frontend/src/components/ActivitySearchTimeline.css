@@ -66,3 +66,9 @@
 .null-text{
     font-size: 12px;
 }
+.time-card .activity-parentGoal{
+    font-size: 12px;
+    background-color: skyblue;
+    border-radius: 10px;
+    padding: 2px 5px;
+}

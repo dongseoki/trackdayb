@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Time.css";
 import { LeftNavigation } from '../components/index';
-import ActivityInsertForm from "../components/ActivityInsertForm";
+
 //time picker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
@@ -12,6 +12,9 @@ import ActivitySearchTimeline from '../components/ActivitySearchTimeline';
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
 import { GoalModalSearchTitleListProvider} from "../context/GoalModalSearchTitleListContext";
 import ActivityTimeline from "../components/ActivityTimeline";
+//context
+import { ActivitySearchListProvider } from "../context/ActivitySearchListContext";
+import { ActivitySearchGroupbyProvider} from "../context/ActivitySearchGroupbyContext";
 
 function Time() {
   // 검색조건
@@ -34,42 +37,36 @@ function Time() {
             setSearchGoalIdList={setSearchGoalIdList}
             />
         </aside>
-        <div className="timeline">
-          <ActivitySearchTimeline
-            searchStartDatetime={searchStartDatetime}
-            searchEndDatetime={searchEndDatetime}
-            setSearchStartDatetime={setSearchStartDatetime}
-            setSearchEndDatetime={setSearchEndDatetime}
-            searchGoalIdList={searchGoalIdList}
-            setSearchGoalIdList={setSearchGoalIdList}
-          />
-        </div>
-        <div className="write">
-          <GoalModalSearchTitleListProvider
-            writeDate={writeDate}>
-                          
-            <div className="date-picker-wrapper">
-              <DatePicker
-                className="date-picker"
-                selected={writeDate}
-                onChange={(date) => {
-                  setWriteDate(date);
-                }}
-                locale={ko}
-                dateFormat="yyyy년 MM월 dd일"
-              />
-            </div>
+        <ActivitySearchListProvider
+          searchStartDatetime={searchStartDatetime}
+          searchEndDatetime={searchEndDatetime}
+          searchGoalIdList={searchGoalIdList}
+        >
+          <ActivitySearchGroupbyProvider>
+          <div className="timeline">
+            <ActivitySearchTimeline/>
+          </div>
 
-            <div className="cards">
+          <div className="write">
+            <GoalModalSearchTitleListProvider
+              writeDate={writeDate}>
+                            
+              <div className="date-picker-wrapper">
+                <DatePicker
+                  className="date-picker"
+                  selected={writeDate}
+                  onChange={(date) => {
+                    setWriteDate(date);
+                  }}
+                  locale={ko}
+                  dateFormat="yyyy년 MM월 dd일"
+                />
+              </div>
               <ActivityTimeline writeDate={writeDate}/>
-            </div>
-
-            <div className="writeForm">
-              <ActivityInsertForm writeDate={writeDate}/>
-            </div>
-
-          </GoalModalSearchTitleListProvider>
-        </div>
+            </GoalModalSearchTitleListProvider>
+          </div>
+          </ActivitySearchGroupbyProvider>
+        </ActivitySearchListProvider>
       </GoalSearchTitleListProvider>
     </div>
   );

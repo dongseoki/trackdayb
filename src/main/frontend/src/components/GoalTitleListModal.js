@@ -20,10 +20,11 @@ import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitle
 
 import randomColor from "randomcolor";
 
-function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor}){
+function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate}){
   const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
   const [ tempParentId, setTempParentId ] = useState("");
   const [ tempParentTitle, setTempParentTitle ] = useState("없음");
+  const [ tempParentProgressRate, setTempParentProgressRate] = useState(0); //시간관리용 목표진행률
   const [searchTerm, setSearchTerm] = useState("") //검색어
   const [searchResults, setSearchResults] = useState([]) //검색결과
 
@@ -54,10 +55,13 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   const handleSubmitInside = () =>{
     setParentId(tempParentId);
     setParentGoalTitle(tempParentTitle);
-    console.log("주소", window.location.pathname)
     // 목표관리 탭에서만 setColor
     if(window.location.pathname === '/goal'){
       setColor(tempParentId ? "" : randomColor())
+    }
+    //시간관리 탭에서만 setParentProgressRate
+    if(window.location.pathname === '/time'){
+      setParentProgressRate(tempParentProgressRate)
     }
     setOpenInside(false);
   }
@@ -103,6 +107,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
               setTempParentTitle={setTempParentTitle}
               searchTerm={searchTerm}
               searchHandler={searchHandler}
+              setTempParentProgressRate = {setTempParentProgressRate}
             />
             <div className="button-wrapper">
               <button type="button" className="submitBtn" onClick={handleSubmitInside}>확인</button>
@@ -115,7 +120,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   )
 }
 
-function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler}){
+function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler, setTempParentProgressRate}){
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
   const inputEl = useRef("")
@@ -175,6 +180,7 @@ function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentI
         }
       })
       setTempParentTitle(goalTitleList[targetIndex]["title"])
+      setTempParentProgressRate(goalTitleList[targetIndex]['progressRate']) // 시간관리 탭 사용 목표 진행률
     }
   }
 
