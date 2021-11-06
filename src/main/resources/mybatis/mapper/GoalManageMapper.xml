@@ -143,7 +143,7 @@
         <if test="kind != null and !kind.equals('')">
                 kind = #{kind},
         </if>
-        <if test="content != null and !content.equals('')">
+        <if test="content != null">
                 content = #{content},
         </if>
         <if test="startDatetime != null and !startDatetime.equals('')">
@@ -155,7 +155,9 @@
         <if test="progressRate != null and !progressRate.equals('')">
                 progress_rate = #{progressRate},
         </if>
-        color = #{color},
+        <if test="color != null">
+                color = #{color},
+        </if>
         <if test="shareStatus != null and !shareStatus.equals('')">
                 share_status = #{shareStatus},
         </if>
