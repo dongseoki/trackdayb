@@ -28,7 +28,7 @@ import "./ActivityTimeline.css";
 import ActivityInsertFormModal from "../components/ActivityInsertFormModal";
 import ActivityModifyFormModal from "../components/ActivityModifyFormModal";
 
-export default function ActivityTimeline({writeDate}) {
+export default function ActivityTimeline({writeDate, checker}) {
     // 오늘의 활동내역 리스트)
     const [activityList, setActivityList] = useState([]);
     
@@ -60,7 +60,7 @@ export default function ActivityTimeline({writeDate}) {
           }
         }
         fetchActivityList();
-    }, [writeDate]);
+    }, [writeDate, checker]);
 
   if (activityList.length === 0) {
     return (<div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>)
@@ -81,25 +81,31 @@ export default function ActivityTimeline({writeDate}) {
                           <TimelineConnector />
                       </TimelineSeparator>
                       <TimelineContent sx={{ py: '12px', px: 2 }} className="time-card">
-                        <div className="card-button-wrapper">
-                          {(activity.shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
-                          <ActivityModifyFormModal 
-                            modifyData = {activityList[index]}
-                            targetIndex={index}
-                          />
-                          <DeleteModal 
-                            activityId = {activity.activityId}
-                            activityList = {activityList}
-                            setActivityList = {setActivityList}
-                            activitySearchList={activitySearchList}
-                            setActivitySearchList = {setActivitySearchList}
-                          />
+                        <div className="card-top-wrapper">
+                          <div className="datetime-wrapper">
+                            <Typography>{activity.startDatetime.substring(11,16)}-</Typography>
+                            <Typography>{activity.endDatetime.substring(11,16)}</Typography>
+                          </div>
+                          <div className="card-button-wrapper">
+                            {(activity.shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
+                            <ActivityModifyFormModal 
+                              writeDate = {writeDate}
+                              modifyData = {activityList[index]}
+                              targetIndex={index}
+                              activityList = {activityList}
+                              setActivityList = {setActivityList}
+                            />
+                            <DeleteModal 
+                              activityId = {activity.activityId}
+                              activityList = {activityList}
+                              setActivityList = {setActivityList}
+                              activitySearchList={activitySearchList}
+                              setActivitySearchList = {setActivitySearchList}
+                            />
+                          </div>
                         </div>
                       
-                        <div className="datetime-wrapper">
-                        <Typography>{activity.startDatetime.substring(11,16)}-</Typography>
-                        <Typography>{activity.endDatetime.substring(11,16)}</Typography>
-                        </div>
+                        
                         <Typography className="activity-title" component="span">{activity.title}</Typography>
                         <Typography className="activity-content">{activity.content}</Typography>
                         {activity.goalTitleInfo.goalId ? <span className="activity-parentGoal" style={{backgroundColor : hexToRgba(activity.goalTitleInfo.color)}}>{activity.goalTitleInfo.title}</span> : null}

@@ -20,6 +20,7 @@ export const ActivitySearchListProvider = (props) =>{
                             orderColumn: "start_datetime",
                             orderType: "asc",
                             searchGoalIdList: props.searchGoalIdList.toString(),
+                            otherIncludedYn: props.otherIncludedYn ? 'Y' : 'N'
                         },
                     });
                     // 리스트에 세팅하기(원본)
@@ -30,7 +31,7 @@ export const ActivitySearchListProvider = (props) =>{
             }
         }
         fetchActivitySearchList();
-      }, [props.searchStartDatetime, props.searchEndDatetime, props.searchGoalIdList])
+      }, [props.searchStartDatetime, props.searchEndDatetime, props.searchGoalIdList, props.otherIncludedYn])
 
     return (
         <ActivitySearchListContext.Provider value={[ activitySearchList, setActivitySearchList ]}>
