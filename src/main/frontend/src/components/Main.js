@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Home, Time, Goal, Report, Community, Login, Signup, Mypage } from './index.js'; 
 
 
-function Main(props) {
+function Main() {
     return (
         <div>
             <Switch>

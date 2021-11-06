@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import "./Time.css";
 import { LeftNavigation } from '../components/index';
-import ActivityInsertForm from "../components/ActivityInsertForm";
+
 //time picker
-import TextField from '@material-ui/core/TextField';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"
+import { ko } from 'date-fns/esm/locale';
+
 //TimeLine
-import CustomizedTimeline from '../components/CustomizedTimeline';
+import ActivitySearchTimeline from '../components/ActivitySearchTimeline';
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
 import { GoalModalSearchTitleListProvider} from "../context/GoalModalSearchTitleListContext";
+import ActivityTimeline from "../components/ActivityTimeline";
+//context
+import { ActivitySearchListProvider } from "../context/ActivitySearchListContext";
+import { ActivitySearchGroupbyProvider} from "../context/ActivitySearchGroupbyContext";
 
 function Time() {
-  // 검색조건(조회기간)
+  // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
-  const [writeDate, setWriteDate] = useState(makeYYMMDD(new Date()));
-
+  const [writeDate, setWriteDate] = useState(new Date());
   return (
     <div className="time">
       <GoalSearchTitleListProvider
@@ -31,48 +37,36 @@ function Time() {
             setSearchGoalIdList={setSearchGoalIdList}
             />
         </aside>
-        <div className="timeline">
-          타임라인
-          <CustomizedTimeline
-            searchStartDatetime={searchStartDatetime}
-            searchEndDatetime={searchEndDatetime}
-            setSearchStartDatetime={setSearchStartDatetime}
-            setSearchEndDatetime={setSearchEndDatetime}
-          />
-        </div>
-        <div className="write">
-          <GoalModalSearchTitleListProvider
-            writeDate={writeDate}>
-            <div className="button-wrapper">
-              <button>import</button>
-              <button>export</button>
-              <button>도움말</button>
-              <button>양식다운로드</button>
-            </div>
-            <div className="date-picker-wrapper">
-              <TextField
-                className="date-picker"
-                id="date"
-                label="작성일"
-                type="date"
-                defaultValue={writeDate}
-                sx={{ width: 220 }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant="outlined"
-                onChange={function(e){
-                  setWriteDate(e.target.value)
-                }}
-              />
-            </div>
-            <div className="cards"></div>
+        <ActivitySearchListProvider
+          searchStartDatetime={searchStartDatetime}
+          searchEndDatetime={searchEndDatetime}
+          searchGoalIdList={searchGoalIdList}
+        >
+          <ActivitySearchGroupbyProvider>
+          <div className="timeline">
+            <ActivitySearchTimeline/>
+          </div>
 
-            <div className="writeForm">
-              <ActivityInsertForm writeDate={writeDate}/>
-            </div>
-          </GoalModalSearchTitleListProvider>
-        </div>
+          <div className="write">
+            <GoalModalSearchTitleListProvider
+              writeDate={writeDate}>
+                            
+              <div className="date-picker-wrapper">
+                <DatePicker
+                  className="date-picker"
+                  selected={writeDate}
+                  onChange={(date) => {
+                    setWriteDate(date);
+                  }}
+                  locale={ko}
+                  dateFormat="yyyy년 MM월 dd일"
+                />
+              </div>
+              <ActivityTimeline writeDate={writeDate}/>
+            </GoalModalSearchTitleListProvider>
+          </div>
+          </ActivitySearchGroupbyProvider>
+        </ActivitySearchListProvider>
       </GoalSearchTitleListProvider>
     </div>
   );

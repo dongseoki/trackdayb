@@ -1,0 +1,14 @@
+.activity-timeline{
+}
+.activity-timeline .MuiTimelineItem-missingOppositeContent:before{
+    padding: 0;
+    flex: 0;
+}
+.activity-timeline .activity-card-wrapper{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40px 1fr ;
+}
+.activity-timeline .activity-card-wrapper .time-card{
+    width: 100%;
+}

@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
-import "./GoalInsertFormModal.css"
+import "./GoalInsertFormModal.css";
 import axios from "axios";
+import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
 import { BiLock } from "react-icons/bi";

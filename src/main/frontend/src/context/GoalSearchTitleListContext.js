@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
-
+import axiosInstance from "../axiosConfig";
 export const GoalSearchTitleListContext = createContext();
 
 export const GoalSearchTitleListProvider = (props) =>{

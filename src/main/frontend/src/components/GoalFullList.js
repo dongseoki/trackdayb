@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import "./GoalFullList.css";
 import axios from "axios";
+import axiosInstance from "../axiosConfig";
 import GoalInsertFormModal from "./GoalInsertFormModal";
 // 토글버튼
 import ToggleButton from '@mui/material/ToggleButton';
@@ -111,8 +112,6 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
 function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
-  console.log('goalTitlePathList', goalTitlePathList)
-  
   return(
         <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
           <div className="card-button-wrapper">

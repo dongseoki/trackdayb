@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import axiosInstance from "../axiosConfig";
 import "./ImageUploadForm.css";
 import ProgressBar from "./ProgressBar";
 
