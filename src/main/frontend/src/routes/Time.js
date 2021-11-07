@@ -76,7 +76,7 @@ function Time() {
               writeDate={writeDate}>
                             
               <div className="date-picker-wrapper">
-                <button onClick={MinusOneDay}><IoIosArrowBack/></button>
+                <button class="arrow-icon" onClick={MinusOneDay}><IoIosArrowBack/></button>
                 <DatePicker
                   className="date-picker"
                   selected={writeDate}
@@ -86,7 +86,7 @@ function Time() {
                   locale={ko}
                   dateFormat="yyyy년 MM월 dd일"
                 />
-                <button onClick={PlusOneDay}><IoIosArrowForward/></button>
+                <button class="arrow-icon" onClick={PlusOneDay}><IoIosArrowForward/></button>
               </div>
               <ActivityTimeline 
               writeDate={writeDate}

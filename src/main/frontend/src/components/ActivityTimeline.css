@@ -11,8 +11,14 @@
 }
 .activity-timeline .activity-card-wrapper .time-card{
     width: 100%;
+    box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
 }
-
+.null-text{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
 .cards .activity-timeline .activity-card-wrapper .card-top-wrapper{
     display: flex;
     justify-content: space-between;

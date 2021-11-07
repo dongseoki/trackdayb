@@ -63,12 +63,36 @@ export default function ActivityTimeline({writeDate, checker}) {
     }, [writeDate, checker]);
 
   if (activityList.length === 0) {
-    return (<div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>)
+    return (
+      <>
+      <div className="writeForm">
+        <ActivityInsertFormModal 
+          writeDate={writeDate}
+          activityList = {activityList}
+          setActivityList = {setActivityList}
+          activitySearchList={activitySearchList}
+          setActivitySearchList = {setActivitySearchList}
+        />
+      </div>
+
+      <div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>
+      </>
+    )
   }
 
   else{
     return (
       <>
+      <div className="writeForm">
+        <ActivityInsertFormModal 
+          writeDate={writeDate}
+          activityList = {activityList}
+          setActivityList = {setActivityList}
+          activitySearchList={activitySearchList}
+          setActivitySearchList = {setActivitySearchList}
+        />
+      </div>
+      
       <div className="cards">
         <Timeline className="activity-timeline">
           {activityList && activityList.map((activity, index) => (
@@ -115,15 +139,7 @@ export default function ActivityTimeline({writeDate, checker}) {
             ))}
         </Timeline>
       </div>
-      <div className="writeForm">
-        <ActivityInsertFormModal 
-          writeDate={writeDate}
-          activityList = {activityList}
-          setActivityList = {setActivityList}
-          activitySearchList={activitySearchList}
-          setActivitySearchList = {setActivitySearchList}
-        />
-      </div>
+      
       </>
     );
   }
