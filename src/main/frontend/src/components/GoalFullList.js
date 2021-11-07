@@ -31,7 +31,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
-  console.log('goalFullList', goalFullList)
+  // console.log('goalFullList', goalFullList)
   const toggleOrderType = (preValue)=>{
     if (preValue === 'asc'){
       return 'desc'
