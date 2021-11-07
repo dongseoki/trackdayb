@@ -68,3 +68,14 @@ Release 0.3.5.2
 
 Release 0.3.6
   - 목표 수정 API : 색이 인자로 없을 경우, 수정하지 않도록 수정. 반환값에 goalTitleInfo 포함하도록 조치.
+
+Release 0.3.7
+  - LeftNavigation 디자인 수정
+  - 시간관리 탭 LeftNavigation 기타 조건 체크박스 추가
+  - 시간관리 타임라인과 체크박스 연동
+  - 관련 목표 선택 모달 내부 목표 전체 리스트에서 hover시 부모정보 보이기
+  - 시간관리 날짜 이동 arrow 추가
+  - 시간관리 신규 추가/수정/삭제 기능
+  - footer 위치 지정
+  - 로그인 curUser state 사용하여 구현 (새로고침시 날라감)
+  - 회원가입 form 구현
