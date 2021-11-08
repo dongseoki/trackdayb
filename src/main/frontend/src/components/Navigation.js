@@ -34,7 +34,7 @@ function Navigation(){
                     {curUser ? (
                         <>
                         <span>{curUser.memberId}</span>
-                        <span onClick={logoutHandler}>로그아웃</span>
+                        <li><button onClick={logoutHandler}>로그아웃</button></li>
                         <li><Link to="/mypage">마이페이지</Link></li>
                         </>
                         ) : (

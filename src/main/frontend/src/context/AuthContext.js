@@ -9,11 +9,11 @@ export const AuthProvider = ({children}) => {
     useEffect(()=>{
         const token = sessionStorage.getItem('jwt-token');
         if(curUser) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            // sessionStorage.setItem('jwt-token', token);
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         }
         // else if(token){
-        //     axios.get
+        //     result = axios.get('/member/curUser')
+        //     setCurUser(result)
         // }
         else delete axios.defaults.headers.common.Authorization
     }, [curUser])
@@ -21,3 +21,6 @@ export const AuthProvider = ({children}) => {
         <AuthContext.Provider value={[curUser, setCurUser]}>{children}</AuthContext.Provider>
     )
 }
+
+
+// sessionStorage.setItem('jwt-token', token);
