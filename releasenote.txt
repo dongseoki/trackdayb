@@ -79,3 +79,8 @@ Release 0.3.7
   - footer 위치 지정
   - 로그인 curUser state 사용하여 구현 (새로고침시 날라감)
   - 회원가입 form 구현
+
+Release 0.3.8
+  - currentUser API 구현.
+  - 회원가입시, 토큰 정보 반환 처리.
+  - 로그인시 멤버 아이디 반환 처리.

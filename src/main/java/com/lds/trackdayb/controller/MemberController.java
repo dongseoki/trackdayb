@@ -7,13 +7,13 @@ import javax.validation.Valid;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.MemberDTO;
-import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.exception.DuplicateMemberException;
 import com.lds.trackdayb.jwt.JwtFilter;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.mvo.ResultMVO;
 import com.lds.trackdayb.service.MemberService;
 import com.lds.trackdayb.util.ResponseCodeUtil;
+import com.lds.trackdayb.util.SecurityUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,8 +98,7 @@ public class MemberController {
         HttpHeaders httpHeaders;
 
 
-        authenticationToken =
-        new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), memberDTO.getPassword());
+        authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), memberDTO.getPassword());
 
         authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -107,6 +106,7 @@ public class MemberController {
         jwt = tokenProvider.createToken(authentication);
         resultMVO.setToken(jwt);
 
+        resultMVO.setMemberId(SecurityUtil.getCurrentUsername().get());
         httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
@@ -129,22 +129,39 @@ public class MemberController {
     // }
 
     @PostMapping(value = "/signup")
-    public String signup(@RequestBody MemberDTO memberDTO){
-        JsonObject jo = new JsonObject();
-        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+    public ResultMVO signup(@RequestBody MemberDTO memberDTO){
+        ResultMVO resultMVO = new ResultMVO();
+        String originalPassword = memberDTO.getPassword();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         try {
             MemberDTO memberInfo =memberService.signup(memberDTO);
-            jo.addProperty("memberId", memberInfo.getMemberId());
+
+            //로그인 처리.
+            UsernamePasswordAuthenticationToken authenticationToken;
+            Authentication authentication;
+            String jwt="";
+            authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), originalPassword);
+
+            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+    
+            // jwt 토큰.
+            jwt = tokenProvider.createToken(authentication);
+            resultMVO.setToken(jwt);
+            
+            // memberId
+            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().get());
+
         } catch (DuplicateMemberException e) {
             LOGGER.error("signup error : {}", e.toString());
-            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER);
-            jo.addProperty("message", "signup fail. duplicate error");
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER);
+            resultMVO.setMessage("signup fail. duplicate error");
         } catch (Exception e) {
             LOGGER.error("signup error : {}", e.toString());
-            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_FAIL);
-            jo.addProperty("message", "signup fail. server error");
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+            resultMVO.setMessage("signup fail.. server error");
         }
-        return jo.toString();
+        return resultMVO;
     }
 
 
@@ -155,10 +172,20 @@ public class MemberController {
     //     return ResponseEntity.ok(userService.signup(userDto));
     // }
 
-    @GetMapping("/user")
+    @GetMapping("/currentUser")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<MemberDTO> getMyUserInfo(HttpServletRequest request) {
-        return ResponseEntity.ok(memberService.getMyUserWithAuthorities());
+    public String getMyUserInfo(HttpServletRequest request) {
+        JsonObject jo = new JsonObject();
+        jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
+        try {
+            MemberDTO memberInfo =memberService.getMyUserWithAuthorities();
+            jo.add("memberInfo", new Gson().toJsonTree(memberInfo));
+        } catch (Exception e) {
+            LOGGER.error("getMyUserInfo error : {}", e.toString());
+            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_FAIL);
+            jo.addProperty("message", "server error");
+        }
+        return jo.toString();
     }
 
     @GetMapping("/user/{username}")
