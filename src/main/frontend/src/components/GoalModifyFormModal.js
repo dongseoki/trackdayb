@@ -38,7 +38,7 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
-function GoalModifyFormModal({modifyData, targetIndex}){
+function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType}){
   const [ goalTotalTitleList, ] = useContext(GoalTotalTitleListContext);
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
@@ -137,6 +137,8 @@ function GoalModifyFormModal({modifyData, targetIndex}){
   const handleOpen = () => {
     setOpen(true);
     ModifySettingForm();
+    console.log("orderColumn", orderColumn)
+console.log("orderType", orderType)
   };
 
   const handleClose = () => {
@@ -187,11 +189,26 @@ function GoalModifyFormModal({modifyData, targetIndex}){
       }
       try{
         const result = await axiosInstance.patch("/goalManage/goal", formData);
-        setOpen(false);
+        handleClose();
+        // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
+        function data_sorting(a, b) {
+          console.log("함수 안orderColumn", orderColumn)
+          console.log("함수 안orderType", orderType)
+          var dateA = new Date(a[orderColumn]).getTime();
+          var dateB = new Date(b[orderColumn]).getTime();
+          if (orderType === "asc") return dateA > dateB ? 1 : -1
+          else return dateA < dateB ? 1 : -1
+        };
+
+
         // 수정한 데이터 반영
         let tempArray = [...goalFullList];
         tempArray[targetIndex] = result.data.goalInfo;
-        setGoalFullList(tempArray);
+        setGoalFullList(tempArray.sort(data_sorting));
+
+        // LeftNav에도 수정 반영되어야함
+        // setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
+
       }catch(err){
         console.error(err)
       }

@@ -115,7 +115,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
             }
             handleClose();
             // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
-            function date_ascending(a, b) {
+            function data_sorting(a, b) {
               var dateA = new Date(a['startDatetime']).getTime();
               var dateB = new Date(b['startDatetime']).getTime();
               return dateA > dateB ? 1 : -1;
@@ -123,11 +123,11 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
             // 수정한 데이터 반영
             let tempArray = [...activityList];
             tempArray[targetIndex] = result_activity.data.activityInfo;
-            setActivityList(tempArray.sort(date_ascending))
+            setActivityList(tempArray.sort(data_sorting))
             
             let tempSearchArray = [...activitySearchList];
             tempSearchArray[targetIndex] = result_activity.data.activityInfo;
-            setActivitySearchList(tempSearchArray.sort(date_ascending))
+            setActivitySearchList(tempSearchArray.sort(data_sorting))
           
         }catch(err){
             console.error(err)

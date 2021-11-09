@@ -97,9 +97,14 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
             setGoalFullList={setGoalFullList}
             updateTotalTitle={updateTotalTitle}
             setUpdateTotalTitle={setUpdateTotalTitle}
+            orderColumn={orderColumn}
+            orderType = {orderType}
           ></GoalCard>
         ))}
-        <GoalInsertFormModal goalFullList={goalFullList}
+        <GoalInsertFormModal 
+            orderColumn={orderColumn}
+            orderType = {orderType}
+            goalFullList={goalFullList}
             setGoalFullList={setGoalFullList}
             goalSearchTitleList={goalSearchTitleList}
             setGoalSearchTitleList={setGoalSearchTitleList}/>
@@ -109,7 +114,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
   )
 }
 
-function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}){
+function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
   return(
@@ -119,6 +124,8 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
             <GoalModifyFormModal 
               modifyData = {goalFullList[index]}
               targetIndex={index}
+              orderColumn={orderColumn}
+              orderType = {orderType}
             />
             <DeleteModal 
               goalId={goalId} 
