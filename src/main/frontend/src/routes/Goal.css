@@ -1,4 +1,5 @@
 .goal{
+  flex : 1;
   display: grid;
   grid-template-columns: 20% 80%;
   margin : 0 80px;

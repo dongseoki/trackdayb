@@ -21,7 +21,7 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
   
   let nodes = []
   goalTitleList.forEach((goal, index)=>{
-      const goalObj = new Object();
+      const goalObj = {};
       goalObj.label = goal.title
       goalObj.id = parseInt(goal.goalId)
       goalObj.dropdown=false
@@ -83,7 +83,7 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
  }
   return (
     <div>
-      <div className="goal-list">
+
       <div className="total-check-wrapper">
         <div className="checkbox-wrapper" onClick={(e) => {AllcheckHandler(e, e.target.checked)}}> 
           <Checkbox {...label} 
@@ -92,6 +92,8 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
         </div>
         <div className="total-check">전체체크</div>
       </div>
+
+      <div className="goal-list">
         <Tree
         nodes={nodes} 
         theme="modifiedDarkLarge"

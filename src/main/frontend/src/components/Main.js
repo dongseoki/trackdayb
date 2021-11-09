@@ -7,7 +7,7 @@ import { Home, Time, Goal, Report, Community, Login, Signup, Mypage } from './in
 
 function Main() {
     return (
-        <div>
+        <div className='main-content'>
             <Switch>
                 <Route path='/' exact={true} component={Home} />
                 <Route path="/time" exact={true} component={ Time } />

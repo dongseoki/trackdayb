@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css";
-import axios from "axios";
+// import axios from "axios";
 import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
@@ -38,8 +38,8 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
-function GoalModifyFormModal({modifyData, targetIndex}){
-  const [ goalTotalTitleList, setGoalTotalTitleList] = useContext(GoalTotalTitleListContext);
+function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType}){
+  const [ goalTotalTitleList, ] = useContext(GoalTotalTitleListContext);
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
@@ -54,7 +54,7 @@ function GoalModifyFormModal({modifyData, targetIndex}){
   const pIdtoTitle= (pId)=>{
       if(pId){
           let targetIndex = goalTotalTitleList.findIndex((element) =>{
-              if(element.goalId == pId){
+              if(element.goalId === pId){
                   return true
               }
           })
@@ -137,6 +137,9 @@ function GoalModifyFormModal({modifyData, targetIndex}){
   const handleOpen = () => {
     setOpen(true);
     ModifySettingForm();
+    console.log('modifyData', modifyData)
+    console.log("orderColumn", orderColumn)
+console.log("orderType", orderType)
   };
 
   const handleClose = () => {
@@ -185,15 +188,41 @@ function GoalModifyFormModal({modifyData, targetIndex}){
         "satYn":sat ? "Y":"N"
         }
       }
-      console.log('제출', formData)
       try{
-        const result = await axios.patch("/goalManage/goal", formData);
-        console.log("제출결과", {result})
-        setOpen(false);
+        const result = await axiosInstance.patch("/goalManage/goal", formData);
+        handleClose();
+        // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
+        function data_sorting(a, b) {
+          console.log('orderColumn', orderColumn)
+          if(orderColumn === 'progress_rate') {
+            orderColumn = 'progressRate'
+            console.log('orderColumn2', orderColumn)
+            console.log('a.orderColumn', typeof parseInt(a[orderColumn]))
+
+            if (orderType === "asc") return parseInt(a[orderColumn]) > parseInt(b[orderColumn]) ? 1 : -1
+            else return parseInt(a[orderColumn]) < parseInt(b[orderColumn]) ? 1 : -1
+
+          }else{          
+            if(orderColumn === 'modification_datetime') orderColumn = 'modificationDatetime'
+            else if(orderColumn === 'start_datetime') orderColumn = 'startDatetime'
+            else if(orderColumn === 'end_datetime') orderColumn = 'endDatetime'
+
+
+            var dateA = new Date(a[orderColumn]).getTime();
+            var dateB = new Date(b[orderColumn]).getTime();
+            if (orderType === "asc") return dateA > dateB ? 1 : -1
+            else return dateA < dateB ? 1 : -1
+          }
+        };
+
         // 수정한 데이터 반영
         let tempArray = [...goalFullList];
         tempArray[targetIndex] = result.data.goalInfo;
-        setGoalFullList(tempArray);
+        setGoalFullList(tempArray.sort(data_sorting));
+
+        // LeftNav에도 수정 반영되어야함
+        // setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
+
       }catch(err){
         console.error(err)
       }
@@ -350,7 +379,6 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat, none, setNone}) {
   // const [none, setNone] = useState(false)
   const timeUnitChangeHandler = (event) => {
-    console.log("timeUnit 변경")
     setTimeUnit(event.target.value);
     setCount("")
     if(event.target.value === "D" || event.target.value === "M" ){

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import axiosInstance from "../axiosConfig";
-import axios from "axios";
+// import axios from "axios";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
@@ -30,10 +30,10 @@ import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
-function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
+function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
-
+  
   // const [startDatetime, setStartDatetime] = useState(new Date());
   // const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
@@ -153,10 +153,17 @@ function GoalInsertFormModal({goalFullList, setGoalFullList, goalSearchTitleList
       }
       console.log('제출', formData)
       try{
-        const result = await axios.post("/goalManage/goal", formData);
+        const result = await axiosInstance.post("/goalManage/goal", formData);
         console.log("제출결과", {result})
         handleClose();
-        setGoalFullList([...goalFullList, result.data.goalInfo]);
+        // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
+        function data_sorting(a, b) {
+          var dateA = new Date(a[orderColumn]).getTime();
+          var dateB = new Date(b[orderColumn]).getTime();
+          if (orderType === "asc") return dateA > dateB ? 1 : -1
+          else return dateA < dateB ? 1 : -1
+        };
+        setGoalFullList([...goalFullList, result.data.goalInfo].sort(data_sorting));
         setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
         setUpdateTotalTitle(!updateTotalTitle)
       }catch(err){

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./GoalFullList.css";
-import axios from "axios";
+// import axios from "axios";
 import axiosInstance from "../axiosConfig";
 import GoalInsertFormModal from "./GoalInsertFormModal";
 // 토글버튼
@@ -31,7 +31,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
-  console.log('goalFullList', goalFullList)
+  // console.log('goalFullList', goalFullList)
   const toggleOrderType = (preValue)=>{
     if (preValue === 'asc'){
       return 'desc'
@@ -43,7 +43,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
     <div>
       <GoalModalSearchTitleListProvider>
       <div className="button-wrapper">
-        <button>목표 모아보기</button>
+        {/* <button>목표 모아보기</button> */}
         <ToggleButtonGroup
           color="primary"
           value={orderColumn}
@@ -97,9 +97,14 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
             setGoalFullList={setGoalFullList}
             updateTotalTitle={updateTotalTitle}
             setUpdateTotalTitle={setUpdateTotalTitle}
+            orderColumn={orderColumn}
+            orderType = {orderType}
           ></GoalCard>
         ))}
-        <GoalInsertFormModal goalFullList={goalFullList}
+        <GoalInsertFormModal 
+            orderColumn={orderColumn}
+            orderType = {orderType}
+            goalFullList={goalFullList}
             setGoalFullList={setGoalFullList}
             goalSearchTitleList={goalSearchTitleList}
             setGoalSearchTitleList={setGoalSearchTitleList}/>
@@ -109,7 +114,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
   )
 }
 
-function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}){
+function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
   return(
@@ -119,6 +124,8 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
             <GoalModifyFormModal 
               modifyData = {goalFullList[index]}
               targetIndex={index}
+              orderColumn={orderColumn}
+              orderType = {orderType}
             />
             <DeleteModal 
               goalId={goalId} 
@@ -189,12 +196,11 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
 
   const deleteHandler = async ()=>{
     try{
-      const result= await axios.delete("/goalManage/goal", {
+      const result= await axiosInstance.delete("/goalManage/goal", {
         params:{
           goalId: goalId
         }
       })
-      console.log("삭제결과", result)
       handleClose()
       setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
       setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))

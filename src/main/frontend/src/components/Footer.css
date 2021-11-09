@@ -1,13 +1,12 @@
 .footer{
-    /* position : fixed; */
-    /* bottom: 0; */
+    position : absolute;
+    bottom: 0;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    /* height: 70px;*/
     width: 100%;
     border-top : 1px solid #b2e0e0;
     padding: 10px 100px;
-}
+  }
 .left{
     font-size: 2em;
     font-weight: 700;

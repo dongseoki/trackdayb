@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import "./ActivityInsertFormModal.css"
 //toggle
 import ToggleButton from '@mui/material/ToggleButton';
 //slider-score
 import Slider from '@mui/material/Slider';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from "../axiosConfig";
 //icon
-import { FaLock } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import { BiLock } from "react-icons/bi";
 //css
@@ -92,7 +92,7 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
       }; 
       try{
         //활동 추가
-        const result_activity = await axios.post("/timeManage/activity", formData_activity);
+        const result_activity = await axiosInstance.post("/timeManage/activity", formData_activity);
         console.log('방금 추가한 것(활동)', result_activity.data)
 
         //목표진행률 업데이트
@@ -101,13 +101,18 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
             goalId : parentId,
             progressRate : parentProgressRate
           }
-          const result_goal = await axios.patch("/goalManage/goal", formData_goal)
+          const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
           console.log('방금 추가한 것(목표)', result_goal.data)
         }
         handleClose();
-        // 기존 리스트들에 추가 업데이트
-        // setActivityList([...activityList, result_activity.data.activityInfo])
-        // setActivitySearchList([...activitySearchList, result_activity.data.activityInfo])
+        // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
+        function data_sorting(a, b) {
+          var dateA = new Date(a['startDatetime']).getTime();
+          var dateB = new Date(b['startDatetime']).getTime();
+          return dateA > dateB ? 1 : -1;
+        };
+        setActivityList([...activityList, result_activity.data.activityInfo].sort(data_sorting))
+        setActivitySearchList([...activitySearchList, result_activity.data.activityInfo].sort(data_sorting))
       } catch(err){
         console.error(err)
       }

@@ -5,11 +5,15 @@ import GoalTitleList from "./GoalTitleList";
 import { GoalSearchTitleListContext } from "../context/GoalSearchTitleListContext";
 //icon
 import { BiSearch } from "react-icons/bi";
+import Checkbox from '@mui/material/Checkbox';
+//checkbox
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
 
 function LeftNavigation(props){
     // 시간관리(time) 탭에서만 작동    
     const currentURI = window.location.pathname;
-  
+
     const [goalSearchTitleList ] = useContext(GoalSearchTitleListContext);
     const [searchTerm, setSearchTerm] = useState("") //검색어
     const [searchResults, setSearchResults] = useState([]) //검색결과
@@ -29,6 +33,10 @@ function LeftNavigation(props){
             setSearchResults(goalSearchTitleList);
         }
     }
+    const OthercheckHandler = (e, checked) =>{
+        e.stopPropagation() //이벤트 버블링 막기
+        props.setOtherIncludedYn(checked);
+    }
     return (
         <nav className="left-nav">
             <div className="search-dateRange-area">
@@ -42,6 +50,7 @@ function LeftNavigation(props){
             
             <div className="search-goalTitle-area">
                 <p>목표선택</p>
+                               
                 <div className="search-input-wrapper">
                     <input type="text" placeholder="검색어를 입력하세요" ref={inputEl} value={searchTerm} onChange={getSearchTerm}/>
                     <i className="search-icon"><BiSearch/></i>
@@ -52,7 +61,15 @@ function LeftNavigation(props){
                 setSearchGoalIdList={props.setSearchGoalIdList}
                 />
             </div>
-            {currentURI === "/time" ? <div>기타포함</div> : null}
+            
+            {currentURI === "/time" ? <div className="other-include-area">
+                <div className="checkbox-wrapper" onClick={(e) => {OthercheckHandler(e, e.target.checked)}}> 
+                    <Checkbox {...label} 
+                        checked={props.otherIncludedYn}
+                    />
+                </div>
+                <div className="total-check">기타포함</div>
+            </div> : null}
             
         </nav>
     )

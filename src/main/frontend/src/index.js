@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
-
-import { GoalTotalTitleListProvider } from "./context/GoalTotalTitleListContext";
+import { AuthProvider } from './context/AuthContext'; //로그인 유저 정보
 
 ReactDOM.render(
   <React.StrictMode>
-    <GoalTotalTitleListProvider>
+    <AuthProvider>
       <App />
-    </GoalTotalTitleListProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

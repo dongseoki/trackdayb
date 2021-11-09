@@ -4,11 +4,10 @@ import "./ActivityInsertFormModal.css"
 import ToggleButton from '@mui/material/ToggleButton';
 //slider-score
 import Slider from '@mui/material/Slider';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
-import { FaLock } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa";
 import { BiLock } from "react-icons/bi";
 //css
 import { makeStyles } from '@material-ui/core/styles';
@@ -21,14 +20,15 @@ import TextField from '@material-ui/core/TextField';
 
 import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
-function ActivityModifyFormModal({modifyData, targetIndex}){
+function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
     
     const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
-    const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
+    // const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
     // const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
+    
     const YNtoTF = (value)=>{
         if(value === "Y"){
             return true
@@ -36,7 +36,10 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
             return false
         }
     }
-
+    // YYYY-MM-DD 형태로 반환
+    function makeYYMMDD(value){
+        return value.toISOString().substring(0,10);
+    }
     // 초기화 폼
     const [startDatetime, setStartDatetime] = useState("");
     const [endDatetime, setEndDatetime] = useState("");
@@ -55,7 +58,7 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
         setTitle(modifyData.title);
         setContent(modifyData.content);
         setActivityScore(modifyData.activityScore);
-        setParentGoalTitle(modifyData.goalTitleInfo.title);
+        setParentGoalTitle(modifyData.goalTitleInfo.title ? modifyData.goalTitleInfo.title : "없음");
         setParentId(modifyData.goalId);
         setParentProgressRate(modifyData.goalTitleInfo.parentProgressRate)
     }
@@ -78,7 +81,6 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
-        console.log('modify', modifyData)
         setOpen(true);
         ModifySettingForm();
     };
@@ -89,7 +91,47 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
 
     const handleFormSubmit = async (evt) =>{
         evt.preventDefault();
-        console.log("제출버튼")
+        const formData_activity = {
+            activityId : modifyData.activityId,
+            goalId:parentId,
+            title : title,
+            startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
+            endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
+            content : content,
+            activityScore : activityScore,
+            shareStatus: shareStatus ? "N":"Y",
+        }; 
+        try{
+            const result_activity = await axiosInstance.patch("/timeManage/activity", formData_activity);
+            console.log("방금 수정한 활동", result_activity.data)
+            //목표진행률 업데이트
+            if(parentId){
+                const formData_goal = {
+                goalId : parentId,
+                progressRate : parentProgressRate
+                }
+                const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
+                console.log('방금 수정한 것(목표)', result_goal.data)
+            }
+            handleClose();
+            // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
+            function data_sorting(a, b) {
+              var dateA = new Date(a['startDatetime']).getTime();
+              var dateB = new Date(b['startDatetime']).getTime();
+              return dateA > dateB ? 1 : -1;
+            };
+            // 수정한 데이터 반영
+            let tempArray = [...activityList];
+            tempArray[targetIndex] = result_activity.data.activityInfo;
+            setActivityList(tempArray.sort(data_sorting))
+            
+            let tempSearchArray = [...activitySearchList];
+            tempSearchArray[targetIndex] = result_activity.data.activityInfo;
+            setActivitySearchList(tempSearchArray.sort(data_sorting))
+          
+        }catch(err){
+            console.error(err)
+        }
     }
     return ( 
     <div>

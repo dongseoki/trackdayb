@@ -7,13 +7,13 @@ import { BrowserRouter } from 'react-router-dom';
 
 function App(){
     return (
-        <div>
+        <section>
             <BrowserRouter>
             <Header />
             <Main />
             <Footer />
             </BrowserRouter>
-        </div>
+        </section>
         
     )
 }

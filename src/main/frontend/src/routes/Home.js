@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import logo from '../logo.svg';
 import "./Home.css"
 
 function Home () {
@@ -12,12 +11,11 @@ function Home () {
         });
     },[])
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <h1 className="App-title">{message}</h1>
-                <p>test22222</p>
-            </header>
+        <div className="home">
+            <h1 className="App-title">{message}</h1>
+            <p>Track</p>
+            <p>Your</p>
+            <p>Day</p>
         </div>
     )
 }

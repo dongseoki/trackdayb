@@ -6,6 +6,9 @@ import { LeftNavigation } from '../components/index';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import { ko } from 'date-fns/esm/locale';
+//icon
+import {IoIosArrowBack} from "react-icons/io"
+import {IoIosArrowForward} from "react-icons/io"
 
 //TimeLine
 import ActivitySearchTimeline from '../components/ActivitySearchTimeline';
@@ -15,15 +18,36 @@ import ActivityTimeline from "../components/ActivityTimeline";
 //context
 import { ActivitySearchListProvider } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyProvider} from "../context/ActivitySearchGroupbyContext";
+import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
 
 function Time() {
+
   // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [writeDate, setWriteDate] = useState(new Date());
+  const [otherIncludedYn, setOtherIncludedYn ] = useState(true); //시간관리 기타포함
+  const [ checker, setChecker] = useState(true); //작성일 변경 감지 변수 
+
+
+  const MinusOneDay = ()=>{
+    let chdate = writeDate;
+    chdate.setDate(chdate.getDate() -1);
+    setWriteDate(chdate)
+    setChecker(!checker)
+  }
+
+  const PlusOneDay = ()=>{
+    let chdate = writeDate;
+    chdate.setDate(chdate.getDate() +1);
+    setWriteDate(chdate)
+    setChecker(!checker)
+  }
+
   return (
     <div className="time">
+      <GoalTotalTitleListProvider>
       <GoalSearchTitleListProvider
         searchStartDatetime={searchStartDatetime}
         searchEndDatetime={searchEndDatetime}>
@@ -35,23 +59,27 @@ function Time() {
             setSearchEndDatetime={setSearchEndDatetime}
             searchGoalIdList={searchGoalIdList}
             setSearchGoalIdList={setSearchGoalIdList}
+            otherIncludedYn={otherIncludedYn}
+            setOtherIncludedYn={setOtherIncludedYn}
             />
         </aside>
         <ActivitySearchListProvider
           searchStartDatetime={searchStartDatetime}
           searchEndDatetime={searchEndDatetime}
           searchGoalIdList={searchGoalIdList}
+          otherIncludedYn={otherIncludedYn}
         >
           <ActivitySearchGroupbyProvider>
-          <div className="timeline">
+          <div className="timeline-search">
             <ActivitySearchTimeline/>
           </div>
 
-          <div className="write">
+          <div className="timeline">
             <GoalModalSearchTitleListProvider
               writeDate={writeDate}>
                             
               <div className="date-picker-wrapper">
+                <button className="arrow-icon" onClick={MinusOneDay}><IoIosArrowBack/></button>
                 <DatePicker
                   className="date-picker"
                   selected={writeDate}
@@ -61,21 +89,19 @@ function Time() {
                   locale={ko}
                   dateFormat="yyyy년 MM월 dd일"
                 />
+                <button className="arrow-icon" onClick={PlusOneDay}><IoIosArrowForward/></button>
               </div>
-              <ActivityTimeline writeDate={writeDate}/>
+              <ActivityTimeline 
+              writeDate={writeDate}
+              checker={checker}/>
             </GoalModalSearchTitleListProvider>
           </div>
           </ActivitySearchGroupbyProvider>
         </ActivitySearchListProvider>
       </GoalSearchTitleListProvider>
+      </GoalTotalTitleListProvider>
     </div>
   );
 }
-
-// YYYY-MM-DD 형태로 반환
-function makeYYMMDD(value){
-  return value.toISOString().substring(0,10);
-}
-
 
 export default Time;
