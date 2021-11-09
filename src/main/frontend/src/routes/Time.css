@@ -3,7 +3,7 @@
   grid-template-columns: 20% 40% 40%;
   margin : 0 80px;
 }
-.time .timeline{
+.time .timeline-search{
   margin : 20px;
   padding : 20px;
   background-color: rgba(130,143,146, 0.08);
@@ -13,23 +13,25 @@
   justify-content: center;
   align-items: center;
 }
-.time .write{
+.time .timeline{
+  display: grid;
+  grid-template-rows: 50px 50px 1fr;
   margin: 20px 0;
   padding : 20px;
   background-color: rgba(130,143,146, 0.08);
   border-radius: 10px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
-.time .write .button-wrapper{
+.time .timeline .button-wrapper{
   display: flex;
   justify-content: flex-end;
 }
-.time .write .date-picker-wrapper{
-  margin-top: 22px;
+.time .timeline .date-picker-wrapper{
+  margin: 16px 16px 0 16px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
 }
-.time .write .date-picker{  
+.time .timeline .date-picker{ 
   border: none;
   box-shadow: rgb(0 0 0 / 2%) 0px 1px 3px 0px, rgb(27 31 35 / 15%) 0px 0px 0px 1px;
   outline: none;
@@ -38,30 +40,40 @@
   padding: 7px 10px;
   border-radius: 10px;
 }
-
-.time .write .cards{
+.arrow-icon{
+  font-size: 12px;
+  border: none;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  color: rgba(5, 23, 42, 0.6);
+}
+.arrow-icon:hover{
+  color: #1976d2;
+}
+.time .timeline .cards{
 
 }
-.time .write .writeForm{
-  /* margin-top: 10px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px; */
+.time .timeline .writeForm{
+  margin-top: 16px;
+  /* background-color: white; */
+  /* padding: 20px; */
+  /* border-radius: 10px; */
 }
-.time .write .writeForm .top-wrapper{
+.time .timeline .writeForm .top-wrapper{
   display: flex;
   justify-content: space-between;
 }
-.time .write .writeForm .title-wrapper{
+.time .timeline .writeForm .title-wrapper{
   margin: 10px 0; 
 }
-.time .write .writeForm .title-wrapper .textfield-title{
+.time .timeline .writeForm .title-wrapper .textfield-title{
   width: 100%;
 }
-.time .write .writeForm .content-wrapper{
+.time .timeline .writeForm .content-wrapper{
   margin: 10px 0; 
 }
-.time .write .writeForm .content-wrapper .textfeild-content{
+.time .timeline .writeForm .content-wrapper .textfeild-content{
   width :  100%;
 }
 .activityScore-wrapper{

@@ -1,9 +1,15 @@
 import Axios from "axios";
+import { Router } from "react-router";
+
+const token = sessionStorage.getItem('jwt-token');
+
+
 
 const axiosInstance = Axios.create({
-  timeout: 5000,
+  // timeout: 1000, // 세션만료 시간
   headers: {
     "Content-Type": "application/json",
+    "Authorization" : token ? "Bearer "+token : null,
   },
 });
 axiosInstance.interceptors.request.use(
@@ -16,21 +22,25 @@ axiosInstance.interceptors.request.use(
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
     if (!config.headers.Authorization) {
-        const token = sessionStorage.getItem('jwt-token');
-        if (token && token.length > 0) {
-        //   let decodedToken = jwt_decode(token);
-        //   const tmstamp = parseInt(Date.now() / 1000);
-        //   if (tmstamp <= decodedToken.exp && decodedToken.user && decoded.user.id) {
-        //     config.headers.Authorization = token;
-        //   } else {
-        //     alert('세션 연결이 종료되었습니다.');
-        //   }
-        config.headers.Authorization = token;
+      console.log('auth null')
+      // window.location.href = "/login"
+      // alert('세션 연결이 종료 되었습니다.')
 
-        }
+        // const token = sessionStorage.getItem('jwt-token');
+        // if (token && token.length > 0) {
+        // //   let decodedToken = jwt_decode(token);
+        // //   const tmstamp = parseInt(Date.now() / 1000);
+        // //   if (tmstamp <= decodedToken.exp && decodedToken.user && decoded.user.id) {
+        // //     config.headers.Authorization = token;
+        // //   } else {
+        // //     alert('세션 연결이 종료되었습니다.');
+        // //   }
+        // config.headers.Authorization = token;
+
+        // }
       }else{
         // alert('세션 연결이 종료되었습니다.');
-        window.location = "/login"
+        // window.location = "/login"
     } 
     return config;
   },
@@ -43,6 +53,7 @@ axiosInstance.interceptors.request.use(
 );
 axiosInstance.interceptors.response.use(
   (config) => {
+    console.log("config", config)
       /* 요청을 보낸 뒤에 response(응답)이 오는 경우에 여기서 먼저 확인이 가능하다.
     * 활용 *
     1. status-code가 정상적이어도 내용상의 이유로 에러처리가 필요한 경우
@@ -51,6 +62,21 @@ axiosInstance.interceptors.response.use(
     return config;
   },
   (err) => {
+    console.log("Err", err)
+    if(err.response.status === 401){
+      console.log("401에러발생")
+      // store.dispatch('logout');
+      // Router.push('/login')
+      // window.location.href = "/login"
+      // alert("로그인 하세요")
+      // ReturnLogin()
+      // let myhistory = useHistoryTest()
+      // myhistory.push('/login')
+      // window.location.href = "/login"
+
+    }
+
+    // alert('세션 연결이 종료 되었습니다.')
       /**
     response응답 후에 status-code가 4xx, 5xx 처럼 에러를 나타내는 경우 해당 루트를 수행한다.
     */

@@ -3,7 +3,7 @@ import "./Footer.css"
 
 function Footer(props) {
     return (
-        <div>
+        <>
             <footer>
                 <div className="footer">
                     <div className="left">trackDay</div>
@@ -28,7 +28,7 @@ function Footer(props) {
                     </div>
                 </div>
             </footer>
-        </div>
+        </>
     );
 }
 

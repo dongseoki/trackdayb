@@ -106,8 +106,8 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
         }
         handleClose();
         // 기존 리스트들에 추가 업데이트
-        // setActivityList([...activityList, result_activity.data.activityInfo])
-        // setActivitySearchList([...activitySearchList, result_activity.data.activityInfo])
+        setActivityList([...activityList, result_activity.data.activityInfo])
+        setActivitySearchList([...activitySearchList, result_activity.data.activityInfo])
       } catch(err){
         console.error(err)
       }

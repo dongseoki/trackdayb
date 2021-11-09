@@ -23,7 +23,7 @@ import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
-function ActivityModifyFormModal({modifyData, targetIndex}){
+function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
     
     const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
     const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
@@ -36,7 +36,10 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
             return false
         }
     }
-
+    // YYYY-MM-DD 형태로 반환
+    function makeYYMMDD(value){
+        return value.toISOString().substring(0,10);
+    }
     // 초기화 폼
     const [startDatetime, setStartDatetime] = useState("");
     const [endDatetime, setEndDatetime] = useState("");
@@ -78,7 +81,6 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
-        console.log('modify', modifyData)
         setOpen(true);
         ModifySettingForm();
     };
@@ -90,6 +92,37 @@ function ActivityModifyFormModal({modifyData, targetIndex}){
     const handleFormSubmit = async (evt) =>{
         evt.preventDefault();
         console.log("제출버튼")
+        const formData_activity = {
+            activityId : modifyData.activityId,
+            goalId:parentId,
+            title : title,
+            startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
+            endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
+            content : content,
+            activityScore : activityScore,
+            shareStatus: shareStatus ? "N":"Y",
+        }; 
+        try{
+            console.log("formData_activity", formData_activity)
+            const result_activity = await axios.patch("/timeManage/activity", formData_activity);
+            console.log("방금 수정한 활동", result_activity.data)
+            //목표진행률 업데이트
+            if(parentId){
+                const formData_goal = {
+                goalId : parentId,
+                progressRate : parentProgressRate
+                }
+                const result_goal = await axios.patch("/goalManage/goal", formData_goal)
+                console.log('방금 수정한 것(목표)', result_goal.data)
+                handleClose();
+                // 수정한 데이터 반영
+                let tempArray = [...activityList];
+                tempArray[targetIndex] = result_activity.data.activityInfo;
+                setActivityList(tempArray)
+            }
+        }catch(err){
+            console.error(err)
+        }
     }
     return ( 
     <div>

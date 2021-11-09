@@ -1,4 +1,4 @@
-.timeline li .MuiTimelineOppositeContent-root{
+.timeline-search li .MuiTimelineOppositeContent-root{
     padding : 0;
 }
 .date-wrapper{
@@ -27,11 +27,12 @@
     border-radius: 10px;
     margin-bottom: 5px;
     padding : 10px;
+    box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
 }
-.timeline .MuiTimelineDot-root{
+.timeline-search .MuiTimelineDot-root{
     color : black;
 }
-.timeline li{
+.timeline-search li{
     display: grid;
 }
 .time-card .datetime-wrapper{

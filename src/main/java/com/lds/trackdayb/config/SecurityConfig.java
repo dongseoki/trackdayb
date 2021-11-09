@@ -68,11 +68,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 테스트 시 아래 [1]번 주석을 풀고, 하단 [2]번을 주석처리 하시면 됩니다.
                 // 테스트 완료 후 원상복구 하면 됩니다.
                 // [1]
-                .antMatchers("/**").permitAll()
+                // .antMatchers("/**").permitAll()
                 // [1] end.
                 // [2]
-                // .antMatchers("/rest-test/param-list").permitAll().antMatchers("/test").permitAll()
-                // .antMatchers("/member/login").permitAll().antMatchers("/member/signup").permitAll()
+                .antMatchers("/rest-test/param-list").permitAll().antMatchers("/test").permitAll()
+                .antMatchers("/member/login").permitAll().antMatchers("/member/signup").permitAll()
                 // [2] end.
 
                 .anyRequest().authenticated()

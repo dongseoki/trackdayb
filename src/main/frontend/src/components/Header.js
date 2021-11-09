@@ -10,11 +10,11 @@ import Navigation from './Navigation';
 
 function Header(props) {
     return (
-        <div>
+        <>
             <header>
                 <Navigation />
             </header>
-        </div>
+        </>
     );
 }
 

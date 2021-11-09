@@ -11,4 +11,52 @@
 }
 .activity-timeline .activity-card-wrapper .time-card{
     width: 100%;
+    box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
+}
+.null-text{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.cards .activity-timeline .activity-card-wrapper .card-top-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+.cards .activity-timeline .activity-card-wrapper .card-button-wrapper{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.cards .activity-timeline .activity-card-wrapper .card-button-wrapper .lock-icon{
+    font-size: 19px;
+    color: #1976d2;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.cards .activity-timeline .activity-card-wrapper .card-button-wrapper .deleteBtn {
+    border: none;
+    font-size: 20px;
+    background-color: transparent;
+    cursor: pointer;
+    color: rgba(5, 23, 42, 0.6);
+}
+.cards .activity-timeline .activity-card-wrapper .card-button-wrapper .deleteBtn:hover{
+    color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.04);
+    border-radius: 4px;
+}
+.cards .activity-timeline .activity-card-wrapper .card-button-wrapper .modifyBtn {
+    height: 30px;
+    font-size: 12px;
+    border: none;
+    font-size: 20px;
+    background-color: transparent;
+    cursor: pointer;
+    color: rgba(5, 23, 42, 0.6);
+}
+.cards .activity-timeline .activity-card-wrapper .card-button-wrapper .modifyBtn:hover{
+    color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.04);
+    border-radius: 4px;
 }

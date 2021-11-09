@@ -8,12 +8,35 @@
 }
 .insert-form .acitvity-insert-btn{
     width : 100%;
-    color : red;
     background-color: white;
     border-radius: 10px;
     margin-bottom: 5px;
     padding: 10px;
+    box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
+    border: none;
 }
+.insert-form .acitvity-insert-btn:hover{
+    border : 2px solid #4EC3E0;
+    transition: 0.5s;
+    color : #4EC3E0;
+}
+
+/* .goal-insert-btn{
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border : none;
+    background-color: white;
+    width: 200px;
+    height: 250px;
+    margin : 10px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+  }
+  .goal-insert-btn:hover{
+    border : 3px solid #4EC3E0;
+    transition: 0.5s;
+    color : #4EC3E0;
+  } */
 /* insert Form CSS */
 .top-wrapper{
     display: flex;
