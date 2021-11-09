@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Time.css";
 import { LeftNavigation } from '../components/index';
 
@@ -18,8 +18,10 @@ import ActivityTimeline from "../components/ActivityTimeline";
 //context
 import { ActivitySearchListProvider } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyProvider} from "../context/ActivitySearchGroupbyContext";
+import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
 
 function Time() {
+
   // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
@@ -45,6 +47,7 @@ function Time() {
 
   return (
     <div className="time">
+      <GoalTotalTitleListProvider>
       <GoalSearchTitleListProvider
         searchStartDatetime={searchStartDatetime}
         searchEndDatetime={searchEndDatetime}>
@@ -96,6 +99,7 @@ function Time() {
           </ActivitySearchGroupbyProvider>
         </ActivitySearchListProvider>
       </GoalSearchTitleListProvider>
+      </GoalTotalTitleListProvider>
     </div>
   );
 }

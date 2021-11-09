@@ -53,6 +53,17 @@
 .sign li a {
   white-space: nowrap;
   color: var(--black);
+  font-weight: 600;
+  font-size: 16px;
+}
+.sign .logout-btn{
+  background-color: transparent;
+  border: 1px solid #b2e0e0;
+  color: var(--black);
+  border-radius: 10px;
+  background-color: #b2e0e0;
+  padding: 2px 8px;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 1090px) {

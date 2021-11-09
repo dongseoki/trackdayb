@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import axiosInstance from "../axiosConfig";
 export const GoalModalSearchTitleListContext = createContext();
 // 입력폼 내부 기간 관련 목표제목리스트
@@ -11,7 +11,7 @@ export const GoalModalSearchTitleListProvider = (props) =>{
   useEffect(()=>{
       const fetchGoalModalSearchTitleList = async () => {
         try{
-          const result = await axios.get(
+          const result = await axiosInstance.get(
             "/goalManage/goalTitleList",
             {
                 params : {
@@ -20,7 +20,6 @@ export const GoalModalSearchTitleListProvider = (props) =>{
                 }
             });
           setGoalModalSearchTitleList(result.data.goalTitleList);
-          console.log('모달안의 목표 리스트', result.data.goalTitleList)
         } catch(err) {
           console.error(err);
         }

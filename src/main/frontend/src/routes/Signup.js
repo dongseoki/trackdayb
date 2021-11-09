@@ -5,7 +5,6 @@ import {AuthContext} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 
 function Signup(props) {
-  console.log(props);
   const [name, setName] = useState("")
   const [memberId, setMemberId] = useState('')
   const [password, setPassword] = useState('')
@@ -34,9 +33,12 @@ function Signup(props) {
       }
       const result = await axios.post('/member/signup', formData)
       console.log('회원가입 결과', result);
+      //현재 유저 설정
       setCurUser({
         memberId : result.data.memberId
       })
+      //세션 스토리지에 저장하기
+      sessionStorage.setItem("jwt-token", result.data.token)
       history.push('/time')
 
     }catch(err){

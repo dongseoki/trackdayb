@@ -20,8 +20,6 @@ function Login() {
     if(!validateForm()){
       alert("올바른 정보를 입력하세요")
     }
-    console.log("memberId", memberId)
-    console.log("password", password)
 
     const formData = {
       memberId,
@@ -38,7 +36,8 @@ function Login() {
       history.push("/time");
       
     }catch(err){
-      console.error(err)
+      console.log('err.response', err.response.statusText)
+      alert(`올바른 정보를 입력하세요 (${err.response.statusText})`)
     }
   }
 

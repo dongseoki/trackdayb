@@ -4,6 +4,7 @@ import LeftNavigation from "../components/LeftNavigation";
 import GoalFullList from "../components/GoalFullList";
 import { GoalFullListProvider } from "../context/GoalFullListContext";
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
+import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
 
 function Goal() {
   // 검색조건
@@ -15,6 +16,7 @@ function Goal() {
 
   return (
     <div className="goal">
+      <GoalTotalTitleListProvider>
       <GoalSearchTitleListProvider
         searchStartDatetime={searchStartDatetime}
         searchEndDatetime={searchEndDatetime}>
@@ -45,6 +47,7 @@ function Goal() {
           </div>
         </GoalFullListProvider>
       </GoalSearchTitleListProvider>
+      </GoalTotalTitleListProvider>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { ActivitySearchListContext } from "./ActivitySearchListContext";
 export const ActivitySearchGroupbyContext = createContext();
 
 export const ActivitySearchGroupbyProvider = (props) =>{
-    const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext)
+    const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
     const [ activitySearchGroupby, setActivitySearchGroupby ] = useState({});
 
     var groupBy = function(xs, key) {

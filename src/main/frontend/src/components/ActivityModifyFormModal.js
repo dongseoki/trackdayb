@@ -4,11 +4,10 @@ import "./ActivityInsertFormModal.css"
 import ToggleButton from '@mui/material/ToggleButton';
 //slider-score
 import Slider from '@mui/material/Slider';
-import axios from 'axios';
+// import axios from 'axios';
+import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
-import { FaLock } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa";
 import { BiLock } from "react-icons/bi";
 //css
 import { makeStyles } from '@material-ui/core/styles';
@@ -21,14 +20,15 @@ import TextField from '@material-ui/core/TextField';
 
 import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
 function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
     
     const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
-    const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
+    // const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
     // const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
+    
     const YNtoTF = (value)=>{
         if(value === "Y"){
             return true
@@ -58,7 +58,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
         setTitle(modifyData.title);
         setContent(modifyData.content);
         setActivityScore(modifyData.activityScore);
-        setParentGoalTitle(modifyData.goalTitleInfo.title);
+        setParentGoalTitle(modifyData.goalTitleInfo.title ? modifyData.goalTitleInfo.title : "없음");
         setParentId(modifyData.goalId);
         setParentProgressRate(modifyData.goalTitleInfo.parentProgressRate)
     }
@@ -91,7 +91,6 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
 
     const handleFormSubmit = async (evt) =>{
         evt.preventDefault();
-        console.log("제출버튼")
         const formData_activity = {
             activityId : modifyData.activityId,
             goalId:parentId,
@@ -103,8 +102,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
             shareStatus: shareStatus ? "N":"Y",
         }; 
         try{
-            console.log("formData_activity", formData_activity)
-            const result_activity = await axios.patch("/timeManage/activity", formData_activity);
+            const result_activity = await axiosInstance.patch("/timeManage/activity", formData_activity);
             console.log("방금 수정한 활동", result_activity.data)
             //목표진행률 업데이트
             if(parentId){
@@ -112,14 +110,25 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
                 goalId : parentId,
                 progressRate : parentProgressRate
                 }
-                const result_goal = await axios.patch("/goalManage/goal", formData_goal)
+                const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
                 console.log('방금 수정한 것(목표)', result_goal.data)
-                handleClose();
-                // 수정한 데이터 반영
-                let tempArray = [...activityList];
-                tempArray[targetIndex] = result_activity.data.activityInfo;
-                setActivityList(tempArray)
             }
+            handleClose();
+            // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
+            function date_ascending(a, b) {
+              var dateA = new Date(a['startDatetime']).getTime();
+              var dateB = new Date(b['startDatetime']).getTime();
+              return dateA > dateB ? 1 : -1;
+            };
+            // 수정한 데이터 반영
+            let tempArray = [...activityList];
+            tempArray[targetIndex] = result_activity.data.activityInfo;
+            setActivityList(tempArray.sort(date_ascending))
+            
+            let tempSearchArray = [...activitySearchList];
+            tempSearchArray[targetIndex] = result_activity.data.activityInfo;
+            setActivitySearchList(tempSearchArray.sort(date_ascending))
+          
         }catch(err){
             console.error(err)
         }

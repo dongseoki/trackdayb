@@ -21,7 +21,7 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
   
   let nodes = []
   goalTitleList.forEach((goal, index)=>{
-      const goalObj = new Object();
+      const goalObj = {};
       goalObj.label = goal.title
       goalObj.id = parseInt(goal.goalId)
       goalObj.dropdown=false

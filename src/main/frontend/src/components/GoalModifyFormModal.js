@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css";
-import axios from "axios";
+// import axios from "axios";
 import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
@@ -39,7 +39,7 @@ import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 
 function GoalModifyFormModal({modifyData, targetIndex}){
-  const [ goalTotalTitleList, setGoalTotalTitleList] = useContext(GoalTotalTitleListContext);
+  const [ goalTotalTitleList, ] = useContext(GoalTotalTitleListContext);
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
@@ -54,7 +54,7 @@ function GoalModifyFormModal({modifyData, targetIndex}){
   const pIdtoTitle= (pId)=>{
       if(pId){
           let targetIndex = goalTotalTitleList.findIndex((element) =>{
-              if(element.goalId == pId){
+              if(element.goalId === pId){
                   return true
               }
           })
@@ -185,10 +185,8 @@ function GoalModifyFormModal({modifyData, targetIndex}){
         "satYn":sat ? "Y":"N"
         }
       }
-      console.log('제출', formData)
       try{
-        const result = await axios.patch("/goalManage/goal", formData);
-        console.log("제출결과", {result})
+        const result = await axiosInstance.patch("/goalManage/goal", formData);
         setOpen(false);
         // 수정한 데이터 반영
         let tempArray = [...goalFullList];
@@ -350,7 +348,6 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat, none, setNone}) {
   // const [none, setNone] = useState(false)
   const timeUnitChangeHandler = (event) => {
-    console.log("timeUnit 변경")
     setTimeUnit(event.target.value);
     setCount("")
     if(event.target.value === "D" || event.target.value === "M" ){

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./GoalFullList.css";
-import axios from "axios";
+// import axios from "axios";
 import axiosInstance from "../axiosConfig";
 import GoalInsertFormModal from "./GoalInsertFormModal";
 // 토글버튼
@@ -43,7 +43,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
     <div>
       <GoalModalSearchTitleListProvider>
       <div className="button-wrapper">
-        <button>목표 모아보기</button>
+        {/* <button>목표 모아보기</button> */}
         <ToggleButtonGroup
           color="primary"
           value={orderColumn}
@@ -189,12 +189,11 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
 
   const deleteHandler = async ()=>{
     try{
-      const result= await axios.delete("/goalManage/goal", {
+      const result= await axiosInstance.delete("/goalManage/goal", {
         params:{
           goalId: goalId
         }
       })
-      console.log("삭제결과", result)
       handleClose()
       setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
       setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))

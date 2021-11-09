@@ -15,8 +15,8 @@ import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyCo
 export default function ActivitySearchTimeline() {
   // getActivityListTEST
   // 참조데이터(전체 리스트 -> 파생 그룹바이)
-  const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext)
-  const [ activitySearchGroupby, setActivitySearchGroupby ] = useContext(ActivitySearchGroupbyContext)
+  const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
+  const [ activitySearchGroupby,  ] = useContext(ActivitySearchGroupbyContext)
   
   if (activitySearchList.length === 0) {
     return (<div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>)

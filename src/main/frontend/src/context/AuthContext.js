@@ -11,16 +11,20 @@ export const AuthProvider = ({children}) => {
         if(curUser) {
             axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         }
-        // else if(token){
-        //     result = axios.get('/member/curUser')
-        //     setCurUser(result)
-        // }
-        else delete axios.defaults.headers.common.Authorization
+        else if(token){
+            axios
+            .get('/member/currentUser', {headers : {Authorization : `Bearer ${token}`} })
+            .then((result) => {
+                setCurUser({memberId:result.data.memberInfo.memberId})
+            })
+            .catch(()=>{
+                sessionStorage.removeItem("jwt-token");
+                delete axios.defaults.headers.common.Authorization;
+            });
+        }
+        else delete axios.defaults.headers.common.Authorization;
     }, [curUser])
     return (
         <AuthContext.Provider value={[curUser, setCurUser]}>{children}</AuthContext.Provider>
     )
 }
-
-
-// sessionStorage.setItem('jwt-token', token);

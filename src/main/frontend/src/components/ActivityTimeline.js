@@ -4,14 +4,11 @@ import TimelineItem from '@material-ui/lab/TimelineItem';
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
 import TimelineConnector from '@material-ui/lab/TimelineConnector';
 import TimelineContent from '@material-ui/lab/TimelineContent';
-import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import TimelineDot from '@material-ui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 //icon
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BiLock } from "react-icons/bi";
-import { CgArrowDown } from 'react-icons/cg';
-import { CgArrowUp } from 'react-icons/cg';
 
 // 삭제버튼
 import Button from '@mui/material/Button';
@@ -20,10 +17,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import axiosInstance from "../axiosConfig";
-import axios from "axios";
+// import axios from "axios";
 //Context
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import "./ActivityTimeline.css";
 import ActivityInsertFormModal from "../components/ActivityInsertFormModal";
 import ActivityModifyFormModal from "../components/ActivityModifyFormModal";
@@ -34,7 +31,7 @@ export default function ActivityTimeline({writeDate, checker}) {
     
     // 참조데이터(전체 리스트 -> 파생 그룹바이)
     const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext)
-    const [ activitySearchGroupby, setActivitySearchGroupby ] = useContext(ActivitySearchGroupbyContext)
+    // const [ activitySearchGroupby, setActivitySearchGroupby ] = useContext(ActivitySearchGroupbyContext)
 
     // YYYY-MM-DD 형태로 반환
     function makeYYMMDD(value){
@@ -44,7 +41,7 @@ export default function ActivityTimeline({writeDate, checker}) {
     useEffect(() => {
         const fetchActivityList = async () => {
           try {
-            const result = await axios.get("/timeManage/activityList", {
+            const result = await axiosInstance.get("/timeManage/activityList", {
               params:{
                 searchStartDatetime :makeYYMMDD(writeDate),
                 searchEndDatetime : makeYYMMDD(writeDate),
@@ -161,7 +158,7 @@ function DeleteModal({activityId, activityList, setActivityList, activitySearchL
 
   const deleteHandler = async ()=>{
     try{
-      const result= await axios.delete("/timeManage/activity", {
+      const result= await axiosInstance.delete("/timeManage/activity", {
         params:{
           activityId: activityId
         }

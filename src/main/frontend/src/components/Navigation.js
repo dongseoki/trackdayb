@@ -6,11 +6,12 @@ import axios from "axios";
 
 function Navigation(){
     const [curUser, setCurUser] = useContext(AuthContext);
+
     const logoutHandler = async () =>{
         try{
-            console.log('로그아웃')
-            // await axios.patch('/member/logout');
             setCurUser()
+            sessionStorage.removeItem("jwt-token");
+            delete axios.defaults.headers.common.Authorization;
         }catch(err){
             console.error(err)
         }
@@ -22,8 +23,8 @@ function Navigation(){
             </div>
             <div className="menu">
                 <ul>
-                    <li><Link to="/time">시간관리</Link></li>
-                    <li><Link to="/goal">목표관리</Link></li>
+                    <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
+                    <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
                     <li><Link to="/report">리포트</Link></li>
                     <li><Link to="/community">커뮤니티</Link></li>
                 </ul>
@@ -33,9 +34,9 @@ function Navigation(){
                 <ul>
                     {curUser ? (
                         <>
+                        {/* <li><Link to="/mypage">마이페이지</Link></li> */}
                         <span>{curUser.memberId}</span>
-                        <li><button onClick={logoutHandler}>로그아웃</button></li>
-                        <li><Link to="/mypage">마이페이지</Link></li>
+                        <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </>
                         ) : (
                             <>
@@ -43,8 +44,6 @@ function Navigation(){
                             <li><Link to="/signup">회원가입</Link></li>
                             </>
                         )}
-                    
-                    
                 </ul>
             </div>
         </nav>

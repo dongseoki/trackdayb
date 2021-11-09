@@ -134,11 +134,11 @@ function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentI
   }, [goalTitleList]);
 
   const nodes = []
-  goalTitleList.map((goal, index) => {
-    if(goal.goalId == goalId){ // 자기자신은 제외하기
-    } else if (goal.parentId == goalId){ // 자기자신을 부모로 갖고있는 애들도 제외
+  goalTitleList.forEach((goal, index) => {
+    if(goal.goalId === goalId){ // 자기자신은 제외하기
+    } else if (goal.parentId === goalId){ // 자기자신을 부모로 갖고있는 애들도 제외
     } else {
-      const goalObj = new Object();
+      const goalObj = {};
       goalObj.label = goal.title
       goalObj.id = parseInt(goal.goalId)
       goalObj.dropdown=false
@@ -217,7 +217,6 @@ function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentI
                 noDataString="목표를 등록해주세요."
                 animations={true}
                 NodeRenderer={({ data, isOpen, level, selected }) => {
-                  console.log('data', data)
                   const classes = ['custom-node', isOpen ? 'open' : undefined, selected ? 'selected' : undefined].join(' ')
                   return (
                     <div className="goal-title-wrapper">
