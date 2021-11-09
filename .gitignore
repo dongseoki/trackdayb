@@ -41,3 +41,8 @@ logs/
 
 ### security information
 application.yml
+
+nohup.out
+
+replay_pid.*.log
+hs_err_pid.*.log
