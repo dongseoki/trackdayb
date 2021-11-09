@@ -84,3 +84,7 @@ Release 0.3.8
   - currentUser API 구현.
   - 회원가입시, 토큰 정보 반환 처리.
   - 로그인시 멤버 아이디 반환 처리.
+
+
+Release 0.3.9
+  - mysql 컬럼 인덱스 추가 설정.
