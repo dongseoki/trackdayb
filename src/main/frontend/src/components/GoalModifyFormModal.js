@@ -137,6 +137,7 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType}){
   const handleOpen = () => {
     setOpen(true);
     ModifySettingForm();
+    console.log('modifyData', modifyData)
     console.log("orderColumn", orderColumn)
 console.log("orderType", orderType)
   };
@@ -192,14 +193,27 @@ console.log("orderType", orderType)
         handleClose();
         // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
         function data_sorting(a, b) {
-          console.log("함수 안orderColumn", orderColumn)
-          console.log("함수 안orderType", orderType)
-          var dateA = new Date(a[orderColumn]).getTime();
-          var dateB = new Date(b[orderColumn]).getTime();
-          if (orderType === "asc") return dateA > dateB ? 1 : -1
-          else return dateA < dateB ? 1 : -1
-        };
+          console.log('orderColumn', orderColumn)
+          if(orderColumn === 'progress_rate') {
+            orderColumn = 'progressRate'
+            console.log('orderColumn2', orderColumn)
+            console.log('a.orderColumn', typeof parseInt(a[orderColumn]))
 
+            if (orderType === "asc") return parseInt(a[orderColumn]) > parseInt(b[orderColumn]) ? 1 : -1
+            else return parseInt(a[orderColumn]) < parseInt(b[orderColumn]) ? 1 : -1
+
+          }else{          
+            if(orderColumn === 'modification_datetime') orderColumn = 'modificationDatetime'
+            else if(orderColumn === 'start_datetime') orderColumn = 'startDatetime'
+            else if(orderColumn === 'end_datetime') orderColumn = 'endDatetime'
+
+
+            var dateA = new Date(a[orderColumn]).getTime();
+            var dateB = new Date(b[orderColumn]).getTime();
+            if (orderType === "asc") return dateA > dateB ? 1 : -1
+            else return dateA < dateB ? 1 : -1
+          }
+        };
 
         // 수정한 데이터 반영
         let tempArray = [...goalFullList];
