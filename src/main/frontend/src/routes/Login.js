@@ -43,39 +43,31 @@ function Login() {
 
 
   return (
-    <div className="about__container">
-      <span>
-        로그인
-      </span>
-      <form onSubmit = {handleSubmit}>
-        <TextField
-          id="outlined-memberId-input"
-          label="memberId"
-          type="text"
-          autoComplete="current-memberId"
-          onChange={(e) => setMemberId(e.target.value)}
-        />
-            
-        <TextField
-          id="outlined-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit" className="submitBtn">로그인</button>
-      </form>
-      {/* <Form onSubmit={handleSubmit}>
-
-
-          
-
-
-          
-        <Button block size="lg" type="submit" disabled={!validateForm()}>
-          Login
-        </Button>
-      </Form> */}
+    <div className="login">
+      <div className="login-container">
+        <h1 className="login-title">
+          Sign in
+        </h1>
+        <form className='login-form' onSubmit = {handleSubmit}>
+          <TextField
+            className="login-input"
+            id="outlined-memberId-input"
+            label="memberId"
+            type="text"
+            autoComplete="current-memberId"
+            onChange={(e) => setMemberId(e.target.value)}
+          />
+          <TextField
+            className="login-input"
+            id="outlined-password-input"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit" className="submitBtn">로그인</button>
+        </form>
+      </div>
     </div>
   );
 }

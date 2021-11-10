@@ -3,6 +3,7 @@ import "./Signup.css";
 import axios from "axios";
 import {AuthContext} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
+import TextField from '@material-ui/core/TextField';
 
 function Signup(props) {
   const [name, setName] = useState("")
@@ -47,38 +48,72 @@ function Signup(props) {
 
   }
   return (
-    <div className="about__container">
-      <span>
-        회원가입
-      </span>
+    <div className="signup">
+      <div className="signup-container">
+        <h1 className='signup-title'>
+          Sign up
+        </h1>
 
-      <form onSubmit={submitHandler}>
-        <div>
-          <label>이름</label>
-          <input value={name} onChange={(e) => setName(e.target.value)}></input>
-        </div>
-        <div>
-          <label>아이디</label>
-          <input value={memberId} onChange={(e) => setMemberId(e.target.value)}></input>
-        </div>
-        <div>
-          <label>비밀번호</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
-        </div>
-        <div>
-          <label>비밀번호 확인</label>
-          <input type="password" value={passwordCheck} onChange={(e) => setPasswordCheck(e.target.value)}></input>
-        </div>
-        <div>
-          <label>휴대폰번호</label>
-          <input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}></input>
-        </div>
-        <div>
-          <label>이메일</label>
-          <input value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)}></input>
-        </div>
-        <button type="submit">회원가입</button>
-      </form>
+        <form className="signup-form" onSubmit={submitHandler}>
+          <TextField
+            className="signup-input"
+            id="outlined-name-input"
+            label="Names"
+            type="text"
+            autoComplete="current-name"
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            className="signup-input"
+            id="outlined-memberId-input"
+            label="memberId"
+            type="text"
+            autoComplete="current-memberId"
+            onChange={(e) => setMemberId(e.target.value)}
+          />
+          <TextField
+            className="signup-input"
+            id="outlined-password-input"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <TextField
+            className="signup-input"
+            id="outlined-passwordCheck-input"
+            label="Password Check"
+            type="password"
+            autoComplete="current-password-check"
+            onChange={(e) => setPasswordCheck(e.target.value)}
+          />
+          <TextField
+            className="signup-input"
+            id="outlined-phoneNumber-input"
+            label="Phone Number"
+            type="text"
+            autoComplete="current-phoneNumber"
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          <TextField
+            className="signup-input"
+            id="outlined-email-input"
+            label="Email Address"
+            type="text"
+            autoComplete="current-email"
+            onChange={(e) => setEmailAddress(e.target.value)}
+          />
+          <TextField
+            error
+            id="standard-error-helper-text"
+            label="Error"
+            defaultValue="Hello World"
+            helperText="Incorrect entry."
+            variant="standard"
+          />
+          <button type="submit" className="submitBtn">회원가입</button>
+        </form>
+      </div>
     </div>
   );
 }
