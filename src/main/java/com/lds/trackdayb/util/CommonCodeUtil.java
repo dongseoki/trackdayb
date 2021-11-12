@@ -17,4 +17,10 @@ public final class CommonCodeUtil {
     public static String SEARCH_RANGE_CORRECT = "C"; // 정방향
     public static String SEARCH_RANGE_REVERSE = "R"; // 역방향
     public static String SEARCH_RANGE_EXIST = "E"; // 단 하나의 원소(일자)라도 존재하(겹치)는 경우
+
+
+    // 성공.
+    // 실패.
+    public static String SUCCESS = "S";
+    public static String FAIL = "F";
 }

@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.MemberDTO;
 import com.lds.trackdayb.exception.DuplicateMemberException;
+import com.lds.trackdayb.exception.ValidateException;
 import com.lds.trackdayb.jwt.JwtFilter;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.mvo.ResultMVO;
@@ -156,6 +157,10 @@ public class MemberController {
             LOGGER.error("signup error : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER);
             resultMVO.setMessage("signup fail. duplicate error");
+        } catch (ValidateException e) {
+            LOGGER.error("validate error : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_ID_PASSWORD_VALID_FAIL);
+            resultMVO.setMessage(e.getMessage());
         } catch (Exception e) {
             LOGGER.error("signup error : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);

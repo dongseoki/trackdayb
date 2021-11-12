@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import com.lds.trackdayb.dto.MemberDTO;
 import com.lds.trackdayb.exception.DuplicateMemberException;
+import com.lds.trackdayb.exception.ValidateException;
 import com.lds.trackdayb.repository.MemberRepository;
+import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +68,14 @@ public class MemberServiceImpl extends MemberService {
     public MemberDTO signup(MemberDTO memberDTO) {
         if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        }
+        String passwordMessage = SecurityUtil.isValidPassword(memberDTO.getPassword());
+        String idMessage = SecurityUtil.isValidMemberId(memberDTO.getMemberId());
+        if(! StringUtils.equals(passwordMessage, CommonCodeUtil.SUCCESS)){
+            throw new ValidateException(passwordMessage);
+        }
+        if(! StringUtils.equals(idMessage, CommonCodeUtil.SUCCESS)){
+            throw new ValidateException(idMessage);
         }
         memberDTO.setAuth("ROLE_USER");
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

@@ -210,7 +210,8 @@
             g.modification_datetime as g_modification_datetime
         from activity a 
         left outer join goal g 
-        on a.goal_id = g.goal_id 
+        on a.goal_id = g.goal_id
+        and g.deletion_status = 'N'
         WHERE
         1=1
         <if test="searchStartDatetime != null and !searchStartDatetime.equals('')">
