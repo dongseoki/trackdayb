@@ -23,4 +23,11 @@ public final class CommonCodeUtil {
     // 실패.
     public static String SUCCESS = "S";
     public static String FAIL = "F";
+
+    public static int MEMBER_ID_MAX_LENGTH = 20;
+    public static int MEMBER_ID_MIN_LENGTH = 4;
+
+    public static int MEMBER_PASSWORD_MIN_LENGTH = 8;
+    public static int MEMBER_PASSWORD_MAX_LENGTH = 20;
+
 }

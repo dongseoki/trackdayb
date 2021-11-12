@@ -34,16 +34,16 @@ public class SecurityUtil {
     }
 
     public static String isValidMemberId(String memberId){
-       if(memberId == null || memberId.length()<8 || memberId.length()>20){
-          return "아이디는 8자리 이상 20자리 이하여야 합니다.";
+       if(memberId == null || memberId.length()<CommonCodeUtil.MEMBER_ID_MIN_LENGTH || memberId.length()>CommonCodeUtil.MEMBER_ID_MAX_LENGTH){
+          return "아이디는 "+CommonCodeUtil.MEMBER_ID_MIN_LENGTH +"자리 이상 "+CommonCodeUtil.MEMBER_ID_MAX_LENGTH+"자리 이하여야 합니다.";
        }
        return CommonCodeUtil.SUCCESS;
 
     }
 
     public static String isValidPassword(String password){
-         if(password.length() < 8 || password.length() > 20){
-               return "비밀번호는 8자 이상이 20자 이하여야 합니다.";
+         if(password.length() < CommonCodeUtil.MEMBER_PASSWORD_MIN_LENGTH || password.length() > CommonCodeUtil.MEMBER_PASSWORD_MAX_LENGTH){
+               return "비밀번호는 "+CommonCodeUtil.MEMBER_PASSWORD_MIN_LENGTH+"자 이상이 "+CommonCodeUtil.MEMBER_PASSWORD_MAX_LENGTH+"자 이하여야 합니다.";
          }else if(!password.matches(".*[a-zA-Z]+.*")){
                return "비밀번호는 영문자를 포함해야 합니다.";
          }else if(!password.matches(".*[0-9]+.*")){
