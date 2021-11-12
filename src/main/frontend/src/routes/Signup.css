@@ -24,7 +24,7 @@
   .signup-form{
     display: flex;
     flex-direction: column;
-    padding : 50px;
+    padding : 20px 50px;
     padding-bottom: 0;
     justify-content: space-evenly;
     width: 400px;

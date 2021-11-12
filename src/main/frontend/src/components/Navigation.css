@@ -48,7 +48,7 @@
 .sign li{
   display: inline-block;
   text-align: center;
-  width: 100px;
+  width: 80px;
 }
 .sign li a {
   white-space: nowrap;
@@ -57,15 +57,35 @@
   font-size: 16px;
 }
 .sign .logout-btn{
-  background-color: transparent;
   border: 1px solid #b2e0e0;
   color: var(--black);
   border-radius: 10px;
   background-color: #b2e0e0;
   padding: 2px 8px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
 }
-
+.sign .login-btn{
+  border: 1px solid #b2e0e0;
+  color: var(--black);
+  border-radius: 10px;
+  background-color: #b2e0e0;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+}
+.sign .signup-btn{
+  border: 1px solid #b2e0e0;
+  color: var(--black);
+  border-radius: 10px;
+  background-color: #b2e0e0;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+}
 @media screen and (max-width: 1090px) {
   .nav {
     left: initial;

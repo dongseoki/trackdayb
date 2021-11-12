@@ -35,13 +35,13 @@ function Navigation(){
                     {curUser ? (
                         <>
                         {/* <li><Link to="/mypage">마이페이지</Link></li> */}
-                        <span>{curUser.memberId}</span>
+                        <li><span>{curUser.memberId}</span></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </>
                         ) : (
                             <>
-                            <li><Link to="/login">로그인</Link></li>
-                            <li><Link to="/signup">회원가입</Link></li>
+                            <li><Link to="/login" className="login-btn">로그인</Link></li>
+                            <li><Link to="/signup" className="signup-btn">회원가입</Link></li>
                             </>
                         )}
                 </ul>
