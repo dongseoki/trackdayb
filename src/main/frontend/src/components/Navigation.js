@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {useHistory} from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
 import {AuthContext} from "../context/AuthContext";
 import axios from "axios";
 import { toast } from 'react-toastify';
+import { useMediaQuery } from "react-responsive";
+//icon
+import {GiHamburgerMenu} from "react-icons/gi"
 
 function Navigation(){
     const [curUser, setCurUser] = useContext(AuthContext);
@@ -22,18 +25,35 @@ function Navigation(){
             console.error(err)
         }
     }
+
+    // 반응형 화면 BreakPoint
+    const isSmallScreen = useMediaQuery({
+        query: "(max-width: 740px)",
+    });
+    
+    // LeftNav 접기 State
+    const [navFoldState, setNavFoldState] = useState(isSmallScreen ? true : false);
+  
+    console.log('isSmallScreen', isSmallScreen)
+    console.log('navFoldState', navFoldState)
+    console.log('isSmallScreen&& navFoldState', isSmallScreen&&navFoldState)
     return (
-        <nav className="nav">
+        <>
+        <nav>
+        <div className="nav">
             <div className="title">
                 <Link to="/">trackDay</Link>
             </div>
             <div className="menu">
-                <ul>
-                    <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
-                    <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
-                    <li><Link to="/report">리포트</Link></li>
-                    <li><Link to="/community">커뮤니티</Link></li>
-                </ul>
+            {isSmallScreen ? <div className="nav-fold" onClick={()=>{setNavFoldState(!navFoldState)}}><GiHamburgerMenu/></div> : null}
+                <div className="inline-block-menu">
+                    <ul>
+                        <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
+                        <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
+                        <li><Link to="/report">리포트</Link></li>
+                        <li><Link to="/community">커뮤니티</Link></li>
+                    </ul>
+                </div>
             </div>
 
             <div className="sign">
@@ -52,7 +72,19 @@ function Navigation(){
                         )}
                 </ul>
             </div>
+        </div>
+        {isSmallScreen && navFoldState ? (
+            <div className="hidden-block-menu">
+                <ul>
+                    <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
+                    <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
+                    <li><Link to="/report">리포트</Link></li>
+                    <li><Link to="/community">커뮤니티</Link></li>
+                </ul>
+            </div>
+        ) : null}
         </nav>
+    </>
     )
 }
 

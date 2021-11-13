@@ -13,6 +13,7 @@
   background-attachment: fixed;
   border-bottom: 1px solid #b2e0e0;
   align-items: center;
+  position: relative;
 }
 .title{
   padding: 0 20px;
@@ -27,13 +28,14 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  
 }
-.menu li{
+.menu .inline-block-menu li{
   display: inline-block;
-  width: 180px;
+  padding : 0 30px;
   text-align: center;
 }
-.menu li a{
+.menu .inline-block-menu li a{
   color: var(--black);
   white-space:nowrap;
   font-weight: 600;
@@ -48,7 +50,7 @@
 .sign li{
   display: inline-block;
   text-align: center;
-  width: 80px;
+  padding : 0 10px;
 }
 .sign li a {
   white-space: nowrap;
@@ -86,11 +88,48 @@
   font-size: 14px;
   font-weight: 400;
 }
-@media screen and (max-width: 1090px) {
-  .nav {
-    left: initial;
-    top: initial;
-    bottom: 0px;
-    width: 100%;
+.nav .menu .nav-fold{
+  position: absolute;
+  top : 0;
+  right : 0;
+  font-size: 22px;
+  padding : 20px 0;
+  margin-right: 80px;
+  cursor: pointer;
+}
+
+@media screen and (max-width : 1040px) {
+  .nav{
+    grid-template-columns: 0.5fr 2fr 1fr;
+  }
+  .nav .menu li{
+    padding : 0 5px;
+  }
+  .nav .title a{
+    font-size : 24px;
+  }
+}
+@media screen and (max-width : 740px) {
+  .nav{
+    grid-template-columns: 1fr 1fr 3fr;
+  }
+  .nav .menu .inline-block-menu li{
+    width: 50px;
+    display: none;
+  }
+  .hidden-block-menu ul{
+    margin: 0;
+  }
+  .hidden-block-menu ul li{
+    background-color: #4EC3E0;
+    text-align: center;
+    padding : 5px 0;
+
+  }
+  .hidden-block-menu ul li a{
+    color: var(--black);
+    white-space:nowrap;
+    font-weight: 600;
+    font-size: 16px;
   }
 }
