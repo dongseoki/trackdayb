@@ -19,7 +19,7 @@ body {
   /* font-family: Roboto; */
 }
 section{
-  padding-bottom: 130px;
+  padding-bottom: 100px;
   display: flex;
   min-height: 100vh;
   flex-direction: column;

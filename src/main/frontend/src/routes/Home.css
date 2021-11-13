@@ -37,3 +37,52 @@
     }
   }
   
+.home{
+  flex : 1;
+  /* background-color: #4EC3E0; */
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+.home .main-slogan{
+  padding: 50px 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.home .main-slogan p{
+  font-size: 100px;
+  font-weight: bold;
+  margin: 0;
+}
+.home .main-illustrations{
+  position: relative;
+}
+.home .main-illustrations .checking-box-svg{
+  position: absolute;
+  bottom: 100px;
+  left: -50px;
+  width: 150px;
+  height: 150px;
+}
+.home .main-illustrations .dividing-time-svg{
+  position: absolute;
+  bottom: 50px;
+  right: 100px;
+  width: 700px;
+  height: 700px;
+}
+.home .main-illustrations .progress-bar-svg{
+  position: absolute;
+  top : 250px;
+  left : 50px;
+  width: 150px;
+  height: 150px;
+}
+.home .main-illustrations .bulletin-board-svg{
+  position: absolute;
+  top : 50px;
+  left : 250px;
+  width: 150px;
+  height: 150px;
+}

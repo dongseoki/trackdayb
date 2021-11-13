@@ -8,8 +8,8 @@
   width: 100%;
   position: relative;
   /* light 버전 background */
-  background: linear-gradient(140deg, #4EC3E0, #3292EB);
-  /* background: #4EC3E0; */
+  /* background: linear-gradient(140deg, #4EC3E0, #3292EB); */
+  background: #4EC3E0;
   background-attachment: fixed;
   border-bottom: 1px solid #b2e0e0;
   align-items: center;
