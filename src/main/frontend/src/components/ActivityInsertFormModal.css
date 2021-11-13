@@ -1,12 +1,12 @@
-.insert-form{
+.time .insert-form{
     padding : 6px 16px;
     display: grid;
     grid-template-columns: 40px 1fr;
 }
-.insert-form::before{
+.time .insert-form::before{
     content: '';
 }
-.insert-form .acitvity-insert-btn{
+.time .insert-form .acitvity-insert-btn{
     width : 100%;
     background-color: white;
     border-radius: 10px;
@@ -15,30 +15,14 @@
     box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
     border: none;
 }
-.insert-form .acitvity-insert-btn:hover{
+.time .insert-form .acitvity-insert-btn:hover{
     border : 2px solid #4EC3E0;
     transition: 0.5s;
     color : #4EC3E0;
 }
 
-/* .goal-insert-btn{
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    border : none;
-    background-color: white;
-    width: 200px;
-    height: 250px;
-    margin : 10px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
-  }
-  .goal-insert-btn:hover{
-    border : 3px solid #4EC3E0;
-    transition: 0.5s;
-    color : #4EC3E0;
-  } */
 /* insert Form CSS */
-.top-wrapper{
+.time .top-wrapper{
     display: flex;
     flex-direction: row;
     margin: 10px 0;
@@ -46,7 +30,7 @@
     align-items:center
 }
 
-.modal-date-picker .date-picker-wrapper{
+.time .modal-date-picker .date-picker-wrapper{
     display: flex;
     justify-content: space-around;
     width: 100%;
@@ -56,37 +40,37 @@
     border-radius: 4px;
     background-color: white;
 }
-.modal-date-picker .date-picker-wrapper .date-picker{
+.time .modal-date-picker .date-picker-wrapper .date-picker{
     border : none;
     width: 170px;
     text-align: center;
     font-size: 14px;
     background-color: transparent;
 }
-.modal-date-picker .date-picker-wrapper .date-picker:focus{
+.time .modal-date-picker .date-picker-wrapper .date-picker:focus{
     font-weight: bolder;
     outline: none;
 }
-.modal-share-toggle .lock-icon{
+.time .modal-share-toggle .lock-icon{
     font-size: 15px;
 }
 
-.modal-title{
+.time .modal-title{
     font-size: 12px;
     color: rgba(0, 0, 0, 0.87);
     margin-bottom: 5px;
 }
-.modal-share-toggle{
+.time .modal-share-toggle{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.count-wrapper{
+.time .count-wrapper{
     display: flex;
     flex-direction: row;
     margin-top: 5px;
 }
-.timeUnit-select{
+.time .timeUnit-select{
     width: 80px;
     height: 40px;
     border :1px solid rgba(0, 0, 0, 0.22);

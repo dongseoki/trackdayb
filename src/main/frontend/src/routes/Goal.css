@@ -1,27 +1,53 @@
 .goal{
   flex : 1;
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 350px 1fr;
   margin : 0 80px;
 }
-/* .about__container {
-    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
-      0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
-    padding: 20px;
-    border-radius: 5px;
-    background-color: white;
-    margin: 0 auto;
-    margin-top: 100px;
-    width: 100%;
-    max-width: 400px;
-    font-weight: 300;
+.goal .side .left-nav-fold{
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: rgba(78, 195, 224, 0.1);
+  border-radius: 10px;
+  box-shadow: rgb(50 50 93 / 25%) 0px 2px 1px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
+  cursor: pointer;
+}
+@media screen and (max-width : 1040px) {
+  .goal{
+    flex: 1;
+    margin : 0 80px;
+    display: flex;
+    flex-direction: column;
   }
-  
-  .about__container span:first-child {
-    font-size: 20px;
+  .goal .side .left-nav {
+    margin-top:  0;
   }
-  
-  .about__container span:last-child {
-    display: block;
-    margin-top: 10px;
-  } */
+  .goal .goal-content{
+    margin-left : 0;
+    margin-right: 0;
+  }
+}
+@media screen and (max-width : 740px) {
+  .goal .goal-content .button-wrapper{
+    min-width: 300px;
+  }
+  .goal .goal-content .button-wrapper .MuiButtonBase-root{
+    font-size: 12px;
+    padding-left:  5px;
+    padding-right: 5px;
+  }
+}
+@media screen and (max-width : 600px) {
+  .goal .goal-content .card{
+    width : 100%;
+  }
+  .goal .goal-content .insert-form{
+    width : 100%;
+  }
+  .goal .goal-content .insert-form .goal-insert-btn{
+    width : 95%;
+  }
+}

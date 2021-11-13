@@ -5,6 +5,11 @@ import GoalFullList from "../components/GoalFullList";
 import { GoalFullListProvider } from "../context/GoalFullListContext";
 import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
 import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
+import { useMediaQuery } from "react-responsive";
+//icon
+import {IoIosArrowDown} from "react-icons/io"
+import {IoIosArrowUp} from "react-icons/io"
+
 
 function Goal() {
   // 검색조건
@@ -13,7 +18,19 @@ function Goal() {
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [orderColumn, setOrderColumn] = useState("modification_datetime");
   const [orderType, setOrderType] = useState("desc");
+  
+  // 반응형 화면 BreakPoint
+  const isSmallScreen = useMediaQuery({
+    query: "(max-width: 740px)",
+  });
 
+  const isMiddleScreen = useMediaQuery({
+    query: "(max-width: 1040px)",
+  });
+
+  // LeftNav 접기 State
+  const [leftNavFoldState, setLeftNavFoldState] = useState(isMiddleScreen ? true : false);
+  
   return (
     <div className="goal">
       <GoalTotalTitleListProvider>
@@ -28,7 +45,8 @@ function Goal() {
           orderType={orderType}
         >
           <aside className="side">
-            <LeftNavigation 
+          {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
+          {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation 
               searchStartDatetime={searchStartDatetime}
               searchEndDatetime={searchEndDatetime}
               setSearchStartDatetime={setSearchStartDatetime}
@@ -36,15 +54,16 @@ function Goal() {
               searchGoalIdList={searchGoalIdList}
               setSearchGoalIdList={setSearchGoalIdList}
             />
+          )}
           </aside>
-          <div className="goal-content">
+          <section className="goal-content">
             <GoalFullList 
               orderColumn={orderColumn}
               setOrderColumn={setOrderColumn}
               orderType={orderType}
               setOrderType={setOrderType}
             />
-          </div>
+          </section>
         </GoalFullListProvider>
       </GoalSearchTitleListProvider>
       </GoalTotalTitleListProvider>
