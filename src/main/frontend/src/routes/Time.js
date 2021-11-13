@@ -9,6 +9,8 @@ import { ko } from 'date-fns/esm/locale';
 //icon
 import {IoIosArrowBack} from "react-icons/io"
 import {IoIosArrowForward} from "react-icons/io"
+import {IoIosArrowDown} from "react-icons/io"
+import {IoIosArrowUp} from "react-icons/io"
 
 //TimeLine
 import ActivitySearchTimeline from '../components/ActivitySearchTimeline';
@@ -19,6 +21,7 @@ import ActivityTimeline from "../components/ActivityTimeline";
 import { ActivitySearchListProvider } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyProvider} from "../context/ActivitySearchGroupbyContext";
 import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
+import { useMediaQuery } from "react-responsive";
 
 function Time() {
 
@@ -29,7 +32,6 @@ function Time() {
   const [writeDate, setWriteDate] = useState(new Date());
   const [otherIncludedYn, setOtherIncludedYn ] = useState(true); //시간관리 기타포함
   const [ checker, setChecker] = useState(true); //작성일 변경 감지 변수 
-
 
   const MinusOneDay = ()=>{
     let chdate = writeDate;
@@ -45,6 +47,20 @@ function Time() {
     setChecker(!checker)
   }
 
+  // 반응형 화면 BreakPoint
+  const isSmallScreen = useMediaQuery({
+    query: "(max-width: 740px)",
+  });
+
+  const isMiddleScreen = useMediaQuery({
+    query: "(max-width: 1040px)",
+  });
+   
+  // LeftNav 접기 State
+  const [leftNavFoldState, setLeftNavFoldState] = useState(isMiddleScreen ? true : false);
+  // Activity Search TimeLind 접기 State
+  const [activeSearchFoldState, setActiveSearchFoldState] = useState(isSmallScreen ? true : false);
+  
   return (
     <div className="time">
       <GoalTotalTitleListProvider>
@@ -52,17 +68,21 @@ function Time() {
         searchStartDatetime={searchStartDatetime}
         searchEndDatetime={searchEndDatetime}>
         <aside className="side">
-          <LeftNavigation 
-            searchStartDatetime={searchStartDatetime}
-            searchEndDatetime={searchEndDatetime}
-            setSearchStartDatetime={setSearchStartDatetime}
-            setSearchEndDatetime={setSearchEndDatetime}
-            searchGoalIdList={searchGoalIdList}
-            setSearchGoalIdList={setSearchGoalIdList}
-            otherIncludedYn={otherIncludedYn}
-            setOtherIncludedYn={setOtherIncludedYn}
-            />
+          {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
+          {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation 
+              searchStartDatetime={searchStartDatetime}
+              searchEndDatetime={searchEndDatetime}
+              setSearchStartDatetime={setSearchStartDatetime}
+              setSearchEndDatetime={setSearchEndDatetime}
+              searchGoalIdList={searchGoalIdList}
+              setSearchGoalIdList={setSearchGoalIdList}
+              otherIncludedYn={otherIncludedYn}
+              setOtherIncludedYn={setOtherIncludedYn}
+              />
+              )}
         </aside>
+
+        
         <ActivitySearchListProvider
           searchStartDatetime={searchStartDatetime}
           searchEndDatetime={searchEndDatetime}
@@ -70,9 +90,15 @@ function Time() {
           otherIncludedYn={otherIncludedYn}
         >
           <ActivitySearchGroupbyProvider>
+          <section className='time-contents'>
+          {isSmallScreen ? <div className="active-search-fold" onClick={()=>{setActiveSearchFoldState(!activeSearchFoldState)}}>액티비티 접기 {activeSearchFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> } </div> : null}
+        
+          {isSmallScreen && activeSearchFoldState ? null : (
           <div className="timeline-search">
             <ActivitySearchTimeline/>
           </div>
+          )}
+        
 
           <div className="timeline">
             <GoalModalSearchTitleListProvider
@@ -80,7 +106,7 @@ function Time() {
                             
               <div className="date-picker-wrapper">
                 <button className="arrow-icon" onClick={MinusOneDay}><IoIosArrowBack/></button>
-                <DatePicker
+                <div className="datePicker-wrap"><DatePicker
                   className="date-picker"
                   selected={writeDate}
                   onChange={(date) => {
@@ -88,7 +114,7 @@ function Time() {
                   }}
                   locale={ko}
                   dateFormat="yyyy년 MM월 dd일"
-                />
+                /></div>
                 <button className="arrow-icon" onClick={PlusOneDay}><IoIosArrowForward/></button>
               </div>
               <ActivityTimeline 
@@ -96,6 +122,7 @@ function Time() {
               checker={checker}/>
             </GoalModalSearchTitleListProvider>
           </div>
+          </section>
           </ActivitySearchGroupbyProvider>
         </ActivitySearchListProvider>
       </GoalSearchTitleListProvider>

@@ -1,18 +1,24 @@
-import React, { useContext } from "react"
+import React, { useContext } from "react";
+import {useHistory} from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
 import {AuthContext} from "../context/AuthContext";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 function Navigation(){
     const [curUser, setCurUser] = useContext(AuthContext);
+    const history = useHistory();
 
     const logoutHandler = async () =>{
         try{
             setCurUser()
             sessionStorage.removeItem("jwt-token");
             delete axios.defaults.headers.common.Authorization;
+            toast.success("로그아웃 되었습니다.")
+            history.push("/")
         }catch(err){
+            toast.error("fail");
             console.error(err)
         }
     }

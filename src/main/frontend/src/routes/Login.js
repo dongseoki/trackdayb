@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
+import { toast } from 'react-toastify';
 
 function Login() {
   const [memberId, setMemberId] = useState("");
@@ -18,7 +19,7 @@ function Login() {
   const handleSubmit = async (evt) =>{
     evt.preventDefault();
     if(!validateForm()){
-      alert("올바른 정보를 입력하세요")
+      toast.error("올바른 정보를 입력하세요")
     }
 
     const formData = {
@@ -28,16 +29,15 @@ function Login() {
 
     try{
       const result = await axios.post("/member/login", formData);
-      console.log("제출결과", result)
       //현재 유저 설정
       setCurUser({memberId:result.data.memberId})
       //세션 스토리지에 저장하기
       sessionStorage.setItem("jwt-token", result.data.token)
       history.push("/time");
+      toast.success(`${result.data.memberId}님, 반갑습니다!`)
       
     }catch(err){
-      console.log('err.response', err.response.statusText)
-      alert(`올바른 정보를 입력하세요 (${err.response.statusText})`)
+      toast.error(`올바른 정보를 입력하세요 (${err.response.statusText})`)
     }
   }
 
@@ -50,6 +50,7 @@ function Login() {
         </h1>
         <form className='login-form' onSubmit = {handleSubmit}>
           <TextField
+            required
             className="login-input"
             id="outlined-memberId-input"
             label="memberId"
@@ -58,6 +59,7 @@ function Login() {
             onChange={(e) => setMemberId(e.target.value)}
           />
           <TextField
+            required
             className="login-input"
             id="outlined-password-input"
             label="Password"

@@ -1,5 +1,6 @@
 .left-nav{
     /* border : 1px solid blue; */
+    min-width: 300px;
     padding : 20px;
     background-color: rgba(78, 195, 224, 0.1);
     border-radius: 10px;

@@ -4,6 +4,7 @@ import axios from "axios";
 import {AuthContext} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
+import { toast } from 'react-toastify';
 
 function Signup() {
   const [name, setName] = useState("")
@@ -78,8 +79,11 @@ function Signup() {
       // 세션 스토리지에 저장하기
       sessionStorage.setItem("jwt-token", result.data.token)
       history.push('/time')
+      toast.success(`${result.data.memberId}님, 환영합니다!`)
     }catch(err){
       console.error(err);
+      toast.error(`Oops! 메인페이지로 돌아갑니다. (${err.response.statusText})`)
+      // history.push('/')
     }
   }
   return (

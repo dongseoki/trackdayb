@@ -6,8 +6,11 @@ import { GoalSearchTitleListContext } from "../context/GoalSearchTitleListContex
 //icon
 import { BiSearch } from "react-icons/bi";
 import Checkbox from '@mui/material/Checkbox';
+// import { useMediaQuery } from "react-responsive";
+
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
 
 
 function LeftNavigation(props){
@@ -37,7 +40,17 @@ function LeftNavigation(props){
         e.stopPropagation() //이벤트 버블링 막기
         props.setOtherIncludedYn(checked);
     }
+
+    // // Mobile 기준 breakpoint
+    // const isMiddleScreen = useMediaQuery({
+    //     query: "(max-width: 768px)",
+    // });
+       
+    // // LeftNav 접기 State
+    // const [foldState, setFoldState] = useState(isMiddleScreen ? true : false);
     return (
+        <>
+        
         <nav className="left-nav">
             <div className="search-dateRange-area">
                 <p>조회기간</p>
@@ -72,7 +85,10 @@ function LeftNavigation(props){
             </div> : null}
             
         </nav>
+        
+    </>
     )
+    
 }
 
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import Timeline from '@material-ui/lab/Timeline';
 import TimelineItem from '@material-ui/lab/TimelineItem';
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
@@ -12,14 +12,18 @@ import "./ActivitySearchTimeline.css";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
+
 export default function ActivitySearchTimeline() {
   // getActivityListTEST
   // 참조데이터(전체 리스트 -> 파생 그룹바이)
   const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
   const [ activitySearchGroupby,  ] = useContext(ActivitySearchGroupbyContext)
-  
+
+
   if (activitySearchList.length === 0) {
-    return (<div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>)
+    return (
+      <div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>
+    )
   }
 
   else{
