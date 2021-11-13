@@ -108,3 +108,18 @@ Release 0.3.13
   - 프론트 회원가입시 유효성 체크
   - 메인 페이지 생성
   - 로그아웃시 메인 페이지로 redirect
+
+Release 0.3.14
+  - 로그아웃 시 / 페이지로 redirct
+  - 로그인, 회원가입, 로그아웃 toast-alert 처리
+  - 회원가입 중복시 에러코드가 안오는것 확인 필요****
+  - 시간관리 date-picker 수정
+  - npm install toastify alert 모듈 설치
+  - npm install react-responsive 반응형 웹 모듈 설치
+  - 시간관리 반응형 css 적용
+  - 목표관리 반응형 css 적용
+  - 메뉴 반응형 css 적용
+  - 목표 수정시 에러 나도 저장이 되게 try catch 처리
+  - 목표 수정시(색수정 등) 왼쪽 LeftNav에도 반영
+  - 역기간 제출 막기
+  - 횟수 필수입력 지정

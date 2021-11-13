@@ -17,7 +17,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 //time picker
 import TextField from '@material-ui/core/TextField';
-
+import {toast} from "react-toastify";
 import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 // import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
@@ -91,6 +91,18 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
 
     const handleFormSubmit = async (evt) =>{
         evt.preventDefault();
+        // 역기간 검사
+        const dateRangeValidation = ()=>{
+          if(startDatetime > endDatetime){
+            return false
+          }else return true
+        }
+
+        if(!dateRangeValidation()){
+          toast.error("올바른 진행기간을 입력하세요.", {
+            autoClose : 5000
+          })
+        } else{
         const formData_activity = {
             activityId : modifyData.activityId,
             goalId:parentId,
@@ -132,6 +144,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
         }catch(err){
             console.error(err)
         }
+      }
     }
     return ( 
     <div>

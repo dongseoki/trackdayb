@@ -17,7 +17,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 //time picker
 import TextField from '@material-ui/core/TextField';
-
+import {toast} from "react-toastify";
 import GoalTitleListModal from "./GoalTitleListModal";
 
 function ActivityInsertFormModal({writeDate, activityList, setActivityList, activitySearchList, setActivitySearchList}){
@@ -81,40 +81,53 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
 
     const handleSubmit = async (evt) => {
       evt.preventDefault();
-      const formData_activity = {
-        goalId:parentId,
-        title : title,
-        startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
-        endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
-        content : content,
-        activityScore : activityScore,
-        shareStatus: shareStatus ? "N":"Y",
-      }; 
-      try{
-        //활동 추가
-        const result_activity = await axiosInstance.post("/timeManage/activity", formData_activity);
-        console.log('방금 추가한 것(활동)', result_activity.data)
+      // 역기간 검사
+      const dateRangeValidation = ()=>{
+        if(startDatetime > endDatetime){
+          return false
+        }else return true
+      }
 
-        //목표진행률 업데이트
-        if(parentId){
-          const formData_goal = {
-            goalId : parentId,
-            progressRate : parentProgressRate
+      if(!dateRangeValidation()){
+        toast.error("올바른 진행기간을 입력하세요.", {
+          autoClose : 5000
+        })
+      } else{
+        const formData_activity = {
+          goalId:parentId,
+          title : title,
+          startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
+          endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
+          content : content,
+          activityScore : activityScore,
+          shareStatus: shareStatus ? "N":"Y",
+        }; 
+        try{
+          //활동 추가
+          const result_activity = await axiosInstance.post("/timeManage/activity", formData_activity);
+          console.log('방금 추가한 것(활동)', result_activity.data)
+
+          //목표진행률 업데이트
+          if(parentId){
+            const formData_goal = {
+              goalId : parentId,
+              progressRate : parentProgressRate
+            }
+            const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
+            console.log('방금 추가한 것(목표)', result_goal.data)
           }
-          const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
-          console.log('방금 추가한 것(목표)', result_goal.data)
+          handleClose();
+          // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
+          function data_sorting(a, b) {
+            var dateA = new Date(a['startDatetime']).getTime();
+            var dateB = new Date(b['startDatetime']).getTime();
+            return dateA > dateB ? 1 : -1;
+          };
+          setActivityList([...activityList, result_activity.data.activityInfo].sort(data_sorting))
+          setActivitySearchList([...activitySearchList, result_activity.data.activityInfo].sort(data_sorting))
+        } catch(err){
+          console.error(err)
         }
-        handleClose();
-        // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
-        function data_sorting(a, b) {
-          var dateA = new Date(a['startDatetime']).getTime();
-          var dateB = new Date(b['startDatetime']).getTime();
-          return dateA > dateB ? 1 : -1;
-        };
-        setActivityList([...activityList, result_activity.data.activityInfo].sort(data_sorting))
-        setActivitySearchList([...activitySearchList, result_activity.data.activityInfo].sort(data_sorting))
-      } catch(err){
-        console.error(err)
       }
     };
   
