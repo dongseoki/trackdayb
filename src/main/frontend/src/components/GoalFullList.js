@@ -126,6 +126,8 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
               targetIndex={index}
               orderColumn={orderColumn}
               orderType = {orderType}
+              goalSearchTitleList={goalSearchTitleList}
+              setGoalSearchTitleList={setGoalSearchTitleList}
             />
             <DeleteModal 
               goalId={goalId} 

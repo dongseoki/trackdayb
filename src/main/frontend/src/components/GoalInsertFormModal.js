@@ -29,6 +29,7 @@ import { HexColorPicker } from "react-colorful";
 import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
+import {toast} from "react-toastify";
 
 function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
@@ -123,9 +124,26 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         return true;
       }  
     }
+
+    // 역기간 검사
+    const dateRangeValidation = ()=>{
+      let startDateA = new Date(startDatetime).getTime();
+      let endDateB = new Date(endDatetime).getTime();
+      if(startDateA > endDateB){
+        return false
+      }else return true
+    }
     if(!titleValidation()){
-      alert("제목에 슬래시(/)를 포함할 수 없습니다.")
-    }else{
+      toast.error("제목에 슬래시(/)를 포함할 수 없습니다.", {
+        autoClose : 5000
+      })
+    }
+    else if(!dateRangeValidation()){
+      toast.error("올바른 진행기간을 입력하세요.", {
+        autoClose : 5000
+      })
+    }
+    else{
       const formData = {
         "parentId": parentId,
         "title": title,
@@ -152,23 +170,23 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         }
       }
       console.log('제출', formData)
-      try{
-        const result = await axiosInstance.post("/goalManage/goal", formData);
-        console.log("제출결과", {result})
-        handleClose();
-        // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
-        function data_sorting(a, b) {
-          var dateA = new Date(a[orderColumn]).getTime();
-          var dateB = new Date(b[orderColumn]).getTime();
-          if (orderType === "asc") return dateA > dateB ? 1 : -1
-          else return dateA < dateB ? 1 : -1
-        };
-        setGoalFullList([...goalFullList, result.data.goalInfo].sort(data_sorting));
-        setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
-        setUpdateTotalTitle(!updateTotalTitle)
-      }catch(err){
-        console.error(err)
-      }
+      // try{
+      //   const result = await axiosInstance.post("/goalManage/goal", formData);
+      //   console.log("제출결과", {result})
+      //   handleClose();
+      //   // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
+      //   function data_sorting(a, b) {
+      //     var dateA = new Date(a[orderColumn]).getTime();
+      //     var dateB = new Date(b[orderColumn]).getTime();
+      //     if (orderType === "asc") return dateA > dateB ? 1 : -1
+      //     else return dateA < dateB ? 1 : -1
+      //   };
+      //   setGoalFullList([...goalFullList, result.data.goalInfo].sort(data_sorting));
+      //   setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
+      //   setUpdateTotalTitle(!updateTotalTitle)
+      // }catch(err){
+      //   console.error(err)
+      // }
     }
   };
   return (
@@ -431,6 +449,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
         <div className="none-count-wrapper">
           <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} onChange={noneCheckHandler} label="요일미지정" />
           <TextField 
+            required
             disabled={!none}
             type="number"
             id="count" 
@@ -451,6 +470,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
     return(
       <div>
         <TextField 
+          required
           id="count" 
           type="number"
           label="횟수" 

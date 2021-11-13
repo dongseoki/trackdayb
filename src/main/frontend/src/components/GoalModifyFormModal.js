@@ -37,8 +37,9 @@ import Checkbox from '@mui/material/Checkbox';
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
+import {toast} from "react-toastify";
 
-function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType}){
+function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, goalSearchTitleList, setGoalSearchTitleList}){
   const [ goalTotalTitleList, ] = useContext(GoalTotalTitleListContext);
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
@@ -135,11 +136,12 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType}){
  
   
   const handleOpen = () => {
-    setOpen(true);
-    ModifySettingForm();
-    console.log('modifyData', modifyData)
-    console.log("orderColumn", orderColumn)
-console.log("orderType", orderType)
+    try{
+      setOpen(true);
+      ModifySettingForm();
+    }catch(err){
+      console.log(err)
+    }
   };
 
   const handleClose = () => {
@@ -159,8 +161,22 @@ console.log("orderType", orderType)
         return true;
       }  
     }
+    // 역기간 검사
+    const dateRangeValidation = ()=>{
+      let startDateA = new Date(startDatetime).getTime();
+      let endDateB = new Date(endDatetime).getTime();
+      if(startDateA > endDateB){
+        return false
+      }else return true
+    }
     if(!titleValidation()){
-      alert("제목에 슬래시(/)를 포함할 수 없습니다.")
+      toast.error("제목에 슬래시(/)를 포함할 수 없습니다.", {
+        autoClose : 5000
+      })
+    }else if(!dateRangeValidation()){
+      toast.error("올바른 진행기간을 입력하세요.", {
+        autoClose : 5000
+      })
     }else{
       const formData = {
         "goalId" : modifyData.goalId,
@@ -193,16 +209,17 @@ console.log("orderType", orderType)
         handleClose();
         // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
         function data_sorting(a, b) {
-          console.log('orderColumn', orderColumn)
+
           if(orderColumn === 'progress_rate') {
             orderColumn = 'progressRate'
-            console.log('orderColumn2', orderColumn)
-            console.log('a.orderColumn', typeof parseInt(a[orderColumn]))
 
-            if (orderType === "asc") return parseInt(a[orderColumn]) > parseInt(b[orderColumn]) ? 1 : -1
-            else return parseInt(a[orderColumn]) < parseInt(b[orderColumn]) ? 1 : -1
+            var dateA = parseInt(a[orderColumn]);
+            var dateA = parseInt(b[orderColumn]);
+            
+            if (orderType === "asc") return dateA > dateB ? 1 : -1
+            else return dateA < dateB ? 1 : -1
 
-          }else{          
+          }else {          
             if(orderColumn === 'modification_datetime') orderColumn = 'modificationDatetime'
             else if(orderColumn === 'start_datetime') orderColumn = 'startDatetime'
             else if(orderColumn === 'end_datetime') orderColumn = 'endDatetime'
@@ -221,7 +238,9 @@ console.log("orderType", orderType)
         setGoalFullList(tempArray.sort(data_sorting));
 
         // LeftNav에도 수정 반영되어야함
-        // setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
+        let tempSearchArray = [...goalSearchTitleList];
+        tempSearchArray[targetIndex] = result.data.goalInfo;
+        setGoalSearchTitleList(tempSearchArray.sort(data_sorting));
 
       }catch(err){
         console.error(err)
@@ -497,6 +516,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
         <div className="none-count-wrapper">
           <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} checked={none} onChange={noneCheckHandler} label="요일미지정" />
           <TextField 
+            required
             disabled={!none}
             type="number"
             id="count" 
@@ -518,6 +538,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
     return(
       <div>
         <TextField 
+          required
           id="count" 
           type="number"
           label="횟수" 
