@@ -72,18 +72,24 @@ function Signup() {
         emailAddress : emailAddress
       }
       const result = await axios.post('/member/signup', formData)
-      // 현재 유저 설정
-      setCurUser({
-        memberId : result.data.memberId
-      })
-      // 세션 스토리지에 저장하기
-      sessionStorage.setItem("jwt-token", result.data.token)
-      history.push('/time')
-      toast.success(`${result.data.memberId}님, 환영합니다!`)
+      
+      if(result.data.resultCode === "9997"){
+        toast.error(`MemberId가 중복됩니다. (${result.data.message})`)
+      } else if (result.data.resultCode === "9996"){
+        toast.error(`올바른 정보를 입력하세요. (${result.data.message})`)
+      } else { // 서버 회원가입 성공시
+        // 현재 유저 설정
+        setCurUser({
+          memberId : result.data.memberId
+        })
+        // 세션 스토리지에 저장하기
+        sessionStorage.setItem("jwt-token", result.data.token)
+        history.push('/time')
+        toast.success(`${result.data.memberId}님, 환영합니다!`)
+      }
     }catch(err){
-      console.error(err);
-      toast.error(`Oops! 메인페이지로 돌아갑니다. (${err.response.statusText})`)
-      // history.push('/')
+      toast.error(`Oops! 메인페이지로 돌아갑니다. (${err})`)
+      history.push('/')
     }
   }
   return (
