@@ -275,12 +275,20 @@
             AND 
             g.kind = #{searchKind}
         </if>
+        <if test="searchGoalId != null">
+                AND 
+                g.goal_id = #{searchGoalId}
+        </if>
 	<if test="searchGoalIdList != null and !searchGoalIdList.isEmpty()">
             AND 
             g.goal_id IN 
             <foreach collection="searchGoalIdList" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+        </if>
+        <if test="searchParentId != null">
+                AND 
+                g.parent_id = #{searchParentId}
         </if>
         <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
             AND 

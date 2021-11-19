@@ -63,6 +63,33 @@ public class GoalManageServiceImpl implements GoalManageService {
         if (!checkGoalOwnership(goalVO)){
             throw new IllegalStateException();
         }
+
+        // 계층관계. A->B->C,D 인 경우.
+        // B를 삭제하는경우, C,D의 부모 목표를 A로 설정하는 과정.(A가 공백또는 null이여도 가능.)
+        GoalVO param = new GoalVO();
+        if(StringUtils.isNotEmpty(goalVO.getGoalId())){
+
+            // 삭제 대상 목표 조회. 부모 ID 정보를 얻기 위함.
+            GoalVO deleteGoalVO = new GoalVO();
+            deleteGoalVO.setSearchGoalId(goalVO.getGoalId());
+            GoalMVO deleteGoal = goalManageRepository.getGoalTitleList(deleteGoalVO).get(0);
+
+
+            param.setSearchParentId(deleteGoal.getGoalId());
+            for (GoalMVO goalMVO : goalManageRepository.getGoalTitleList(param)){
+                GoalVO updateParam = new GoalVO();
+
+                updateParam.setGoalId(goalMVO.getGoalId());              
+                updateParam.setParentId(deleteGoal.getParentId());
+
+                goalManageRepository.updateGoal(updateParam);
+                LOGGER.debug("in delete, update targetGoal : {}, updatedParentId : {}", updateParam.getGoalId(), updateParam.getParentId());
+            }
+        }
+
+        
+
+
         goalManageRepository.deleteGoal(goalVO);
         //PeriodicityInfo 는 삭제처리 되지 않음.
     }
