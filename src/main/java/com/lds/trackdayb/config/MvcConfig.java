@@ -20,6 +20,12 @@ public class MvcConfig implements WebMvcConfigurer{
     registry.addViewController("/timeManage/recordPubl").setViewName("/timeManage/recordPubl");
     // registry.addView
     ///timeManage/record
+    registry.addViewController("/{spring:\\w+}")
+        .setViewName("forward:/");
+    registry.addViewController("/**/{spring:\\w+}")
+        .setViewName("forward:/");
+    registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
+        .setViewName("forward:/");
   }
   
   // test

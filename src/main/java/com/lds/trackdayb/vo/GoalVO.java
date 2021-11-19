@@ -17,6 +17,8 @@ public class GoalVO extends GoalDTO{
     String searchRangeOption = CommonCodeUtil.SEARCH_RANGE_EXIST; // 검색 범위 옵션. 기본 값 존재.
     String searchKind = "";
     String orderColumn = "";
+    String searchParentId;
     String orderType = "";
+    String searchGoalId;
     List<String> searchGoalIdList = new ArrayList<String>();
 }
