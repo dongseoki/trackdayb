@@ -24,8 +24,8 @@ public class MvcConfig implements WebMvcConfigurer{
         .setViewName("forward:/");
     registry.addViewController("/**/{spring:\\w+}")
         .setViewName("forward:/");
-    registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
-        .setViewName("forward:/");
+    // registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
+    //     .setViewName("forward:/");
   }
   
   // test
