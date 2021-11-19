@@ -5,6 +5,9 @@ PROJECT_NAME=trackdayb
 
 cd $REPOSITORY/$PROJECT_NAME/
 
+echo "> Git reset --hard"
+git reset --hard
+
 echo "> Git Pull"
 
 git pull
