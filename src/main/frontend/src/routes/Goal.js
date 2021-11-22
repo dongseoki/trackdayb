@@ -7,11 +7,14 @@ import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListConte
 import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
 import { useMediaQuery } from "react-responsive";
 //icon
-import {IoIosArrowDown} from "react-icons/io"
-import {IoIosArrowUp} from "react-icons/io"
+import {IoIosArrowDown} from "react-icons/io";
+import {IoIosArrowUp} from "react-icons/io";
+import useTitle from '../hooks/useTitle';
 
 
 function Goal() {
+  const titleUpdater = useTitle("trackDay");
+  setTimeout(()=>titleUpdater("목표관리"), 100);
   // 검색조건
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());

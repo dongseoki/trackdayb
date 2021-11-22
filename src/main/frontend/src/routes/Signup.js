@@ -5,8 +5,12 @@ import {AuthContext} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { toast } from 'react-toastify';
+import useTitle from '../hooks/useTitle';
 
 function Signup() {
+  const titleUpdater = useTitle("trackDay");
+  setTimeout(()=>titleUpdater("회원가입"), 100);
+
   const [name, setName] = useState("")
   const [memberId, setMemberId] = useState('')
   const [password, setPassword] = useState('')

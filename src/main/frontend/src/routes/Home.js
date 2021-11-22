@@ -1,7 +1,10 @@
 import React from 'react';
 import "./Home.css"
+import useTitle from '../hooks/useTitle';
 
 function Home () {
+    const titleUpdater = useTitle("trackDay");
+    setTimeout(()=>titleUpdater("메인"), 100);
     return (
         <div className="home">
             <div className="main-banner">

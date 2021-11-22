@@ -5,8 +5,12 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import { toast } from 'react-toastify';
+import useTitle from '../hooks/useTitle';
 
 function Login() {
+  const titleUpdater = useTitle("trackDay");
+  setTimeout(()=>titleUpdater("로그인"), 100);
+
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
   const [ , setCurUser ] = useContext(AuthContext);
