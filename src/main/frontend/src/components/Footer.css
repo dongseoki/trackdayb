@@ -39,3 +39,15 @@
     text-align: right;
     font-style: normal;
 }
+@media screen and (max-width : 740px) {
+    .footer{
+        padding : 10px;
+    }
+    .footer .left{
+        font-size: 1.5em;
+    }
+    .footer .middle p {
+        font-size:  0.5em;
+    }
+    
+}

@@ -1,4 +1,31 @@
-.App {
+.home{
+  flex : 1;
+  height: 100vh;
+}
+.home .main-banner {
+  height: 100%;
+  width: 100%;
+}
+.home .main-banner .img-wrapper{
+  position: relative;
+}
+.home .main-banner .img-wrapper .pattern-design-jpg{
+  width: 100%;
+  height: 100vh;
+}
+.home .main-banner .main-slogan{
+  position: absolute;
+  top : 40%;
+  left : 50%;
+  transform: translate(-50%, -50%);
+}
+.home .main-banner .main-slogan p{
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  text-shadow: #000000 1px 0 10px;
+}
+/* .App {
     text-align: center;
   }
   
@@ -36,10 +63,9 @@
       transform: rotate(360deg);
     }
   }
-  
-.home{
+   */
+/* .home{
   flex : 1;
-  /* background-color: #4EC3E0; */
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -85,4 +111,15 @@
   left : 250px;
   width: 150px;
   height: 150px;
+} */
+
+@media screen and (max-width : 1040px) {
+  .home{
+    margin : 0;
+  }
+}
+@media screen and (max-width : 740px) {
+  .home{
+    margin : 0;
+  }
 }

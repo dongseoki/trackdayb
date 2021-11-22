@@ -3,10 +3,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 40px;
 }
 .signup-container {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
     background-color: white;
     margin: 0 auto;
@@ -14,7 +15,7 @@
     display: grid;
     grid-template-rows: 70px 1fr;
     align-items: center;
-    height: 90%;
+    /* height: 90%; */
     padding-bottom: 50px;
   }
   .signup-title{
@@ -27,7 +28,7 @@
     padding : 20px 50px;
     padding-bottom: 0;
     justify-content: space-evenly;
-    width: 400px;
+    width: 100%;
   }
   .signup-form .signup-input{
     margin : 10px 0;

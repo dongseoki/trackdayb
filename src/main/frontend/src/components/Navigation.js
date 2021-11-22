@@ -64,7 +64,7 @@ function Navigation(){
                         <li><span>{curUser.memberId}</span></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </>
-                        ) : (
+                        ) : ( isSmallScreen ? null:
                             <>
                             <li><Link to="/login" className="login-btn">로그인</Link></li>
                             <li><Link to="/signup" className="signup-btn">회원가입</Link></li>
@@ -80,6 +80,8 @@ function Navigation(){
                     <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
                     <li><Link to="/report">리포트</Link></li>
                     <li><Link to="/community">커뮤니티</Link></li>
+                    <li><Link to="/login" className="login-btn">로그인</Link></li>
+                    <li><Link to="/signup" className="signup-btn">회원가입</Link></li>
                 </ul>
             </div>
         ) : null}

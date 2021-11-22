@@ -30,6 +30,7 @@ import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 import {toast} from "react-toastify";
+import { useMediaQuery } from "react-responsive";
 
 function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
@@ -83,6 +84,11 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
     setColor(randomColor());
   }
 
+  // 반응형 화면 BreakPoint
+  const isMobileScreen = useMediaQuery({
+      query: "(max-width: 440px)",
+  });
+
   const useStyles = makeStyles((theme) => ({
     modal: {
       display: 'flex',
@@ -95,6 +101,14 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
       boxShadow: theme.shadows[5],
       padding: theme.spacing(1, 3, 2),
       width: "470px",
+      fontSize: "14px"
+    },
+    paperMobile: {
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: "10px",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(1, 3, 2),
+      width: "100%",
       fontSize: "14px"
     },
   }));
@@ -205,7 +219,7 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper}>
+          <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
             <h3 id="transition-modal-title">목표 추가</h3>
             <form onSubmit={handleFormSubmit}>
             <div className="top-wrapper">  

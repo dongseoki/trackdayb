@@ -134,6 +134,9 @@
   }
 }
 @media screen and (max-width : 740px) {
+  .time{
+    margin : 0;
+  }
   .time .time-contents{
     display: flex;
     flex-direction: column;

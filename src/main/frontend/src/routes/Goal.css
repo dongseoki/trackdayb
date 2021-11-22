@@ -31,6 +31,9 @@
   }
 }
 @media screen and (max-width : 740px) {
+  .goal{
+    margin : 0;
+  }
   .goal .goal-content .button-wrapper{
     min-width: 300px;
   }

@@ -21,6 +21,7 @@ import {toast} from "react-toastify";
 import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 // import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+import { useMediaQuery } from "react-responsive";
 
 function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
     
@@ -63,6 +64,11 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
         setParentProgressRate(modifyData.goalTitleInfo.parentProgressRate)
     }
 
+    // 반응형 화면 BreakPoint
+    const isMobileScreen = useMediaQuery({
+        query: "(max-width: 440px)",
+    });
+    
     const useStyles = makeStyles((theme) => ({
         modal: {
           display: 'flex',
@@ -75,6 +81,14 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
           borderRadius: "10px",
           boxShadow: theme.shadows[5],
           padding: theme.spacing(1, 3, 2),
+        },
+        paperMobile: {
+          backgroundColor: theme.palette.background.paper,
+          borderRadius: "10px",
+          boxShadow: theme.shadows[5],
+          padding: theme.spacing(1, 3, 2),
+          width: "100%",
+          fontSize: "14px"
         },
     }));
 
@@ -164,23 +178,25 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
       }}
     >
       <Fade in={open}>
-        <div className={classes.paper}>
+        <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
           <h3 id="transition-modal-title">활동 수정</h3>
           <form onSubmit={handleFormSubmit}>
                 <div className="top-wrapper">
-                  <TimePickers 
-                    id='starttime'
-                    label='시작시간'
-                    value={startDatetime}
-                    setTime={setStartDatetime}
-                  />
-                  <p>~</p>
-                  <TimePickers 
-                    id='endtime'
-                    label='종료시간'
-                    value={endDatetime}
-                    setTime={setEndDatetime}
-                  />
+                  <div className ="modal-time-picker">
+                    <TimePickers 
+                      id='starttime'
+                      label='시작시간'
+                      value={startDatetime}
+                      setTime={setStartDatetime}
+                    />
+                    <p>~</p>
+                    <TimePickers 
+                      id='endtime'
+                      label='종료시간'
+                      value={endDatetime}
+                      setTime={setEndDatetime}
+                    />
+                  </div>
                   <div className="modal-share-toggle">
                     <div className="modal-title">비공개</div>
                       <ToggleButton

@@ -30,26 +30,14 @@
     align-items:center
 }
 
-.time .modal-date-picker .date-picker-wrapper{
+.top-wrapper .modal-time-picker{
     display: flex;
+    flex-direction: row;
     justify-content: space-around;
     width: 100%;
-    padding: 8px 10px;
-    height: 38px;
-    border :1px solid rgba(0, 0, 0, 0.22);
+    padding: 8px 0px;
     border-radius: 4px;
     background-color: white;
-}
-.time .modal-date-picker .date-picker-wrapper .date-picker{
-    border : none;
-    width: 170px;
-    text-align: center;
-    font-size: 14px;
-    background-color: transparent;
-}
-.time .modal-date-picker .date-picker-wrapper .date-picker:focus{
-    font-weight: bolder;
-    outline: none;
 }
 .time .modal-share-toggle .lock-icon{
     font-size: 15px;
