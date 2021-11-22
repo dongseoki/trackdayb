@@ -183,12 +183,25 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
         return false
       }else return true
     }
+    // 횟수 음수 검사
+    const countValidation = ()=>{
+      if(count <= 0){
+        return false
+      } else{
+        return true
+      }
+    }
+
     if(!titleValidation()){
       toast.error("제목에 슬래시(/)를 포함할 수 없습니다.", {
         autoClose : 5000
       })
     }else if(!dateRangeValidation()){
       toast.error("올바른 진행기간을 입력하세요.", {
+        autoClose : 5000
+      })
+    }else if(!countValidation()){
+      toast.error("올바른 횟수를 입력하세요", {
         autoClose : 5000
       })
     }else{
