@@ -105,7 +105,8 @@ function Time() {
 
           <div className="timeline">
             <GoalModalSearchTitleListProvider
-              writeDate={writeDate}>
+              writeDate={writeDate}
+              checker={checker}>
                             
               <div className="date-picker-wrapper">
                 <button className="arrow-icon" onClick={MinusOneDay}><IoIosArrowBack/></button>
