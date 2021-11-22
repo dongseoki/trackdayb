@@ -15,6 +15,12 @@
 .modal-goalList-desc{
     font-size: 14px;
 }
+.modal-goalList-time-p{
+    font-size: 12px;
+}
+.modal-goalList-goal-p{
+    font-size: 12px;
+}
 .modal-goal-list{
     margin: 10px 0;
     width: 100%;

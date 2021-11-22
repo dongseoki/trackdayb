@@ -21,6 +21,8 @@ import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitle
 import randomColor from "randomcolor";
 
 function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate}){
+  
+  const pathname = window.location.pathname; // time or goal
   const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
   const [ tempParentId, setTempParentId ] = useState("");
   const [ tempParentTitle, setTempParentTitle ] = useState("없음");
@@ -56,11 +58,11 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
     setParentId(tempParentId);
     setParentGoalTitle(tempParentTitle);
     // 목표관리 탭에서만 setColor
-    if(window.location.pathname === '/goal'){
+    if(pathname === '/goal'){
       setColor(tempParentId ? "" : randomColor())
     }
     //시간관리 탭에서만 setParentProgressRate
-    if(window.location.pathname === '/time'){
+    if(pathname === '/time'){
       setParentProgressRate(tempParentProgressRate)
     }
     setOpenInside(false);
@@ -97,8 +99,17 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
         <Fade in={openInside}>
           <div className={classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
-            <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
-            
+            {pathname === '/time' ? 
+              <>
+                <div className="modal-goalList-desc" id="transition-modal-description">활동과 관련된 목표를 선택하세요</div> 
+                <p className="modal-goalList-time-p">활동일이 포함되는 목표 리스트입니다.</p>
+              </>: 
+              <>
+                <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
+                <p className="modal-goalList-goal-p">설정한 진행기간이 포함되는 목표 리스트입니다.</p>
+              </>
+            }
+
             <GoalTitleChoiceList
               goalId = {goalId}
               goalTitleList = {searchTerm.length < 1 ? goalModalSearchTitleList : searchResults} // 기간검색 제목리스트
