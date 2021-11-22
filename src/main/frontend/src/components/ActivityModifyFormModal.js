@@ -129,7 +129,6 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
         }; 
         try{
             const result_activity = await axiosInstance.patch("/timeManage/activity", formData_activity);
-            console.log("방금 수정한 활동", result_activity.data)
             //목표진행률 업데이트
             if(parentId){
                 const formData_goal = {
@@ -137,7 +136,6 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
                 progressRate : parentProgressRate
                 }
                 const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
-                console.log('방금 수정한 것(목표)', result_goal.data)
             }
             handleClose();
             // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)

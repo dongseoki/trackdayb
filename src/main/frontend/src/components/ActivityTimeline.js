@@ -148,7 +148,6 @@ function DeleteModal({activityId, activityList, setActivityList, activitySearchL
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
-    console.log('activyId', activityId)
     setOpen(true);
   };
 
@@ -163,7 +162,6 @@ function DeleteModal({activityId, activityList, setActivityList, activitySearchL
           activityId: activityId
         }
       })
-      console.log("삭제결과", result)
       handleClose()
       setActivityList(activityList.filter(activity => activity.activityId !== activityId))
       setActivitySearchList(activitySearchList.filter(activity => activity.activityId !== activityId))

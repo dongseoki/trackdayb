@@ -2,7 +2,6 @@ import React from "react";
 import "./Community.css";
 
 function Community(props) {
-  console.log(props);
   return (
     <div className="about__container">
       <span>

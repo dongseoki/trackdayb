@@ -29,7 +29,7 @@ export const GoalFullListProvider = (props) => {
           }
         }
         fetchGoalFullList();
-    }, [props.searchStartDatetime, props.searchEndDatetime, props.orderColumn, props.orderType, props.searchGoalIdList]);
+    }, [props.searchStartDatetime, props.searchEndDatetime, props.orderColumn, props.orderType, props.searchGoalIdList, props.updateChecker]);
 
     // YYYY-MM-DD 형태로 반환
     function makeYYMMDD(value){

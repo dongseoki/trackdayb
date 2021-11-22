@@ -2,7 +2,6 @@ import React from "react";
 import "./Report.css";
 
 function Report(props) {
-  console.log(props);
   return (
     <div className="about__container">
       <span>

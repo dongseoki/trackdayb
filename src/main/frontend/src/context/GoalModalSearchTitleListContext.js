@@ -4,7 +4,6 @@ import axiosInstance from "../axiosConfig";
 export const GoalModalSearchTitleListContext = createContext();
 // 입력폼 내부 기간 관련 목표제목리스트
 export const GoalModalSearchTitleListProvider = (props) =>{
-  console.log("context porps", props)
   const [ goalModalSearchTitleList, setGoalModalSearchTitleList ] = useState([]);
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());

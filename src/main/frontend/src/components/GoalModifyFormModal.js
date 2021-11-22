@@ -35,14 +35,14 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
-import { GoalFullListContext } from "../context/GoalFullListContext";
+// import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 import {toast} from "react-toastify";
 import { useMediaQuery } from "react-responsive";
 
-function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, goalSearchTitleList, setGoalSearchTitleList}){
+function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, goalSearchTitleList, setGoalSearchTitleList, updateChecker, setUpdateChecker}){
   const [ goalTotalTitleList, ] = useContext(GoalTotalTitleListContext);
-  const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
+  // const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
   const YNtoTF = (value)=>{
@@ -221,41 +221,7 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
       try{
         const result = await axiosInstance.patch("/goalManage/goal", formData);
         handleClose();
-        // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
-        function data_sorting(a, b) {
-
-          if(orderColumn === 'progress_rate') {
-            orderColumn = 'progressRate'
-
-            var dateA = parseInt(a[orderColumn]);
-            var dateA = parseInt(b[orderColumn]);
-            
-            if (orderType === "asc") return dateA > dateB ? 1 : -1
-            else return dateA < dateB ? 1 : -1
-
-          }else {          
-            if(orderColumn === 'modification_datetime') orderColumn = 'modificationDatetime'
-            else if(orderColumn === 'start_datetime') orderColumn = 'startDatetime'
-            else if(orderColumn === 'end_datetime') orderColumn = 'endDatetime'
-
-
-            var dateA = new Date(a[orderColumn]).getTime();
-            var dateB = new Date(b[orderColumn]).getTime();
-            if (orderType === "asc") return dateA > dateB ? 1 : -1
-            else return dateA < dateB ? 1 : -1
-          }
-        };
-
-        // 수정한 데이터 반영
-        let tempArray = [...goalFullList];
-        tempArray[targetIndex] = result.data.goalInfo;
-        setGoalFullList(tempArray.sort(data_sorting));
-
-        // LeftNav에도 수정 반영되어야함
-        let tempSearchArray = [...goalSearchTitleList];
-        tempSearchArray[targetIndex] = result.data.goalInfo;
-        setGoalSearchTitleList(tempSearchArray.sort(data_sorting));
-
+        setUpdateChecker(!updateChecker) // 수정시 DB에서 goalFullList 업데이트
       }catch(err){
         console.error(err)
       }

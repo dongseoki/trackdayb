@@ -32,7 +32,7 @@ import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitle
 import {toast} from "react-toastify";
 import { useMediaQuery } from "react-responsive";
 
-function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList}){
+function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList, updateChecker, setUpdateChecker}){
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
   
@@ -183,21 +183,11 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
           "satYn":sat ? "Y":"N"
         }
       }
-      console.log('제출', formData)
       try{
         const result = await axiosInstance.post("/goalManage/goal", formData);
-        console.log("제출결과", {result})
         handleClose();
-        // 기존 리스트들에 추가 업데이트(정렬 기준 반영)
-        function data_sorting(a, b) {
-          var dateA = new Date(a[orderColumn]).getTime();
-          var dateB = new Date(b[orderColumn]).getTime();
-          if (orderType === "asc") return dateA > dateB ? 1 : -1
-          else return dateA < dateB ? 1 : -1
-        };
-        setGoalFullList([...goalFullList, result.data.goalInfo].sort(data_sorting));
-        setGoalSearchTitleList([...goalSearchTitleList, result.data.goalInfo]);
         setUpdateTotalTitle(!updateTotalTitle)
+        setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
       }catch(err){
         console.error(err)
       }

@@ -26,12 +26,11 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 
 import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
 
-function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
+function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, updateChecker, setUpdateChecker}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
-  // console.log('goalFullList', goalFullList)
   const toggleOrderType = (preValue)=>{
     if (preValue === 'asc'){
       return 'desc'
@@ -99,6 +98,8 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
             setUpdateTotalTitle={setUpdateTotalTitle}
             orderColumn={orderColumn}
             orderType = {orderType}
+            updateChecker={updateChecker}
+            setUpdateChecker={setUpdateChecker}
           ></GoalCard>
         ))}
         <GoalInsertFormModal 
@@ -107,14 +108,16 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType}) {
             goalFullList={goalFullList}
             setGoalFullList={setGoalFullList}
             goalSearchTitleList={goalSearchTitleList}
-            setGoalSearchTitleList={setGoalSearchTitleList}/>
+            setGoalSearchTitleList={setGoalSearchTitleList}
+            updateChecker={updateChecker}
+            setUpdateChecker={setUpdateChecker}/>
       </div>
       </GoalModalSearchTitleListProvider>
     </div>
   )
 }
 
-function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType}){
+function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
   return(
@@ -128,6 +131,8 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
               orderType = {orderType}
               goalSearchTitleList={goalSearchTitleList}
               setGoalSearchTitleList={setGoalSearchTitleList}
+              updateChecker={updateChecker}
+              setUpdateChecker={setUpdateChecker}
             />
             <DeleteModal 
               goalId={goalId} 
@@ -156,7 +161,6 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
 }
 
 function PeriodicityInfo({periodicityInfo}){
-  // console.log("함수안에 들어갔다", periodicityInfo)
   const timeUnitToString = (value)=>{
     if(value === "D"){
       return "매일"

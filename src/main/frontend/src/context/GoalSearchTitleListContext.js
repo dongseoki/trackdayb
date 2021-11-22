@@ -18,13 +18,12 @@ export const GoalSearchTitleListProvider = (props) =>{
                 }
               });
             setGoalSearchTitleList(result.data.goalTitleList);
-            // console.log("Context : 목표타이틀 조건검색", result.data.goalTitleList)
           } catch(err) {
             console.error(err);
           }
         };
         fetchGoalSearchTitleList();
-      }, [props.searchStartDatetime, props.searchEndDatetime])
+      }, [props.searchStartDatetime, props.searchEndDatetime, props.updateChecker])
 
     return (
         <GoalSearchTitleListContext.Provider value={[ goalSearchTitleList, setGoalSearchTitleList ]}>

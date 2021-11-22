@@ -34,9 +34,6 @@ function Navigation(){
     // LeftNav 접기 State
     const [navFoldState, setNavFoldState] = useState(isSmallScreen ? true : false);
   
-    console.log('isSmallScreen', isSmallScreen)
-    console.log('navFoldState', navFoldState)
-    console.log('isSmallScreen&& navFoldState', isSmallScreen&&navFoldState)
     return (
         <>
         <nav>

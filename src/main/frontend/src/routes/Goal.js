@@ -21,6 +21,7 @@ function Goal() {
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [orderColumn, setOrderColumn] = useState("modification_datetime");
   const [orderType, setOrderType] = useState("desc");
+  const [updateChecker, setUpdateChecker] = useState(true); // 목표 수정/신규 감지 변수
   
   // 반응형 화면 BreakPoint
   const isSmallScreen = useMediaQuery({
@@ -39,13 +40,15 @@ function Goal() {
       <GoalTotalTitleListProvider>
       <GoalSearchTitleListProvider
         searchStartDatetime={searchStartDatetime}
-        searchEndDatetime={searchEndDatetime}>
+        searchEndDatetime={searchEndDatetime}
+        updateChecker={updateChecker}>
         <GoalFullListProvider
           searchStartDatetime={searchStartDatetime}
           searchEndDatetime={searchEndDatetime}
           searchGoalIdList={searchGoalIdList}
           orderColumn={orderColumn}
           orderType={orderType}
+          updateChecker={updateChecker}
         >
           <aside className="side">
           {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
@@ -65,6 +68,8 @@ function Goal() {
               setOrderColumn={setOrderColumn}
               orderType={orderType}
               setOrderType={setOrderType}
+              updateChecker={updateChecker}
+              setUpdateChecker={setUpdateChecker}
             />
           </section>
         </GoalFullListProvider>
