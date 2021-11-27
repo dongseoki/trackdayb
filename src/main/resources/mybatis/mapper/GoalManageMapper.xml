@@ -305,6 +305,20 @@
             g.deletion_status = 'N'
 
     </sql>
+    <sql id="goalSearchOrderQuery">
+        ORDER BY
+        <choose>
+                <when test='gatherGoalYn != null and gatherGoalYn.equals("Y")'>
+                                FNC_GOAL_ID_PATH(g.goal_id) asc
+                </when>
+                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
+                                g.${orderColumn} ${orderType}
+                </when>
+                <otherwise>
+                                g.modification_datetime desc
+                </otherwise>
+        </choose>
+    </sql>
 
     <select id="getGoalFullList" resultMap="goalFullResultMap">
         SELECT 
@@ -331,16 +345,7 @@
         on g.goal_id =pi2.goal_id 
         AND g.kind = 'regular'
         <include refid="goalSearchConditionQuery" />
-        <choose>
-                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
-                        ORDER BY
-                                g.${orderColumn} ${orderType}
-                </when>
-                <otherwise>
-                        ORDER BY
-                                g.modification_datetime desc
-                </otherwise>
-        </choose>
+        <include refid="goalSearchOrderQuery" />
     </select>
     <select id="getGoalTitleList" resultType="GoalMVO">
         select 
@@ -359,17 +364,7 @@
         FNC_GOAL_TITLE_PATH(g.goal_id) as goal_title_path
         from goal g 
         <include refid="goalSearchConditionQuery" />
-        <choose>
-                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
-                        ORDER BY
-                                g.${orderColumn} ${orderType}
-                </when>
-                <otherwise>
-                        ORDER BY
-                                g.modification_datetime desc
-                </otherwise>
-        </choose>
-
+        <include refid="goalSearchOrderQuery" />
     </select>
     <select id="argListTest" resultType="String">
         SELECT CONCAT(#{array[0]}, #{array[1]}, #{array[2]})

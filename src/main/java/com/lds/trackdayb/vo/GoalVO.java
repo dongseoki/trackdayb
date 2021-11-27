@@ -20,5 +20,6 @@ public class GoalVO extends GoalDTO{
     String searchParentId;
     String orderType = "";
     String searchGoalId;
+    String gatherGoalYn = "";
     List<String> searchGoalIdList = new ArrayList<String>();
 }
