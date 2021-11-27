@@ -79,8 +79,14 @@ public class GoalManageServiceImpl implements GoalManageService {
             for (GoalMVO goalMVO : goalManageRepository.getGoalTitleList(param)){
                 GoalVO updateParam = new GoalVO();
 
-                updateParam.setGoalId(goalMVO.getGoalId());              
-                updateParam.setParentId(deleteGoal.getParentId());
+                updateParam.setGoalId(goalMVO.getGoalId());     
+
+                String parentId = deleteGoal.getParentId();
+                updateParam.setParentId(parentId);
+                if (StringUtils.isEmpty(parentId)){
+                    updateParam.setColor(CommonCodeUtil.getRandomHexColor());
+                }
+
 
                 goalManageRepository.updateGoal(updateParam);
                 LOGGER.debug("in delete, update targetGoal : {}, updatedParentId : {}", updateParam.getGoalId(), updateParam.getParentId());

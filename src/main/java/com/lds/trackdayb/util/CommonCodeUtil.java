@@ -1,4 +1,6 @@
 package com.lds.trackdayb.util;
+import java.awt.Color;
+import java.util.Random;
 
 public final class CommonCodeUtil {
     public static String TIME_RECORD = "time_record";
@@ -29,5 +31,16 @@ public final class CommonCodeUtil {
 
     public static int MEMBER_PASSWORD_MIN_LENGTH = 8;
     public static int MEMBER_PASSWORD_MAX_LENGTH = 20;
+
+    public static final String getRandomHexColor() {
+        Random random = new Random();
+        float hue = random.nextFloat();
+        // sat between 0.1 and 0.3
+        float saturation = (random.nextInt(2000) + 1000) / 10000f;
+        float luminance = 0.9f;
+        Color color = Color.getHSBColor(hue, saturation, luminance);
+        
+        return '#' + Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
+    }
 
 }
