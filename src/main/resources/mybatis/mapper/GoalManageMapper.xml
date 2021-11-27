@@ -175,8 +175,15 @@
         <if test="type != null and !type.equals('')">
                 type = #{type},
         </if>
-        <if test="count != null and !count.equals('')">
-                count = #{count},
+        <if test="count != null">
+                <choose>
+                        <when test="!count.equals('')">
+                                count = #{count},
+                        </when>
+                        <otherwise>
+                                count = NULL,
+                        </otherwise>
+                </choose>
         </if>
         <if test="sunYn != null and !sunYn.equals('')">
                 sun_yn = #{sunYn},
