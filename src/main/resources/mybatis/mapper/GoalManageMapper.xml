@@ -43,10 +43,10 @@
                 #{content},
             </if>
             <if test="startDatetime != null and !startDatetime.equals('')">
-                #{startDatetime},
+                DATE_FORMAT(#{startDatetime}, '%Y-%m-%d'),
             </if>
             <if test="endDatetime != null and !endDatetime.equals('')">
-                    #{endDatetime},
+                DATE_FORMAT(#{endDatetime}, '%Y-%m-%d 23:59:59'),
             </if>
             <if test="progressRate != null and !progressRate.equals('')">
                     #{progressRate},
@@ -147,10 +147,10 @@
                 content = #{content},
         </if>
         <if test="startDatetime != null and !startDatetime.equals('')">
-                start_datetime = #{startDatetime},
+                start_datetime = DATE_FORMAT(#{startDatetime}, '%Y-%m-%d'),
         </if>
         <if test="endDatetime != null and !endDatetime.equals('')">
-                end_datetime = #{endDatetime},
+                end_datetime = DATE_FORMAT(#{endDatetime}, '%Y-%m-%d 23:59:59'),
         </if>
         <if test="progressRate != null and !progressRate.equals('')">
                 progress_rate = #{progressRate},
