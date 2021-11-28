@@ -20,7 +20,7 @@ import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitle
 
 import randomColor from "randomcolor";
 
-function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, startDatetime, endDatetime}){
+function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, startDatetime, endDatetime, writeDate}){
   
   const pathname = window.location.pathname; // time or goal
   const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
@@ -48,7 +48,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       backgroundColor: theme.palette.background.paper,
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
+      padding: theme.spacing(1,3,2),
       width: "355px",
     },
   }));
@@ -58,9 +58,6 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
     e.preventDefault();
     setOpenInside(true);
     setTempParentId(parentId)
-    console.log('startDatetime', startDatetime)
-    console.log('endDatetime', endDatetime)
-  
   };
   const handleCloseInside = () => {
     setOpenInside(false);
@@ -114,13 +111,12 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
             {pathname === '/time' ? 
               <>
                 <div className="modal-goalList-desc" id="transition-modal-description">활동과 관련된 목표를 선택하세요</div> 
-                <p className="modal-goalList-time-p">활동일이 포함되는 목표 리스트입니다.</p>
+                <p className="modal-goalList-time-p">활동일 (<span>{makeYYMMDD(writeDate)}</span>) 이 포함되는 목표 리스트입니다.</p>
               </>: 
               <>
                 <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
                 <p className="modal-goalList-goal-p">목표 등록시 설정한 진행기간이 포함되는 리스트입니다.</p>
-                <div>{makeYYMMDD(startDatetime)}</div>
-                <div>{makeYYMMDD(endDatetime)}</div>
+                <p className="modal-goalList-period-p">진행기간 : <span>{makeYYMMDD(startDatetime)}</span> - <span>{makeYYMMDD(endDatetime)}</span></p>
               </>
             }
 

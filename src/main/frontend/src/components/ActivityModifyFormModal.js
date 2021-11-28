@@ -267,6 +267,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
                     parentId={parentId}
                     setParentId={setParentId}
                     setParentProgressRate={setParentProgressRate}
+                    writeDate={writeDate}
                   />
                   <div className="parent-title">{parentGoalTitle}</div>
                 </div>

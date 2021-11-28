@@ -251,6 +251,7 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
                     parentId={parentId}
                     setParentId={setParentId}
                     setParentProgressRate={setParentProgressRate}
+                    writeDate={writeDate}
                   />
                   <div className="parent-title">{parentGoalTitle}</div>
                 </div>
