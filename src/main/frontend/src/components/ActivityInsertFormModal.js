@@ -69,7 +69,7 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
         backgroundColor: theme.palette.background.paper,
         borderRadius: "10px",
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(1, 3, 2),
+        padding: theme.spacing(1,1,  2, 2),
         width: "470px",
         fontSize: "14px"
       },
@@ -77,7 +77,7 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
         backgroundColor: theme.palette.background.paper,
         borderRadius: "10px",
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(1, 3, 2),
+        padding: theme.spacing(1, 1, 2, 2),
         width: "100%",
         fontSize: "14px"
       },
@@ -166,7 +166,7 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
             <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
               <h3 id="transition-modal-title">활동 추가</h3>
               {/* <div>작성일 : {writeDate}</div> */}
-              <form onSubmit={handleSubmit}>
+              <form className="activity-form" onSubmit={handleSubmit}>
                 <div className="top-wrapper">
                   <div className ="modal-time-picker">
                     <TimePickers 

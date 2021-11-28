@@ -1,3 +1,14 @@
+/* 모바일용 모달 스크롤 */
+@media  (max-height: 700px) {
+    .activity-form{
+        max-height: 70vh;
+    }
+}
+.activity-form{
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
 .time .insert-form{
     padding : 6px 16px;
     display: grid;

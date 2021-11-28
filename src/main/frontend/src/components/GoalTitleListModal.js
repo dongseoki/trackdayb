@@ -48,7 +48,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       backgroundColor: theme.palette.background.paper,
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(1,3,2),
+      padding: theme.spacing(1,2,2),
       width: "355px",
     },
   }));

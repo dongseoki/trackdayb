@@ -83,13 +83,13 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
           // border: '2px solid #000',
           borderRadius: "10px",
           boxShadow: theme.shadows[5],
-          padding: theme.spacing(1, 3, 2),
+          padding: theme.spacing(1, 1, 2, 2),
         },
         paperMobile: {
           backgroundColor: theme.palette.background.paper,
           borderRadius: "10px",
           boxShadow: theme.shadows[5],
-          padding: theme.spacing(1, 3, 2),
+          padding: theme.spacing(1,1, 2, 2),
           width: "100%",
           fontSize: "14px"
         },
@@ -181,7 +181,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
       <Fade in={open}>
         <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
           <h3 id="transition-modal-title">활동 수정</h3>
-          <form onSubmit={handleFormSubmit}>
+          <form className="activity-form" onSubmit={handleFormSubmit}>
                 <div className="top-wrapper">
                   <div className ="modal-time-picker">
                     <TimePickers 

@@ -1,3 +1,13 @@
+/* 모바일용 모달 스크롤 */
+@media  (max-height: 700px) {
+    .goal-form{
+        max-height: 70vh;
+    }
+}
+.goal-form{
+    overflow-y: auto;
+    padding-right: 10px;
+}
 /* insert Form CSS */
 .top-wrapper{
     margin: 10px 0;

@@ -98,15 +98,15 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
       backgroundColor: theme.palette.background.paper,
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(1, 3, 2),
+      padding: theme.spacing(1, 1, 2, 2),
       width: "470px",
-      fontSize: "14px"
+      fontSize: "14px",
     },
     paperMobile: {
       backgroundColor: theme.palette.background.paper,
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(1, 3, 2),
+      padding: theme.spacing(1, 1, 2, 2),
       width: "100%",
       fontSize: "14px"
     },
@@ -222,7 +222,7 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         <Fade in={open}>
           <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
             <h3 id="transition-modal-title">목표 추가</h3>
-            <form onSubmit={handleFormSubmit}>
+            <form className="goal-form" onSubmit={handleFormSubmit}>
             <div className="top-wrapper">  
               <div className="modal-date-picker">
                 <div className="modal-title">진행기간</div>
