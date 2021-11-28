@@ -11,12 +11,16 @@ export const GoalModalSearchTitleListProvider = (props) =>{
   useEffect(()=>{
       const fetchGoalModalSearchTitleList = async () => {
         try{
+          // YYYY-MM-DD 형태로 반환
+          function makeYYMMDD(value){
+            return value.toISOString().substring(0,10);
+          }
           const result = await axiosInstance.get(
             "/goalManage/goalTitleList",
             {
                 params : {
-                    searchStartDatetime: props.writeDate ? props.writeDate : startDatetime, // Time 용 검색조건 & Goal 용 검색조건
-                    searchEndDatetime: props.writeDate ? props.writeDate : endDatetime
+                    searchStartDatetime: props.writeDate ? makeYYMMDD(props.writeDate) : makeYYMMDD(startDatetime), // Time 용 검색조건 & Goal 용 검색조건
+                    searchEndDatetime: props.writeDate ? makeYYMMDD(props.writeDate) : makeYYMMDD(endDatetime)
                 }
             });
           setGoalModalSearchTitleList(result.data.goalTitleList);

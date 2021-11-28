@@ -10,13 +10,17 @@ export const ActivitySearchListProvider = (props) =>{
     useEffect(()=>{
         const fetchActivitySearchList = async () => {
             try {
+                // YYYY-MM-DD 형태로 반환
+                function makeYYMMDD(value){
+                    return value.toISOString().substring(0,10);
+                }
                 if(!props.searchGoalIdList.length){
                     setActivitySearchList([])
                 } else{
                     const result = await axiosInstance.get("/timeManage/activityList", {
                         params:{
-                            searchStartDatetime :props.searchStartDatetime,
-                            searchEndDatetime : props.searchEndDatetime,
+                            searchStartDatetime :makeYYMMDD(props.searchStartDatetime),
+                            searchEndDatetime : makeYYMMDD(props.searchEndDatetime),
                             orderColumn: "start_datetime",
                             orderType: "asc",
                             searchGoalIdList: props.searchGoalIdList.toString(),

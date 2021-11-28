@@ -58,7 +58,6 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
   const [ parentId, setParentId ] = useState("")
   const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
   const [color, setColor] = useState(randomColor());
-  const defaultSearchTime = " 09:00:00";
   
   const InitializeForm = ()=>{
     setStartDatetime(new Date());
@@ -175,8 +174,8 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         "title": title,
         "kind":kind,
         "content":content,
-        "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
-        "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
+        "startDatetime": makeYYMMDD(startDatetime),
+        "endDatetime":makeYYMMDD(endDatetime),
         "progressRate":progressRate,
         "color":color,
         "shareStatus": shareStatus ? "N":"Y",

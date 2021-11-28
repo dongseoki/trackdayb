@@ -88,8 +88,6 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
   const [ parentGoalTitle, setParentGoalTitle ] = useState("");
   const [color, setColor] = useState("");
 
-  const defaultSearchTime = " 09:00:00";
-
   const ModifySettingForm = ()=>{
     setStartDatetime(new Date(modifyData.startDatetime));
     setEndDatetime(new Date(modifyData.endDatetime));
@@ -214,8 +212,8 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
         "title": title,
         "kind":kind,
         "content":content,
-        "startDatetime": makeYYMMDD(startDatetime) + defaultSearchTime,
-        "endDatetime":makeYYMMDD(endDatetime) + defaultSearchTime,
+        "startDatetime": makeYYMMDD(startDatetime),
+        "endDatetime":makeYYMMDD(endDatetime),
         "progressRate":progressRate,
         "color":color,
         "shareStatus": shareStatus ? "N":"Y",
