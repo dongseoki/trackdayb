@@ -113,6 +113,9 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
     setParentGoalTitle(pIdtoTitle(modifyData.parentId));
     setColor(modifyData.color);
     if(modifyData.periodicityInfo.timeUnit === "W" && modifyData.periodicityInfo.type ==="day"){
+      setNone(false);
+    }
+    if(modifyData.periodicityInfo.timeUnit === "W" && modifyData.periodicityInfo.type ==="count"){
       setNone(true);
     }
   }
