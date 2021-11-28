@@ -1,4 +1,13 @@
-
+/* 모바일용 모달 스크롤 */
+@media  (max-height: 700px) {
+    .modal-goalList-form{
+        max-height: 70vh;
+    }
+}
+.modal-goalList-form{
+    overflow-y: auto;
+    padding-right: 10px;
+}
 .prevGoalTitleList{
     border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
@@ -25,8 +34,11 @@
     font-size: 12px;
 }
 .modal-goal-list{
+    display: flex;
+    justify-content: center;
     margin: 10px 0;
     width: 100%;
+    padding : 0 5px;
 }
 .modal-goal-list p{
     font-size: 14px;

@@ -48,7 +48,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       backgroundColor: theme.palette.background.paper,
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(1,2,2),
+      padding: theme.spacing(1,1,2,2),
       width: "355px",
     },
   }));
@@ -108,31 +108,33 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
         <Fade in={openInside}>
           <div className={classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
-            {pathname === '/time' ? 
-              <>
-                <div className="modal-goalList-desc" id="transition-modal-description">활동과 관련된 목표를 선택하세요</div> 
-                <p className="modal-goalList-time-p">활동일 (<span>{makeYYMMDD(writeDate)}</span>) 이 포함되는 목표 리스트입니다.</p>
-              </>: 
-              <>
-                <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
-                <p className="modal-goalList-goal-p">목표 등록시 설정한 진행기간이 포함되는 리스트입니다.</p>
-                <p className="modal-goalList-period-p">진행기간 : <span>{makeYYMMDD(startDatetime)}</span> - <span>{makeYYMMDD(endDatetime)}</span></p>
-              </>
-            }
+            <div className="modal-goalList-form">
+              {pathname === '/time' ? 
+                <>
+                  <div className="modal-goalList-desc" id="transition-modal-description">활동과 관련된 목표를 선택하세요</div> 
+                  <p className="modal-goalList-time-p">활동일 (<span>{makeYYMMDD(writeDate)}</span>) 이 포함되는 목표 리스트입니다.</p>
+                </>: 
+                <>
+                  <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
+                  <p className="modal-goalList-goal-p">목표 등록시 설정한 진행기간이 포함되는 리스트입니다.</p>
+                  <p className="modal-goalList-period-p">진행기간 : <span>{makeYYMMDD(startDatetime)}</span> - <span>{makeYYMMDD(endDatetime)}</span></p>
+                </>
+              }
 
-            <GoalTitleChoiceList
-              goalId = {goalId}
-              goalTitleList = {searchTerm.length < 1 ? goalModalSearchTitleList : searchResults} // 기간검색 제목리스트
-              tempParentId={tempParentId}
-              setTempParentId={setTempParentId}
-              setTempParentTitle={setTempParentTitle}
-              searchTerm={searchTerm}
-              searchHandler={searchHandler}
-              setTempParentProgressRate = {setTempParentProgressRate}
-            />
-            <div className="button-wrapper">
-              <button type="button" className="submitBtn" onClick={handleSubmitInside}>확인</button>
-              <button type="button" className="cancleBtn" onClick={handleCloseInside}>취소</button>
+              <GoalTitleChoiceList
+                goalId = {goalId}
+                goalTitleList = {searchTerm.length < 1 ? goalModalSearchTitleList : searchResults} // 기간검색 제목리스트
+                tempParentId={tempParentId}
+                setTempParentId={setTempParentId}
+                setTempParentTitle={setTempParentTitle}
+                searchTerm={searchTerm}
+                searchHandler={searchHandler}
+                setTempParentProgressRate = {setTempParentProgressRate}
+              />
+              <div className="button-wrapper">
+                <button type="button" className="submitBtn" onClick={handleSubmitInside}>확인</button>
+                <button type="button" className="cancleBtn" onClick={handleCloseInside}>취소</button>
+              </div>
             </div>
           </div>
         </Fade>
