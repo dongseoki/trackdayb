@@ -21,8 +21,9 @@ function Goal() {
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [orderColumn, setOrderColumn] = useState("modification_datetime");
   const [orderType, setOrderType] = useState("desc");
+  const [gatherGoalYn, setGatherGoalYn] = useState(true); //목표 모아보기 변수
   const [updateChecker, setUpdateChecker] = useState(true); // 목표 수정/신규 감지 변수
-  
+   
   // 반응형 화면 BreakPoint
   const isSmallScreen = useMediaQuery({
     query: "(max-width: 740px)",
@@ -48,6 +49,7 @@ function Goal() {
           searchGoalIdList={searchGoalIdList}
           orderColumn={orderColumn}
           orderType={orderType}
+          gatherGoalYn={gatherGoalYn}
           updateChecker={updateChecker}
         >
           <aside className="side">
@@ -68,6 +70,8 @@ function Goal() {
               setOrderColumn={setOrderColumn}
               orderType={orderType}
               setOrderType={setOrderType}
+              gatherGoalYn={gatherGoalYn}
+              setGatherGoalYn={setGatherGoalYn}
               updateChecker={updateChecker}
               setUpdateChecker={setUpdateChecker}
             />

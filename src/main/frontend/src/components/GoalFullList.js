@@ -11,9 +11,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { BiLock } from "react-icons/bi";
 import { CgArrowDown } from 'react-icons/cg';
 import { CgArrowUp } from 'react-icons/cg';
-
-// 삭제버튼
 import Button from '@mui/material/Button';
+// 삭제버튼
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -26,7 +25,7 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 
 import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
 
-function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, updateChecker, setUpdateChecker}) {
+function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gatherGoalYn, setGatherGoalYn, updateChecker, setUpdateChecker}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
@@ -42,14 +41,11 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, upd
     <div>
       <GoalModalSearchTitleListProvider>
       <div className="button-wrapper">
-        {/* <button>목표 모아보기</button> */}
+        <Button variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
         <ToggleButtonGroup
           color="primary"
           value={orderColumn}
           exclusive={true}
-          // onChange={(event, changeColumn) => {
-          //   setOrderColumn(changeColumn)
-          // }}
         >
           <ToggleButton value="modification_datetime" 
             onClick={(e) =>{

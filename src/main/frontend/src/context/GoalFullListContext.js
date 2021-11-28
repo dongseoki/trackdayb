@@ -20,8 +20,10 @@ export const GoalFullListProvider = (props) => {
                 orderColumn: props.orderColumn,
                 orderType: props.orderType,
                 searchGoalIdList:props.searchGoalIdList.toString(),
+                gatherGoalYn: props.gatherGoalYn===true ? "Y" : "N", //목표 모아보기변수
               }
             });
+            console.log('목표 전체 리스트', result.data.goalFullList)
             setGoalFullList(result.data.goalFullList)
           }
           } catch(err){
@@ -29,7 +31,7 @@ export const GoalFullListProvider = (props) => {
           }
         }
         fetchGoalFullList();
-    }, [props.searchStartDatetime, props.searchEndDatetime, props.orderColumn, props.orderType, props.searchGoalIdList, props.updateChecker]);
+    }, [props.searchStartDatetime, props.searchEndDatetime, props.orderColumn, props.orderType, props.searchGoalIdList, props.gatherGoalYn, props.updateChecker]);
 
     // YYYY-MM-DD 형태로 반환
     function makeYYMMDD(value){
