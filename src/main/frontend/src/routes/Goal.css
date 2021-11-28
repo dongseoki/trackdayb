@@ -34,14 +34,14 @@
   .goal{
     margin : 0;
   }
-  .goal .goal-content .button-wrapper{
+  /* .goal .goal-content .button-wrapper{
     min-width: 300px;
   }
   .goal .goal-content .button-wrapper .MuiButtonBase-root{
     font-size: 12px;
     padding-left:  5px;
     padding-right: 5px;
-  }
+  } */
 }
 @media screen and (max-width : 600px) {
   .goal .goal-content .card{

@@ -24,6 +24,12 @@ import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
 import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
+//반응형
+import { useMediaQuery } from "react-responsive";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gatherGoalYn, setGatherGoalYn, updateChecker, setUpdateChecker}) {
   const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
@@ -37,11 +43,38 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
       return 'asc'
     }
   }
+
+  // 반응형 화면 BreakPoint
+  const isMobileScreen = useMediaQuery({
+    query: "(max-width: 600px)",
+  });
+
   return (
     <div>
       <GoalModalSearchTitleListProvider>
+      {isMobileScreen ? 
+      <div className='button-wrapper'>
+        <Button className={gatherGoalYn ? "gather-btn active" : "gather-btn"} color="primary" variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
+        <FormControl>
+        <InputLabel id="demo-simple-select-label">정렬</InputLabel>
+        <Select
+          className="orderColumn-select"
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={orderColumn}
+          label="정렬"
+          onChange={(e)=>{setOrderColumn(e.target.value)}}
+        >
+          <MenuItem value="modification_datetime">최종수정일 순</MenuItem>
+          <MenuItem value="start_datetime">시작일 순</MenuItem>
+          <MenuItem value="end_datetime">종료일 순</MenuItem>
+          <MenuItem value="progress_rate">진행률 순</MenuItem>
+        </Select>
+        </FormControl>
+        <Button className="orderType-btn" title={orderType === "desc" ? "내림차순" : "오름차순"} onClick={()=>{setOrderType(toggleOrderType(orderType))}}>{orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</Button>
+      </div> : 
       <div className="button-wrapper">
-        <Button variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
+        <Button className={gatherGoalYn ? "gather-btn active" : "gather-btn"} color="primary" variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
         <ToggleButtonGroup
           color="primary"
           value={orderColumn}
@@ -70,6 +103,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
               }}>진행률 순 {orderColumn === 'progress_rate' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
         </ToggleButtonGroup>
       </div>
+      } 
       <div className="goal-cards-list">
         {goalFullList && goalFullList.map((goal, index) => (
           <GoalCard
