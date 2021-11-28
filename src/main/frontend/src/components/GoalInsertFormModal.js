@@ -164,7 +164,7 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
       toast.error("올바른 진행기간을 입력하세요.", {
         autoClose : 5000
       })
-    }else if(!countValidation()){
+    }else if(count && !countValidation()){
       toast.error("올바른 횟수를 입력하세요", {
         autoClose : 5000
       })
