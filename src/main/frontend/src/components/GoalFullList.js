@@ -141,7 +141,9 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
               goalFullList={goalFullList}
               setGoalFullList ={setGoalFullList}
               updateTotalTitle={updateTotalTitle}
-              setUpdateTotalTitle={setUpdateTotalTitle}/>
+              setUpdateTotalTitle={setUpdateTotalTitle}
+              updateChecker={updateChecker}
+              setUpdateChecker={setUpdateChecker}/>
           </div>
           <div className="path-tag-wrapper">
             {goalTitlePathList.length>0 ? goalTitlePathList.map((goal, index) => (
@@ -189,7 +191,7 @@ function PeriodicityInfo({periodicityInfo}){
 
 
 // 삭제 버튼 모달
-function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle}) {
+function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, updateChecker, setUpdateChecker}) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -208,9 +210,10 @@ function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalF
         }
       })
       handleClose()
-      setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
-      setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))
+      // setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
+      // setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))
       setUpdateTotalTitle(!updateTotalTitle)
+      setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
     }catch(err){
       console.error(err)
     }
