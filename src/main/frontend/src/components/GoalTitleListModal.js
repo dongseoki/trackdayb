@@ -20,7 +20,7 @@ import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitle
 
 import randomColor from "randomcolor";
 
-function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate}){
+function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, startDatetime, endDatetime}){
   
   const pathname = window.location.pathname; // time or goal
   const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
@@ -29,6 +29,14 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   const [ tempParentProgressRate, setTempParentProgressRate] = useState(0); //시간관리용 목표진행률
   const [searchTerm, setSearchTerm] = useState("") //검색어
   const [searchResults, setSearchResults] = useState([]) //검색결과
+
+  // YYYY-MM-DD 형태로 반환
+  function makeYYMMDD(value){
+    // korea utc timezone(zero offset) 설정
+    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
+    let dateOffset = new Date(value.getTime() - offset);
+    return dateOffset.toISOString().substring(0,10);
+  }
 
   const useStyles = makeStyles((theme) => ({
     modal: {
@@ -50,6 +58,9 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
     e.preventDefault();
     setOpenInside(true);
     setTempParentId(parentId)
+    console.log('startDatetime', startDatetime)
+    console.log('endDatetime', endDatetime)
+  
   };
   const handleCloseInside = () => {
     setOpenInside(false);
@@ -81,6 +92,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       setSearchResults(goalModalSearchTitleList);
     }
   }
+  
   return(
     <>
       <button className="prevGoalTitleList" onClick={handleOpenInside}>목표분류</button>
@@ -106,7 +118,9 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
               </>: 
               <>
                 <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
-                <p className="modal-goalList-goal-p">설정한 진행기간이 포함되는 목표 리스트입니다.</p>
+                <p className="modal-goalList-goal-p">목표 등록시 설정한 진행기간이 포함되는 리스트입니다.</p>
+                <div>{makeYYMMDD(startDatetime)}</div>
+                <div>{makeYYMMDD(endDatetime)}</div>
               </>
             }
 

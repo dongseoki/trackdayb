@@ -12,7 +12,10 @@ export const ActivitySearchListProvider = (props) =>{
             try {
                 // YYYY-MM-DD 형태로 반환
                 function makeYYMMDD(value){
-                    return value.toISOString().substring(0,10);
+                    // korea utc timezone(zero offset) 설정
+                    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
+                    let dateOffset = new Date(value.getTime() - offset);
+                    return dateOffset.toISOString().substring(0,10);
                 }
                 if(!props.searchGoalIdList.length){
                     setActivitySearchList([])
