@@ -19,7 +19,7 @@ function Goal() {
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [searchGoalIdList, setSearchGoalIdList] = useState([]);
-  const [orderColumn, setOrderColumn] = useState("modification_datetime");
+  const [orderColumn, setOrderColumn] = useState("");
   const [orderType, setOrderType] = useState("desc");
   const [gatherGoalYn, setGatherGoalYn] = useState(true); //목표 모아보기 변수
   const [updateChecker, setUpdateChecker] = useState(true); // 목표 수정/신규 감지 변수

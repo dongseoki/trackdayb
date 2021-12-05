@@ -17,8 +17,8 @@ export const GoalFullListProvider = (props) => {
                 searchStartDatetime:makeYYMMDD(props.searchStartDatetime),
                 searchEndDatetime:makeYYMMDD(props.searchEndDatetime),
                 // searchKind:"deadline",
-                orderColumn: props.orderColumn,
-                orderType: props.orderType,
+                ...(props.orderColumn && { orderColumn: props.orderColumn}), //값이 있을때만 parmas 보냄
+                ...(props.orderColumn && { orderType: props.orderType}), //값이 있을때만 parmas 보냄
                 searchGoalIdList:props.searchGoalIdList.toString(),
                 gatherGoalYn: props.gatherGoalYn===true ? "Y" : "N", //목표 모아보기변수
               }
