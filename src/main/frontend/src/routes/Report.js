@@ -3,10 +3,8 @@ import "./Report.css";
 
 function Report(props) {
   return (
-    <div className="about__container">
-      <span>
-        리포트
-      </span>
+    <div className="report">
+      <div className='report-desc'>coming soon!</div>
     </div>
   );
 }

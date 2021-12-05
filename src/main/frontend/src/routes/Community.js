@@ -3,10 +3,8 @@ import "./Community.css";
 
 function Community(props) {
   return (
-    <div className="about__container">
-      <span>
-        커뮤니티
-      </span>
+    <div className="community">
+      <div className='community-desc'>coming soon!</div>
     </div>
   );
 }
