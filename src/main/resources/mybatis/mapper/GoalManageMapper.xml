@@ -348,7 +348,20 @@
     <select id="getGoalFullList" resultMap="goalFullResultMap">
         SELECT 
                 (SELECT color from goal as g2 where g2.goal_id = SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1)) as top_goal_color,
-                g.*, 
+                g.goal_id,
+                IFNULL(g.parent_id, "") as parent_id,
+                g.member_serial_number,
+                g.title,
+                g.kind,
+                g.content,
+                g.start_datetime,
+                g.end_datetime,
+                g.progress_rate,
+                g.color,
+                g.share_status,
+                g.create_datetime,
+                g.modification_datetime,
+                g.deletion_status,
                 FNC_GOAL_ID_PATH(g.goal_id) as goal_id_path,
                 FNC_GOAL_TITLE_PATH(g.goal_id) as goal_title_path,
                 pi2.periodicity_id as pi_periodicity_id,
@@ -377,16 +390,19 @@
         select 
         (SELECT color from goal as g2 where g2.goal_id = SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1)) as top_goal_color,
         g.goal_id,
-        g.parent_id,
+        IFNULL(g.parent_id, "") as parent_id,
         g.member_serial_number,
         g.title,
         g.kind,
+        
         g.start_datetime,
         g.end_datetime,
         g.progress_rate,
         g.color,
+        g.share_status,
         g.create_datetime,
         g.modification_datetime,
+        g.deletion_status,
         FNC_GOAL_ID_PATH(g.goal_id) as goal_id_path,
         FNC_GOAL_TITLE_PATH(g.goal_id) as goal_title_path
         from goal g 
