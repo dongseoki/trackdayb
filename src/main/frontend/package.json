@@ -165,6 +165,7 @@
     ]
   },
   "devDependencies": {
+    "chokidar": "^3.5.2",
     "react-dev-utils": "^11.0.4"
   }
 }
