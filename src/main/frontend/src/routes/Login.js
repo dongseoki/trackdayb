@@ -36,7 +36,7 @@ function Login() {
       //현재 유저 설정
       setCurUser({memberId:result.data.memberId})
       //세션 스토리지에 저장하기
-      sessionStorage.setItem("jwt-token", result.data.token)
+      localStorage.setItem("jwt-token", result.data.token)
       history.push("/time");
       toast.success(`${result.data.memberId}님, 반갑습니다!`)
       

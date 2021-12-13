@@ -16,7 +16,7 @@ function Navigation(){
     const logoutHandler = async () =>{
         try{
             setCurUser()
-            sessionStorage.removeItem("jwt-token");
+            localStorage.removeItem("jwt-token");
             delete axios.defaults.headers.common.Authorization;
             toast.success("로그아웃 되었습니다.")
             history.push("/")

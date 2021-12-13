@@ -7,7 +7,7 @@ export const AuthProvider = ({children}) => {
     const [ curUser, setCurUser ] = useState();
     
     useEffect(()=>{
-        const token = sessionStorage.getItem('jwt-token');
+        const token = localStorage.getItem('jwt-token');
         if(curUser) {
             axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         }
@@ -18,7 +18,7 @@ export const AuthProvider = ({children}) => {
                 setCurUser({memberId:result.data.memberInfo.memberId})
             })
             .catch(()=>{
-                sessionStorage.removeItem("jwt-token");
+                localStorage.removeItem("jwt-token");
                 delete axios.defaults.headers.common.Authorization;
             });
         }

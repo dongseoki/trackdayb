@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(
     토큰에 대한 정보를 여러곳에서 처리하지 않아도 된다.
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
-   const token = sessionStorage.getItem('jwt-token');
+   const token = localStorage.getItem('jwt-token');
    if(token){
       config.headers.Authorization = `Bearer ${token}`;
    }else{
