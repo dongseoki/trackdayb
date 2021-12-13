@@ -57,7 +57,7 @@ function Login() {
             required
             className="login-input"
             id="outlined-memberId-input"
-            label="memberId"
+            label="ID"
             type="text"
             autoComplete="current-memberId"
             onChange={(e) => setMemberId(e.target.value)}
