@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useMediaQuery } from "react-responsive";
 //icon
 import {GiHamburgerMenu} from "react-icons/gi"
+import GuidePopup from "./GuidePopup";
 
 function Navigation(){
     const [curUser, setCurUser] = useContext(AuthContext);
@@ -60,6 +61,7 @@ function Navigation(){
                         {/* <li><Link to="/mypage">마이페이지</Link></li> */}
                         <li><span>{curUser.memberId}</span></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
+                        <GuidePopup/>
                         </>
                         ) : ( isSmallScreen ? null:
                             <>
