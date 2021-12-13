@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class GoalDTO {
     private String goalId = "";  // INT NOT NULL AUTO_INCREMENT COMMENT ''
-    private String parentId = "";  // INT   COMMENT ''
+    private String parentId;  // INT   COMMENT ''
     private String memberSerialNumber = "";  // INT NOT NULL  COMMENT '멤버테이블 일련번호(AUTOINCREAMENT)'
-    private String title = "";  // VARCHAR(50) NOT NULL  COMMENT '제목'
+    private String title;  // VARCHAR(50) NOT NULL  COMMENT '제목'
     private String kind = "";  // ENUM('DEADLINE','REGULAR') NOT NULL  COMMENT '주기성, 기한성 목표 구분'
     private String content;  // TEXT NOT NULL  COMMENT '내용'
     private String startDatetime = "";  // DATETIME   COMMENT '시작일'

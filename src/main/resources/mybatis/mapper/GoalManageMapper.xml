@@ -126,18 +126,20 @@
     <update id="updateGoal">
         UPDATE goal
         SET
-        <choose>
-                <when test="!parentId.equals('')">
-                        parent_id = #{parentId},
-                </when>
-                <otherwise>
-                        parent_id = NULL,
-                </otherwise>
-        </choose>
+        <if test="parentId != null">
+                <choose>
+                        <when test="!parentId.equals('')">
+                                parent_id = #{parentId},
+                        </when>
+                        <otherwise>
+                                parent_id = NULL,
+                        </otherwise>
+                </choose>
+        </if>
         <if test="memberSerialNumber != null and !memberSerialNumber.equals('')">
                 member_serial_number = #{memberSerialNumber},
         </if>
-        <if test="title != null and !title.equals('')">
+        <if test="title != null">
                 title = #{title},
         </if>
         <if test="kind != null and !kind.equals('')">
@@ -309,6 +311,29 @@
         ORDER BY
         <choose>
                 <when test='gatherGoalYn != null and gatherGoalYn.equals("Y")'>
+                        SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1) asc,
+                        <choose>
+                                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
+                                        g.${orderColumn} ${orderType}
+                                </when>
+                                <otherwise>
+                                        FNC_GOAL_ID_PATH(g.goal_id) asc
+                                </otherwise>
+                        </choose>
+                </when>
+                <otherwise>
+                        <choose>
+                                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
+                                        g.${orderColumn} ${orderType}
+                                </when>
+                                <otherwise>
+                                        g.modification_datetime desc
+                                </otherwise>
+                        </choose>
+                </otherwise>
+        </choose>
+        <!-- <choose>
+                <when test='gatherGoalYn != null and gatherGoalYn.equals("Y")'>
                                 FNC_GOAL_ID_PATH(g.goal_id) asc
                 </when>
                 <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
@@ -317,12 +342,26 @@
                 <otherwise>
                                 g.modification_datetime desc
                 </otherwise>
-        </choose>
+        </choose> -->
     </sql>
 
     <select id="getGoalFullList" resultMap="goalFullResultMap">
         SELECT 
-                g.*, 
+                (SELECT color from goal as g2 where g2.goal_id = SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1)) as top_goal_color,
+                g.goal_id,
+                IFNULL(g.parent_id, "") as parent_id,
+                g.member_serial_number,
+                g.title,
+                g.kind,
+                g.content,
+                g.start_datetime,
+                g.end_datetime,
+                g.progress_rate,
+                g.color,
+                g.share_status,
+                g.create_datetime,
+                g.modification_datetime,
+                g.deletion_status,
                 FNC_GOAL_ID_PATH(g.goal_id) as goal_id_path,
                 FNC_GOAL_TITLE_PATH(g.goal_id) as goal_title_path,
                 pi2.periodicity_id as pi_periodicity_id,
@@ -349,17 +388,21 @@
     </select>
     <select id="getGoalTitleList" resultType="GoalMVO">
         select 
+        (SELECT color from goal as g2 where g2.goal_id = SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1)) as top_goal_color,
         g.goal_id,
-        g.parent_id,
+        IFNULL(g.parent_id, "") as parent_id,
         g.member_serial_number,
         g.title,
         g.kind,
+        
         g.start_datetime,
         g.end_datetime,
         g.progress_rate,
         g.color,
+        g.share_status,
         g.create_datetime,
         g.modification_datetime,
+        g.deletion_status,
         FNC_GOAL_ID_PATH(g.goal_id) as goal_id_path,
         FNC_GOAL_TITLE_PATH(g.goal_id) as goal_title_path
         from goal g 

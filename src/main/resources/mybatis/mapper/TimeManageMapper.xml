@@ -311,7 +311,7 @@
                     ,#{title}
                     ,#{startDatetime}
                     ,#{endDatetime}
-            <if test="content != null and !content.equals('')">
+            <if test="content != null">
                     ,#{content}
             </if>
             <if test="activityScore != null and !activityScore.equals('')">
@@ -347,7 +347,7 @@
         <if test="endDatetime != null and !endDatetime.equals('')">
                 ,end_datetime = #{endDatetime}
         </if>
-        <if test="content != null and !content.equals('')">
+        <if test="content != null">
                 ,content = #{content}
         </if>
         <if test="activityScore != null and !activityScore.equals('')">
