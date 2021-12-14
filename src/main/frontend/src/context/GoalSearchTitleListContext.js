@@ -18,6 +18,7 @@ export const GoalSearchTitleListProvider = (props) =>{
                 }
               });
             setGoalSearchTitleList(result.data.goalTitleList);
+            
           } catch(err) {
             console.error(err);
           }

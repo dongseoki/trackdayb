@@ -107,7 +107,7 @@ function Signup() {
             required
             className="signup-input"
             id="outlined-name-input"
-            label="Names"
+            label="Name"
             type="text"
             autoComplete="current-name"
             onChange={(e) => setName(e.target.value)}
@@ -116,7 +116,7 @@ function Signup() {
             required
             className="signup-input"
             id="outlined-memberId-input"
-            label="MemberId"
+            label="ID"
             type="text"
             autoComplete="current-memberId"
             onChange={(e) => setMemberId(e.target.value)}
@@ -149,7 +149,7 @@ function Signup() {
                 hasNotSameError('passwordCheck') ? "입력한 비밀번호와 일치하지 않습니다." : null
             }
           />
-          <TextField
+          {/* <TextField
             className="signup-input"
             id="outlined-phoneNumber-input"
             label="Phone Number (선택입력)"
@@ -159,8 +159,8 @@ function Signup() {
             helperText='010-0000-0000'
             inputProps={{maxLength: 13}}
             error = {phoneNumber ? hasPhoneError(phoneNumber) : false}
-          />
-          <TextField
+          /> */}
+          {/* <TextField
             className="signup-input"
             id="outlined-email-input"
             label="Email Address (선택입력)"
@@ -168,7 +168,7 @@ function Signup() {
             autoComplete="current-email"
             onChange={(e) => setEmailAddress(e.target.value)}
             error = {emailAddress ? hasEmailError(emailAddress) : false}
-          />
+          /> */}
           <button type="submit" className="submitBtn">회원가입</button>
         </form>
       </div>
