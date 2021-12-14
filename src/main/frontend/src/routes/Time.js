@@ -24,6 +24,8 @@ import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext
 import { useMediaQuery } from "react-responsive";
 import useTitle from '../hooks/useTitle';
 
+
+
 function Time() {
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("시간관리"), 100);
