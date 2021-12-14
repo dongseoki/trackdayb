@@ -24,8 +24,6 @@ import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
 import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
-//반응형
-import { useMediaQuery } from "react-responsive";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
@@ -43,19 +41,13 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
       return 'asc'
     }
   }
-
-  // 반응형 화면 BreakPoint
-  const isMobileScreen = useMediaQuery({
-    query: "(max-width: 600px)",
-  });
-
   return (
     <div>
       <GoalModalSearchTitleListProvider>
-      {isMobileScreen ? 
+
       <div className='button-wrapper'>
         <Button className={gatherGoalYn ? "gather-btn active" : "gather-btn"} color="primary" variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
-        <FormControl>
+        <FormControl size="small">
         <InputLabel id="demo-simple-select-label">정렬</InputLabel>
         <Select
           className="orderColumn-select"
@@ -63,47 +55,27 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
           id="demo-simple-select"
           value={orderColumn}
           label="정렬"
-          onChange={(e)=>{setOrderColumn(e.target.value)}}
+          onChange={(e)=>{
+              setOrderColumn(e.target.value)}
+          }
         >
-          <MenuItem value="modification_datetime">최종수정일 순</MenuItem>
-          <MenuItem value="start_datetime">시작일 순</MenuItem>
-          <MenuItem value="end_datetime">종료일 순</MenuItem>
-          <MenuItem value="progress_rate">진행률 순</MenuItem>
+          <MenuItem value="">정렬</MenuItem>
+          <MenuItem value="modification_datetime">최종수정일</MenuItem>
+          <MenuItem value="start_datetime">시작일</MenuItem>
+          <MenuItem value="end_datetime">종료일</MenuItem>
+          <MenuItem value="progress_rate">진행률</MenuItem>
         </Select>
         </FormControl>
-        <Button className="orderType-btn" title={orderType === "desc" ? "내림차순" : "오름차순"} onClick={()=>{setOrderType(toggleOrderType(orderType))}}>{orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</Button>
-      </div> : 
-      <div className="button-wrapper">
-        <Button className={gatherGoalYn ? "gather-btn active" : "gather-btn"} color="primary" variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
-        <ToggleButtonGroup
-          color="primary"
-          value={orderColumn}
-          exclusive={true}
-        >
-          <ToggleButton value="modification_datetime" 
-            onClick={(e) =>{
-              setOrderType(toggleOrderType(orderType))
-              setOrderColumn("modification_datetime")
-              }}>최종수정일 순 {orderColumn === 'modification_datetime' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}
-          </ToggleButton>
-          <ToggleButton value="start_datetime"
-            onClick={(e) =>{
-              setOrderType(toggleOrderType(orderType))
-              setOrderColumn("start_datetime")
-              }}>시작일 순 {orderColumn === 'start_datetime' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
-          <ToggleButton value="end_datetime"
-            onClick={(e) =>{
-              setOrderType(toggleOrderType(orderType))
-              setOrderColumn("end_datetime")
-              }}>종료일 순 {orderColumn === 'end_datetime' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
-          <ToggleButton value="progress_rate"
-            onClick={(e) =>{
-              setOrderType(toggleOrderType(orderType))
-              setOrderColumn("progress_rate")
-              }}>진행률 순 {orderColumn === 'progress_rate' && orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}</ToggleButton>
-        </ToggleButtonGroup>
+        <Button 
+          disabled = {orderColumn === "" ? true : false} 
+          variant="outlined" 
+          className={orderColumn === "" ? "orderType-btn" : "orderType-btn active"}  
+          title={orderType === "desc" ? "내림차순" : "오름차순"} 
+          onClick={()=>{setOrderType(toggleOrderType(orderType))}}>
+            {orderType === "desc" ? <CgArrowDown /> : <CgArrowUp />}
+        </Button>
       </div>
-      } 
+
       <div className="goal-cards-list">
         {goalFullList && goalFullList.map((goal, index) => (
           <GoalCard

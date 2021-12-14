@@ -1,89 +1,100 @@
-.goal-content{
-  margin : 20px;
+.goal-content {
+  margin: 20px;
   padding: 20px;
-  background-color: rgba(130,143,146, 0.08);
+  background-color: rgba(130, 143, 146, 0.08);
   border-radius: 10px;
   box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
 }
 
-.goal-content .button-wrapper{
+.goal-content .button-wrapper {
   display: flex;
   justify-content: flex-end;
   height: 40px;
 }
+
 .goal-content .button-wrapper button {
-  white-space:nowrap;
+  white-space: nowrap;
 }
-.goal-content .button-wrapper .gather-btn{
+
+.goal-content .button-wrapper .gather-btn {
   background-color: transparent;
   border: 1px solid rgba(0, 0, 0, 0.12);
   color: rgba(0, 0, 0, 0.54);
   box-shadow: none;
   margin-right: 5px;
 }
-.goal-content .button-wrapper .active{
+
+.goal-content .button-wrapper .active {
   color: #1976d2;
   background-color: rgba(25, 118, 210, 0.08);
 }
-.goal-content .button-wrapper .orderColumn-select{
-  height: 40px;
-  font-size: 14px;
+
+.goal-content .button-wrapper .orderColumn-select {
+  margin-right: 2px;
+  min-width: 100px;
 }
-.goal-content .button-wrapper .orderType-btn{
+
+.goal-content .button-wrapper .orderType-btn .active {
   border: 1px solid rgba(0, 0, 0, 0.12);
   color: #1976d2;
   background-color: rgba(25, 118, 210, 0.08);
   box-shadow: none;
   margin-right: 10px;
-  font-size : 1.2em;
+  font-size: 1.2em;
   min-width: none;
 }
-.goal-content .goal-cards-list{
-  padding : 20px 0;
+
+.goal-content .goal-cards-list {
+  padding: 20px 0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.goal-content .card{
+.goal-content .card {
   border-radius: 6px 10px 10px 6px;
-  border-left : 6px solid #cccccc;
+  border-left: 6px solid #cccccc;
   background-color: white;
   padding: 5px 12px 10px 14px;
   width: 200px;
   height: 250px;
-  margin : 10px;
+  margin: 10px;
   display: grid;
   grid-template-rows: 1fr 1fr 34px 60px 25px 44px 24px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-.goal-content .card .path-tag-wrapper{
+
+.goal-content .card .path-tag-wrapper {
   display: flex;
 }
-.goal-content .card .path-tag{
-  font-size : 12px;
+
+.goal-content .card .path-tag {
+  font-size: 12px;
   border-radius: 10px;
   background-color: rgba(25, 118, 210, 0.1);
   padding: 2px 6px;
   margin-right: 1px;
 }
-.goal-insert-btn{
+
+.goal-insert-btn {
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
-  border : none;
+  border: none;
   background-color: white;
   width: 200px;
   height: 250px;
-  margin : 10px;
+  margin: 10px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
 }
-.goal-insert-btn:hover{
-  border : 3px solid #4EC3E0;
+
+.goal-insert-btn:hover {
+  border: 3px solid #4EC3E0;
   transition: 0.5s;
-  color : #4EC3E0;
+  color: #4EC3E0;
 }
-.card .card-button-wrapper{
+
+.card .card-button-wrapper {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -96,7 +107,8 @@
   cursor: pointer;
   color: rgba(5, 23, 42, 0.6);
 }
-.card .card-button-wrapper .deleteBtn:hover{
+
+.card .card-button-wrapper .deleteBtn:hover {
   color: #1976d2;
   background-color: rgba(25, 118, 210, 0.04);
   border-radius: 4px;
@@ -111,18 +123,21 @@
   cursor: pointer;
   color: rgba(5, 23, 42, 0.6);
 }
-.card .card-button-wrapper .modifyBtn:hover{
+
+.card .card-button-wrapper .modifyBtn:hover {
   color: #1976d2;
   background-color: rgba(25, 118, 210, 0.04);
   border-radius: 4px;
 }
-.card .card-button-wrapper .lock-icon{
+
+.card .card-button-wrapper .lock-icon {
   font-size: 19px;
   color: #1976d2;
   vertical-align: middle;
   margin-right: 5px;
 }
-.card .title{
+
+.card .title {
   font-size: 16px;
   font-weight: bold;
   margin-top: 8px;
@@ -130,40 +145,46 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.card .content{
+
+.card .content {
   font-size: 14px;
   margin: 5px 0;
   overflow: hidden;
   display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
-.card .datetime{
+
+.card .datetime {
   font-size: 12px;
-  margin: 5px 0 ;
+  margin: 5px 0;
 }
-.card .tag{
+
+.card .tag {
   border-radius: 10px;
   background-color: rgba(25, 118, 210, 0.1);
   padding: 2px 6px;
   margin-right: 1px;
   font-size: 12px;
 }
-.card .progressRate{
+
+.card .progressRate {
   font-size: 14px;
   text-align: center;
 }
 
 @media screen and (max-width : 380px) {
+
   /* .goal .goal-content .button-wrapper{
     min-width: 300px;
   } */
-  .goal-content .button-wrapper button{
+  .goal-content .button-wrapper button {
     font-size: 12px;
-    padding-left:  5px;
+    padding-left: 5px;
     padding-right: 5px;
   }
-  .goal-content .button-wrapper .orderColumn-select{
+
+  .goal-content .button-wrapper .orderColumn-select {
     font-size: 12px;
   }
 }
