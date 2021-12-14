@@ -293,7 +293,7 @@
             ,title
             ,start_datetime
             ,end_datetime
-            <if test="content != null and !content.equals('')">
+            <if test="content != null">
                     ,content
             </if>
             <if test="activityScore != null and !activityScore.equals('')">

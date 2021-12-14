@@ -11,7 +11,7 @@
             <if test="kind != null and !kind.equals('')">
                 kind,
             </if>
-            <if test="content != null and !content.equals('')">
+            <if test="content != null">
                 content,
             </if>
             <if test="startDatetime != null and !startDatetime.equals('')">
@@ -39,7 +39,7 @@
             <if test="kind != null and !kind.equals('')">
                 #{kind},
             </if>
-            <if test="content != null and !content.equals('')">
+            <if test="content != null">
                 #{content},
             </if>
             <if test="startDatetime != null and !startDatetime.equals('')">
