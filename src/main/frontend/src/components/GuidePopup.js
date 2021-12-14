@@ -11,33 +11,52 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 //반응형
 import { useMediaQuery } from "react-responsive";
-//히스토리
-import {useHistory} from "react-router-dom";
 
 
-function GuidePopup() {
-    const history = useHistory();
-    
+function GuidePopup(props) {
+  const [open, setOpen] = [props.showGuide, props.setShowGuide];
+
+
     const images = [
         {
-            label: 'San Francisco – Oakland Bay Bridge, United States',
+            label: '메인',
             imgPath:
-            'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60',
+            'img/guide/1main.png',
         },
         {
-            label: 'Bird',
+            label: '목표관리',
             imgPath:
-            'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60',
+            'img/guide/2goal.png',
         },
         {
-            label: 'Bali, Indonesia',
+            label: '목표 입력/수정',
             imgPath:
-            'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250&q=80',
+            'img/guide/3goal_add.png',
         },
         {
-            label: 'Goč, Serbia',
+            label: '시간관리',
             imgPath:
-            'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
+            'img/guide/4time.png',
+        },
+        {
+          label: '활동 입력/수정',
+          imgPath:
+          'img/guide/5time_add.png',
+        },
+        {
+          label: '리포트',
+          imgPath:
+          'img/guide/6report.png',
+        },
+        {
+          label: '커뮤니티',
+          imgPath:
+          'img/guide/7community.png',
+        },
+        {
+          label: '커뮤니티 상세',
+          imgPath:
+          'img/guide/8community_detail.png',
         },
     ];
     
@@ -45,7 +64,11 @@ function GuidePopup() {
     const maxStep = images.length;
 
     const handleNext = () => {
+      if(activeStep === maxStep - 1){
+        handleClose();
+      }else{
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
     }
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -68,7 +91,7 @@ function GuidePopup() {
         borderRadius: "10px",
         boxShadow: theme.shadows[5],
         padding: theme.spacing(1, 1, 2, 2),
-        width: "470px",
+        width: "1200px",
         fontSize: "14px",
         },
         paperMobile: {
@@ -82,21 +105,21 @@ function GuidePopup() {
     }));
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  
 
-  const handleOpen = () => {
-    setOpen(true);
-    setActiveStep(0);
-    console.log('history', history)
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  //   setActiveStep(0);
+  // };
 
   const handleClose = () => {
     setOpen(false);
+    setActiveStep(0);
   };
   
   return (
     <div className="guide-popup">
-      <button className="popupBtn" onClick={handleOpen}>guide</button>
+      {/* <button className="popupBtn" onClick={handleOpen}>guide</button> */}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -111,14 +134,14 @@ function GuidePopup() {
       >
         <Fade in={open}>
           <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
-            <h3 id="transition-modal-title">{images[activeStep].label}</h3>
+            {/* <h3 id="transition-modal-title">{images[activeStep].label}</h3> */}
             <div>
                 <Box
                     component="img"
                     sx={{
-                    height: 255,
+                    // height: 255,
                     display: 'block',
-                    maxWidth: 400,
+                    // maxWidth: 400,
                     overflow: 'hidden',
                     width: '100%',
                     }}
@@ -135,9 +158,9 @@ function GuidePopup() {
                 <Button
                     size="small"
                     onClick={handleNext}
-                    disabled={activeStep === maxStep - 1}
+                    // disabled={activeStep === maxStep - 1}
                 >
-                    Next
+                    {activeStep === maxStep-1 ? "Start" : "Next"}
                 </Button>
                 }
                 backButton={

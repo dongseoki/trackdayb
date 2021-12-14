@@ -4,14 +4,11 @@ import './index.css';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './context/AuthContext'; //로그인 유저 정보
-// import { CookieProvider } from 'react-cookie'; //팝업창 쿠키
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      {/* <CookieProvider> */}
-        <App />
-      {/* </CookieProvider> */}
+      <App />
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')

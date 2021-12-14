@@ -15,130 +15,161 @@
   align-items: center;
   position: relative;
 }
-.title{
+
+.nav .title {
   padding: 0 20px;
 }
-.title a{
+
+.nav .title a {
   font-size: 2.2em;
   font-weight: 700;
   color: var(--black);
-}   
-.menu{
+}
+
+.menu {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  
+
 }
-.menu .inline-block-menu li{
+
+.menu .inline-block-menu li {
   display: inline-block;
-  padding : 0 30px;
+  padding: 0 30px;
   text-align: center;
 }
-.menu .inline-block-menu li a{
+
+.menu .inline-block-menu li a {
   color: var(--black);
-  white-space:nowrap;
+  white-space: nowrap;
   font-weight: 600;
   font-size: 16px;
 }
-.sign{
+
+.sign {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
 }
-.sign li{
+
+.sign li {
   display: inline-block;
   text-align: center;
-  padding : 0 10px;
+  padding: 0 10px;
 }
+
 .sign li a {
   white-space: nowrap;
   color: var(--black);
   font-weight: 600;
   font-size: 16px;
 }
-.sign .logout-btn{
+
+.sign .logout-btn {
   border: 1px solid #b2e0e0;
   color: var(--black);
   border-radius: 10px;
   background-color: #b2e0e0;
-  padding: 2px 8px;
+  padding: 3px 8px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
 }
-.sign .login-btn{
+
+.sign .login-btn {
   border: 1px solid #b2e0e0;
   color: var(--black);
   border-radius: 10px;
   background-color: #b2e0e0;
-  padding: 2px 8px;
+  padding: 3px 8px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
 }
-.sign .signup-btn{
+
+.sign .signup-btn {
   border: 1px solid #b2e0e0;
   color: var(--black);
   border-radius: 10px;
   background-color: #b2e0e0;
-  padding: 2px 8px;
+  padding: 3px 8px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
 }
-.nav .menu .nav-fold{
+
+.sign .guide-btn {
+  border: 1px solid #113A45;
+  color: var(--white);
+  border-radius: 10px;
+  background-color: #113A45;
+  padding: 3px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.nav .menu .nav-fold {
   position: absolute;
-  top : 0;
-  right : 0;
+  top: 0;
+  right: 0;
   font-size: 22px;
-  padding : 20px 0;
+  padding: 20px 0;
   margin-right: 80px;
   cursor: pointer;
 }
 
 @media screen and (max-width : 1040px) {
-  .nav{
+  .nav {
     grid-template-columns: 0.5fr 2fr 1fr;
-    padding : 0;
+    padding: 0;
   }
-  
-  .nav .menu li{
-    padding : 0 5px;
+
+  .nav .menu li {
+    padding: 0 5px;
   }
-  .nav .title a{
-    font-size : 24px;
+
+  .nav .title a {
+    font-size: 24px;
   }
 }
+
 @media screen and (max-width : 740px) {
-  .nav{
+  .nav {
     grid-template-columns: 1fr 0fr 3fr;
-    padding:  0;
+    padding: 0;
   }
-  .nav .menu .nav-fold{
+
+  .nav .menu .nav-fold {
     margin: 0 10px;
   }
-  .nav .menu .inline-block-menu li{
+
+  .nav .menu .inline-block-menu li {
     width: 50px;
     display: none;
   }
-  .hidden-block-menu ul{
+
+  .hidden-block-menu ul {
     margin: 0;
   }
-  .hidden-block-menu ul li{
+
+  .hidden-block-menu ul li {
     background-color: #4EC3E0;
     text-align: center;
-    padding : 5px 0;
+    padding: 5px 0;
 
   }
-  .hidden-block-menu ul li a{
+
+  .hidden-block-menu ul li a {
     color: var(--black);
-    white-space:nowrap;
+    white-space: nowrap;
     font-weight: 600;
     font-size: 16px;
   }
-  .sign ul{
-    margin-right:1em;
+
+  .sign ul {
+    margin-right: 1em;
   }
 }

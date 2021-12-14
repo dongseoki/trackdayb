@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./Home.css"
 import useTitle from '../hooks/useTitle';
+import GuidePopup from '../components/GuidePopup';
 
 function Home () {
     const titleUpdater = useTitle("trackDay");
     setTimeout(()=>titleUpdater("메인"), 100);
+    
+    const [showGuide, setShowGuide] = useState(true);
     return (
         <div className="home">
+            <GuidePopup showGuide={showGuide} setShowGuide={setShowGuide}/>
             <div className="main-banner">
                 <div className="img-wrapper">
                     <img className='pattern-design-jpg' src="img/fakurian-design-PjG_SXDkpwQ-unsplash.jpg" alt="main-background"></img>

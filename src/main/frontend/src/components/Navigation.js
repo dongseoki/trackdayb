@@ -14,6 +14,12 @@ function Navigation(){
     const [curUser, setCurUser] = useContext(AuthContext);
     const history = useHistory();
 
+    // 가이드 모달 팝업
+    const [showGuide, setShowGuide] = useState(false);
+    const handleOpen = () => {
+        setShowGuide(true);
+    };
+
     const logoutHandler = async () =>{
         try{
             setCurUser()
@@ -46,8 +52,8 @@ function Navigation(){
             {isSmallScreen ? <div className="nav-fold" onClick={()=>{setNavFoldState(!navFoldState)}}><GiHamburgerMenu/></div> : null}
                 <div className="inline-block-menu">
                     <ul>
-                        <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
                         <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
+                        <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
                         <li><Link to="/report">리포트</Link></li>
                         <li><Link to="/community">커뮤니티</Link></li>
                     </ul>
@@ -61,7 +67,8 @@ function Navigation(){
                         {/* <li><Link to="/mypage">마이페이지</Link></li> */}
                         <li><span>{curUser.memberId}</span></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
-                        <GuidePopup/>
+                        <li><button className="guide-btn" onClick={handleOpen}>가이드</button></li>
+                        
                         </>
                         ) : ( isSmallScreen ? null:
                             <>
@@ -75,8 +82,8 @@ function Navigation(){
         {isSmallScreen && navFoldState ? (
             <div className="hidden-block-menu">
                 <ul>
-                    <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
                     <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
+                    <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
                     <li><Link to="/report">리포트</Link></li>
                     <li><Link to="/community">커뮤니티</Link></li>
                     <li><Link to="/login" className="login-btn">로그인</Link></li>
@@ -85,6 +92,7 @@ function Navigation(){
             </div>
         ) : null}
         </nav>
+        <GuidePopup showGuide={showGuide} setShowGuide={setShowGuide}/>
     </>
     )
 }
