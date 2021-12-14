@@ -62,20 +62,16 @@ function Navigation(){
 
             <div className="sign">
                 <ul>
-                    {curUser ? (
-                        <>
-                        {/* <li><Link to="/mypage">마이페이지</Link></li> */}
+                    {curUser ? <>
                         <li><span>{curUser.memberId}</span></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
-                        <li><button className="guide-btn" onClick={handleOpen}>가이드</button></li>
-                        
-                        </>
-                        ) : ( isSmallScreen ? null:
+                        </> : ( 
                             <>
                             <li><Link to="/login" className="login-btn">로그인</Link></li>
                             <li><Link to="/signup" className="signup-btn">회원가입</Link></li>
                             </>
                         )}
+                    {isSmallScreen ? null: <li><button className="guide-btn" onClick={handleOpen}>가이드</button></li>}
                 </ul>
             </div>
         </div>
@@ -86,8 +82,7 @@ function Navigation(){
                     <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
                     <li><Link to="/report">리포트</Link></li>
                     <li><Link to="/community">커뮤니티</Link></li>
-                    <li><Link to="/login" className="login-btn">로그인</Link></li>
-                    <li><Link to="/signup" className="signup-btn">회원가입</Link></li>
+                    <li><button className="guide-btn" onClick={handleOpen}>가이드</button></li>
                 </ul>
             </div>
         ) : null}

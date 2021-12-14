@@ -54,6 +54,10 @@
   align-items: center;
 }
 
+.sign ul {
+  display: flex;
+}
+
 .sign li {
   display: inline-block;
   text-align: center;
@@ -76,6 +80,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
+  white-space: nowrap;
 }
 
 .sign .login-btn {
@@ -87,6 +92,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
+  white-space: nowrap;
 }
 
 .sign .signup-btn {
@@ -98,6 +104,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
+  white-space: nowrap;
 }
 
 .sign .guide-btn {
@@ -109,6 +116,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 400;
+  white-space: nowrap;
 }
 
 .nav .menu .nav-fold {
@@ -121,7 +129,7 @@
   cursor: pointer;
 }
 
-@media screen and (max-width : 1040px) {
+@media screen and (max-width : 1105px) {
   .nav {
     grid-template-columns: 0.5fr 2fr 1fr;
     padding: 0;
@@ -138,8 +146,12 @@
 
 @media screen and (max-width : 740px) {
   .nav {
-    grid-template-columns: 1fr 0fr 3fr;
+    /* grid-template-columns: 1fr 0fr 3fr; */
     padding: 0;
+  }
+
+  .nav .sign {
+    margin-right: 40px;
   }
 
   .nav .menu .nav-fold {
@@ -167,6 +179,15 @@
     white-space: nowrap;
     font-weight: 600;
     font-size: 16px;
+  }
+
+  .hidden-block-menu .guide-btn {
+    color: var(--black);
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    background-color: transparent;
   }
 
   .sign ul {
