@@ -15,7 +15,7 @@
 }
 .home .main-banner .main-slogan{
   position: absolute;
-  top : 40%;
+  top : 35%;
   left : 50%;
   transform: translate(-50%, -50%);
 }
@@ -24,6 +24,21 @@
   font-weight: bold;
   color: white;
   text-shadow: #000000 1px 0 10px;
+}
+.link-box{
+  margin-top: 30px;
+  position: absolute;
+  top : 50%;
+  left : 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.link-box p{
+  font-size: 16px;
+  color : var(--black);
+  background: linear-gradient(to top, #a6e1ef 100%, transparent 30% );
 }
 /* .App {
     text-align: center;
