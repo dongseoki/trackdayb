@@ -69,7 +69,6 @@ public class GoalManageController {
      * 검색 조회 조건이 반영되지 않았다.
      * 항상 성공 코드를 반환한다.
      * 제목 리스트 테스트 메서드는 목표의 내용, 목표에 연결된 주기성 정보는 반환하지 않는다.
-     * @param goalVO
      * @return ResultMVO
      */
     @PostMapping("/getGoalTitleListTEST")
@@ -185,6 +184,35 @@ public class GoalManageController {
             
             // set goalInfo
             String[] searchGoalIdArray = {goalVO.getGoalId()}; 
+            GoalVO param1 = new GoalVO();
+            param1.setMemberSerialNumber(goalVO.getMemberSerialNumber());
+            param1.setSearchGoalIdList(Arrays.asList(searchGoalIdArray));
+            resultMVO.setGoalInfo(goalService.getGoalFullList(param1).get(0));
+
+        } catch (Exception e) {
+            LOGGER.error("update error : {}", e.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+        }
+
+
+
+        return resultMVO;
+    }
+
+    @PatchMapping("/goal/progress-rate")
+    public ResultMVO updateGoalProgressRate(@RequestParam (value = "goalId", required = true)String goalId, @RequestParam(value="progressRate", required = true)String progressRate){
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
+        GoalVO goalVO = new GoalVO();
+        goalVO.setGoalId(goalId);
+        goalVO.setProgressRate(progressRate);
+        goalVO.setMemberSerialNumber(loginSerialNumber);
+        try {
+            goalService.updateGoalProgressRate(goalVO);
+
+            // set goalInfo
+            String[] searchGoalIdArray = {goalVO.getGoalId()};
             GoalVO param1 = new GoalVO();
             param1.setMemberSerialNumber(goalVO.getMemberSerialNumber());
             param1.setSearchGoalIdList(Arrays.asList(searchGoalIdArray));

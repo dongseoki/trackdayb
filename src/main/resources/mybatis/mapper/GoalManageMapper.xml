@@ -168,6 +168,15 @@
             goal_id = #{goalId}
 
     </update>
+
+    <update id="updateGoalProgressRate">
+        UPDATE goal   /* GoalManageRepository.updateGoalProgressRate */
+        SET
+            progress_rate = #{progressRate}
+        WHERE
+            goal_id = #{goalId}
+    </update>
+
     <update id="updatePeriodicityInfo">
         UPDATE periodicity_info
         SET
@@ -230,6 +239,7 @@
         WHERE
             goal_id = #{goalId}
     </update>
+
 
     <resultMap id="goalFullResultMap" type="com.lds.trackdayb.mvo.GoalMVO"> 
         <id column="goal_id" property="goalId"/> 
@@ -386,7 +396,7 @@
         <include refid="goalSearchConditionQuery" />
         <include refid="goalSearchOrderQuery" />
     </select>
-    <select id="getGoalTitleList" resultType="GoalMVO">
+    <select id="getGoalTitleList" resultType="com.lds.trackdayb.mvo.GoalMVO">
         select 
         (SELECT color from goal as g2 where g2.goal_id = SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1)) as top_goal_color,
         g.goal_id,

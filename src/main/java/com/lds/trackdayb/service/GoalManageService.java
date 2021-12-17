@@ -10,6 +10,7 @@ public interface GoalManageService {
     void insertGoal(GoalVO goalVO) ;
 
     void updateGoal(GoalVO goalVO) ;
+    void updateGoalProgressRate(GoalVO goalVO);
 
     void deleteGoal(GoalVO goalVO) ;
 
@@ -18,5 +19,5 @@ public interface GoalManageService {
     List<GoalMVO> getGoalFullList(GoalVO goalVO);
 
     boolean checkGoalOwnership(GoalVO goalVO);
-    
+
 }

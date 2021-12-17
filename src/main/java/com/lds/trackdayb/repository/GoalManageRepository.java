@@ -19,6 +19,8 @@ public interface GoalManageRepository {
 
     void updateGoal(GoalVO goalVO);
 
+    void updateGoalProgressRate(GoalVO goalVO);
+
     void updatePeriodicityInfo(PeriodicityInfoDTO pDto);
 
     void deleteGoal(GoalVO goalVO);
@@ -30,5 +32,5 @@ public interface GoalManageRepository {
     List<GoalMVO> getGoalFullList(GoalVO goalVO);
 
     String argListTest(String[] args);
-    
+
 }

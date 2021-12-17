@@ -59,6 +59,15 @@ public class GoalManageServiceImpl implements GoalManageService {
     }
 
     @Override
+    public void updateGoalProgressRate(GoalVO goalVO) {
+        if (!checkGoalOwnership(goalVO)){
+            throw new IllegalStateException();
+        }
+        goalManageRepository.updateGoalProgressRate(goalVO);
+    }
+
+
+    @Override
     public void deleteGoal(GoalVO goalVO) {
         if (!checkGoalOwnership(goalVO)){
             throw new IllegalStateException();
