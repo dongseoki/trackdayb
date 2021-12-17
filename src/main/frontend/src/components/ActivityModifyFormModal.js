@@ -138,7 +138,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
                 goalId : parentId,
                 progressRate : parentProgressRate
                 }
-                const result_goal = await axiosInstance.patch("/goalManage/goal", formData_goal)
+                const result_goal = await axiosInstance.patch("/goalManage/goal/progress-rate", formData_goal)
             }
             handleClose();
             // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
