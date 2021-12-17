@@ -2,6 +2,7 @@ package com.lds.trackdayb.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -200,15 +201,17 @@ public class GoalManageController {
     }
 
     @PatchMapping("/goal/progress-rate")
-    public ResultMVO updateGoalProgressRate(@RequestParam (value = "goalId", required = true)String goalId, @RequestParam(value="progressRate", required = true)String progressRate){
+    public ResultMVO updateGoalProgressRate(@RequestBody Map<String, String> updateMap){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-        String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
-        GoalVO goalVO = new GoalVO();
-        goalVO.setGoalId(goalId);
-        goalVO.setProgressRate(progressRate);
-        goalVO.setMemberSerialNumber(loginSerialNumber);
+
         try {
+            String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
+            GoalVO goalVO = new GoalVO();
+            goalVO.setGoalId(updateMap.get("goalId"));
+            goalVO.setProgressRate(updateMap.get("progressRate"));
+            goalVO.setMemberSerialNumber(loginSerialNumber);
+
             goalService.updateGoalProgressRate(goalVO);
 
             // set goalInfo
@@ -222,8 +225,6 @@ public class GoalManageController {
             LOGGER.error("update error : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
         }
-
-
 
         return resultMVO;
     }
