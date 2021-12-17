@@ -88,7 +88,7 @@ function Signup() {
         })
         // 세션 스토리지에 저장하기
         localStorage.setItem("jwt-token", result.data.token)
-        history.push('/time')
+        history.push('/')
         toast.success(`${result.data.memberId}님, 환영합니다!`)
       }
     }catch(err){

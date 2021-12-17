@@ -19,6 +19,12 @@ function Footer(props) {
                         <p>Copyright @ 2021 trackDay All rights reserved.</p>
                     </div>
                     <div className="right">
+                        <a href="https://forms.gle/zJmLVMoKX6nFWbuw6" target="_blank" rel="noopener noreferrer">
+                            <p>&#127856; 피드백 남기러 가기 &#127856;</p>
+                        </a>
+                        <a href="https://open.kakao.com/o/gu0EefLd" target="_blank" rel="noopener noreferrer">
+                            <p>&#128073; FAQ (개발자 오픈카톡) &#128072;</p>
+                        </a>
                         {/* <address>      
                         대표자 : 이동석 | 사업자번호 : 116-99-99999<br />
                         서울특별시 마포구 와우산@로 24길<br />

@@ -40,6 +40,7 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
         }
       })
       goalObj.color = goal.color
+      goalObj.topGoalColor = goal.topGoalColor // 부모 컬러 기준
       goalObj.index = index
       nodes.push(goalObj)
   })
@@ -109,9 +110,9 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
                 checked={searchGoalIdList.includes(data.id) ? true : false}
                 value={data.id}/>
               </div>
-              <div className={classes} style={{ width: '100%', ['--icon-pos']: `calc(2px + ${level * 25}px)`,backgroundColor : hexToRgba(data.color)}}>
+              <div className={classes} style={{ width: '100%', ['--icon-pos']: `calc(2px + ${level * 25}px)`,backgroundColor : hexToRgba(data.topGoalColor)}}>
                 <div className="goal-title" style={{width:`calc(180px - ${level * 10}px)` }}>{data.label}</div>
-                <div className="color-tag" style={{ backgroundColor : data.color}}>
+                <div className="color-tag" style={{ backgroundColor : data.topGoalColor}}>
                   {data.dropdown ? <RiArrowDropDownLine className="arrow-icon"/> : null}
                 </div>
               </div>
@@ -128,7 +129,7 @@ function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
 // hex to rgba
 function hexToRgba ( hexType ){ 
   if(!hexType){
-    return "rgba(130,143,146, 0.08)";
+    return "rgba(130,143,146, 0.08)"; //topGoalColor가 없는 경우(회색표시)
   }else{
   /* 맨 앞의 "#" 기호를 삭제하기. */ 
   var hex = hexType.trim().replace( "#", "" ); 

@@ -90,6 +90,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
             kind={goal.kind}
             progressRate={goal.progressRate}
             color={goal.color}
+            topGoalColor={goal.topGoalColor}
             shareStatus={goal.shareStatus}
             periodicityInfo = {goal.periodicityInfo}
             goalSearchTitleList={goalSearchTitleList}
@@ -119,11 +120,12 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
   )
 }
 
-function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
+function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, topGoalColor, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
   return(
-        <div className="card" style={{ borderLeft : `7px solid`, borderColor : color}} id={goalId} >
+        //color&topGoalColor 모두 없으면 css에 고정값 (회색 사용)
+        <div className="card" style={{ borderLeft : `7px solid`, borderColor : topGoalColor}} id={goalId} > 
           <div className="card-button-wrapper">
             {(shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
             <GoalModifyFormModal 
@@ -159,7 +161,7 @@ function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, cont
           <div className="content">{content}</div>
           <div className="datetime">{startDatetime.substring(0,10)} ~ {endDatetime.substring(0,10)}</div>
           <div>{(kind==="regular") ? (<><span className="tag">주기성</span> <PeriodicityInfo periodicityInfo ={periodicityInfo} /></>) : (<span className="tag">기한성</span>)}</div>
-          {progressRate ? <div className="progressRate">{progressRate}%</div> : null}
+          <div className="progressRate">{progressRate ? progressRate : 0}%</div>
         </div>
     )
 }

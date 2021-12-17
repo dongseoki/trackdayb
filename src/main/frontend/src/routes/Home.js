@@ -18,6 +18,14 @@ function Home () {
                 <div className="main-slogan">
                     <p>Track Your Day</p>
                 </div>
+                <div className='link-box'>
+                    <a href="https://forms.gle/zJmLVMoKX6nFWbuw6" target="_blank" rel="noopener noreferrer">
+                        <p>&#127856; 피드백 남기러 가기 &#127856;</p>
+                    </a>
+                    <a href="https://open.kakao.com/o/gu0EefLd" target="_blank" rel="noopener noreferrer">
+                        <p>&#128073; FAQ (개발자 오픈카톡) &#128072;</p>
+                    </a>
+                </div> 
             </div>
             {/* <div className="main-illustrations">
                 <img className="checking-box-svg" src="img/undraw_checking_boxes_re_9h8m.svg" alt="checking box"></img>
