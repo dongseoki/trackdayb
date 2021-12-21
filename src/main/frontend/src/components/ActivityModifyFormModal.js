@@ -64,7 +64,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
         setActivityScore(modifyData.activityScore);
         setParentGoalTitle(modifyData.goalTitleInfo.title ? modifyData.goalTitleInfo.title : "없음");
         setParentId(modifyData.goalId);
-        setParentProgressRate(modifyData.goalTitleInfo.parentProgressRate)
+        setParentProgressRate(modifyData.goalTitleInfo.progressRate)
     }
 
     // 반응형 화면 BreakPoint
