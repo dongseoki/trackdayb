@@ -1,154 +1,181 @@
 /* 모바일용 모달 스크롤 */
-@media  (max-height: 700px) {
-    .goal-form{
+@media (max-height: 700px) {
+    .goal-form {
         max-height: 70vh;
     }
 }
-.goal-form{
+
+.goal-form {
     overflow-y: auto;
     padding-right: 10px;
 }
+
 /* insert Form CSS */
-.top-wrapper{
+.top-wrapper {
     margin: 10px 0;
     width: 100%;
     display: grid;
     grid-template-columns: 85% 15%;
 }
-.modal-date-picker .date-picker-wrapper{
+
+.modal-date-picker .date-picker-wrapper {
     display: flex;
     justify-content: space-around;
     padding: 8px 10px;
     height: 38px;
-    border :1px solid rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
     background-color: white;
 }
-.modal-date-picker .date-picker-wrapper .date-picker{
-    border : none;
+
+.modal-date-picker .date-picker-wrapper .date-picker {
+    border: none;
     width: 100%;
     text-align: center;
     font-size: 14px;
     background-color: transparent;
 }
-.modal-date-picker .date-picker-wrapper .date-picker:focus{
+
+.modal-date-picker .date-picker-wrapper .date-picker:focus {
     font-weight: bolder;
     outline: none;
 }
-.modal-share-toggle .lock-icon{
+
+.modal-share-toggle .lock-icon {
     font-size: 15px;
 }
 
-.modal-title{
+.modal-title {
     font-size: 12px;
     color: rgba(0, 0, 0, 0.87);
     margin-bottom: 5px;
 }
-.modal-share-toggle{
+
+.modal-share-toggle {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.count-wrapper{
+
+.count-wrapper {
     display: flex;
     flex-direction: row;
     margin-top: 5px;
 }
-.timeUnit-select{
+
+.timeUnit-select {
     width: 80px;
     height: 40px;
-    border :1px solid rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
     text-align: center;
     margin-right: 20px;
 }
-.none-count-wrapper{
+
+.none-count-wrapper {
     margin-top: 10px;
 }
-.slider-wrapper{
+
+.slider-wrapper {
     display: flex;
     flex-direction: column;
     margin-top: 5px;
 }
-.slider-border{
-    border : 1px solid rgba(0, 0, 0, 0.12);
+
+.slider-border {
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 4px;
     display: flex;
     justify-content: center;
 }
-.parent-modal-wrapper{
+
+.parent-modal-wrapper {
     display: flex;
     flex-direction: row;
-    margin : 10px 0;
+    margin: 10px 0;
     justify-content: space-between;
 }
-.parent-title{
-    border : 1px solid rgba(0, 0, 0, 0.12);
+
+.parent-title {
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 4px;
     width: 80%;
     text-align: center;
     height: 40px;
     line-height: 40px;
 }
-.color-picker-area{
+
+.color-picker-area {
     display: flex;
     flex-direction: row;
-    margin-top : 15px;
+    margin-top: 15px;
+    justify-content: space-between;
 }
-.color-picker-btn{
-    border :none;
+
+.color-picker-area .textfield-title {
+    width: 85%;
+}
+
+.color-picker-btn {
+    border: none;
     border-radius: 4px;
     background-color: transparent;
     height: 40px;
-    color : white;
+    color: white;
     font-size: 20px;
     margin-right: 2px;
     cursor: pointer;
 }
-.color-tag-wrapper{
-    position: relative;
-}
-.color-picker{
+
+.color-picker {
     position: absolute;
-    bottom: 0;
-    left: 40px;
+    bottom: 40px;
+    transform: translate(-100%, 0);
 }
+
 .small .react-colorful {
     width: 120px;
     height: 120px;
-  }
-.small .react-colorful__hue {
-height: 20px;
 }
-.goal-type-radio .MuiFormControlLabel-label{
+
+.small .react-colorful__hue {
+    height: 20px;
+}
+
+.goal-type-radio .MuiFormControlLabel-label {
     font-size: 14px;
 }
-.dayCheckbox-wrapper{
+
+.dayCheckbox-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-.dayCheckbox-wrapper .MuiFormControlLabel-label{
+
+.dayCheckbox-wrapper .MuiFormControlLabel-label {
     font-size: 14px;
 }
-.button-wrapper{
+
+.button-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 10px;
 }
-.submitBtn{
+
+.submitBtn {
     border: 1px solid #3292EB;
     border-radius: 4px;
     background-color: #3292EB;
     height: 40px;
     width: 50%;
-    color : white;
+    color: white;
     font-size: 14px;
     margin-right: 2px;
     cursor: pointer;
 }
-.cancleBtn{
+
+.cancleBtn {
     border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
     background-color: #eaf4fd;
