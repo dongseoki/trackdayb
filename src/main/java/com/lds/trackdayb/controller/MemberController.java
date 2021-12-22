@@ -102,7 +102,8 @@ public class MemberController {
             TokenDTO tokenInfo =  memberService.reissue(tokenRequestDTO);
             resultMVO.setTokenInfo(tokenInfo);
 
-            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+            // anonymous issue. 멤버 아이디 설정 값이 익명으로 나오는 문제. 해결을 위해 아래 코드 주석 처리.
+//            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
 
             httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
         }catch (RuntimeException runtimeException){
