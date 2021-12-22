@@ -2,8 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lds.trackdayb.repository.MemberRepository">
+    <update id="updateRefreshToken">
+        UPDATE member
+        SET refresh_token = #{refreshToken}
+        WHERE member_id = #{memberId}
+    </update>
 
-    <select id="findByMemberId" resultType="MemberDTO">
+    <select id="findByMemberId" resultType="com.lds.trackdayb.dto.MemberDTO">
     SELECT *
     FROM member
     WHERE
@@ -11,7 +16,7 @@
     LIMIT 1;
     </select>
 
-    <select id="findByMemberIdAndPassword" resultType="MemberDTO">
+    <select id="findByMemberIdAndPassword" resultType="com.lds.trackdayb.dto.MemberDTO">
         SELECT *
         FROM member
         WHERE

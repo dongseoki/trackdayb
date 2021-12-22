@@ -14,4 +14,5 @@ public interface MemberRepository {
 
     MemberDTO findByMemberId(String memberId);
     MemberDTO findByMemberIdAndPassword(HashMap<String, String> param);
+    void updateRefreshToken(MemberDTO memberDTO);
 }

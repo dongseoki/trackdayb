@@ -187,3 +187,7 @@ Release 1.0.0.1
 Release 1.0.0.2
   - 행동수정 폼 - 진행률 api 호출로 변경.
   - 행동삽입 폼 - 진행률 api 호출로 변경.
+
+Release 1.X.0.0
+  - login API, signup API 수정 : token 반환 형식 변경.
+  - reissue API 추가
