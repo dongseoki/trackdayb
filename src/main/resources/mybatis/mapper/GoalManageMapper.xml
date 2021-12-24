@@ -259,6 +259,22 @@
         <result column="pi_modification_datetime" property="periodicityInfo.modificationDatetime"/>
         <result column="pi_deletion_status" property="periodicityInfo.deletionStatus"/>
 </resultMap>
+    <sql id="goalJoinQueryForStatic">
+        <if test='gatherGoalYn != null and gatherGoalYn.equals("Y") and orderType != null and !orderType.equals("") and orderColumn != null and !orderColumn.equals("")'>
+            INNER JOIN
+            (   SELECT
+            SUBSTRING_INDEX(FNC_GOAL_ID_PATH(goal_id), '/',1) AS top_goal_id,
+            <choose>
+                <when test='orderType.equals("ASC")'> MIN(${orderColumn}) </when>
+                <otherwise> MAX(${orderColumn}) </otherwise>
+            </choose> AS rep_val
+            FROM goal as g
+            <include refid="goalSearchConditionQuery" />
+            GROUP BY SUBSTRING_INDEX(FNC_GOAL_ID_PATH(goal_id), '/',1)
+            )g2 ON SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1) = g2.top_goal_id
+        </if>
+    </sql>
+
     <sql id="goalSearchConditionQuery">
         WHERE 
         1=1
@@ -319,9 +335,12 @@
     </sql>
     <sql id="goalSearchOrderQuery">
         ORDER BY
+        <if test='gatherGoalYn != null and gatherGoalYn.equals("Y") and orderColumn != null and !orderColumn.equals("") and orderType != null and !orderType.equals("")'>
+            rep_val ${orderType},
+        </if>
         <choose>
                 <when test='gatherGoalYn != null and gatherGoalYn.equals("Y")'>
-                        SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1) asc,
+                        SUBSTRING_INDEX(FNC_GOAL_ID_PATH(g.goal_id), '/',1) desc,
                         <choose>
                                 <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
                                         g.${orderColumn} ${orderType}
@@ -342,17 +361,6 @@
                         </choose>
                 </otherwise>
         </choose>
-        <!-- <choose>
-                <when test='gatherGoalYn != null and gatherGoalYn.equals("Y")'>
-                                FNC_GOAL_ID_PATH(g.goal_id) asc
-                </when>
-                <when test="orderColumn != null and !orderColumn.equals('') and orderType != null and !orderType.equals('')">
-                                g.${orderColumn} ${orderType}
-                </when>
-                <otherwise>
-                                g.modification_datetime desc
-                </otherwise>
-        </choose> -->
     </sql>
 
     <select id="getGoalFullList" resultMap="goalFullResultMap">
@@ -393,6 +401,7 @@
         left outer join periodicity_info pi2 
         on g.goal_id =pi2.goal_id 
         AND g.kind = 'regular'
+        <include refid="goalJoinQueryForStatic" />
         <include refid="goalSearchConditionQuery" />
         <include refid="goalSearchOrderQuery" />
     </select>
@@ -415,7 +424,8 @@
         g.deletion_status,
         FNC_GOAL_ID_PATH(g.goal_id) as goal_id_path,
         FNC_GOAL_TITLE_PATH(g.goal_id) as goal_title_path
-        from goal g 
+        from goal g
+        <include refid="goalJoinQueryForStatic" />
         <include refid="goalSearchConditionQuery" />
         <include refid="goalSearchOrderQuery" />
     </select>
