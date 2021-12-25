@@ -1,140 +1,62 @@
-.home{
-  flex : 1;
+.home {
+  flex: 1;
   height: 100vh;
 }
+
 .home .main-banner {
   height: 100%;
   width: 100%;
 }
-.home .main-banner .img-wrapper{
+
+.home .main-banner .img-wrapper {
   position: relative;
 }
-.home .main-banner .img-wrapper .pattern-design-jpg{
+
+.home .main-banner .img-wrapper .pattern-design-jpg {
   width: 100%;
   height: 100vh;
 }
-.home .main-banner .main-slogan{
+
+.home .main-banner .main-slogan {
   position: absolute;
-  top : 35%;
-  left : 50%;
+  top: 35%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
-.home .main-banner .main-slogan p{
+
+.home .main-banner .main-slogan p {
   font-size: 50px;
   font-weight: bold;
   color: white;
   text-shadow: #000000 1px 0 10px;
 }
-.link-box{
+
+.link-box {
   margin-top: 30px;
   position: absolute;
-  top : 50%;
-  left : 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.link-box p{
+
+.link-box p {
+  white-space: nowrap;
   font-size: 16px;
-  color : var(--black);
-  background: linear-gradient(to top, #a6e1ef 100%, transparent 30% );
+  color: var(--black);
+  background: linear-gradient(to top, #a6e1ef 100%, transparent 30%);
 }
-/* .App {
-    text-align: center;
-  }
-  
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
-  
-  .App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
-  
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-   */
-/* .home{
-  flex : 1;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-}
-.home .main-slogan{
-  padding: 50px 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.home .main-slogan p{
-  font-size: 100px;
-  font-weight: bold;
-  margin: 0;
-}
-.home .main-illustrations{
-  position: relative;
-}
-.home .main-illustrations .checking-box-svg{
-  position: absolute;
-  bottom: 100px;
-  left: -50px;
-  width: 150px;
-  height: 150px;
-}
-.home .main-illustrations .dividing-time-svg{
-  position: absolute;
-  bottom: 50px;
-  right: 100px;
-  width: 700px;
-  height: 700px;
-}
-.home .main-illustrations .progress-bar-svg{
-  position: absolute;
-  top : 250px;
-  left : 50px;
-  width: 150px;
-  height: 150px;
-}
-.home .main-illustrations .bulletin-board-svg{
-  position: absolute;
-  top : 50px;
-  left : 250px;
-  width: 150px;
-  height: 150px;
-} */
 
 @media screen and (max-width : 1040px) {
-  .home{
-    margin : 0;
+  .home {
+    margin: 0;
   }
 }
+
 @media screen and (max-width : 740px) {
-  .home{
-    margin : 0;
+  .home {
+    margin: 0;
   }
 }

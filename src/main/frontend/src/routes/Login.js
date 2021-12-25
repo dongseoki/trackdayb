@@ -16,6 +16,7 @@ function Login() {
   const [ , setCurUser ] = useContext(AuthContext);
   const history = useHistory();
 
+  
   const validateForm = ()=>{
     return memberId.length > 0 && password.length > 0;
   }

@@ -49,7 +49,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
       padding: theme.spacing(1,1,2,2),
-      width: "355px",
+      width: "100%",
     },
   }));
   const classes = useStyles();

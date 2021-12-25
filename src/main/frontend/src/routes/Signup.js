@@ -134,7 +134,7 @@ function Signup() {
             onChange={(e) => setPassword(e.target.value)}
             error={hasPasswordError(password)}
             helperText={hasPasswordError(password) ? '영문자, 숫자, 특수문자 포함 8자 이상' : null}
-            inputProps={{maxLength: 12}}
+            inputProps={{maxLength: 20}}
           />
           <TextField
             required
@@ -148,6 +148,7 @@ function Signup() {
             helperText={
                 hasNotSameError('passwordCheck') ? "입력한 비밀번호와 일치하지 않습니다." : null
             }
+            inputProps={{maxLength: 20}}
           />
           {/* <TextField
             className="signup-input"
