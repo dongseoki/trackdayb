@@ -12,9 +12,11 @@ echo "> Git Pull"
 
 git pull
 
-echo "> 프로젝트 Build 시작"
+echo "> gradlew, deploy.sh 권한 변경 "
 chmod 777 gradlew
 chmod 774 scripts/deploy.sh
+
+echo "> 프로젝트 Build 시작"
 ./gradlew build
 
 echo "> Build 파일 복사"
