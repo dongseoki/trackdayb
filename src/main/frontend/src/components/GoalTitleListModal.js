@@ -17,7 +17,7 @@ import Tree from '@naisutech/react-tree'
 //icon
 import { BiSearch } from "react-icons/bi";
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext"; //기간검색 제목리스트
-
+import { useMediaQuery } from "react-responsive";
 import randomColor from "randomcolor";
 
 function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, startDatetime, endDatetime, writeDate}){
@@ -38,6 +38,11 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
     return dateOffset.toISOString().substring(0,10);
   }
 
+  // 반응형 화면 BreakPoint
+  const isMobileScreen = useMediaQuery({
+    query: "(max-width: 440px)",
+  });
+
   const useStyles = makeStyles((theme) => ({
     modal: {
       display: 'flex',
@@ -49,7 +54,15 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       borderRadius: "10px",
       boxShadow: theme.shadows[5],
       padding: theme.spacing(1,1,2,2),
+      width: "355px",
+    },
+    paperMobile: {
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: "10px",
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(1, 1, 2, 2),
       width: "100%",
+      fontSize: "14px"
     },
   }));
   const classes = useStyles();
@@ -106,7 +119,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
         }}
       >
         <Fade in={openInside}>
-          <div className={classes.paper}>
+          <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
             <div className="modal-goalList-form">
               {pathname === '/time' ? 
