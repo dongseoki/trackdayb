@@ -135,7 +135,7 @@ public class MemberController {
         authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        TokenDTO tokenInfo = tokenProvider.createToken(authentication);
+        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(authentication);
         resultMVO.setTokenInfo(tokenInfo);
 
         // refresh token 수정.
@@ -181,7 +181,7 @@ public class MemberController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
     
             // jwt 토큰.
-            TokenDTO tokenInfo = tokenProvider.createToken(authentication);
+            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(authentication);
             resultMVO.setTokenInfo(tokenInfo);
 
             // refresh token 수정.

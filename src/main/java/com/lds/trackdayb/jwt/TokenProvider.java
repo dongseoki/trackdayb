@@ -59,7 +59,7 @@ public class TokenProvider implements InitializingBean {
    }
 
    // 인증정보를 기반으로 토큰을 생성한다.
-   public TokenDTO createToken(Authentication authentication) {
+   public TokenDTO createAccessAndRefreshToken(Authentication authentication) {
       String authorities = authentication.getAuthorities().stream()
          .map(GrantedAuthority::getAuthority)
          .collect(Collectors.joining(","));
@@ -92,6 +92,34 @@ public class TokenProvider implements InitializingBean {
               .accessToken(accessToken)
               .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
               .refreshToken(refreshToken)
+              .build();
+   }
+
+   // 인증정보를 기반으로 토큰을 생성한다.
+   public TokenDTO createAccessTokenOnly(Authentication authentication) {
+      String authorities = authentication.getAuthorities().stream()
+              .map(GrantedAuthority::getAuthority)
+              .collect(Collectors.joining(","));
+
+      long now = (new Date()).getTime();
+
+      // Access Token 생성
+      Date accessTokenExpiresIn = new Date(now + this.accessTokenValidityInMilliseconds);
+      String accessToken = Jwts.builder()
+              .setSubject(authentication.getName())       // payload "sub": "name"
+              .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+              .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+              .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+              .compact();
+
+      LOGGER.debug("createToken Info");
+      LOGGER.debug("accessTokenExpiresIn : {}", accessTokenExpiresIn);
+
+
+      return  TokenDTO.builder()
+              .grantType(BEARER_TYPE)
+              .accessToken(accessToken)
+              .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
               .build();
    }
 

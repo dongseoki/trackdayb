@@ -159,7 +159,7 @@ public class MemberServiceImpl extends MemberService {
         }
 
         // 4. 새로운 토큰 생성
-        TokenDTO newTokenDTO = tokenProvider.createToken(authentication);
+        TokenDTO newTokenDTO = tokenProvider.createAccessTokenOnly(authentication);
 
         // 5. 저장소 정보 업데이트
         MemberDTO refreshTokenUpdateParam = new MemberDTO();
