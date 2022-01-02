@@ -35,8 +35,11 @@ function Login() {
       const result = await axios.post("/member/login", formData);
       //현재 유저 설정
       setCurUser({memberId:result.data.memberId})
+
       //로컬 스토리지에 저장하기
-      localStorage.setItem("jwt-token", result.data.token)
+      localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+      localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+
       history.push("/");
       toast.success(`${result.data.memberId}님, 반갑습니다!`)
       

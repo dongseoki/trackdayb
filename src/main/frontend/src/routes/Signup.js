@@ -86,8 +86,10 @@ function Signup() {
         setCurUser({
           memberId : result.data.memberId
         })
-        // 세션 스토리지에 저장하기
-        localStorage.setItem("jwt-token", result.data.token)
+        //로컬 스토리지에 저장하기
+        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+
         history.push('/')
         toast.success(`${result.data.memberId}님, 환영합니다!`)
       }

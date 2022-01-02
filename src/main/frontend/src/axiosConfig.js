@@ -1,4 +1,6 @@
+import axios from "axios";
 import Axios from "axios";
+import { toast } from "react-toastify";
 
 
 const axiosInstance = Axios.create({
@@ -16,11 +18,12 @@ axiosInstance.interceptors.request.use(
     토큰에 대한 정보를 여러곳에서 처리하지 않아도 된다.
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
-   const token = localStorage.getItem('jwt-token');
-   if(token){
-      config.headers.Authorization = `Bearer ${token}`;
+   const accessToken = localStorage.getItem('accessToken');
+   if(accessToken){
+      config.headers.Authorization = `Bearer ${accessToken}`;
    }else{
-     window.location.href = '/login'
+     console.log("(request) accessToken 없음")
+    //  window.location.href = '/login'
    }
     // if (!config.headers.Authorization) {
     //   console.log('auth null')
@@ -52,6 +55,20 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(err);
   }
 );
+
+let isTokenRefreshing = false; // 발행중 flag
+let refreshSubscribers = []; // 할 일 리스트
+
+// 저장해둔 할 일 수행
+const onTokenRefreshed = (accessToken) => {
+  refreshSubscribers.map((callback) => callback(accessToken));
+};
+
+// 할 일 추가
+const addRefreshSubscriber = (callback) => {
+  refreshSubscribers.push(callback);
+};
+
 axiosInstance.interceptors.response.use(
   (config) => {
       /* 요청을 보낸 뒤에 response(응답)이 오는 경우에 여기서 먼저 확인이 가능하다.
@@ -61,11 +78,59 @@ axiosInstance.interceptors.response.use(
     **/
     return config;
   },
-  (err) => {
-    console.log("Err", err)
-    if(err.response.status === 401){
-      console.log("401에러발생_test2")
+  async (err) => {
+    const originalRequest = err.config;
 
+    if(err.response.status === 401){
+      if(!isTokenRefreshing){
+        // 토큰발행중이 아닐때(false)만 요청
+        refreshSubscribers = [];
+        isTokenRefreshing = true;
+        
+        console.log("accessToken 만료 : 401에러발생")
+        
+        const accessToken = localStorage.getItem('accessToken');
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        const tokenData = {
+          accessToken,
+          refreshToken,
+        };
+        try{
+          console.log('accessToken, refreshToken 재발행 요청')
+          const result = await axios.post('/member/reissue', tokenData)
+          localStorage.setItem('accessToken', result.data.tokenInfo.accessToken);
+
+          isTokenRefreshing = false; // 토큰 발행 끝
+
+          axios.defaults.headers.common.Authorization = `Bearer ${result.data.tokenInfo.accessToken}`;
+          // originalRequest.headers.Authorization = `Bearer ${result.data.tokenInfo.accessToken}`;
+          // return axios(originalRequest);
+          // 새로운 토큰으로 지연된 요청 진행
+          onTokenRefreshed(result.data.tokenInfo.accessToken);
+
+        }catch(err){
+          if(err.response.data.resultCode === '9995') {
+            
+            console.log('refreshToken 만료');
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location = "/login";
+          }
+        }
+      }
+
+      // token이 재발급 되는 동안 요청은 refreshSubscribers에 저장
+
+      const retryOriginalRequest = new Promise((resolve) => {
+        addRefreshSubscriber((accessToken) => {
+          originalRequest.headers.Authorization = "Bearer " + accessToken;
+          resolve(axios(originalRequest));
+        });
+      });
+      
+      return retryOriginalRequest;
+      
       // store.dispatch('logout');
       // Router.push('/login')
       // window.location.href = "/login"
@@ -73,7 +138,7 @@ axiosInstance.interceptors.response.use(
       // ReturnLogin()
       // let myhistory = useHistoryTest()
       // myhistory.push('/login')
-      window.location.href = "/login"
+      // window.location.href = "/login"
     }
 
     // alert('세션 연결이 종료 되었습니다.')
