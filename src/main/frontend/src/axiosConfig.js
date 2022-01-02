@@ -64,7 +64,7 @@ axiosInstance.interceptors.response.use(
   (err) => {
     console.log("Err", err)
     if(err.response.status === 401){
-      console.log("401에러발생_test")
+      console.log("401에러발생_test2")
 
       // store.dispatch('logout');
       // Router.push('/login')
