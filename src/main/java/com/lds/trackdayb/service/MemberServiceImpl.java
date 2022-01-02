@@ -158,17 +158,8 @@ public class MemberServiceImpl extends MemberService {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
-        // 4. 새로운 토큰 생성
-        TokenDTO newTokenDTO = tokenProvider.createAccessTokenOnly(authentication);
-
-        // 5. 저장소 정보 업데이트
-        MemberDTO refreshTokenUpdateParam = new MemberDTO();
-        refreshTokenUpdateParam.setMemberId(currentMemberDTO.getMemberId());
-        refreshTokenUpdateParam.setRefreshToken(newTokenDTO.getRefreshToken());
-        memberRepository.updateRefreshToken(refreshTokenUpdateParam);
-
-        // 토큰 발급
-        return newTokenDTO;
+        // 4. 새로운 토큰 생성 및 리턴.
+        return tokenProvider.createAccessTokenOnly(authentication);
     }
 
 }
