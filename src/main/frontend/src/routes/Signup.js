@@ -23,7 +23,7 @@ function Signup() {
 
   // memberId validation Check
   const hasMemberIdError = memberIdEntered =>
-    memberId.length < 4 ? true : false;
+    memberId.length < 4 ? false : true;
   // 비밀번호 validation check
   const hasPasswordError = (password) =>{
     // 특수문자 포함 체크 함수
@@ -31,23 +31,24 @@ function Signup() {
       const specialChars = "~․!@#$%^&*()_-+={}[]|\\;:'\"<>,.?/";
       for (let i = 0; i < specialChars.length; i++) {
         if (value.indexOf(specialChars[i]) > -1) { 
-           return true; 
+           return false; 
          } 
       }
-      return false;
+      return true;
     }
     // 8자 이상, 최소 영문1개, 최소 숫자1개, 최소 특문 1개
-    if(password.length < 8) return true
-    else if(!password.match(".*[a-zA-Z]+.*")) return true
-    else if(!password.match(".*[0-9]+.*")) return true
-    if(containsSpecialChar(password) === false) {
-      return true
+    if(password.length < 8) return false
+    else if(!password.match(".*[a-zA-Z]+.*")) return false
+    else if(!password.match(".*[0-9]+.*")) return false
+    if(containsSpecialChar(password) === true) {
+      return false
     }
-    else return false
+    else return true
   }
   // 비밀번호 더블 체크
   const hasNotSameError = passwordEntered =>
-        password !== passwordCheck ? true : false;
+        password !== passwordCheck ? false : true;
+  
   // 휴대폰번호 validation check
   const hasPhoneError = (phoneNumber) =>{
     if(!phoneNumber.match(/^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/)) return true
@@ -62,37 +63,39 @@ function Signup() {
   const submitHandler = async (e) =>{
     e.preventDefault();
     try{
-      //validation check
-      if(hasMemberIdError('memberId')) throw new Error("MemberId는 4자 이상입니다.");
-      if(hasPasswordError(password)) throw new Error("Password는 영문, 숫자, 특수문자 포함 8자 이상입니다.");
-      if(hasNotSameError('passwordCheck')) throw new Error("Password가 일치 하지 않습니다.");
-      if(phoneNumber && hasPhoneError(phoneNumber)) throw new Error('올바른 Phone Number를 입력하세요.');
-      if(emailAddress && hasEmailError(emailAddress)) throw new Error('올바른 Email Address를 입력하세요.');
-      const formData = {
-        name : name,
-        memberId : memberId,
-        password : password,
-        phoneNumber : phoneNumber,
-        emailAddress : emailAddress
-      }
-      const result = await axios.post('/member/signup', formData)
-      
-      if(result.data.resultCode === "9997"){
-        toast.error(`MemberId가 중복됩니다. (${result.data.message})`)
-      } else if (result.data.resultCode === "9996"){
-        toast.error(`올바른 정보를 입력하세요. (${result.data.message})`)
-      } else { // 서버 회원가입 성공시
-        // 현재 유저 설정
-        setCurUser({
-          memberId : result.data.memberId
-        })
-        // 세션 스토리지에 저장하기
-        localStorage.setItem("jwt-token", result.data.token)
-        history.push('/')
-        toast.success(`${result.data.memberId}님, 환영합니다!`)
+      if(hasMemberIdError('memberId') && hasPasswordError(password) && hasNotSameError('passwordCheck')){
+        const formData = {
+          name : name,
+          memberId : memberId,
+          password : password,
+          // phoneNumber : phoneNumber,
+          // emailAddress : emailAddress
+        }
+        const result = await axios.post('/member/signup', formData)
+        
+        if(result.data.resultCode === "9997"){
+          toast.error(`ID가 중복됩니다. (${result.data.message})`)
+        } else if (result.data.resultCode === "9996"){
+          toast.error(`올바른 정보를 입력하세요. (${result.data.message})`)
+        } else { // 서버 회원가입 성공시
+          // 현재 유저 설정
+          setCurUser({
+            memberId : result.data.memberId
+          })
+          // 세션 스토리지에 저장하기
+          localStorage.setItem("jwt-token", result.data.token)
+          history.push('/')
+          toast.success(`${result.data.memberId}님, 환영합니다!`)
+        }
+      } else {
+        if(!hasMemberIdError('memberId')) toast.error("ID는 4자 이상입니다.");
+        if(!hasPasswordError(password)) toast.error("Password는 영문, 숫자, 특수문자 포함 8자 이상입니다.");
+        if(!hasNotSameError('passwordCheck')) toast.error("Password가 일치 하지 않습니다.");
+        // if(phoneNumber && hasPhoneError(phoneNumber)) toast.error('올바른 Phone Number를 입력하세요.');
+        // if(emailAddress && hasEmailError(emailAddress)) toast.error('올바른 Email Address를 입력하세요.');
       }
     }catch(err){
-      toast.error(`Oops! 메인페이지로 돌아갑니다. (${err})`)
+      toast.error(`Oops! 메인 페이지로 이동합니다. ${err}`)
       history.push('/')
     }
   }
@@ -120,8 +123,8 @@ function Signup() {
             type="text"
             autoComplete="current-memberId"
             onChange={(e) => setMemberId(e.target.value)}
-            error={hasMemberIdError('memberId')}
-            helperText={hasMemberIdError('memberId') ? '4자 이상' : null}
+            error={!hasMemberIdError('memberId')}
+            helperText={!hasMemberIdError('memberId') ? '4자 이상' : null}
             inputProps={{maxLength: 12}}
           />
           <TextField
@@ -132,8 +135,8 @@ function Signup() {
             type="password"
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
-            error={hasPasswordError(password)}
-            helperText={hasPasswordError(password) ? '영문자, 숫자, 특수문자 포함 8자 이상' : null}
+            error={!hasPasswordError(password)}
+            helperText={!hasPasswordError(password) ? '영문자, 숫자, 특수문자 포함 8자 이상' : null}
             inputProps={{maxLength: 20}}
           />
           <TextField
@@ -144,9 +147,9 @@ function Signup() {
             type="password"
             autoComplete="current-password-check"
             onChange={(e) => setPasswordCheck(e.target.value)}
-            error={hasNotSameError('passwordCheck')}
+            error={!hasNotSameError('passwordCheck')}
             helperText={
-                hasNotSameError('passwordCheck') ? "입력한 비밀번호와 일치하지 않습니다." : null
+                !hasNotSameError('passwordCheck') ? "입력한 비밀번호와 일치하지 않습니다." : null
             }
             inputProps={{maxLength: 20}}
           />
