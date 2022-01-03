@@ -192,3 +192,11 @@ Release 1.X.0.0
   - login API, signup API 수정 : token 반환 형식 변경.
   - reissue API 추가
   - reissue API 수정 - accessToken만 발급. refreshToken 미발급.
+
+Release 1.X.0.1
+  - 로그인시 acess, refresh 토큰 저장
+  - 회원가입시 토큰 저장
+  - 로그아웃시 토큰 삭제
+  - AuthContext 로그인 사용자 정보 가져오기 수정
+  - axiosConfig 설정
+  
