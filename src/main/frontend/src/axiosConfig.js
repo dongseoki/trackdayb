@@ -1,8 +1,7 @@
 import axios from "axios";
-import Axios from "axios";
 
 
-const axiosInstance = Axios.create({
+const axiosInstance = axios.create({
   // timeout: 1000, // 세션만료 시간
   headers: {
     "Content-Type": "application/json",
