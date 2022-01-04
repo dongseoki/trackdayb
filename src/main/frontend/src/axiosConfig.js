@@ -59,15 +59,13 @@ axiosInstance.interceptors.response.use(
     **/
     return config;
   },
-  async (err) => {
-
-    // console.log('에러발생', err)
+  (err) => {
     const originalRequest = err.config;
 
     if(err.response.status === 401 && !originalRequest._retry){
       
       if(isRefreshing) {
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) => {
           failedQueue.push({resolve, reject})
         }).then(token => {
           originalRequest.headers['Authorization'] = `Bearer ` + token;
@@ -92,14 +90,16 @@ axiosInstance.interceptors.response.use(
         axios.post('/member/reissue', tokenData)
         .then(({data}) => {
           localStorage.setItem('accessToken', data.tokenInfo.accessToken);
-          axios.defaults.headers.common.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
           originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
-          processQueue(null, data.tokenInfo.accessToken);
           resolve(axios(originalRequest))
+          processQueue(null, data.tokenInfo.accessToken);
         })
         .catch((err) => {
           processQueue(err, null);
           reject(err);
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          window.location.href = '/login'
         })
         .then(() => { isRefreshing = false })
       })
