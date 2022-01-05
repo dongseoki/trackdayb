@@ -31,8 +31,8 @@ function Signup() {
       const specialChars = "~․!@#$%^&*()_-+={}[]|\\;:'\"<>,.?/";
       for (let i = 0; i < specialChars.length; i++) {
         if (value.indexOf(specialChars[i]) > -1) { 
-           return false; 
-         } 
+           return false;
+         }
       }
       return true;
     }
@@ -48,7 +48,7 @@ function Signup() {
   // 비밀번호 더블 체크
   const hasNotSameError = passwordEntered =>
         password !== passwordCheck ? false : true;
-  
+
   // 휴대폰번호 validation check
   const hasPhoneError = (phoneNumber) =>{
     if(!phoneNumber.match(/^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/)) return true
@@ -72,7 +72,7 @@ function Signup() {
           // emailAddress : emailAddress
         }
         const result = await axios.post('/member/signup', formData)
-        
+
         if(result.data.resultCode === "9997"){
           toast.error(`ID가 중복됩니다. (${result.data.message})`)
         } else if (result.data.resultCode === "9996"){
@@ -82,8 +82,10 @@ function Signup() {
           setCurUser({
             memberId : result.data.memberId
           })
-          // 세션 스토리지에 저장하기
-          localStorage.setItem("jwt-token", result.data.token)
+          //로컬 스토리지에 저장하기
+          localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+          localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+
           history.push('/')
           toast.success(`${result.data.memberId}님, 환영합니다!`)
         }

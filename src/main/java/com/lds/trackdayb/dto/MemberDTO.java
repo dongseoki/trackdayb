@@ -25,6 +25,7 @@ public class MemberDTO implements UserDetails {
     private String failCount = "";  // INT NOT NULL  COMMENT '로그인 실패 횟수'
     private String activeUserStatus = "";  // ENUM('Y','N')   COMMENT '활동 유저 여부'
     private String lastLoginDatetime = "";  // DATETIME   COMMENT '최근 로그인 일시'
+    private String refreshToken = "";  // VARCHAR(1000)   COMMENT '리프래시_토큰_값'
     private String withdrawalDatetime = "";  // DATETIME   COMMENT '탈퇴일시'
     private String remark = "";  // TEXT   COMMENT '비고'
     private String createDatetime = "";  // DATETIME NOT NULL DEFAULT_GENERATED COMMENT '생성 일시'

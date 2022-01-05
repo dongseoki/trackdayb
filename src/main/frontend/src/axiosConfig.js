@@ -1,7 +1,7 @@
-import Axios from "axios";
+import axios from "axios";
 
 
-const axiosInstance = Axios.create({
+const axiosInstance = axios.create({
   // timeout: 1000, // 세션만료 시간
   headers: {
     "Content-Type": "application/json",
@@ -16,33 +16,14 @@ axiosInstance.interceptors.request.use(
     토큰에 대한 정보를 여러곳에서 처리하지 않아도 된다.
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
-   const token = localStorage.getItem('jwt-token');
-   if(token){
-      config.headers.Authorization = `Bearer ${token}`;
+   const accessToken = localStorage.getItem('accessToken');
+   if(accessToken){
+      config.headers.Authorization = `Bearer ${accessToken}`;
    }else{
-     window.location.href = '/login'
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.href = '/login'
    }
-    // if (!config.headers.Authorization) {
-    //   console.log('auth null')
-    //   // window.location.href = "/login"
-    //   // alert('세션 연결이 종료 되었습니다.')
-
-    //     // const token = sessionStorage.getItem('jwt-token');
-    //     // if (token && token.length > 0) {
-    //     // //   let decodedToken = jwt_decode(token);
-    //     // //   const tmstamp = parseInt(Date.now() / 1000);
-    //     // //   if (tmstamp <= decodedToken.exp && decodedToken.user && decoded.user.id) {
-    //     // //     config.headers.Authorization = token;
-    //     // //   } else {
-    //     // //     alert('세션 연결이 종료되었습니다.');
-    //     // //   }
-    //     // config.headers.Authorization = token;
-
-    //     // }
-    //   }else{
-    //     // alert('세션 연결이 종료되었습니다.');
-    //     // window.location = "/login"
-    // } 
     return config;
   },
   (err) => {
@@ -52,6 +33,22 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(err);
   }
 );
+
+let isRefreshing = false; // 발행중 flag
+let failedQueue = []; // 할 일 리스트
+
+// 저장해둔 할 일 수행
+const processQueue = (error, token=null) => {
+  failedQueue.forEach(prom => {
+    if(error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  })
+  failedQueue = [];
+}
+
 axiosInstance.interceptors.response.use(
   (config) => {
       /* 요청을 보낸 뒤에 response(응답)이 오는 경우에 여기서 먼저 확인이 가능하다.
@@ -62,24 +59,50 @@ axiosInstance.interceptors.response.use(
     return config;
   },
   (err) => {
-    console.log("Err", err)
-    if(err.response.status === 401){
-      console.log("401에러발생")
+    const originalRequest = err.config;
 
-      // store.dispatch('logout');
-      // Router.push('/login')
-      // window.location.href = "/login"
-      // alert("로그인 하세요")
-      // ReturnLogin()
-      // let myhistory = useHistoryTest()
-      // myhistory.push('/login')
-      window.location.href = "/login"
+    if(err.response.status === 401 && !originalRequest._retry){
+      
+      if(isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({resolve, reject})
+        }).then(token => {
+          originalRequest.headers['Authorization'] = `Bearer ` + token;
+          return axios(originalRequest);
+        }).catch(err => {
+          return err
+        })
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      const tokenData = {
+        accessToken,
+        refreshToken,
+      };
+
+      return new Promise(function(resolve, reject) {
+        axios.post('/member/reissue', tokenData)
+        .then(({data}) => {
+          localStorage.setItem('accessToken', data.tokenInfo.accessToken);
+          originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
+          resolve(axios(originalRequest))
+          processQueue(null, data.tokenInfo.accessToken);
+        })
+        .catch((err) => {
+          processQueue(err, null);
+          reject(err);
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          window.location.href = '/login'
+        })
+        .then(() => { isRefreshing = false })
+      })
     }
-
-    // alert('세션 연결이 종료 되었습니다.')
-      /**
-    response응답 후에 status-code가 4xx, 5xx 처럼 에러를 나타내는 경우 해당 루트를 수행한다.
-    */
     return Promise.reject(err);
   }
 );

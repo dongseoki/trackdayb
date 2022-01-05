@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/index*", "/static/**", "/*.js", "/*.json", "/*.ico").permitAll()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
                 .antMatchers("/rest-test/param-list").permitAll().antMatchers("/test").permitAll()
-                .antMatchers("/member/login").permitAll().antMatchers("/member/signup").permitAll()
+                .antMatchers("/member/login").permitAll().antMatchers("/member/signup").permitAll().antMatchers("/member/reissue").permitAll()
                 // [2] end.
 
                 .anyRequest().authenticated()

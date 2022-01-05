@@ -3,9 +3,6 @@ import "./GoalFullList.css";
 // import axios from "axios";
 import axiosInstance from "../axiosConfig";
 import GoalInsertFormModal from "./GoalInsertFormModal";
-// 토글버튼
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 //icon
 import { RiDeleteBinLine } from "react-icons/ri";
 import { BiLock } from "react-icons/bi";
@@ -79,7 +76,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
       <div className="goal-cards-list">
         {goalFullList && goalFullList.map((goal, index) => (
           <GoalCard
-            key={index}
+            key={goal.goalId}
             index={index}
             goalTitlePath={goal.goalTitlePath}
             title={goal.title}
@@ -120,7 +117,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
   )
 }
 
-function GoalCard({index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, topGoalColor, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
+function GoalCard({ index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, topGoalColor, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
   return(

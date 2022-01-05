@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.MemberDTO;
+import com.lds.trackdayb.dto.TokenDTO;
+import com.lds.trackdayb.dto.TokenRequestDTO;
 import com.lds.trackdayb.exception.DuplicateMemberException;
 import com.lds.trackdayb.exception.ValidateException;
 import com.lds.trackdayb.jwt.JwtFilter;
@@ -16,6 +18,7 @@ import com.lds.trackdayb.service.MemberService;
 import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
+import ognl.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -87,6 +90,35 @@ public class MemberController {
 
     //     return resultMVO; 
     // }
+    @PostMapping("/reissue")
+    public ResponseEntity<ResultMVO> reissue(@Valid @RequestBody TokenRequestDTO tokenRequestDTO){
+        ResultMVO resultMVO = new ResultMVO();
+        HttpHeaders httpHeaders;
+        httpHeaders = new HttpHeaders();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+
+        try{
+            // reissue
+            TokenDTO tokenInfo =  memberService.reissue(tokenRequestDTO);
+            resultMVO.setTokenInfo(tokenInfo);
+
+            // anonymous issue. 멤버 아이디 설정 값이 익명으로 나오는 문제. 해결을 위해 아래 코드 주석 처리.
+//            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+
+            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
+        }catch (RuntimeException runtimeException){
+            LOGGER.debug("invalid refresh token");
+            LOGGER.error("REFRESH TOKEN ERROR : {}", runtimeException.getMessage());
+            LOGGER.error("REFRESH TOKEN ERROR : {}", runtimeException.toString());
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_INVALID_REFRESH_TOKEN);
+            return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.UNAUTHORIZED);
+        }catch(Exception exception){
+            LOGGER.error("unexpected exception occured");
+            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
+            return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ResultMVO> authorize(@Valid @RequestBody MemberDTO memberDTO) {
@@ -95,7 +127,6 @@ public class MemberController {
 
         UsernamePasswordAuthenticationToken authenticationToken;
         Authentication authentication;
-        String jwt="";
         HttpHeaders httpHeaders;
 
 
@@ -104,12 +135,15 @@ public class MemberController {
         authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        jwt = tokenProvider.createToken(authentication);
-        resultMVO.setToken(jwt);
+        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(authentication);
+        resultMVO.setTokenInfo(tokenInfo);
 
-        resultMVO.setMemberId(SecurityUtil.getCurrentUsername().get());
+        // refresh token 수정.
+        memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+
+        resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
         httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
 
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
@@ -147,11 +181,14 @@ public class MemberController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
     
             // jwt 토큰.
-            jwt = tokenProvider.createToken(authentication);
-            resultMVO.setToken(jwt);
+            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(authentication);
+            resultMVO.setTokenInfo(tokenInfo);
+
+            // refresh token 수정.
+            memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
             
             // memberId
-            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().get());
+            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
 
         } catch (DuplicateMemberException e) {
             LOGGER.error("signup error : {}", e.toString());

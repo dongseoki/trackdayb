@@ -4,13 +4,17 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import com.lds.trackdayb.dto.MemberDTO;
+import com.lds.trackdayb.dto.TokenDTO;
+import com.lds.trackdayb.dto.TokenRequestDTO;
 import com.lds.trackdayb.exception.DuplicateMemberException;
 import com.lds.trackdayb.exception.ValidateException;
+import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.repository.MemberRepository;
 import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl extends MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
 
     @Override
     public String save(MemberDTO memberDTO) {
@@ -45,12 +50,11 @@ public class MemberServiceImpl extends MemberService {
     @Override
     public MemberDTO login(String memberId, String password) {
         // TODO Auto-generated method stub
-        HashMap<String, String> param = new HashMap<String, String>();
+        HashMap<String, String> param = new HashMap<>();
         param.put("memberId", memberId);
         param.put("password", password);
-        MemberDTO memberDTO = memberRepository.findByMemberIdAndPassword(param);
 
-        return memberDTO;
+        return memberRepository.findByMemberIdAndPassword(param);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class MemberServiceImpl extends MemberService {
         // 시큐리티에서 지정한 서비스이기 때문에 이 메소드를 필수로 구현
         MemberDTO memberDTO = memberRepository.findByMemberId(memberId);
         if (memberDTO == null || StringUtils.isEmpty(memberDTO.getMemberId())) {
-            new UsernameNotFoundException(memberId);
+            throw new UsernameNotFoundException(memberId);
         }
 
         return memberDTO;
@@ -123,7 +127,39 @@ public class MemberServiceImpl extends MemberService {
         // return memberDTO;
 
         // [2]
-        return memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().get());
+        return memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+    }
+
+    @Override
+    public void updateRefreshToken(String memberId, String refreshToken) {
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setMemberId(memberId);
+        memberDTO.setRefreshToken(refreshToken);
+        memberRepository.updateRefreshToken(memberDTO);
+    }
+
+    @Override
+    public TokenDTO reissue(TokenRequestDTO tokenRequestDTO) {
+        // 1. Refresh Token 검증
+        if (!tokenProvider.validateToken(tokenRequestDTO.getRefreshToken())) {
+            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+        }
+
+        // 2. Access Token 에서 Member ID 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDTO.getAccessToken());
+
+        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
+        MemberDTO currentMemberDTO = memberRepository.findByMemberId(authentication.getName());
+
+        String dbRefreshTokenValue = currentMemberDTO.getRefreshToken();
+
+        // 3. Refresh Token 일치하는지 검사
+        if (!StringUtils.equals(tokenRequestDTO.getRefreshToken(), dbRefreshTokenValue)) {
+            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        // 4. 새로운 토큰 생성 및 리턴.
+        return tokenProvider.createAccessTokenOnly(authentication);
     }
 
 }

@@ -1,12 +1,13 @@
 package com.lds.trackdayb.mvo;
 
+import com.lds.trackdayb.dto.TokenDTO;
 import lombok.Data;
 
 @Data
 public class ResultMVO {
     String resultCode ="";
     String message = "";
-    String token = ""; // 인증토큰
+    TokenDTO tokenInfo = new TokenDTO();
     GoalMVO goalInfo = null;
     ActivityMVO activityInfo = null;
     String memberId = null;
