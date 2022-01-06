@@ -238,3 +238,6 @@ Release 1.2.0.1
   - 로그아웃시 토큰 삭제
   - AuthContext 로그인 사용자 정보 가져오기 수정
   - axiosConfig 설정
+
+Release 1.XX.XX.XX
+  - login RSA 테스트 성공.

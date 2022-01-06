@@ -11,4 +11,5 @@ public class ResultMVO {
     GoalMVO goalInfo = null;
     ActivityMVO activityInfo = null;
     String memberId = null;
+    PublicKeyInfo publicKeyInfo = null;
 }

@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and().authorizeRequests()
 
@@ -75,7 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/index*", "/static/**", "/*.js", "/*.json", "/*.ico").permitAll()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
                 .antMatchers("/rest-test/param-list").permitAll().antMatchers("/test").permitAll()
+                .antMatchers("/rest-test/param-list").permitAll().antMatchers("/testPage").permitAll()
+                .antMatchers("/rest-test/param-list").permitAll().antMatchers("/test/*").permitAll()
                 .antMatchers("/member/login").permitAll().antMatchers("/member/signup").permitAll().antMatchers("/member/reissue").permitAll()
+                .antMatchers("/member/requestpublickey").permitAll()
                 // [2] end.
 
                 .anyRequest().authenticated()

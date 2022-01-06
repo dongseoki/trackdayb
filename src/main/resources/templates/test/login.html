@@ -1,25 +1,61 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">-->
   <head>
     <meta charset="UTF-8">
     <title>login</title>
     <script	src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+<!--    <script type="text/javascript" src="/resources/js/jsbn.js"></script>-->
+<!--    <script type="text/javascript" src="/resources/js/rsa.js"/>"></script>-->
+<!--    <script type="text/javascript" src="/resources/js/prng4.js"></script>-->
+<!--    <script type="text/javascript" src="/resources/js/rng.js"></script>-->
+    <script type="text/javascript" src="/js/jsbn.js"></script>
+    <script type="text/javascript" src="/js/rsa.js"/>"></script>
+    <script type="text/javascript" src="/js/prng4.js"></script>
+    <script type="text/javascript" src="/js/rng.js"></script>
 
     <script>
       var response;
+      var rsaPublicKeyModulus;
+      var rsaPublicKeyExponent;
       function ajax_send(){
+        var rsa = new RSAKey();
+
+        rsa.setPublic(rsaPublicKeyModulus, rsaPublicKeyExponent);
+
+        var memberId = document.querySelectorAll("[name=memberId]")[0].value;
+        var password = document.querySelectorAll("[name=password]")[0].value;
+        var securedMemberId = rsa.encrypt(memberId);
+        var securedPassword = rsa.encrypt(password);
+
+
         response = fetch("http://127.0.0.1:8080/member/login", {
           method: 'post',
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            memberId : document.querySelectorAll("[name=memberId]")[0].value,            
-            password : sha256(document.querySelectorAll("[name=password]")[0].value)
+            // memberId : document.querySelectorAll("[name=memberId]")[0].value,
+            // password : sha256(document.querySelectorAll("[name=password]")[0].value)
+            memberId : securedMemberId,
+            password : securedPassword
           })
         }).then((response) => response.json())
       .then((data) => console.log(data));
       }
+
+      document.addEventListener("DOMContentLoaded", function(){
+// Handler when the DOM is fully loaded
+        console.log("hello world");
+        response = fetch("http://127.0.0.1:8080/member/requestpublickey", {
+          method: 'get'
+        }).then((response) => response.json())
+                .then(function (data){
+                  rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
+                  rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
+                });
+
+      });
     </script>
   </head>
   <body>
