@@ -1,6 +1,6 @@
 # trackDay
 
-<img src="./src/main/frontend/public/img/thumbnail.png"  width="600" height="600"/>
+<img src="./src/main/frontend/public/img/thumbnail.png"  width="500" height="500"/>
 
 ## 🗂️ 목차
 
