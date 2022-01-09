@@ -1,6 +1,6 @@
 # trackDay
 
-![Thumbnail](./src/images/Thumbnail.png)
+![Thumbnail](https://ibb.co/JHRrdHr)
 
 ## 🗂️ 목차
 
