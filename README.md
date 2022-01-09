@@ -3,6 +3,7 @@
 ![Thumbnail](https://ibb.co/JHRrdHr)
 <img width="150" src="https://ibb.co/JHRrdHr">
 ![이미지 URL 삽입 테스트](https://ibb.co/JHRrdHr "이미지 URL 삽입 테스트")
+![썸네일](https://user-images.githubusercontent.com/46259221/148684657-e0841361-dc46-4eff-99bd-c42428548f2a.png)
 
 
 ## 🗂️ 목차
