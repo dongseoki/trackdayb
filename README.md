@@ -161,27 +161,3 @@ useEffect(() => {
 3. 2차 유저 피드백 (각종 커뮤니티) 21/11/27 ~ 21/11/30
 
 ## 개선 사항
-
-- Slick Slider 형식은 여러 게시물을 한눈에 보기가 어렵다는 의견이 있어 List 형식으로 볼 수 있게 함.
-
-![](https://blog.kakaocdn.net/dn/bJT7vW/btrmEEvFIy8/YoMX7WqcqRtK4ncXSahQAK/img.gif)
-
-- 보고 있는 찬반 투표, 객관식 투표 페이지에 따라 작성하기의 형식이 바뀌어 적용되도록 함.
-
-![](https://blog.kakaocdn.net/dn/bRL3nF/btrmGgumZxZ/XOzVTdCdwkWli6E1IRpUhK/img.gif)
-
-- 메인페이지의 인기 글을 클릭 후 페이지 이동 시 해당 게시글을 바로 볼 수 있도록 함.
-
-![](https://blog.kakaocdn.net/dn/bSly0e/btrmEdkOyFS/JTOqZmzEmKid2WBkheC6kK/img.gif)
-
-- 선택한 Slider 형식과 List 형식이 유지되도록 함.
-
-![](https://blog.kakaocdn.net/dn/XSJwo/btrmEkjDwCo/ZUcaoPv8rCeKGYgv2Hqjzk/img.gif)
-
-- 객관식 투표 List 형식에서 상세페이지 이동 후 뒤로 가기 시 해당 게시글이 위에 오도록 함.
-
-![](https://blog.kakaocdn.net/dn/qp94l/btrmK8V2MNh/8Pkqks7gCKx1KCTxhdIhJ1/img.gif)
-
-- 찬반 투표 Slick Slider의 양쪽 게시물의 투표 버튼 클릭 시 투표가 적용되는 문제를 해결함.
-
-![](https://blog.kakaocdn.net/dn/eDzuQn/btrmHFglfjB/6DHTUb0ieRmmly3KQ1Bk80/img.gif)
