@@ -36,8 +36,6 @@ trackDay는 이루고자 하는 목표를 관리하고, 매일의 활동을 기�
 
 ## 🧑‍💻 팀 구성
 
-[팀 소개 페이지](https://crawling-health-e0d.notion.site/be6df84bde484ca883f54739be96eb8f)
-
 <table>
   <tr>
   <td align="center">
@@ -92,6 +90,7 @@ trackDay는 이루고자 하는 목표를 관리하고, 매일의 활동을 기�
 - 목표를 카드로 만들어 관리한다.
 - 원하는 조건에 맞게 목표카드를 필터링 걸 수 있다.
 - 목표카드에는 진행기간/공개여부/제목/내용/목표유형(주기성/기한성)/진행률/부모목표/태그컬러를 설정할 수 있다.
+![Thumbnail](./src/main/frontend/public/img/guide/2goal.png)
 
 ### 시간관리
 
