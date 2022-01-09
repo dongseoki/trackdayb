@@ -1,10 +1,3 @@
-# trackdayb
-
-
-# 사이드 프로젝트 관련 블로그 게시글 링크.
-https://velog.io/@blueskyi?tag=%EC%82%AC%EC%9D%B4%EB%93%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
-
-
 # trackDay
 
 ![Thumbnail](./src/images/Thumbnail.png)
@@ -36,6 +29,8 @@ trackDay는 이루고자 하는 목표를 관리하고, 매일의 활동을 기�
 
 ### Github [Organizations](https://github.com/dongseoki/trackdayb)
 -> 공개레포로 전환 필요
+
+### 사이드프로젝트 관련 블로그 [Blog](https://velog.io/@blueskyi?tag=%EC%82%AC%EC%9D%B4%EB%93%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
 
 <hr>
 
