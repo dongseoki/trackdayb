@@ -1,6 +1,9 @@
 # trackDay
 
 ![Thumbnail](https://ibb.co/JHRrdHr)
+<img width="150" src="https://ibb.co/JHRrdHr">
+![이미지 URL 삽입 테스트](https://ibb.co/JHRrdHr "이미지 URL 삽입 테스트")
+
 
 ## 🗂️ 목차
 
