@@ -40,21 +40,21 @@ trackDay는 이루고자 하는 목표를 관리하고, 매일의 활동을 기�
 
 <table>
   <tr>
-  <td colspan='2' align="center">
+  <td align="center">
   Backend
   </td>
-  <td colspan='2' align="center">
+  <td align="center">
   Frontend
   </td>
   <tr>
     <td align="center" >
     <b>이동석</b></a><br>
-    <a href="https://github.com/jeangho293">Github</a>
+    <a href="https://github.com/dongseoki">Github</a>
     <br>JAVA<br>
     </td>
     <td align="center">
     <b>김유진</b></a><br />
-    <a href="https://github.com/gabmin" >Github</a>
+    <a href="https://github.com/eugenekk" >Github</a>
     <br>REACT<br>
     </td>
     </tr>
