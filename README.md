@@ -1,9 +1,6 @@
 # trackDay
 
-![Thumbnail](./src/main/frontend/public/img/thumbnail.png)
-<img src="./src/main/frontend/public/img/thumbnail.png"  width="200" height="400"/>
-![썸네일](https://user-images.githubusercontent.com/46259221/148684657-e0841361-dc46-4eff-99bd-c42428548f2a.png)
-
+<img src="./src/main/frontend/public/img/thumbnail.png"  width="600" height="600"/>
 
 ## 🗂️ 목차
 
