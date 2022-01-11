@@ -6,6 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import { toast } from 'react-toastify';
 import useTitle from '../hooks/useTitle';
+import GoogleLoginBtn from "../components/GoogleLoginBtn";
 
 function Login() {
   const titleUpdater = useTitle("trackDay");
@@ -77,6 +78,7 @@ function Login() {
           />
           <button type="submit" className="submitBtn">로그인</button>
         </form>
+          <GoogleLoginBtn />
       </div>
     </div>
   );

@@ -64,6 +64,7 @@
     "react-cookie": "^4.1.1",
     "react-datepicker": "^4.2.1",
     "react-dom": "^17.0.2",
+    "react-google-login": "^5.2.2",
     "react-icons": "^4.2.0",
     "react-project": "^0.0.30",
     "react-refresh": "^0.8.3",
