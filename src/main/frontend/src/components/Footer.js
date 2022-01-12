@@ -1,7 +1,35 @@
-import React from "react";
-import "./Footer.css"
+import React, { useEffect, useState } from "react";
+import "./Footer.css";
 
 function Footer(props) {
+    
+    //// releaseVersion text 파일 읽어오기
+    const [ releaseVersion, setReleaseVersion ] = useState('');
+
+    let xhttp;
+    function createHttpRequest() {
+        xhttp = new XMLHttpRequest();
+    }
+    function readReleaseTxt(){
+        createHttpRequest();
+        xhttp.onreadystatechange = callFunction;
+        xhttp.open('GET', 'latestReleaseVer.txt', true);
+        xhttp.send(null);
+    }
+    function callFunction(){
+        if(xhttp.readyState == 4){
+            if(xhttp.status == 200){
+                let responseData = xhttp.responseText;
+                setReleaseVersion(responseData);
+            }
+        }
+    }
+
+    useEffect(()=>{
+        readReleaseTxt();
+    },[])
+    
+
     return (
         <>
             <footer>
@@ -17,6 +45,7 @@ function Footer(props) {
                             </ul> */}
                         </div>
                         <p>Copyright @ 2021 trackDay All rights reserved.</p>
+                        <p>{releaseVersion}</p>
                     </div>
                     <div className="right">
                         <a href="https://forms.gle/zJmLVMoKX6nFWbuw6" target="_blank" rel="noopener noreferrer">
