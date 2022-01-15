@@ -9,26 +9,40 @@
 <!--    <script type="text/javascript" src="/resources/js/rsa.js"/>"></script>-->
 <!--    <script type="text/javascript" src="/resources/js/prng4.js"></script>-->
 <!--    <script type="text/javascript" src="/resources/js/rng.js"></script>-->
-    <script type="text/javascript" src="/js/jsbn.js"></script>
-    <script type="text/javascript" src="/js/rsa.js"/>"></script>
-    <script type="text/javascript" src="/js/prng4.js"></script>
-    <script type="text/javascript" src="/js/rng.js"></script>
+<!--    <script type="text/javascript" src="/js/jsbn.js"></script>-->
+<!--    <script type="text/javascript" src="/js/rsa.js"/>"></script>-->
+<!--    <script type="text/javascript" src="/js/prng4.js"></script>-->
+<!--    <script type="text/javascript" src="/js/rng.js"></script>-->
+    <script type="text/javascript" src="/js/jsencrypt.js"></script>
 
     <script>
       var response;
       var rsaPublicKeyModulus;
       var rsaPublicKeyExponent;
+      var publicKeyStr;
       function ajax_send(){
-        var rsa = new RSAKey();
 
-        rsa.setPublic(rsaPublicKeyModulus, rsaPublicKeyExponent);
+        // 1. Using rsaPublicKeyModulus, rsaPublicKeyExponent
+        // var rsa = new RSAKey();
+        // rsa.setPublic(rsaPublicKeyModulus, rsaPublicKeyExponent);
+
+        // 2. Using publicKey by JSEncrypt
+        let rsaEncrypt = new JSEncrypt();
+        rsaEncrypt.setPublicKey(publicKeyStr);
 
         var memberId = document.querySelectorAll("[name=memberId]")[0].value;
         var password = document.querySelectorAll("[name=password]")[0].value;
-        var securedMemberId = rsa.encrypt(memberId);
-        var securedPassword = rsa.encrypt(password);
 
+        // 1. Using rsaPublicKeyModulus, rsaPublicKeyExponent
+        // var securedMemberId = rsa.encrypt(memberId);
+        // var securedPassword = rsa.encrypt(password);
 
+        // 2. Using publicKey by JSEncrypt
+        var securedMemberId = rsaEncrypt.encrypt(memberId);
+        var securedPassword = rsaEncrypt.encrypt(password);
+
+        console.log("securedMemberId : "+ securedMemberId)
+        console.log("securedPassword : "+ securedPassword)
         response = fetch("http://127.0.0.1:8080/member/login", {
           method: 'post',
           headers: {
@@ -51,8 +65,13 @@
           method: 'get'
         }).then((response) => response.json())
                 .then(function (data){
-                  rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
-                  rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
+
+                  //1
+                  // rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
+                  // rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
+
+                  //2
+                  publicKeyStr = data.publicKeyInfo.publicKeyStr;
                 });
 
       });

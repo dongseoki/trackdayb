@@ -43,6 +43,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.security.*;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
+
+import static com.lds.trackdayb.util.CommonCodeUtil.byteArrayToHex;
 
 @RequiredArgsConstructor
 @RestController
@@ -173,7 +176,8 @@ public class MemberController {
     private String decryptRsa(PrivateKey privateKey, String securedValue) throws Exception {
         System.out.println("will decrypt : " + securedValue);
         Cipher cipher = Cipher.getInstance("RSA");
-        byte[] encryptedBytes = hexToByteArray(securedValue);
+
+        byte[] encryptedBytes = Base64.getDecoder().decode(securedValue);;
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
         String decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
@@ -203,6 +207,7 @@ public class MemberController {
         KeyPair keyPair = generator.genKeyPair();
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PublicKey publicKey = keyPair.getPublic();
+        String publicKeyStr = new String(Base64.getEncoder().encode(publicKey.getEncoded()));
         PrivateKey privateKey = keyPair.getPrivate();
 
         // 세션에 공개키의 문자열을 키로하여 개인키를 저장한다.
@@ -212,11 +217,10 @@ public class MemberController {
         String publicKeyModulus = publicSpec.getModulus().toString(16);
         String publicKeyExponent = publicSpec.getPublicExponent().toString(16);
 
-//        request.setAttribute("publicKeyModulus", publicKeyModulus);
-//        request.setAttribute("publicKeyExponent", publicKeyExponent);
         PublicKeyInfo publicKeyInfo = new PublicKeyInfo();
         publicKeyInfo.setPublicKeyModulus(publicKeyModulus);
         publicKeyInfo.setPublicKeyExponent(publicKeyExponent);
+        publicKeyInfo.setPublicKeyStr(publicKeyStr);
         resultMVO.setPublicKeyInfo(publicKeyInfo);
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -239,18 +243,30 @@ public class MemberController {
     // }
 
     @PostMapping(value = "/signup")
-    public ResultMVO signup(@RequestBody MemberDTO memberDTO){
+    public ResultMVO signup(@RequestBody MemberDTO memberDTO, HttpServletRequest request){
         ResultMVO resultMVO = new ResultMVO();
-        String originalPassword = memberDTO.getPassword();
+
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         try {
+            HttpSession session = request.getSession();
+            PrivateKey privateKey = (PrivateKey) session.getAttribute("__rsaPrivateKey__");
+            session.removeAttribute("__rsaPrivateKey__"); // 키의 재사용을 막는다. 항상 새로운 키를 받도록 강제.
+            if (privateKey == null) {
+                throw new RuntimeException("암호화 비밀키 정보를 찾을 수 없습니다.");
+            }
+            String decodedMemberId = decryptRsa(privateKey, memberDTO.getMemberId());
+            String decodedPassword = decryptRsa(privateKey, memberDTO.getPassword());
+            memberDTO.setMemberId(decodedMemberId);
+            memberDTO.setPassword(decodedPassword);
+
+
             MemberDTO memberInfo =memberService.signup(memberDTO);
 
             //로그인 처리.
             UsernamePasswordAuthenticationToken authenticationToken;
             Authentication authentication;
             String jwt="";
-            authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), originalPassword);
+            authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO.getUsername(), decodedPassword);
 
             authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -240,4 +240,6 @@ Release 1.2.0.1
   - axiosConfig 설정
 
 Release 1.XX.XX.XX
-  - login RSA 테스트 성공.
+  - requestpublickey API 개발
+  - RSA알고리즘, private key로 데이터복호화를 적용한 login API 수정.
+  - RSA알고리즘, private key로 데이터복호화를 적용한 signup API 수정.

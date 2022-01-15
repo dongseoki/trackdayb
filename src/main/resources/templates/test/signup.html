@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <title>sign up</title>
     <script	src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+    <script type="text/javascript" src="/js/jsencrypt.js"></script>
     <script>
+      var publicKeyStr;
       function ajax_send(){
+        let rsaEncrypt = new JSEncrypt();
+        rsaEncrypt.setPublicKey(publicKeyStr);
+        var memberId = document.querySelectorAll("[name=memberId]")[0].value;
+        var password = document.querySelectorAll("[name=password]")[0].value;
+
+        // 2. Using publicKey by JSEncrypt
+        var securedMemberId = rsaEncrypt.encrypt(memberId);
+        var securedPassword = rsaEncrypt.encrypt(password);
+
         fetch("http://127.0.0.1:8080/member/signup", {
           method: 'post',
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            memberId : document.querySelectorAll("[name=memberId]")[0].value,            
-            password : sha256(document.querySelectorAll("[name=password]")[0].value),            
+            memberId : securedMemberId,
+            password : securedPassword,
             name : document.querySelectorAll("[name=name]")[0].value,            
             phoneNumber : document.querySelectorAll("[name=phoneNumber]")[0].value,            
             emailAddress : document.querySelectorAll("[name=emailAddress]")[0].value
@@ -21,6 +32,24 @@
         }).then((response) => response.json())
       .then((data) => console.log(data));
       }
+
+
+      document.addEventListener("DOMContentLoaded", function(){
+// Handler when the DOM is fully loaded
+        console.log("hello world");
+        response = fetch("http://127.0.0.1:8080/member/requestpublickey", {
+          method: 'get'
+        }).then((response) => response.json())
+                .then(function (data){
+
+                  //1
+                  // rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
+                  // rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
+
+                  //2
+                  publicKeyStr = data.publicKeyInfo.publicKeyStr;
+                });
+      });
     </script>
   </head>
   <body>
