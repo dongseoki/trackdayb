@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./Signup.css";
 import axios from "axios";
 import {AuthContext} from "../context/AuthContext";
@@ -6,17 +6,33 @@ import {useHistory} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { toast } from 'react-toastify';
 import useTitle from '../hooks/useTitle';
+import JSEncrypt from 'jsencrypt';
 
 function Signup() {
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("회원가입"), 100);
 
+  const [ publicKey, setPublicKey ] = useState('')
+  // 공개키 요청함수
+  const fetchPublickKey = async () => {
+    try {
+      const result = await axios.get('/member/requestpublickey')
+      setPublicKey(result.data.publicKeyInfo.publicKeyStr)
+    }catch(err) {
+      console.error(err)
+    }
+  }
+  // 페이지로드시 함수 호출
+  useEffect(()=> {
+    fetchPublickKey();
+  },[])
+
   const [name, setName] = useState("")
   const [memberId, setMemberId] = useState('')
   const [password, setPassword] = useState('')
   const [passwordCheck, setPasswordCheck] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [emailAddress, setEmailAddress] = useState('')
+  // const [phoneNumber, setPhoneNumber] = useState('')
+  // const [emailAddress, setEmailAddress] = useState('')
   // 현재 로그인 정보 Context
   const [, setCurUser] = useContext(AuthContext);
   const history = useHistory();
@@ -50,39 +66,52 @@ function Signup() {
         password !== passwordCheck ? false : true;
 
   // 휴대폰번호 validation check
-  const hasPhoneError = (phoneNumber) =>{
-    if(!phoneNumber.match(/^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/)) return true
-    else return false
-  }
+  // const hasPhoneError = (phoneNumber) =>{
+  //   if(!phoneNumber.match(/^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/)) return true
+  //   else return false
+  // }
   // 이메일 validation check
-  const hasEmailError = (emailAddress) =>{
-    if(!emailAddress.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) return true
-    else return false
-  }
+  // const hasEmailError = (emailAddress) =>{
+  //   if(!emailAddress.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) return true
+  //   else return false
+  // }
 
+  //회원가입 제출
   const submitHandler = async (e) =>{
     e.preventDefault();
     try{
       if(hasMemberIdError('memberId') && hasPasswordError(password) && hasNotSameError('passwordCheck')){
+        // 데이터 암호화
+        let rsaEncrypt = new JSEncrypt();
+        rsaEncrypt.setPublicKey(publicKey);
+        let rsaEncryptedMemberId = rsaEncrypt.encrypt(memberId);
+        let rsaEncryptedPassword = rsaEncrypt.encrypt(password);
         const formData = {
-          name : name,
-          memberId : memberId,
-          password : password,
+          name,
+          memberId : rsaEncryptedMemberId,
+          password : rsaEncryptedPassword,
           // phoneNumber : phoneNumber,
           // emailAddress : emailAddress
         }
+        console.log("formData", formData)
         const result = await axios.post('/member/signup', formData)
+        console.log('result.data', result.data)
 
         if(result.data.resultCode === "9997"){
           toast.error(`ID가 중복됩니다. (${result.data.message})`)
+          fetchPublickKey();
         } else if (result.data.resultCode === "9996"){
           toast.error(`올바른 정보를 입력하세요. (${result.data.message})`)
+          fetchPublickKey();
+        }  else if (result.data.resultCode === "9999"){
+          toast.error(`서버에러. (${result.data.message})`)
+          fetchPublickKey();
         } else { // 서버 회원가입 성공시
           // 현재 유저 설정
           setCurUser({
             memberId : result.data.memberId
           })
-          //로컬 스토리지에 저장하기
+          //로컬 스토리지에 저장하기       
           localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
           localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
 

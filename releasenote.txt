@@ -238,3 +238,8 @@ Release 1.2.0.1
   - 로그아웃시 토큰 삭제
   - AuthContext 로그인 사용자 정보 가져오기 수정
   - axiosConfig 설정
+
+Release 1.XX.XX.XX
+  - requestpublickey API 개발
+  - RSA알고리즘, private key로 데이터복호화를 적용한 login API 수정.
+  - RSA알고리즘, private key로 데이터복호화를 적용한 signup API 수정.
