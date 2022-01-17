@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# latestVersion for footer
+/src/main/frontend/public/latestReleaseVer.txt
