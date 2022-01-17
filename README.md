@@ -30,8 +30,6 @@ trackDay는 이루고자 하는 목표를 관리하고, 매일의 활동을 기�
 ### Github [Organizations](https://github.com/dongseoki/trackdayb)
 -> 공개레포로 전환 필요
 
-### 사이드프로젝트 관련 블로그 [Blog](https://velog.io/@blueskyi?tag=%EC%82%AC%EC%9D%B4%EB%93%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
-
 <hr>
 
 ## 🧑‍💻 팀 구성
@@ -65,16 +63,27 @@ trackDay는 이루고자 하는 목표를 관리하고, 매일의 활동을 기�
 - 개발언어: JAVA, JavaScript
 - 개발 라이브러리: React
 - 배포 :
-  - AWS S3 : 서버리스 서비스를 통해 배포를 하기 위해 사용
-  - AWS Cloudfront : HTTPS 적용을 위해 사용
+  - AWS EC2 : IaaS. Amazon으로 부터 물리적 서버, 네트워크, 가상화를 지원받음.
+  - AWS RDS : AWS 클라우드에서 관계형 데이터베이스를 더 쉽게 설치, 운영 및 확장할 수 있는 웹 서비스
+- DBMS :
+  - mysql : 오픈 소스의 관계형 데이터베이스 관리 시스템
 - 통신 :
   - Axios: 서버 통신을 위해 사용
 - 스타일 :
   - styled-components : 가독성 및 편의성을 위해 사용
+- 프레임워크 : 
+  - spring boot : 자바 기반의 웹 어플리케이션을 만들수 있는 프레임 워크
+  - spring security : Spring 기반의 애플리케이션의 보안(인증과 권한, 인가 등)을 담당하는 스프링 하위 프레임워크
+  - mybatis : 개발자가 지정한 SQL, 저장프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크
 - 라이브러리(패키지) :
   - React-Slick : Carousel 기능과 LazyLoad 기능을 통해 서버 효율성을 높이기 위해 사용
   - Moment : 시간 및 날짜 설정을 위해 사용
-  - 
+  - lombok : 어노테이션 기반으로 코드를 자동완성 해주는 라이브러리
+  - javax.validation :  오브젝트 레벨의 제약 선언 및 유효성 검사 기술
+  - swagger : API 문서 자동화를 지원하는 라이브러리
+  - gson : Java에서 Json을 파싱하고, 생성하기 위해 사용되는. 구글에서 개발한 오픈소스
+  - commons-lang3 :  java.lang API를 위한 수많은 도우미 유틸리티, 특히 문자열 조작 메서드, 기본 수치 메소드, 객체 반사, 동시성, 생성 및 직렬화, 시스템 속성을 제공
+  - commons-collections4 : collection과 관련된 새로운 인터페이스, 구현체 및 유틸리티를 제공함으로써 JDK 클래스를 기반으로 빌드하는 것을 추구.
 <hr>
 
 ## 🕹️ 주요 기능
