@@ -13,7 +13,7 @@ echo "> Git Pull"
 git pull
 
 echo "Release Version Updated"
-grep "^Release" ../releasenote.txt | tail -1 > ../src/main/frontend/public/latestReleaseVer.txt
+grep "^Release" ./releasenote.txt | tail -1 > ./src/main/frontend/public/latestReleaseVer.txt
 
 
 echo "> gradlew, deploy.sh 권한 변경 "
