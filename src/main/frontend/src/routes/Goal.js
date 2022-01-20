@@ -10,6 +10,9 @@ import { useMediaQuery } from "react-responsive";
 import {IoIosArrowDown} from "react-icons/io";
 import {IoIosArrowUp} from "react-icons/io";
 import useTitle from '../hooks/useTitle';
+// test
+import { GoalProvider } from "../context/GoalContext";
+
 
 
 function Goal() {
@@ -43,7 +46,8 @@ function Goal() {
         searchStartDatetime={searchStartDatetime}
         searchEndDatetime={searchEndDatetime}
         updateChecker={updateChecker}>
-        <GoalFullListProvider
+        <GoalProvider>
+        {/* <GoalFullListProvider
           searchStartDatetime={searchStartDatetime}
           searchEndDatetime={searchEndDatetime}
           searchGoalIdList={searchGoalIdList}
@@ -51,7 +55,7 @@ function Goal() {
           orderType={orderType}
           gatherGoalYn={gatherGoalYn}
           updateChecker={updateChecker}
-        >
+        > */}
           <aside className="side">
           {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
           {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation 
@@ -76,7 +80,8 @@ function Goal() {
               setUpdateChecker={setUpdateChecker}
             />
           </section>
-        </GoalFullListProvider>
+        {/* </GoalFullListProvider> */}
+        </GoalProvider>
       </GoalSearchTitleListProvider>
       </GoalTotalTitleListProvider>
     </div>

@@ -16,7 +16,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import GoalModifyFormModal from "./GoalModifyFormModal";
 
-import { GoalFullListContext } from "../context/GoalFullListContext";
+// import { GoalFullListContext } from "../context/GoalFullListContext";
 import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
@@ -26,32 +26,16 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
+import { GoalContext } from '../context/GoalContext';
+
 function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gatherGoalYn, setGatherGoalYn, updateChecker, setUpdateChecker}) {
 
-  const GoalFullListReducer = (state, action) => {
-    switch(action.type) {
-      case 'SET_INIT_DATA':
-        return payload;
-      case 'ADD_GOAL':
-        return [...goalFullList, formData]
-      case 'MODIFY_GOAL':
-        return;
-      case 'DELETE_GOAL':
-        return;
-      default:
-        break;
-    }
-  }
+  const { state, dispatch } = useContext(GoalContext)
+  const { loadGoalDataLoading,  goalData:goalFullList, loadGoalDataError} = state;
+  console.log("액션 결과", loadGoalDataError);
 
-  const [goalFullList, dispatch] = useReducer(GoalFullListReducer, [])
-  const setInitData = (initData) => {
-    dispatch({type: 'SET_INIT_DATA', payload: initData})
-  }
 
-  const loading = useFetch(setInitData, 'http://localhost:8080/todo') /////////////////////////수정 필요(useFetch(callback(response.data), url))
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
+  // const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
   const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
@@ -117,7 +101,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
             goalSearchTitleList={goalSearchTitleList}
             setGoalSearchTitleList={setGoalSearchTitleList}
             goalFullList={goalFullList}
-            setGoalFullList={setGoalFullList}
+            // setGoalFullList={setGoalFullList}
             updateTotalTitle={updateTotalTitle}
             setUpdateTotalTitle={setUpdateTotalTitle}
             orderColumn={orderColumn}
@@ -130,7 +114,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
             orderColumn={orderColumn}
             orderType = {orderType}
             goalFullList={goalFullList}
-            setGoalFullList={setGoalFullList}
+            // setGoalFullList={setGoalFullList}
             goalSearchTitleList={goalSearchTitleList}
             setGoalSearchTitleList={setGoalSearchTitleList}
             updateChecker={updateChecker}
