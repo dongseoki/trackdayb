@@ -3,6 +3,7 @@
 <!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">-->
   <head>
     <meta charset="UTF-8">
+    <meta name="google-signin-client_id" content="618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com">
     <title>login</title>
     <script	src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 <!--    <script type="text/javascript" src="/resources/js/jsbn.js"></script>-->
@@ -14,12 +15,52 @@
 <!--    <script type="text/javascript" src="/js/prng4.js"></script>-->
 <!--    <script type="text/javascript" src="/js/rng.js"></script>-->
     <script type="text/javascript" src="/js/jsencrypt.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <script>
       var response;
       var rsaPublicKeyModulus;
       var rsaPublicKeyExponent;
       var publicKeyStr;
+      let googleUserData;
+      var accessTokenIssueRequestBaseUrl = "https://accounts.google.com/o/oauth2/v2/auth?client_id=";
+      const googleClientId = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
+      // const authorizedRedirectionUri = "http://localhost:8080"
+      const authorizedRedirectionUri = "http://localhost:8080/member/google/auth"
+
+      const accessTokenIssueRequestUrl = accessTokenIssueRequestBaseUrl.concat(googleClientId)
+      .concat("&redirect_uri=")
+      .concat(authorizedRedirectionUri)
+      .concat("&response_type=code &scope=email%20profile%20openid &access_type=offline");
+      //
+      function onSignIn(googleUser) {
+        googleUserData = googleUser;
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+        var id_token = googleUser.getAuthResponse().id_token;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8080/member/google/tokensignin');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send('idtoken=' + id_token);
+
+      }
+      // [출처] [JAVASCRIPT] 구글 로그인 API 연동 넣기(JS, JavaScript)|작성자 Ohsanrim
+
+      const onClickGoogleLogin = (e) => {
+        //구글 인증 서버로 인증코드 발급 요청
+        // window.location.replace("https://accounts.google.com/o/oauth2/v2/auth?client_id=&redirect_uri=http://localhost:8080/login/google/auth&response_type=code &scope=email%20profile%20openid &access_type=offline")
+        window.location.replace(accessTokenIssueRequestUrl);
+      }
+
+
+
       function ajax_send(){
 
         // 1. Using rsaPublicKeyModulus, rsaPublicKeyExponent
@@ -61,7 +102,7 @@
       document.addEventListener("DOMContentLoaded", function(){
 // Handler when the DOM is fully loaded
         console.log("hello world");
-        response = fetch("http://127.0.0.1:8080/member/requestpublickey", {
+        response = fetch("http://localhost:8080/member/requestpublickey", {
           method: 'get'
         }).then((response) => response.json())
                 .then(function (data){
@@ -73,6 +114,9 @@
                   //2
                   publicKeyStr = data.publicKeyInfo.publicKeyStr;
                 });
+
+        const googleLoginBtn = document.getElementById("googleLoginBtn");
+        googleLoginBtn.addEventListener("click", onClickGoogleLogin);
 
       });
     </script>
@@ -95,5 +139,9 @@
     </form> <br>
 
     <a href="/test/signup">Go to join! →</a>
+    <div id="googleLoginBtn" style="cursor: pointer">
+      Google Login
+    </div>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
   </body>
 </html>

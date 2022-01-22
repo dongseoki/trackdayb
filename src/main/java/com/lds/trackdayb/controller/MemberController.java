@@ -3,14 +3,23 @@ package com.lds.trackdayb.controller;
 import javax.crypto.Cipher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.lds.trackdayb.dto.MemberDTO;
-import com.lds.trackdayb.dto.TokenDTO;
-import com.lds.trackdayb.dto.TokenRequestDTO;
+import com.lds.trackdayb.dto.*;
 import com.lds.trackdayb.exception.DuplicateMemberException;
 import com.lds.trackdayb.exception.ValidateException;
 import com.lds.trackdayb.jwt.JwtFilter;
@@ -32,30 +41,138 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.security.*;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Map;
 
 import static com.lds.trackdayb.util.CommonCodeUtil.byteArrayToHex;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
-public class MemberController {    
+public class MemberController {
     private final MemberService memberService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
 
+    @GetMapping("/google/auth")
+    public String googleAuth(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "code") String authCode) throws JsonProcessingException {
+//        final String GOOGLE_TOKEN_BASE_URL ="https://accounts.google.com/o/oauth2/v2/auth";
+//        final String GOOGLE_TOKEN_BASE_URL ="https://accounts.google.com/o/oauth2/auth";
+        final String GOOGLE_TOKEN_BASE_URL ="https://oauth2.googleapis.com/token";
+
+        //HTTP Request를 위한 RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        String clientId = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
+        String clientSecret = "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";
+        //Google OAuth Access Token 요청을 위한 파라미터 세팅
+        GoogleOAuthRequest googleOAuthRequestParam = GoogleOAuthRequest
+                .builder()
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .code(authCode)
+                .redirectUri("http://localhost:8080/member/google/auth")
+                .grantType("authorization_code").build();
+
+
+        //JSON 파싱을 위한 기본값 세팅
+        //요청시 파라미터는 스네이크 케이스로 세팅되므로 Object mapper에 미리 설정해준다.
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        //AccessToken 발급 요청
+        ResponseEntity<String> resultEntity = restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL, googleOAuthRequestParam, String.class);
+
+        //Token Request
+        GoogleOAuthResponse result = mapper.readValue(resultEntity.getBody(), new TypeReference<GoogleOAuthResponse>() {
+        });
+
+        //ID Token만 추출 (사용자의 정보는 jwt로 인코딩 되어있다)
+        String jwtToken = result.getIdToken();
+        String requestUrl = UriComponentsBuilder.fromHttpUrl("https://oauth2.googleapis.com/tokeninfo")
+                .queryParam("id_token", jwtToken).encode().toUriString();
+
+        String resultJson = restTemplate.getForObject(requestUrl, String.class);
+
+        Map<String,String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>(){});
+
+        LOGGER.info("test userInfo : {}",userInfo.toString());
+
+        String redirect_uri = request.getScheme() + "://" +   // "http" + "://
+                request.getServerName() +       // "myhost"
+                ":" + request.getServerPort(); // ":" + "8080"
+        try{
+            response.sendRedirect(redirect_uri);
+        }catch (Exception exception){
+
+        }
+        return "success?";
+    }
+
+    @PostMapping("/google/tokensignin")
+    public String googleTokensignin(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "idtoken") String idTokenString) throws JsonProcessingException {
+        final String GOOGLE_TOKEN_BASE_URL ="https://oauth2.googleapis.com/token";
+
+        //HTTP Request를 위한 RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        String CLIENT_ID = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
+        String clientSecret = "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";
+
+        // google example code
+
+        GoogleIdTokenVerifier verifier =
+                new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                // Specify the CLIENT_ID of the app that accesses the backend:
+                .setAudience(Collections.singletonList(CLIENT_ID))
+                // Or, if multiple clients access the backend:
+                //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+                .build();
+
+// (Receive idTokenString by HTTPS POST)
+
+        try{
+            GoogleIdToken idToken = verifier.verify(idTokenString);
+            if (idToken != null) {
+                Payload payload = idToken.getPayload();
+
+                // Print user identifier
+                String userId = payload.getSubject();
+                System.out.println("User ID: " + userId);
+
+                // Get profile information from payload
+                String email = payload.getEmail();
+                boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+                String name = (String) payload.get("name");
+                String pictureUrl = (String) payload.get("picture");
+                String locale = (String) payload.get("locale");
+                String familyName = (String) payload.get("family_name");
+                String givenName = (String) payload.get("given_name");
+
+                // Use or store profile information
+                // ...
+                LOGGER.info("test tokensignin : userId : {}, email : {} emailVerified:{}, name:{}, pictureUrl:{}, local:{}",userId,email,emailVerified,name,pictureUrl,locale);
+
+            } else {
+                LOGGER.info("test tokensignin : {}","Invalid ID token");
+            }
+        }catch (Exception e){
+
+        }
+        //
+        return "success?";
+    }
 
     @PostMapping(value="/logout")
     public ResultMVO logout(HttpServletRequest request) {
