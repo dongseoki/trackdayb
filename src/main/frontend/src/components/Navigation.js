@@ -65,6 +65,7 @@ function Navigation(){
                 <ul>
                     {curUser ? <>
                         <li><span>{curUser.memberId}</span></li>
+                        <li><Link to='/mypage'>mypage</Link></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </> : ( 
                             <>
