@@ -1,6 +1,4 @@
 import React from "react";
-
-
 import { Route, Switch } from 'react-router-dom';
 import { Home, Time, Goal, Report, Community, Login, Signup, Mypage } from './index.js'; 
 import PublicRoute from '../PublicRoute'
@@ -21,5 +19,4 @@ function Main() {
         </div>        
     )
 }
-
 export default Main;
