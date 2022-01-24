@@ -56,8 +56,9 @@ function Login() {
     };
     try{
       const result = await axios.post("/member/login", formData);
+      console.log('ㅎ로그인시 데이터', result)
       //현재 유저 설정
-      setCurUser({memberId:result.data.memberId})
+      setCurUser({memberInfo : result.data.memberInfo})
 
       //로컬 스토리지에 저장하기
       localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)

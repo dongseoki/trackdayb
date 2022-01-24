@@ -18,7 +18,8 @@ export const AuthProvider = ({children}) => {
             else if(accessToken){
                 try{
                     const result = await axiosInstance.get("/member/currentUser");
-                    setCurUser({memberId:result.data.memberInfo.memberId})
+                    console.log('result.data.memberInfo', result.data.memberInfo)
+                    setCurUser({memberInfo : result.data.memberInfo})
                 }catch(err) {
                     console.log('curUser_에러', err);
                     toast.error("현재 유저 정보 가져오기 에러.", {
