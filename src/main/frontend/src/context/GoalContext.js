@@ -1,5 +1,5 @@
 import React, { useReducer, createContext, useEffect } from "react";
-import { goalReducer } from '../reducers/goalReducer';
+import goalReducer from '../reducers/goal';
 import axiosInstance from "../axiosConfig";
 
 export const GoalContext = createContext();

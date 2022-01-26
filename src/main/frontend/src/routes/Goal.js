@@ -11,25 +11,22 @@ import {IoIosArrowDown} from "react-icons/io";
 import {IoIosArrowUp} from "react-icons/io";
 import useTitle from '../hooks/useTitle';
 // test
-import { GoalProvider } from "../context/GoalContext";
-
-
+// import { GoalProvider } from "../context/GoalContext";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_GOALFULLLIST_REQUEST } from "../redux/goal";
+import { LOAD_GOALTOTALFULLLIST_REQUEST } from "../reducers/goal";
 
 function Goal() {
   const dispatch = useDispatch();
   const { loadGoalFullListLoading, loadGoalFullListDone, loadGoalFullListError, goalFullList } = useSelector((state) => state.goal)
-  console.log('loadGoalFullListLoading', loadGoalFullListLoading);
 
-  const onClickHandler = () => {
-    console.log('hello')
+  useEffect(() => {
     dispatch({
-      type : LOAD_GOALFULLLIST_REQUEST,
+      type : LOAD_GOALTOTALFULLLIST_REQUEST,
     });
-    console.log('goalFullList', goalFullList);
-  }
+  }, [])
+
+  console.log('goalFullList', goalFullList);
 
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("목표관리"), 100);
@@ -56,13 +53,12 @@ function Goal() {
   
   return (
     <div className="goal">
-      <button onClick={onClickHandler}>사가 테스트</button>
       <GoalTotalTitleListProvider>
       <GoalSearchTitleListProvider
         searchStartDatetime={searchStartDatetime}
         searchEndDatetime={searchEndDatetime}
         updateChecker={updateChecker}>
-        <GoalProvider>
+        {/* <GoalProvider> */}
         {/* <GoalFullListProvider
           searchStartDatetime={searchStartDatetime}
           searchEndDatetime={searchEndDatetime}
@@ -75,17 +71,17 @@ function Goal() {
           <aside className="side">
           {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
           {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation 
-              searchStartDatetime={searchStartDatetime}
-              searchEndDatetime={searchEndDatetime}
-              setSearchStartDatetime={setSearchStartDatetime}
-              setSearchEndDatetime={setSearchEndDatetime}
-              searchGoalIdList={searchGoalIdList}
-              setSearchGoalIdList={setSearchGoalIdList}
+              // searchStartDatetime={searchStartDatetime}
+              // searchEndDatetime={searchEndDatetime}
+              // setSearchStartDatetime={setSearchStartDatetime}
+              // setSearchEndDatetime={setSearchEndDatetime}
+              // searchGoalIdList={searchGoalIdList}
+              // setSearchGoalIdList={setSearchGoalIdList}
             />
           )}
           </aside>
           <section className="goal-content">
-            <GoalFullList 
+            {/* <GoalFullList 
               orderColumn={orderColumn}
               setOrderColumn={setOrderColumn}
               orderType={orderType}
@@ -94,10 +90,10 @@ function Goal() {
               setGatherGoalYn={setGatherGoalYn}
               updateChecker={updateChecker}
               setUpdateChecker={setUpdateChecker}
-            />
+            /> */}
           </section>
         {/* </GoalFullListProvider> */}
-        </GoalProvider>
+        {/* </GoalProvider> */}
       </GoalSearchTitleListProvider>
       </GoalTotalTitleListProvider>
     </div>
