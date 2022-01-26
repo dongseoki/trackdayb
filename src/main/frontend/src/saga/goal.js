@@ -1,7 +1,7 @@
 // saga 는 밑에서부터
 import axios from 'axios';
 import { all, call, fork, put, delay, takeLatest } from 'redux-saga/effects';
-import { LOAD_GOALFULLLIST_REQUEST, LOAD_GOALFULLLIST_SUCCESS, LOAD_GOALFULLLIST_FAILURE } from '../redux/goal';
+import { LOAD_GOALFULLLIST_REQUEST, LOAD_GOALFULLLIST_SUCCESS, LOAD_GOALFULLLIST_FAILURE } from '../reducers/goal';
 
 // 목표 전체리스트 로드
 function loadGoalFullListAPI() {
