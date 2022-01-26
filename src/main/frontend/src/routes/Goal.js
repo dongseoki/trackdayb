@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Goal.css";
 import LeftNavigation from "../components/LeftNavigation";
 import GoalFullList from "../components/GoalFullList";
@@ -15,7 +15,22 @@ import { GoalProvider } from "../context/GoalContext";
 
 
 
+import { useDispatch, useSelector } from 'react-redux';
+import { LOAD_GOALFULLLIST_REQUEST } from "../redux/goal";
+
 function Goal() {
+  const dispatch = useDispatch();
+  const { loadGoalFullListLoading, loadGoalFullListDone, loadGoalFullListError, goalFullList } = useSelector((state) => state.goal)
+  console.log('loadGoalFullListLoading', loadGoalFullListLoading);
+
+  const onClickHandler = () => {
+    console.log('hello')
+    dispatch({
+      type : LOAD_GOALFULLLIST_REQUEST,
+    });
+    console.log('goalFullList', goalFullList);
+  }
+
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("목표관리"), 100);
   // 검색조건
@@ -41,6 +56,7 @@ function Goal() {
   
   return (
     <div className="goal">
+      <button onClick={onClickHandler}>사가 테스트</button>
       <GoalTotalTitleListProvider>
       <GoalSearchTitleListProvider
         searchStartDatetime={searchStartDatetime}
