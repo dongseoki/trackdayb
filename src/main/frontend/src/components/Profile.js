@@ -4,7 +4,7 @@ import Avatar from '@mui/material/Avatar';
 
 const Profile = ({curUser}) => {
     // 닉네임
-    const [ name , setName ] = useState(curUser.memberInfo.name);
+    const [ name , setName ] = useState('홍길동');
     const [ message, setMessage ] = useState('안녕하세요, 홍길동 입니다.');
     
     // 아바타 이미지 파일

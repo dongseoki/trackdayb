@@ -58,7 +58,8 @@ function Login() {
       const result = await axios.post("/member/login", formData);
       console.log('ㅎ로그인시 데이터', result)
       //현재 유저 설정
-      setCurUser({memberInfo : result.data.memberInfo})
+      // setCurUser({memberInfo : result.data.memberInfo})
+      setCurUser({memberId : result.data.memberId})
 
       //로컬 스토리지에 저장하기
       localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
@@ -68,6 +69,7 @@ function Login() {
       toast.success(`${result.data.memberId}님, 반갑습니다!`)
       
     }catch(err){
+      debugger
       toast.error(`올바른 정보를 입력하세요 (${err.response.statusText})`)
       fetchPublickKey(); // 실패시 새로운 키 요청
     }
