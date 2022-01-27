@@ -4,27 +4,29 @@ export const initialState = {
     loadGoalTotalFullListLoading : false, // 전체 게시글 로딩 중
     loadGoalTotalFullListDone : false,
     loadGoalTotalFullListError : null,
-
     goalSearchFullList : [], // 조건 검색 게시글
     loadGoalSearchFullListLoading : false, // 조건 게시글 로딩 중
     loadGoalSearchFullListDone : false,
     loadGoalSearchFullListError : null,
-
     goalSearchTitleList : [], // 조건 검색 게시글 제목
     loadGoalSearchTitleListLoading : false,
     loadGoalSearchTitleListDone : false,
     loadGoalSearchTitleListError : null,
-
-    // 조건 - Full,Title 같은 변수
-    searchParams : { // 
+    searchParams : { // 조건 - Full,Title 같은 변수
         searchStartDatetime:'2021-01-01',
         searchEndDatetime:'2021-01-30',
         // searchKind:"deadline",
         // ...(props.orderColumn && { orderColumn: props.orderColumn}), //값이 있을때만 parmas 보냄
         // ...(props.orderColumn && { orderType: props.orderType}), //값이 있을때만 parmas 보냄
-        // searchGoalIdList:props.searchGoalIdList.toString(),
+        searchGoalIdList: [],
         // gatherGoalYn: props.gatherGoalYn===true ? "Y" : "N", //목표 모아보기변수
     }, // 목표 검색 조건
+    deleteGoalLoading : false, // 목표 삭제
+    deleteGoalDone : false,
+    deleteGoalError : null,
+    addGoalLoading : false, // 목표 추가
+    addGoalDone : false,
+    addGoalError : null,
     
 }
 // action 은 생략 그때그때 만들어서 사용
@@ -41,6 +43,15 @@ export const LOAD_GOALSEARCHFULLLIST_FAILURE = 'LOAD_GOALSEARCHFULLLIST_FAILURE'
 export const LOAD_GOALSEARCHTITLELIST_REQUEST = 'LOAD_GOALSEARCHTITLELIST_REQUEST';
 export const LOAD_GOALSEARCHTITLELIST_SUCCESS = 'LOAD_GOALSEARCHTITLELIST_SUCCESS';
 export const LOAD_GOALSEARCHTITLELIST_FAILURE = 'LOAD_GOALSEARCHTITLELIST_FAILURE';
+
+export const DELETE_GOAL_REQUEST = 'DELETE_GOAL_REQUEST';
+export const DELETE_GOAL_SUCCESS = 'DELETE_GOAL_SUCCESS';
+export const DELETE_GOAL_FAILURE = 'DELETE_GOAL_FAILURE';
+
+export const ADD_GOAL_REQUEST = 'ADD_GOAL_REQUEST';
+export const ADD_GOAL_SUCCESS = 'ADD_GOAL_SUCCESS';
+export const ADD_GOAL_FAILURE = 'ADD_GOAL_FAILURE';
+
 
 //reducer
 const goalReducer = (state=initialState, action) =>{
@@ -115,6 +126,47 @@ const goalReducer = (state=initialState, action) =>{
                 ...state,
                 loadGoalSearchTitleListLoading : false,
                 loadGoalSearchTitleListError : action.error,
+            }
+        case DELETE_GOAL_REQUEST: // 목표 삭제
+            return {
+                ...state,
+                deleteGoalLoading : true,
+                deleteGoalDone : false,
+                deleteGoalError : null,
+            }
+        case DELETE_GOAL_SUCCESS: 
+            return {
+                ...state,
+                deleteGoalLoading : false,
+                deleteGoalDone : true,
+                goalTotalFullList : state.goalTotalFullList.filter((v) => v.goalId !== action.data ),
+                goalSearchFullList : state.goalSearchFullList.filter((v) => v.goalId !== action.data ),
+                goalSearchTitleList : state.goalSearchTitleList.filter((v) => v.goalId !== action.data ),
+            }
+        case DELETE_GOAL_FAILURE: 
+            return {
+                ...state,
+                deleteGoalLoading : false,
+                deleteGoalError : action.error,
+            }
+        case ADD_GOAL_REQUEST: // 목표 추가
+            return {
+                ...state,
+                addGoalLoading : true,
+                addGoalDone : false,
+                addGoalError : null,
+            }
+        case ADD_GOAL_SUCCESS: 
+            return {
+                ...state,
+                addGoalLoading : false,
+                addGoalDone : true,
+            }
+        case ADD_GOAL_FAILURE: 
+            return {
+                ...state,
+                addGoalLoading : false,
+                addGoalError : action.error,
             }
         default:
             return state;

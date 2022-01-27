@@ -1,23 +1,15 @@
 import React, { useState, useContext } from "react";
 import "./GoalFullList.css";
 // import axios from "axios";
-import axiosInstance from "../axiosConfig";
 import GoalInsertFormModal from "./GoalInsertFormModal";
+import GoalDeleteModal from "./GoalDeleteModal";
 //icon
-import { RiDeleteBinLine } from "react-icons/ri";
 import { BiLock } from "react-icons/bi";
 import { CgArrowDown } from 'react-icons/cg';
 import { CgArrowUp } from 'react-icons/cg';
 import Button from '@mui/material/Button';
-// 삭제버튼
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
-
 import GoalModifyFormModal from "./GoalModifyFormModal";
 
-// import { GoalFullListContext } from "../context/GoalFullListContext";
-import { GoalSearchTitleListContext} from "../context/GoalSearchTitleListContext";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
 
 import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
@@ -26,17 +18,15 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
-import { GoalContext } from '../context/GoalContext';
+import { useSelector } from 'react-redux';
 
 function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gatherGoalYn, setGatherGoalYn, updateChecker, setUpdateChecker}) {
 
-  const { state, dispatch } = useContext(GoalContext)
-  const { loadGoalDataLoading,  goalData:goalFullList, loadGoalDataError} = state;
-  console.log("액션 결과", loadGoalDataError);
+  const { goalSearchFullList, goalSearchTitleList } = useSelector((state) => state.goal)
+  console.log('goalSearchFullList', goalSearchFullList)
+  console.log('goalSearchTitleList', goalSearchTitleList)
 
-
-  // const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
-  const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
+  // const [ goalSearchTitleList, setGoalSearchTitleList ] = useContext(GoalSearchTitleListContext);
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
 
   const toggleOrderType = (preValue)=>{
@@ -82,7 +72,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
       </div>
 
       <div className="goal-cards-list">
-        {goalFullList && goalFullList.map((goal, index) => (
+        {goalSearchFullList && goalSearchFullList.map((goal, index) => (
           <GoalCard
             key={goal.goalId}
             index={index}
@@ -99,8 +89,8 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
             shareStatus={goal.shareStatus}
             periodicityInfo = {goal.periodicityInfo}
             goalSearchTitleList={goalSearchTitleList}
-            setGoalSearchTitleList={setGoalSearchTitleList}
-            goalFullList={goalFullList}
+            // setGoalSearchTitleList={setGoalSearchTitleList}
+            goalSearchFullList={goalSearchFullList}
             // setGoalFullList={setGoalFullList}
             updateTotalTitle={updateTotalTitle}
             setUpdateTotalTitle={setUpdateTotalTitle}
@@ -113,10 +103,10 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
         <GoalInsertFormModal 
             orderColumn={orderColumn}
             orderType = {orderType}
-            goalFullList={goalFullList}
+            goalSearchFullList={goalSearchFullList}
             // setGoalFullList={setGoalFullList}
-            goalSearchTitleList={goalSearchTitleList}
-            setGoalSearchTitleList={setGoalSearchTitleList}
+            // goalSearchTitleList={goalSearchTitleList}
+            // setGoalSearchTitleList={setGoalSearchTitleList}
             updateChecker={updateChecker}
             setUpdateChecker={setUpdateChecker}/>
       </div>
@@ -125,7 +115,7 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
   )
 }
 
-function GoalCard({ index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, topGoalColor, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
+function GoalCard({ index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, topGoalColor, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalSearchFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType, updateChecker, setUpdateChecker}){
   let goalTitlePathList = goalTitlePath.split("/")
   goalTitlePathList.pop()
   return(
@@ -134,25 +124,16 @@ function GoalCard({ index, goalTitlePath, title, startDatetime, endDatetime, con
           <div className="card-button-wrapper">
             {(shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
             <GoalModifyFormModal 
-              modifyData = {goalFullList[index]}
+              modifyData = {goalSearchFullList[index]}
               targetIndex={index}
               orderColumn={orderColumn}
               orderType = {orderType}
-              goalSearchTitleList={goalSearchTitleList}
-              setGoalSearchTitleList={setGoalSearchTitleList}
+              // goalSearchTitleList={goalSearchTitleList}
+              // setGoalSearchTitleList={setGoalSearchTitleList}
               updateChecker={updateChecker}
               setUpdateChecker={setUpdateChecker}
             />
-            <DeleteModal 
-              goalId={goalId} 
-              goalSearchTitleList={goalSearchTitleList}
-              setGoalSearchTitleList={setGoalSearchTitleList}
-              goalFullList={goalFullList}
-              setGoalFullList ={setGoalFullList}
-              updateTotalTitle={updateTotalTitle}
-              setUpdateTotalTitle={setUpdateTotalTitle}
-              updateChecker={updateChecker}
-              setUpdateChecker={setUpdateChecker}/>
+            <GoalDeleteModal goalId={goalId}/>
           </div>
           <div className="path-tag-wrapper">
             {goalTitlePathList.length>0 ? goalTitlePathList.map((goal, index) => (
@@ -199,59 +180,6 @@ function PeriodicityInfo({periodicityInfo}){
 }
 
 
-// 삭제 버튼 모달
-function DeleteModal({goalId, goalSearchTitleList, setGoalSearchTitleList, goalFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, updateChecker, setUpdateChecker}) {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const deleteHandler = async ()=>{
-    try{
-      const result= await axiosInstance.delete("/goalManage/goal", {
-        params:{
-          goalId: goalId
-        }
-      })
-      handleClose()
-      // setGoalFullList(goalFullList.filter(goal => goal.goalId !== goalId));
-      // setGoalSearchTitleList(goalSearchTitleList.filter(goal => goal.goalId !== goalId))
-      setUpdateTotalTitle(!updateTotalTitle)
-      setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
-    }catch(err){
-      console.error(err)
-    }
-  }
-
-  return (
-    <>
-      <button className="deleteBtn" variant="outlined" onClick={handleClickOpen}>
-        <RiDeleteBinLine style={{verticalAlign:"middle"}} title="삭제"/>
-      </button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"정말 삭제하시겠습니까?"}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose}>취소</Button>
-          <Button onClick={deleteHandler} autoFocus>
-            삭제
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-}
 
 
 export default GoalFullList;

@@ -9,7 +9,13 @@ import {LOAD_GOALTOTALFULLLIST_REQUEST,
         LOAD_GOALSEARCHFULLLIST_FAILURE,
         LOAD_GOALSEARCHTITLELIST_REQUEST,
         LOAD_GOALSEARCHTITLELIST_SUCCESS,
-        LOAD_GOALSEARCHTITLELIST_FAILURE} from '../reducers/goal';
+        LOAD_GOALSEARCHTITLELIST_FAILURE,
+        DELETE_GOAL_REQUEST,
+        DELETE_GOAL_SUCCESS,
+        DELETE_GOAL_FAILURE,
+        ADD_GOAL_REQUEST,
+        ADD_GOAL_SUCCESS,
+        ADD_GOAL_FAILURE} from '../reducers/goal';
 
 import axiosInstance from '../axiosConfig';
 
@@ -20,7 +26,6 @@ function loadGoalTotalFullListAPI() {
 function* loadGoalTotalFullList() {
     try{
         const result = yield call(loadGoalTotalFullListAPI)
-        // yield delay(1000);
         yield put({
             type : LOAD_GOALTOTALFULLLIST_SUCCESS,
             data : result.data.goalFullList // 서버로 부터 받아온 데이터
@@ -71,6 +76,46 @@ function* loadGoalSearchTitleList(action) {
     }
 }
 
+// 목표 삭제
+function deleteGoalAPI(data) {
+    return axiosInstance.delete('/goalManage/goal', {params : data})
+}
+function* deleteGoal(action) {
+    try{
+        const result = yield call(deleteGoalAPI, { goalId : action.data.goalId })
+        yield put({
+            type : DELETE_GOAL_SUCCESS,
+            data : action.data.goalId
+        })
+    }catch(err) {
+        yield put({
+            type : DELETE_GOAL_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
+// 목표 추가
+function addGoalAPI(data) {
+    return axiosInstance.post('/goalManage/goal', data)
+}
+function* addGoal(action) {
+    try{
+        const result = yield call(addGoalAPI, action.data.formData)
+        yield put({
+            type : ADD_GOAL_SUCCESS,
+            data : result
+        })
+    }catch(err) {
+        yield put({
+            type : ADD_GOAL_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
+
+
 function* watchLoadGoalToTalFullList() {
     yield takeLatest(LOAD_GOALTOTALFULLLIST_REQUEST, loadGoalTotalFullList);
 }
@@ -83,10 +128,21 @@ function* watchLoadGoalSearchTitleList() {
     yield takeLatest(LOAD_GOALSEARCHTITLELIST_REQUEST, loadGoalSearchTitleList);
 }
 
+function* watchDeleteGoal() {
+    yield takeLatest(DELETE_GOAL_REQUEST, deleteGoal);
+}
+
+function* watchAddGoal() {
+    yield takeLatest(ADD_GOAL_REQUEST, addGoal);
+}
+
+
 export default function* goalSaga() {
     yield all([
         fork(watchLoadGoalToTalFullList),
         fork(watchLoadGoalSearchFullList),
-        fork(watchLoadGoalSearchTitleList)
+        fork(watchLoadGoalSearchTitleList),
+        fork(watchDeleteGoal),
+        fork(watchAddGoal),
     ])
 }

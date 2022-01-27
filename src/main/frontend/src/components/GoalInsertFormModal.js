@@ -31,8 +31,12 @@ import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext"
 import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 import {toast} from "react-toastify";
 import { useMediaQuery } from "react-responsive";
+import { ADD_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
+import { useDispatch } from 'react-redux';
 
 function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList, updateChecker, setUpdateChecker}){
+  const dispatch = useDispatch();
+
   const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
   
@@ -194,14 +198,24 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
           "satYn":sat ? "Y":"N"
         }
       }
-      try{
-        const result = await axiosInstance.post("/goalManage/goal", formData);
-        handleClose();
-        setUpdateTotalTitle(!updateTotalTitle)
-        setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
-      }catch(err){
-        console.error(err)
-      }
+      // 순차적 비동기 처리 필요(정렬조건 때문에)
+      dispatch({
+        type : ADD_GOAL_REQUEST,
+        data : { formData : formData }
+      },);
+      dispatch({
+        type : LOAD_GOALTOTALFULLLIST_REQUEST,
+      })
+      dispatch({
+        type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+      })
+      dispatch({
+        type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+      })
+      handleClose();
+      setUpdateTotalTitle(!updateTotalTitle)
+      setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
+
     }
   };
   return (

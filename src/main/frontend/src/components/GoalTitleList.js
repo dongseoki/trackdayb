@@ -22,7 +22,7 @@ function GoalTitleList({goalTitleList}) {
     dispatch({
       type : LOAD_GOALSEARCHFULLLIST_REQUEST,
       data : {
-        searchGoalIdList : searchGoalIdList
+        searchGoalIdList : searchGoalIdList.toString()
       }
     })
   }, [searchGoalIdList])

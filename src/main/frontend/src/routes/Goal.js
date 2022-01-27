@@ -81,7 +81,7 @@ function Goal() {
           )}
           </aside>
           <section className="goal-content">
-            {/* <GoalFullList 
+            <GoalFullList 
               orderColumn={orderColumn}
               setOrderColumn={setOrderColumn}
               orderType={orderType}
@@ -90,7 +90,7 @@ function Goal() {
               setGatherGoalYn={setGatherGoalYn}
               updateChecker={updateChecker}
               setUpdateChecker={setUpdateChecker}
-            /> */}
+            />
           </section>
         {/* </GoalFullListProvider> */}
         {/* </GoalProvider> */}
