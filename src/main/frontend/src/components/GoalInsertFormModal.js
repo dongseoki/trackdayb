@@ -34,10 +34,9 @@ import { useMediaQuery } from "react-responsive";
 import { ADD_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
 import { useDispatch } from 'react-redux';
 
-function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList, updateChecker, setUpdateChecker}){
+function GoalInsertFormModal(){
   const dispatch = useDispatch();
 
-  const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
   const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
   
   // const [startDatetime, setStartDatetime] = useState(new Date());
@@ -213,8 +212,8 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         type : LOAD_GOALSEARCHTITLELIST_REQUEST,
       })
       handleClose();
-      setUpdateTotalTitle(!updateTotalTitle)
-      setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
+      // setUpdateTotalTitle(!updateTotalTitle)
+      // setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
 
     }
   };

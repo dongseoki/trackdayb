@@ -16,14 +16,16 @@ import FormControl from '@mui/material/FormControl';
 import Tree from '@naisutech/react-tree'
 //icon
 import { BiSearch } from "react-icons/bi";
-import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext"; //기간검색 제목리스트
 import { useMediaQuery } from "react-responsive";
 import randomColor from "randomcolor";
+import { useSelector } from 'react-redux';
 
 function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, startDatetime, endDatetime, writeDate}){
   
   const pathname = window.location.pathname; // time or goal
-  const [ goalModalSearchTitleList ] = useContext(GoalModalSearchTitleListContext); //기간검색 제목리스트
+
+  const {goalModalTitleList} = useSelector((state) => state.goal)
+
   const [ tempParentId, setTempParentId ] = useState("");
   const [ tempParentTitle, setTempParentTitle ] = useState("없음");
   const [ tempParentProgressRate, setTempParentProgressRate] = useState(0); //시간관리용 목표진행률
@@ -91,7 +93,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   const searchHandler = (searchTerm)=>{
     setSearchTerm(searchTerm);
     if(searchTerm !== ""){
-        const newGoalSearchTitleList = goalModalSearchTitleList.filter((goal) =>{
+        const newGoalSearchTitleList = goalModalTitleList.filter((goal) =>{
           return Object.values(goal)
           .join(" ")
           .toLowerCase()
@@ -99,7 +101,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
       });
       setSearchResults(newGoalSearchTitleList);
     } else{
-      setSearchResults(goalModalSearchTitleList);
+      setSearchResults(goalModalTitleList);
     }
   }
   
@@ -136,7 +138,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
 
               <GoalTitleChoiceList
                 goalId = {goalId}
-                goalTitleList = {searchTerm.length < 1 ? goalModalSearchTitleList : searchResults} // 기간검색 제목리스트
+                goalTitleList = {searchTerm.length < 1 ? goalModalTitleList : searchResults} // 기간검색 제목리스트
                 tempParentId={tempParentId}
                 setTempParentId={setTempParentId}
                 setTempParentTitle={setTempParentTitle}

@@ -4,18 +4,27 @@ import { all, call, fork, put, delay, takeLatest } from 'redux-saga/effects';
 import {LOAD_GOALTOTALFULLLIST_REQUEST,
         LOAD_GOALTOTALFULLLIST_SUCCESS,
         LOAD_GOALTOTALFULLLIST_FAILURE,
+        LOAD_GOALTOTALTITLELIST_REQUEST,
+        LOAD_GOALTOTALTITLELIST_SUCCESS,
+        LOAD_GOALTOTALTITLELIST_FAILURE,
         LOAD_GOALSEARCHFULLLIST_REQUEST,
         LOAD_GOALSEARCHFULLLIST_SUCCESS,
         LOAD_GOALSEARCHFULLLIST_FAILURE,
         LOAD_GOALSEARCHTITLELIST_REQUEST,
         LOAD_GOALSEARCHTITLELIST_SUCCESS,
         LOAD_GOALSEARCHTITLELIST_FAILURE,
+        LOAD_GOALMODALTITLELIST_REQUEST,
+        LOAD_GOALMODALTITLELIST_SUCCESS,
+        LOAD_GOALMODALTITLELIST_FAILURE,
         DELETE_GOAL_REQUEST,
         DELETE_GOAL_SUCCESS,
         DELETE_GOAL_FAILURE,
         ADD_GOAL_REQUEST,
         ADD_GOAL_SUCCESS,
-        ADD_GOAL_FAILURE} from '../reducers/goal';
+        ADD_GOAL_FAILURE,
+        MODIFY_GOAL_REQUEST,
+        MODIFY_GOAL_SUCCESS,
+        MODIFY_GOAL_FAILURE} from '../reducers/goal';
 
 import axiosInstance from '../axiosConfig';
 
@@ -33,6 +42,25 @@ function* loadGoalTotalFullList() {
     }catch(err) {
         yield put({
             type : LOAD_GOALTOTALFULLLIST_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
+// 목표 전체 제목 리스트 로드
+function loadGoalTotalTitleListAPI() {
+    return axiosInstance.get('/goalManage/goalTitleList')
+}
+function* loadGoalTotalTitleList() {
+    try{
+        const result = yield call(loadGoalTotalTitleListAPI)
+        yield put({
+            type : LOAD_GOALTOTALTITLELIST_SUCCESS,
+            data : result.data.goalTitleList // 서버로 부터 받아온 데이터
+        })
+    }catch(err) {
+        yield put({
+            type : LOAD_GOALTOTALTITLELIST_FAILURE,
             error : err.response.data
         })
     }
@@ -76,6 +104,25 @@ function* loadGoalSearchTitleList(action) {
     }
 }
 
+// 모달창 내부 목표 타이틀 리스트 로드
+function loadGoalModalTitleListAPI(data) {
+    return axiosInstance.get('/goalManage/goalTitleList', {params : data})
+}
+function* loadGoalModalTitleList(action) {
+    try{
+        const result = yield call(loadGoalModalTitleListAPI, action.data)
+        yield put({
+            type : LOAD_GOALMODALTITLELIST_SUCCESS,
+            data : result.data.goalTitleList // 서버로 부터 받아온 데이터
+        })
+    }catch(err) {
+        yield put({
+            type : LOAD_GOALMODALTITLELIST_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
 // 목표 삭제
 function deleteGoalAPI(data) {
     return axiosInstance.delete('/goalManage/goal', {params : data})
@@ -114,10 +161,33 @@ function* addGoal(action) {
     }
 }
 
+// 목표 수정
+function modifyGoalAPI(data) {
+    return axiosInstance.patch('/goalManage/goal', data)
+}
+function* modifyGoal(action) {
+    try{
+        const result = yield call(modifyGoalAPI, action.data.formData)
+        yield put({
+            type : MODIFY_GOAL_SUCCESS,
+            data : result
+        })
+    }catch(err) {
+        yield put({
+            type : MODIFY_GOAL_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
 
 
 function* watchLoadGoalToTalFullList() {
     yield takeLatest(LOAD_GOALTOTALFULLLIST_REQUEST, loadGoalTotalFullList);
+}
+
+function* watchLoadGoalToTalTitleList() {
+    yield takeLatest(LOAD_GOALTOTALTITLELIST_REQUEST, loadGoalTotalTitleList);
 }
 
 function* watchLoadGoalSearchFullList() {
@@ -128,6 +198,10 @@ function* watchLoadGoalSearchTitleList() {
     yield takeLatest(LOAD_GOALSEARCHTITLELIST_REQUEST, loadGoalSearchTitleList);
 }
 
+function* watchLoadGoalModalTitleList() {
+    yield takeLatest(LOAD_GOALMODALTITLELIST_REQUEST, loadGoalModalTitleList);
+}
+
 function* watchDeleteGoal() {
     yield takeLatest(DELETE_GOAL_REQUEST, deleteGoal);
 }
@@ -136,13 +210,20 @@ function* watchAddGoal() {
     yield takeLatest(ADD_GOAL_REQUEST, addGoal);
 }
 
+function* watchModifyGoal() {
+    yield takeLatest(MODIFY_GOAL_REQUEST, modifyGoal);
+}
+
 
 export default function* goalSaga() {
     yield all([
         fork(watchLoadGoalToTalFullList),
+        fork(watchLoadGoalToTalTitleList),
         fork(watchLoadGoalSearchFullList),
         fork(watchLoadGoalSearchTitleList),
+        fork(watchLoadGoalModalTitleList),
         fork(watchDeleteGoal),
         fork(watchAddGoal),
+        fork(watchModifyGoal),
     ])
 }

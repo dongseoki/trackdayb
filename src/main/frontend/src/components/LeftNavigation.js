@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import "./LeftNavigation.css";
 import DateRangePickerCustom from './DateRangePickerCustom';
 import GoalTitleList from "./GoalTitleList";
@@ -9,12 +9,45 @@ import Checkbox from '@mui/material/Checkbox';
 
 import { useSelector } from 'react-redux';
 
+import { useDispatch } from 'react-redux';
+import { LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
+
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-
-
 function LeftNavigation(props){
+   const dispatch = useDispatch();
+
+  // 로컬변수들
+  const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
+  const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
+
+  // 목표조회 조건 update Action
+  useEffect(()=> {
+    dispatch({
+      type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+      data : {
+        searchStartDatetime : makeYYMMDD(searchStartDatetime),
+        searchEndDatetime : makeYYMMDD(searchEndDatetime)
+      }
+    })
+    dispatch({
+      type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+      data : {
+        searchStartDatetime : makeYYMMDD(searchStartDatetime),
+        searchEndDatetime : makeYYMMDD(searchEndDatetime)
+      }
+    })
+  }, [searchStartDatetime, searchEndDatetime])
+
+  // YYYY-MM-DD 형태로 반환
+  function makeYYMMDD(value){
+    // korea utc timezone(zero offset) 설정
+    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
+    let dateOffset = new Date(value.getTime() - offset);
+    return dateOffset.toISOString().substring(0,10);
+  }
+
     // 시간관리(time) 탭에서만 작동    
     const currentURI = window.location.pathname;
     const { goalSearchTitleList } = useSelector((state) => state.goal)
@@ -57,7 +90,11 @@ function LeftNavigation(props){
         <nav className="left-nav">
             <div className="search-dateRange-area">
                 <p>조회기간</p>
-                <DateRangePickerCustom/>
+                <DateRangePickerCustom
+                    startDate={searchStartDatetime}
+                    setStartDate={setSearchStartDatetime}
+                    endDate={searchEndDatetime}
+                    setEndDate={setSearchEndDatetime}/>
             </div>
             
             <div className="search-goalTitle-area">
