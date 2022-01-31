@@ -31,6 +31,7 @@ import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import ognl.Token;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -62,6 +63,7 @@ public class MemberController {
     private final MemberService memberService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final ModelMapper modelMapper;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
 
     @GetMapping("/google/auth")
@@ -170,6 +172,15 @@ public class MemberController {
         }catch (Exception e){
 
         }
+
+//        String redirect_uri = request.getScheme() + "://" +   // "http" + "://
+//                request.getServerName() +       // "myhost"
+//                ":" + request.getServerPort(); // ":" + "8080"
+//        try{
+//            response.sendRedirect(redirect_uri);
+//        }catch (Exception exception){
+//
+//        }
         //
         return "success?";
     }
@@ -428,7 +439,8 @@ public class MemberController {
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
         try {
-            MemberDTO memberInfo =memberService.getMyUserWithAuthorities();
+            MemberDTO memberDTO =memberService.getMyUserWithAuthorities();
+            MemberInfo memberInfo = modelMapper.map(memberDTO,MemberInfo.class);
             jo.add("memberInfo", new Gson().toJsonTree(memberInfo));
         } catch (Exception e) {
             LOGGER.error("getMyUserInfo error : {}", e.toString());

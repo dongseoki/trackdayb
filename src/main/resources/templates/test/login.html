@@ -18,6 +18,8 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <script>
+      let grantType;
+      let accessToken;
       var response;
       var rsaPublicKeyModulus;
       var rsaPublicKeyExponent;
@@ -34,6 +36,7 @@
       .concat("&response_type=code &scope=email%20profile%20openid &access_type=offline");
       //
       function onSignIn(googleUser) {
+        debugger;
         googleUserData = googleUser;
         var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
@@ -59,6 +62,21 @@
         window.location.replace(accessTokenIssueRequestUrl);
       }
 
+      function requestCurrentUser(){
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", grantType+" "+accessToken);
+
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        };
+
+        fetch("/member/currentUser", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+      }
 
 
       function ajax_send(){
@@ -84,7 +102,7 @@
 
         console.log("securedMemberId : "+ securedMemberId)
         console.log("securedPassword : "+ securedPassword)
-        response = fetch("http://127.0.0.1:8080/member/login", {
+        response = fetch("/member/login", {
           method: 'post',
           headers: {
             "Content-Type": "application/json",
@@ -96,7 +114,10 @@
             password : securedPassword
           })
         }).then((response) => response.json())
-      .then((data) => console.log(data));
+      .then(function(data){
+        grantType = data.tokenInfo.grantType;
+        accessToken = data.tokenInfo.accessToken;
+      });
       }
 
       document.addEventListener("DOMContentLoaded", function(){
