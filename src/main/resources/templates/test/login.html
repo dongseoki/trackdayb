@@ -20,6 +20,8 @@
     <script>
       let grantType;
       let accessToken;
+      let id_token;
+      var auth2testInfo;
       var response;
       var rsaPublicKeyModulus;
       var rsaPublicKeyExponent;
@@ -36,7 +38,8 @@
       .concat("&response_type=code &scope=email%20profile%20openid &access_type=offline");
       //
       function onSignIn(googleUser) {
-        debugger;
+        // debugger;
+
         googleUserData = googleUser;
         var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
@@ -55,6 +58,31 @@
 
       }
       // [출처] [JAVASCRIPT] 구글 로그인 API 연동 넣기(JS, JavaScript)|작성자 Ohsanrim
+
+
+      function onSignInByLoginBtnOnly() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2testInfo = auth2;
+        if (auth2.isSignedIn.get()) {
+          var profile = auth2.currentUser.get().getBasicProfile();
+          console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+          console.log('Name: ' + profile.getName());
+          console.log('Image URL: ' + profile.getImageUrl());
+          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+          id_token = auth2.currentUser.get().wc.id_token;
+          tokensigninTest()
+        }
+      }
+      function tokensigninTest(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8080/member/google/tokensignin');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+          console.log('Signed in as: ' + xhr.responseText);
+        };
+        xhr.send('idtoken=' + id_token);
+      }
+
 
       const onClickGoogleLogin = (e) => {
         //구글 인증 서버로 인증코드 발급 요청
@@ -163,6 +191,7 @@
     <div id="googleLoginBtn" style="cursor: pointer">
       Google Login
     </div>
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+<!--    <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+    <div class="g-signin2" onclick="onSignInByLoginBtnOnly();"></div>
   </body>
 </html>
