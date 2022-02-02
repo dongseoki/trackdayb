@@ -19,12 +19,13 @@ import { BiSearch } from "react-icons/bi";
 import { useMediaQuery } from "react-responsive";
 import randomColor from "randomcolor";
 import { useSelector } from 'react-redux';
+// import { Controller } from 'react-hook-form';
 
-function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, startDatetime, endDatetime, writeDate}){
+function GoalTitleListModal({control, setValue, watch, goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, writeDate}){
   
   const pathname = window.location.pathname; // time or goal
 
-  const {goalModalTitleList} = useSelector((state) => state.goal)
+  const {goalModalTitleList} = useSelector((state) => state.goal) 
 
   const [ tempParentId, setTempParentId ] = useState("");
   const [ tempParentTitle, setTempParentTitle ] = useState("없음");
@@ -68,27 +69,33 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
     },
   }));
   const classes = useStyles();
-  const [openInside, setOpenInside] = useState(false);
-  const handleOpenInside = (e) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = (e) => {
     e.preventDefault();
-    setOpenInside(true);
+    setOpen(true);
     setTempParentId(parentId)
   };
-  const handleCloseInside = () => {
-    setOpenInside(false);
+  const handleClose = () => {
+    setOpen(false);
   };
-  const handleSubmitInside = () =>{
+  const handleSubmit = () =>{
     setParentId(tempParentId);
+    setValue('parentId', tempParentId);
+    // parentId 만 form에 전달
+
+
     setParentGoalTitle(tempParentTitle);
     // 목표관리 탭에서만 setColor
     if(pathname === '/goal'){
-      setColor(tempParentId ? "" : randomColor())
+      const colorValue = randomColor()
+      setColor(tempParentId ? "" : colorValue)
+      setValue('color', tempParentId ? "" : colorValue)
     }
     //시간관리 탭에서만 setParentProgressRate
     if(pathname === '/time'){
       setParentProgressRate(tempParentProgressRate)
     }
-    setOpenInside(false);
+    setOpen(false);
   }
   const searchHandler = (searchTerm)=>{
     setSearchTerm(searchTerm);
@@ -107,20 +114,20 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   
   return(
     <>
-      <button className="prevGoalTitleList" onClick={handleOpenInside}>목표분류</button>
+      <button className="prevGoalTitleList" onClick={handleOpen}>목표분류</button>
       <Modal
         aria-labelledby="transition-modal-prevGoalTitleList"
         aria-describedby="transition-modal-prevGoalTitleList"
         className={classes.modal}
-        open={openInside}
-        onClose={handleCloseInside}
+        open={open}
+        onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={openInside}>
+        <Fade in={open}>
           <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
             <div className="modal-goalList-form">
@@ -132,11 +139,12 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
                 <>
                   <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
                   <p className="modal-goalList-goal-p">목표 등록시 설정한 진행기간이 포함되는 리스트입니다.</p>
-                  <p className="modal-goalList-period-p">진행기간 : <span>{makeYYMMDD(startDatetime)}</span> - <span>{makeYYMMDD(endDatetime)}</span></p>
+                  <p className="modal-goalList-period-p">진행기간 : <span>{makeYYMMDD(watch("startDatetime"))}</span> - <span>{makeYYMMDD(watch("endDatetime"))}</span></p>
                 </>
               }
 
               <GoalTitleChoiceList
+                control={control}
                 goalId = {goalId}
                 goalTitleList = {searchTerm.length < 1 ? goalModalTitleList : searchResults} // 기간검색 제목리스트
                 tempParentId={tempParentId}
@@ -147,8 +155,8 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
                 setTempParentProgressRate = {setTempParentProgressRate}
               />
               <div className="button-wrapper">
-                <button type="button" className="submitBtn" onClick={handleSubmitInside}>확인</button>
-                <button type="button" className="cancleBtn" onClick={handleCloseInside}>취소</button>
+                <button type="button" className="submitBtn" onClick={handleSubmit}>확인</button>
+                <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
               </div>
             </div>
           </div>
@@ -158,7 +166,7 @@ function GoalTitleListModal({goalId, parentId, setParentId, setParentGoalTitle, 
   )
 }
 
-function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler, setTempParentProgressRate}){
+function GoalTitleChoiceList({control, goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler, setTempParentProgressRate}){
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
   const inputEl = useRef("")
@@ -230,7 +238,7 @@ function GoalTitleChoiceList({goalId, goalTitleList, tempParentId,setTempParentI
     <div>
       <div className="modal-goal-list">
         <FormControl component="fieldset">
-          <RadioGroup
+            <RadioGroup
             aria-label="목표선택"
             defaultValue=""
             name="radio-buttons-group"

@@ -29,12 +29,11 @@ export const initialState = {
     goalModalTitleList : [], // 모달창 내부 목표제목리스트
     loadGoalModalTitleListLoading : false,
     loadGoalModalTitleListDone : false,
+    loadGoalModalTitleListError : null,
     modalSearchParams : { // 모달 내부 목표 제목 조건
         searchStartDatetime : '2021-10-01',
         searchEndDatetime :'2021-12-30'
     },
-    loadGoalModalTitleListError : null,
-
     deleteGoalLoading : false, // 목표 삭제
     deleteGoalDone : false,
     deleteGoalError : null,
