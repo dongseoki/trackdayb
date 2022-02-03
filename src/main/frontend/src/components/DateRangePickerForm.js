@@ -4,8 +4,8 @@ import "react-datepicker/dist/react-datepicker.css"
 import { ko } from 'date-fns/esm/locale';
 import { Controller } from 'react-hook-form';
 
-// function DateRangePickerCustom({startDate, endDate, setStartDate, setEndDate}) {
-function DateRangePickerCustom({initialDate, control, watch}) {
+// function DateRangePickerForm({startDate, endDate, setStartDate, setEndDate}) {
+function DateRangePickerForm({initialDate, control, watch}) {
     return (
       <>
       <div className="date-picker-wrapper">
@@ -57,4 +57,4 @@ function DateRangePickerCustom({initialDate, control, watch}) {
   };
 
 
-  export default DateRangePickerCustom;
+  export default DateRangePickerForm;

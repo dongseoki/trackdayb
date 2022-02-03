@@ -14,7 +14,7 @@ import Fade from '@material-ui/core/Fade';
 import randomColor from "randomcolor";
 //goalInsertForm
 import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
+import DateRangePickerForm from './DateRangePickerForm';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -24,7 +24,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import { HexColorPicker } from "react-colorful";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 // 전체목표제목리스트
 import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
@@ -34,7 +34,6 @@ import { useMediaQuery } from "react-responsive";
 import { ADD_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
 import { useDispatch } from 'react-redux';
 
-import { compareAsc, format } from 'date-fns';
 import dayjs from 'dayjs';
 
 // react-hook-form
@@ -44,6 +43,10 @@ import * as yup from 'yup';
 
 function GoalInsertFormModal(){
 
+  const initialDate = {
+    startDate : new Date(),
+    endDate : new Date()
+  }
 
   const [ period, setPeriod ] = useState(true);
 
@@ -60,8 +63,8 @@ function GoalInsertFormModal(){
     content : yup.string().max(200, '내용은 200자 이내입니다').required('내용을 입력해 주세요'),
     
     kind: yup.string("목표 유형을 선택해주세요").required("목표 유형을 선택해주세요"),
-    progressRate: yup.number("진행률을 선택해주세요").required("진행률을 선택해주세요"),
-    color: yup.number('dd').required("dd")
+    // progressRate: yup.number("진행률을 선택해주세요").required("진행률을 선택해주세요"),
+    color: yup.string('문자')
   })
 
   //       "color":color,
@@ -79,27 +82,25 @@ function GoalInsertFormModal(){
       })
     })
   })
+
+
   const schema2 = schema.concat(periodSchema)
+  // period? schema2 : schema
 
-
-  const initialDate = {
-    startDate : new Date(),
-    endDate : new Date()
-  }
-
+  
   const { register, unregister, reset, handleSubmit, getValues, watch, control, setValue, formState: {errors}} = useForm({ 
-    resolver : yupResolver(period? schema2 : schema),
+    resolver : yupResolver(schema),
     defaultValues: {
       title: "",
       content: "",
       kind : 'regular',
       progressRate : 0,
       shareState : false,
-      periodicityInfo : {
-        timeUnit : 'D',
-        type : 'count',
-        count : '',
-      }
+      // periodicityInfo : {
+      //   timeUnit : 'D',
+      //   type : 'count',
+      //   count : '',
+      // }
     
   //       "title": title,
   //       "kind":kind,
@@ -337,7 +338,7 @@ function GoalInsertFormModal(){
               <div className="top-wrapper"> 
                 <div className="modal-date-picker">
                   <div className="modal-title">진행기간</div>
-                  <DateRangePickerCustom
+                  <DateRangePickerForm
                     initialDate={initialDate}
                     control={control}
                     watch={watch}
@@ -583,7 +584,9 @@ function GoalInsertFormModal(){
               />   
               <div className="parent-title">{parentGoalTitle}</div>
             </div>
-            {parentId ?  null : <ColorTag color={color} setColor={setColor} />}
+
+            {parentId ?  null : <ColorTag color={color} setColor={setColor} setValue={setValue} control={control}/>}
+            {errors.color ? errors.color?.message : ''}
               
             <div className="button-wrapper">
               <input type="submit" className="submitBtn" />
@@ -752,7 +755,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
   }
 }
 
-function ColorTag({color, setColor}){
+function ColorTag({color, setColor, setValue, control}){
   const [pickerShow, setPickerShow] = useState(false)
   const pickerHandler = (e)=>{
     e.preventDefault();
@@ -761,23 +764,40 @@ function ColorTag({color, setColor}){
   return (
     <>
     <div className="color-picker-area">
-      <TextField 
+      <Controller
+      name="color"
+      control={control}
+      render={({field}) => (
+        <TextField 
+        {...field}
         className="textfield-title"
         id="color" 
         label="태그컬러" 
         size="small" 
         variant="outlined"
-        value={color}
+        // value={color}
         InputLabelProps={{
           shrink: true,
         }}
-        onChange={function(e){
-          setColor(e.target.value)
-        }}/>
+        // onChange={(e) => {
+        //   setColor(e.target.value)
+        //   setValue('color', e.target.value)
+        // }}
+      />
+      )} />
+      
+      
         <div className="color-tag-wrapper">
           <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
           {pickerShow ? (<div className="color-picker small">
-            <HexColorPicker  color={color} onChange={setColor} />
+          <HexColorInput color={color} onChange={setColor} />
+
+            <HexColorPicker 
+            color={color} 
+            onChange={
+              console.log('hh', color)
+            
+            } />
           </div>) : null}
         </div>
     </div>

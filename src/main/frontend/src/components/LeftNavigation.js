@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import "./LeftNavigation.css";
-import DateRangePickerCustom from './DateRangePickerCustom';
+import DateRangePicker from './DateRangePicker';
 import GoalTitleList from "./GoalTitleList";
 //icon
 import { BiSearch } from "react-icons/bi";
@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
 
+import dayjs from 'dayjs';
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -22,31 +23,25 @@ function LeftNavigation(props){
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
 
+
   // 목표조회 조건 update Action
   useEffect(()=> {
     dispatch({
       type : LOAD_GOALSEARCHFULLLIST_REQUEST,
       data : {
-        searchStartDatetime : makeYYMMDD(searchStartDatetime),
-        searchEndDatetime : makeYYMMDD(searchEndDatetime)
+        searchStartDatetime : dayjs(searchStartDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(searchEndDatetime).format("YYYY-MM-DD"),
       }
     })
     dispatch({
       type : LOAD_GOALSEARCHTITLELIST_REQUEST,
       data : {
-        searchStartDatetime : makeYYMMDD(searchStartDatetime),
-        searchEndDatetime : makeYYMMDD(searchEndDatetime)
+        searchStartDatetime : dayjs(searchStartDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(searchEndDatetime).format("YYYY-MM-DD"),
       }
     })
   }, [searchStartDatetime, searchEndDatetime])
 
-  // YYYY-MM-DD 형태로 반환
-  function makeYYMMDD(value){
-    // korea utc timezone(zero offset) 설정
-    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-    let dateOffset = new Date(value.getTime() - offset);
-    return dateOffset.toISOString().substring(0,10);
-  }
 
     // 시간관리(time) 탭에서만 작동    
     const currentURI = window.location.pathname;
@@ -90,7 +85,7 @@ function LeftNavigation(props){
         <nav className="left-nav">
             <div className="search-dateRange-area">
                 <p>조회기간</p>
-                <DateRangePickerCustom
+                <DateRangePicker
                     startDate={searchStartDatetime}
                     setStartDate={setSearchStartDatetime}
                     endDate={searchEndDatetime}

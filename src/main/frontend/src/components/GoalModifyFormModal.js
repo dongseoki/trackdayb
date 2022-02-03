@@ -11,7 +11,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 //goalModifyForm
 import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
+import DateRangePickerForm from './DateRangePickerForm';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -275,7 +275,7 @@ function GoalModifyFormModal({modifyData, targetIndex}){
             <div className="top-wrapper">  
               <div className="modal-date-picker">
                 <div className="modal-title">진행기간</div>
-                <DateRangePickerCustom 
+                <DateRangePickerForm 
                   startDate={startDatetime}
                   endDate={endDatetime}
                   setStartDate={setStartDatetime} 
