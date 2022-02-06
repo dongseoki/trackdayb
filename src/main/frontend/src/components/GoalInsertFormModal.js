@@ -24,7 +24,6 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import { HexColorPicker, HexColorInput } from "react-colorful";
 // 전체목표제목리스트
 import GoalTitleListModal from "./GoalTitleListModal";
 import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
@@ -41,6 +40,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
+// color
+import { HexColorPicker, HexColorInput } from "react-colorful";
+import { DebouncedPicker } from "./DebouncedPicker";
+
+
 function GoalInsertFormModal(){
 
   const initialDate = {
@@ -48,7 +52,12 @@ function GoalInsertFormModal(){
     endDate : new Date()
   }
 
-  const [ period, setPeriod ] = useState(true);
+  const [none, setNone ] = useState(false);
+  
+  const [ parentId, setParentId ] = useState("")
+  const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
+  const [ color, setColor ] = useState(randomColor());
+  
 
   const dispatch = useDispatch();
 
@@ -64,30 +73,65 @@ function GoalInsertFormModal(){
     
     kind: yup.string("목표 유형을 선택해주세요").required("목표 유형을 선택해주세요"),
     // progressRate: yup.number("진행률을 선택해주세요").required("진행률을 선택해주세요"),
-    color: yup.string('문자')
+
+    parentId : yup.string('부모 스트링'),
+
+    color: yup.string('태그컬러를 선택해주세요.').when('parentId', {
+      is : (value) => value.length == 0,
+      then : yup
+            .string('태그컬러를 선택해주세요')
+            .test(
+              "hex regex",
+              '올바른 태그컬러를 입력해주세요',
+              value => value.match("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+            )
+            .required('태그컬러를 선택해주세요')
+    }),
+
+    periodicityInfo: yup.lazy(value => {
+      if (value !== undefined) {
+        return yup.object().shape({
+          count: yup
+                .number()
+                .when('timeUnit', {
+                  is : 'D',
+                  then : yup.number().transform((value, originalValue) => {
+                    return (originalValue === '' ? undefined : value)
+                  })
+                  .typeError('Parameter is not a valid numeric value.').required('입력하세요').positive('양수')
+                })
+                .when('timeUnit', {
+                  is : 'M',
+                  then : yup.number().transform((value, originalValue) => {
+                    return (originalValue === '' ? undefined : value)
+                  })
+                  .typeError('Parameter is not a valid numeric value.').required('입력하세요').positive('양수')
+                })
+                .when('timeUnit', {
+                  is : 'W',
+                  then : yup.number().transform((value, originalValue) => {
+                    return (originalValue === '' ? undefined : value)
+                  })
+                  .typeError('Parameter is not a valid numeric value.')
+                })
+                // .when('periodicityInfo.timeUnit', {
+                //   is : 'D',
+                //   then : yup.number('숫자').required('횟수를 입력해주세요').positive('양수')
+                // }).when('periodicityInfo.timeUnit', {
+                //   is : 'M',
+                //   then : yup.number('숫자').required('횟수를 입력해주세요').positive('양수')
+                // }).when('periodicityInfo.timeUnit', {
+                //   is : 'W',
+                //   then : yup.mixed().notRequired()
+                // })
+              });
+      }
+      return yup.mixed().notRequired();
+    }),
+
   })
 
-  //       "color":color,
-  // parentId 
 
-
-  const periodSchema = yup.object().shape({
-    periodicityInfo : yup.object().shape({
-      count : yup.number('숫자').typeError('숫자 타입').when('periodicityInfo.timeUnit', {
-        is : 'D',
-        then : yup.number('숫자').required('횟수를 입력해주세요').positive('양수')
-      }).when('periodicityInfo.timeUnit', {
-        is : 'M',
-        then : yup.number('숫자').required('횟수를 입력해주세요').positive('양수')
-      })
-    })
-  })
-
-
-  const schema2 = schema.concat(periodSchema)
-  // period? schema2 : schema
-
-  
   const { register, unregister, reset, handleSubmit, getValues, watch, control, setValue, formState: {errors}} = useForm({ 
     resolver : yupResolver(schema),
     defaultValues: {
@@ -96,38 +140,8 @@ function GoalInsertFormModal(){
       kind : 'regular',
       progressRate : 0,
       shareState : false,
-      // periodicityInfo : {
-      //   timeUnit : 'D',
-      //   type : 'count',
-      //   count : '',
-      // }
-    
-  //       "title": title,
-  //       "kind":kind,
-  //       "content":content,
-  //       "startDatetime": makeYYMMDD(startDatetime),
-  //       "endDatetime":makeYYMMDD(endDatetime),
-  //       "progressRate":progressRate,
-  //       "color":color,
-  //       "shareStatus": shareStatus ? "N":"Y",
-  //     }
-  //     if(kind === "regular"){
-  //       formData['periodicityInfo'] = {
-  //         "timeUnit":timeUnit,
-  //         "type":type,
-  //         "count":count,
-  //         "sunYn":sun ? "Y":"N",
-  //         "monYn":mon ? "Y":"N",
-  //         "tueYn":tue ? "Y":"N",
-  //         "wedsYn":wed ? "Y":"N",
-  //         "thurYn":thu ? "Y":"N",
-  //         "friYn":fri ? "Y":"N",
-  //         "satYn":sat ? "Y":"N"
-  //       }
-  //     }
-
-
-
+      color : color,
+      parentId : parentId,
     },
   });
   
@@ -147,17 +161,11 @@ function GoalInsertFormModal(){
 
 
   const onSubmit = (data) => {
-    alert(JSON.stringify(data));
-
-
+    alert('data')
     data.startDatetime = dayjs(data.startDatetime).format("YYYY-MM-DD")
     data.endDatetime = dayjs(data.endDatetime).format("YYYY-MM-DD")
 
     console.log("form", data)
-
-
-    // const valid = await checkoutAddressSchema.isValid(addressFormData)
-
 
     dispatch({
       type : ADD_GOAL_REQUEST,
@@ -165,12 +173,7 @@ function GoalInsertFormModal(){
     });
   };
   
-  const [none, setNone ] = useState(false);
-  
-  const [ parentId, setParentId ] = useState("")
-  const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
-  const [color, setColor] = useState(randomColor());
-  
+
 
   // 반응형 화면 BreakPoint
   const isMobileScreen = useMediaQuery({
@@ -419,7 +422,6 @@ function GoalInsertFormModal(){
                         if(e.target.value === 'deadline'){
                           unregister('periodicityInfo')
                         }
-                      
                       }}
                       >
                       <FormControlLabel value="regular" control={<Radio />} label="주기성 목표" />
@@ -435,7 +437,7 @@ function GoalInsertFormModal(){
                 <Controller
                 name="periodicityInfo.timeUnit"
                 control={control}
-                defaultValue={"D"}
+                defaultValue="D"
                 render={({ field }) => (
                   <select  {...field} className="timeUnit-select" value={field.value} 
                     onChange={(e)=> {
@@ -491,7 +493,11 @@ function GoalInsertFormModal(){
 
                   <div className="none-count-wrapper">
                     <FormControlLabel control={<Checkbox size="small"/>} onChange={noneCheckHandler} label="요일미지정" />
-                    <Controller name="periodicityInfo.count" control={control} render={({ field }) => (
+                    <Controller 
+                    name="periodicityInfo.count" 
+                    control={control} 
+                    defaultValue=""
+                    render={({ field }) => (
                       <TextField 
                       {...field}
                       disabled={!none}
@@ -513,7 +519,11 @@ function GoalInsertFormModal(){
                 :
                 // 월/일 N회 일때(count)
                 <div>
-                  <Controller name="periodicityInfo.count" control={control} render={({ field }) => (
+                  <Controller 
+                  name="periodicityInfo.count" 
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
                   <TextField 
                     {...field}
                     id="count" 
@@ -575,7 +585,6 @@ function GoalInsertFormModal(){
                 control={control}
                 setValue={setValue}
                 watch={watch}
-
                 parentId={parentId}
                 setParentId={setParentId}
                 parentGoalTitle={parentGoalTitle}
@@ -585,9 +594,8 @@ function GoalInsertFormModal(){
               <div className="parent-title">{parentGoalTitle}</div>
             </div>
 
-            {parentId ?  null : <ColorTag color={color} setColor={setColor} setValue={setValue} control={control}/>}
-            {errors.color ? errors.color?.message : ''}
-              
+            {parentId ?  null : <DebouncedPicker color={color} onChange={setColor} setValue={setValue} errors={errors}/>}
+
             <div className="button-wrapper">
               <input type="submit" className="submitBtn" />
               <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
@@ -716,7 +724,7 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
           {/* <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} onChange={noneCheckHandler} label="요일미지정" /> */}
           <Checkbox size="small" checked={false} label="요일미지정" />
           <TextField 
-            required
+            defaultValue={3}
             disabled={!none}
             type="number"
             id="count" 
@@ -753,56 +761,6 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
       </div>
     )
   }
-}
-
-function ColorTag({color, setColor, setValue, control}){
-  const [pickerShow, setPickerShow] = useState(false)
-  const pickerHandler = (e)=>{
-    e.preventDefault();
-    setPickerShow(!pickerShow)
-  }
-  return (
-    <>
-    <div className="color-picker-area">
-      <Controller
-      name="color"
-      control={control}
-      render={({field}) => (
-        <TextField 
-        {...field}
-        className="textfield-title"
-        id="color" 
-        label="태그컬러" 
-        size="small" 
-        variant="outlined"
-        // value={color}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        // onChange={(e) => {
-        //   setColor(e.target.value)
-        //   setValue('color', e.target.value)
-        // }}
-      />
-      )} />
-      
-      
-        <div className="color-tag-wrapper">
-          <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
-          {pickerShow ? (<div className="color-picker small">
-          <HexColorInput color={color} onChange={setColor} />
-
-            <HexColorPicker 
-            color={color} 
-            onChange={
-              console.log('hh', color)
-            
-            } />
-          </div>) : null}
-        </div>
-    </div>
-    </>
-  )
 }
 
 
