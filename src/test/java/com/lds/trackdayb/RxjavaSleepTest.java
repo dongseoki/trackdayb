@@ -14,6 +14,6 @@ public class RxjavaSleepTest {
                         })
                         .subscribe(System.out::println);
 
-//     Thread.sleep(5000L);
+     Thread.sleep(5000L);
     }
 }

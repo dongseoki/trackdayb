@@ -8,10 +8,7 @@ import com.lds.trackdayb.util.ResponseCodeUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
@@ -37,4 +34,29 @@ public class RestTestController {
       
       return goalManageRepository.argListTest(args);
     }
+
+    @PostMapping(value="/typetest")
+    public String typeTest(@RequestParam("intData")int intData, @RequestParam("booleanData")boolean booleanData, @RequestParam("doubleDataObj")Double doubleDataObj){
+        LOGGER.debug("typeTest - intData : {}, booleanData : {}, doubleDataObj : {}", intData,booleanData,doubleDataObj);
+        return "success";
+
+    }
+    @PostMapping(value="/typetest2-form")
+    public String typeTest2form(@RequestParam("intData")int intData, @RequestParam("booleanData")boolean booleanData, @RequestParam("doubleDataObj")Double doubleDataObj){
+        LOGGER.debug("typeTest - typeTest2form intData : {}, booleanData : {}, doubleDataObj : {}", intData,booleanData,doubleDataObj);
+        return "success";
+    }
+
+    @PostMapping(value="/typetest3-requestbody")
+    public String typeTest3RequestBody(@RequestBody TypeTestVO typeTestVO){
+        LOGGER.debug("typeTest - typeTest3RequestBody intData : {}, booleanData : {}, doubleDataObj : {}", typeTestVO.getIntData(),typeTestVO.isBooleanData(),typeTestVO.getDoubleDataObj());
+        return "success";
+
+    }
+
+//    public static class TypeTestVO {
+//        int intData;
+//        boolean booleanData;
+//        Double doubleDataObj;
+//    }
 }

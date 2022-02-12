@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">-->
   <head>
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
     <script type="text/javascript" src="/js/jsencrypt.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-    <script>
+    <script th:inline="javascript">
       let grantType;
       let accessToken;
       let id_token;
@@ -28,7 +28,11 @@
       var publicKeyStr;
       let googleUserData;
       var accessTokenIssueRequestBaseUrl = "https://accounts.google.com/o/oauth2/v2/auth?client_id=";
-      const googleClientId = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
+      // const googleClientId = "this is example";
+      /* <![CDATA[ */
+      const googleClientId = /*[[ ${snsGoogleCliendId} ]]*/;
+      /* ]] */
+
       // const authorizedRedirectionUri = "http://localhost:8080"
       const authorizedRedirectionUri = "http://localhost:8080/member/google/auth"
 
@@ -70,7 +74,7 @@
           console.log('Image URL: ' + profile.getImageUrl());
           console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
           id_token = auth2.currentUser.get().wc.id_token;
-          tokensigninTest()
+          // tokensigninTest()
         }
       }
       function tokensigninTest(){
@@ -83,10 +87,64 @@
         xhr.send('idtoken=' + id_token);
       }
 
+      function snsLoginTest(){
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          "tokenId": id_token,
+        });
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch("/member/snslogin/google", requestOptions)
+                .then((response) => response.json())
+                .then(function(data){
+                  grantType = data.tokenInfo.grantType;
+                  accessToken = data.tokenInfo.accessToken;
+                })
+                .catch(error => console.log('error', error));
+                // .then(response => response.text())
+                // .then(result => console.log(result))
+                // .catch(error => console.log('error', error));
+      }
+
+      function simpleSignUpTest(name){
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          "tokenId": id_token,
+          "name" : name
+        });
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch("/member/simplesignup/google", requestOptions)
+                .then((response) => response.json())
+                .then(function(data){
+                  grantType = data.tokenInfo.grantType;
+                  accessToken = data.tokenInfo.accessToken;
+                })
+                .catch(error => console.log('error', error));
+                // .then(response => response.text())
+                // .then(result => console.log(result))
+
+      }
+
 
       const onClickGoogleLogin = (e) => {
         //구글 인증 서버로 인증코드 발급 요청
-        // window.location.replace("https://accounts.google.com/o/oauth2/v2/auth?client_id=&redirect_uri=http://localhost:8080/login/google/auth&response_type=code &scope=email%20profile%20openid &access_type=offline")
         window.location.replace(accessTokenIssueRequestUrl);
       }
 

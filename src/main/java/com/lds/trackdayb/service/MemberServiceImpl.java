@@ -1,12 +1,20 @@
 package com.lds.trackdayb.service;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.security.PrivateKey;
+import java.util.*;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.lds.trackdayb.controller.TimeManageController;
 import com.lds.trackdayb.dto.MemberDTO;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
+import com.lds.trackdayb.entity.SnsLinkInfo;
+import com.lds.trackdayb.exception.DeletedUserException;
 import com.lds.trackdayb.exception.DuplicateMemberException;
+import com.lds.trackdayb.exception.NoLinkedMemberException;
 import com.lds.trackdayb.exception.ValidateException;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.repository.MemberRepository;
@@ -14,22 +22,46 @@ import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.RestTemplate;
+
+import javax.crypto.Cipher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl extends MemberService {
+
+    @Value("${sns.google.client-id}")
+    private String SNS_GOOGLE_CLIENT_ID;
+
+    @Value("${sns.google.client-secret}")
+    private String SNS_GOOGLE_CLIENT_SECRET;
+
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    static final Logger LOGGER = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     @Override
     public String save(MemberDTO memberDTO) {
@@ -64,6 +96,9 @@ public class MemberServiceImpl extends MemberService {
         if (memberDTO == null || StringUtils.isEmpty(memberDTO.getMemberId())) {
             throw new UsernameNotFoundException(memberId);
         }
+        if(StringUtils.equals(memberDTO.getDeletionStatus(),"Y")){
+            throw new DeletedUserException("this is deleted user");
+        }
 
         return memberDTO;
     }
@@ -86,6 +121,39 @@ public class MemberServiceImpl extends MemberService {
         memberDTO.setPassword(encoder.encode(memberDTO.getPassword()));
         memberRepository.save(memberDTO);
         return memberDTO;
+    }
+
+    private String decryptRsa(PrivateKey privateKey, String securedValue) throws Exception {
+        System.out.println("will decrypt : " + securedValue);
+        Cipher cipher = Cipher.getInstance("RSA");
+
+        byte[] encryptedBytes = Base64.getDecoder().decode(securedValue);;
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+        String decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
+        return decryptedValue;
+    }
+
+    @Override
+    public void RSApreprocess(HttpServletRequest request, MemberDTO memberDTO) throws Exception {
+        HttpSession session = request.getSession();
+        PrivateKey privateKey = (PrivateKey) session.getAttribute("__rsaPrivateKey__");
+        session.removeAttribute("__rsaPrivateKey__"); // 키의 재사용을 막는다. 항상 새로운 키를 받도록 강제.
+        if (privateKey == null) {
+            throw new RuntimeException("암호화 비밀키 정보를 찾을 수 없습니다.");
+        }
+        String decodedMemberId = decryptRsa(privateKey, memberDTO.getMemberId());
+        String decodedPassword = decryptRsa(privateKey, memberDTO.getPassword());
+        memberDTO.setMemberId(decodedMemberId);
+        memberDTO.setPassword(decodedPassword);
+    }
+
+    @Override
+    public Authentication springSecurityUsernamePasswordAuthenticate(String memberId, String decodedPassword) throws Exception {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberId, decodedPassword);
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
     }
 
     // public User signup(UserDto userDto) {
@@ -161,5 +229,118 @@ public class MemberServiceImpl extends MemberService {
         // 4. 새로운 토큰 생성 및 리턴.
         return tokenProvider.createAccessTokenOnly(authentication);
     }
+
+    @Override
+    public String googleAuthServerAuthenticate(String tokenId) throws Exception {
+        String email = "";
+
+//        //HTTP Request를 위한 RestTemplate
+//        RestTemplate restTemplate = new RestTemplate();
+
+//        String CLIENT_ID = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
+//        String clientSecret = "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";
+        // google example code
+
+        GoogleIdTokenVerifier verifier =
+                new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                        // Specify the CLIENT_ID of the app that accesses the backend:
+                        .setAudience(Collections.singletonList(SNS_GOOGLE_CLIENT_ID))
+                        // Or, if multiple clients access the backend:
+                        //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+                        .build();
+
+// (Receive idTokenString by HTTPS POST)
+
+        try{
+            GoogleIdToken idToken = verifier.verify(tokenId);
+            if (idToken != null) {
+                GoogleIdToken.Payload payload = idToken.getPayload();
+
+                // Print user identifier
+                String userId = payload.getSubject();
+                System.out.println("User ID: " + userId);
+
+                // Get profile information from payload
+                email = payload.getEmail();
+                boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+                String name = (String) payload.get("name");
+                String pictureUrl = (String) payload.get("picture");
+                String locale = (String) payload.get("locale");
+                String familyName = (String) payload.get("family_name");
+                String givenName = (String) payload.get("given_name");
+
+                // Use or store profile information
+                // ...
+                LOGGER.info("test tokensignin : userId : {}, email : {} emailVerified:{}, name:{}, pictureUrl:{}, local:{}",userId,email,emailVerified,name,pictureUrl,locale);
+                if (StringUtils.isEmpty(email) || emailVerified == false){
+                    throw new Exception();
+                }
+            } else {
+                LOGGER.info("test tokensignin : {}","Invalid ID token");
+            }
+        }catch (Exception e){
+            throw new Exception();
+        }
+        return email;
+    }
+
+    @Override
+    public MemberDTO simplesignup(MemberDTO memberDTO, String snsName,String linkedEmail) {
+
+        if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
+            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        }
+        memberDTO.setAuth("ROLE_USER");
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        memberDTO.setPassword(encoder.encode(memberDTO.getMemberId()));
+        // 임으로 memberid email로 설정.
+        memberRepository.save(memberDTO);
+
+        SnsLinkInfo snsLinkInfo = new SnsLinkInfo();
+        snsLinkInfo.setMemberSerialNumber(memberDTO.getMemberSerialNumber());
+        snsLinkInfo.setSnsType(CommonCodeUtil.snsNameToTypeMap.get(snsName));
+        snsLinkInfo.setLinkedEmail(linkedEmail);
+        memberRepository.upsertSnsLinkInfo(snsLinkInfo);
+        return memberDTO;
+    }
+
+    @Override
+    public void linkAccount(MemberDTO memberDTO, String snsName, String linkedEmail) throws Exception {
+        SnsLinkInfo snsLinkInfo = new SnsLinkInfo();
+        snsLinkInfo.setMemberSerialNumber(memberDTO.getMemberSerialNumber());
+        snsLinkInfo.setSnsType(CommonCodeUtil.snsNameToTypeMap.get(snsName));
+        snsLinkInfo.setLinkedEmail(linkedEmail);
+        memberRepository.upsertSnsLinkInfo(snsLinkInfo);
+    }
+
+    @Override
+    public void withdrawal(String memberSerialNumber) throws Exception {
+        memberRepository.withdrawal(memberSerialNumber);
+        memberRepository.deleteSnsLinkInfo(memberSerialNumber);
+    }
+
+    @Override
+    public MemberDTO snslogin(String email) throws Exception {
+        MemberDTO memberDTO = memberRepository.findByLinkedEmail(email);
+        if (memberDTO == null || StringUtils.isEmpty(memberDTO.getMemberId())) {
+            throw new NoLinkedMemberException("no such linked member.");
+        }
+        return memberDTO;
+    }
+
+    @Override
+    public Authentication springSecurityOauth2Authenticate(String memberId) {
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("sub", memberId);
+        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        // make OAuth2AuthenticationToken
+        OAuth2User user = new DefaultOAuth2User(authorities, userDetails, "sub");
+        OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(user, authorities, "oidc");
+        SecurityContextHolder.getContext().setAuthentication(oAuth2AuthenticationToken);
+        return oAuth2AuthenticationToken;
+    }
+
+
 
 }

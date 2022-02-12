@@ -3,7 +3,9 @@ package com.lds.trackdayb.controller;
 import com.lds.trackdayb.repository.GoalManageRepository;
 import com.lds.trackdayb.service.TestService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,6 +26,12 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/test")
 public class TestController {
+    @Value("${sns.google.client-id}")
+    private String SNS_GOOGLE_CLIENT_ID;
+
+    @Value("${sns.google.client-secret}")
+    private String SNS_GOOGLE_CLIENT_SECRET;
+
     private final TestService testService;
 
     @GetMapping("/testPage")
@@ -37,7 +45,8 @@ public class TestController {
     }
 
     @GetMapping(value="/login")
-    public String loginPage(){
+    public String loginPage(ModelMap model){
+      model.addAttribute("snsGoogleCliendId", SNS_GOOGLE_CLIENT_ID);
       return "/test/login";
     }
 

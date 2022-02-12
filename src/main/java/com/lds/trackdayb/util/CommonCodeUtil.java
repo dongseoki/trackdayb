@@ -1,5 +1,7 @@
 package com.lds.trackdayb.util;
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public final class CommonCodeUtil {
@@ -20,6 +22,18 @@ public final class CommonCodeUtil {
     public static String SEARCH_RANGE_REVERSE = "R"; // 역방향
     public static String SEARCH_RANGE_EXIST = "E"; // 단 하나의 원소(일자)라도 존재하(겹치)는 경우
 
+    // 유효 sns 서비스 모음.
+    public static String[] supportSNSarr = new String[]{"google"};
+
+    // 유효 sns 서비스와 서비스 코드 매핑.
+    public static Map<String, String> snsNameToTypeMap = new HashMap<>() {{
+        put("google","G");
+        put("naver","N");
+        put("kakao","K");
+    }};
+
+    // google 관련 정보.
+    public static final String GOOGLE_TOKEN_BASE_URL ="https://oauth2.googleapis.com/token";
 
     // 성공.
     // 실패.
@@ -62,6 +76,7 @@ public final class CommonCodeUtil {
         }
         return sb.toString();
     }
+
 //    출처
 //    https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=loverman85&logNo=221090063698
 

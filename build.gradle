@@ -20,7 +20,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+// https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter-test
+	testImplementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter-test', version: '2.2.2'
+
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'mysql:mysql-connector-java'
 	implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16' /* Log4jdbc */
@@ -42,7 +45,7 @@ dependencies {
 	// Swagger api : document automation
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.5.0'
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.5.0'
-	
+
 	
 	// about jwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
@@ -72,10 +75,14 @@ dependencies {
 	// security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.security:spring-security-oauth2-client'
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+//	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.0.0'
+
 
 }
 

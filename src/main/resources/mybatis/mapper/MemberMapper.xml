@@ -7,6 +7,18 @@
         SET refresh_token = #{refreshToken}
         WHERE member_id = #{memberId}
     </update>
+    <update id="withdrawal" parameterType="string">
+        UPDATE member
+        SET active_user_status = 'N',
+            withdrawal_datetime = NOW(),
+            deletion_status = 'Y',
+            modification_datetime = NOW()
+        WHERE member_serial_number = #{value};
+    </update>
+    <delete id="deleteSnsLinkInfo" parameterType="string">
+        DELETE FROM sns_link_info
+        WHERE member_serial_number = #{value};
+    </delete>
 
     <select id="findByMemberId" resultType="com.lds.trackdayb.dto.MemberDTO">
     SELECT *
@@ -24,6 +36,14 @@
         and
         password=#{password}
         LIMIT 1;
+    </select>
+    <select id="findByLinkedEmail" resultType="com.lds.trackdayb.dto.MemberDTO">
+        SELECT * FROM member m
+        WHERE EXISTS (SELECT 1
+                      FROM
+                          sns_link_info sli
+                      WHERE m.member_serial_number =sli.member_serial_number
+                        AND sli.linked_email = #{value})
     </select>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="memberSerialNumber">
@@ -84,5 +104,13 @@
             </if>
         )
 
+    </insert>
+    <insert id="upsertSnsLinkInfo" parameterType="com.lds.trackdayb.entity.SnsLinkInfo">
+        /* MemberRepository.upsertSnsLinkInfo */
+        INSERT INTO trackday.sns_link_info
+            (member_serial_number, sns_type, linked_email, modification_datetime)
+        VALUES(#{memberSerialNumber}, #{snsType}, #{linkedEmail}, NOW())
+        ON DUPLICATE KEY UPDATE
+            linked_email = #{linkedEmail}
     </insert>
 </mapper>
