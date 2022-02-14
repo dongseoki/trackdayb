@@ -389,7 +389,7 @@ public class MemberController {
     }
 
 
-    @DeleteMapping(value="/member/withdrawal")
+    @DeleteMapping(value="/withdrawal")
     public ResultMVO withdrawal(){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
@@ -403,7 +403,7 @@ public class MemberController {
         return resultMVO;
     }
 
-    @PostMapping(value="/linkaccount/{snsName}")
+    @PatchMapping(value="/linkaccount/{snsName}")
     public ResultMVO linkAccount(@PathVariable("snsName") String snsName, @RequestBody SnsAuthenticate snsAuthenticate){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
@@ -452,6 +452,7 @@ public class MemberController {
 
         String email="";
         HttpHeaders httpHeaders = new HttpHeaders();
+        MemberDTO memberInfo;
 
         if(Arrays.asList(CommonCodeUtil.supportSNSarr).contains(snsName) == false){
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_UNSUPPORT_SNS);
@@ -462,7 +463,6 @@ public class MemberController {
             if(StringUtils.equals(snsName,"google")){
                 try{
                     email = memberService.googleAuthServerAuthenticate(snsAuthenticate.getTokenId());
-                    memberDTO.setMemberId(email); // 멤버 아이디로 이메일 설정.
                 }catch (Exception e){
                     LOGGER.error("googleAuthServerAuthenticate error {}",e.getMessage());
                     resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SNS_AUTH_SERVER_FAIL);
@@ -470,7 +470,19 @@ public class MemberController {
                 }
             }
             try{
-                MemberDTO memberInfo =memberService.snslogin(email);
+
+                memberInfo = memberService.snslogin(email);
+                // spring security Oauth2 Authentication and create access and refreshtoken
+                TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityOauth2Authenticate(memberInfo.getMemberId()));
+                resultMVO.setTokenInfo(tokenInfo);
+
+                // refresh token 수정.
+                memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+
+                // memberId
+                resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+                httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
+
             }catch (NoLinkedMemberException e) {
                 LOGGER.error("snslogin error : {}", e.toString());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_NO_LINKED_MEMBER);
@@ -481,17 +493,6 @@ public class MemberController {
                 return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
             }
 
-            // spring security Oauth2 Authentication and create access and refreshtoken
-            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityOauth2Authenticate(memberDTO.getMemberId()));
-            resultMVO.setTokenInfo(tokenInfo);
-
-            // refresh token 수정.
-            memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
-
-            // memberId
-            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
-
-            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
         }
 
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
