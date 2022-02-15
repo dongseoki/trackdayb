@@ -91,7 +91,7 @@ function GoalInsertFormModal(){
     periodicityInfo: yup.lazy(value => {
       if (value !== undefined) {
         return yup.object().shape({
-          count: yup
+          count : yup
                 .number()
                 .when('timeUnit', {
                   is : 'D',
@@ -113,18 +113,18 @@ function GoalInsertFormModal(){
                     return (originalValue === '' ? undefined : value)
                   })
                   .typeError('Parameter is not a valid numeric value.')
+                  .test(
+                    "none test",
+                    '횟수를 입력하세요123',
+                    (value) => {
+                      if(none) {
+                        if(value === undefined) return false
+                        else return true
+                      }else return true
+                    }
+                  ).positive('양수')
                 })
-                // .when('periodicityInfo.timeUnit', {
-                //   is : 'D',
-                //   then : yup.number('숫자').required('횟수를 입력해주세요').positive('양수')
-                // }).when('periodicityInfo.timeUnit', {
-                //   is : 'M',
-                //   then : yup.number('숫자').required('횟수를 입력해주세요').positive('양수')
-                // }).when('periodicityInfo.timeUnit', {
-                //   is : 'W',
-                //   then : yup.mixed().notRequired()
-                // })
-              });
+        });
       }
       return yup.mixed().notRequired();
     }),
@@ -146,6 +146,7 @@ function GoalInsertFormModal(){
   });
   
 
+  const [error, setError] = useState({ count :' 초기값'})
 
   // 시작일, 종료일 변경시 내부 모달 목표 타이틀 리스트 업데이트
   useEffect(() =>{
@@ -161,10 +162,22 @@ function GoalInsertFormModal(){
 
 
   const onSubmit = (data) => {
+    console.log('error', error.count)
     alert('data')
     data.startDatetime = dayjs(data.startDatetime).format("YYYY-MM-DD")
     data.endDatetime = dayjs(data.endDatetime).format("YYYY-MM-DD")
 
+    if(data.periodicityInfo){
+      if(data.periodicityInfo.count == 1) {
+        setError({
+          count :'ㅗ디ㅣㅐ'
+        })
+
+        console.log('error', error.count)
+        return false
+      }
+
+    }
     console.log("form", data)
 
     dispatch({
@@ -468,26 +481,58 @@ function GoalInsertFormModal(){
                 {watch("periodicityInfo.timeUnit") === "W" ? 
                 <div className="dayCheckbox-wrapper">
                   <FormGroup row>
-                    <Controller name="periodicityInfo.sunYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="일" disabled={none}/>
+                    <Controller name="periodicityInfo.sunYn" control={control} defaultValue={false} 
+                      render={({ field }) => (
+                        <FormControlLabel 
+                        control={
+                          <Checkbox 
+                            size="small" 
+                            checked={field.value} 
+                            onChange={(e)=>{
+                              setValue('periodicityInfo.type', 'day')
+                              field.onChange(e.target.checked)
+                            }}
+                          />
+                          } 
+                          label="일" 
+                          disabled={none}
+                        />
                     )}/>
                     <Controller name="periodicityInfo.monYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="월" disabled={none}/>
+                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
+                        setValue('periodicityInfo.type', 'day')
+                        field.onChange(e.target.checked)
+                      }}/>} label="월" disabled={none}/>
                     )}/>
                     <Controller name="periodicityInfo.tueYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="화" disabled={none}/>
+                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
+                        setValue('periodicityInfo.type', 'day')
+                        field.onChange(e.target.checked)
+                      }}/>} label="화" disabled={none}/>
                     )}/>
                     <Controller name="periodicityInfo.wedsYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="수" disabled={none}/>
+                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
+                        setValue('periodicityInfo.type', 'day')
+                        field.onChange(e.target.checked)
+                      }}/>} label="수" disabled={none}/>
                     )}/>
                     <Controller name="periodicityInfo.thurYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="목" disabled={none}/>
+                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
+                        setValue('periodicityInfo.type', 'day')
+                        field.onChange(e.target.checked)
+                      }}/>} label="목" disabled={none}/>
                     )}/>
                     <Controller name="periodicityInfo.friYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="금" disabled={none}/>
+                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
+                        setValue('periodicityInfo.type', 'day')
+                        field.onChange(e.target.checked)
+                      }}/>} label="금" disabled={none}/>
                     )}/>
                     <Controller name="periodicityInfo.satYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={field.onChange}/>} label="토" disabled={none}/>
+                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
+                        setValue('periodicityInfo.type', 'day')
+                        field.onChange(e.target.checked)
+                      }}/>} label="토" disabled={none}/>
                     )}/>
                   </FormGroup>
 
@@ -510,8 +555,11 @@ function GoalInsertFormModal(){
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      error={!!errors.periodicityInfo?.count}
-                      helperText={errors.periodicityInfo?.count.message}
+                      // error={!!errors.periodicityInfo?.count}
+                      // helperText={errors.periodicityInfo?.count.message}
+
+                      error={!!error.count}
+                      helperText={error.count}
                       />
                     )} />
                   </div>
