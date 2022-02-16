@@ -1,5 +1,5 @@
 // Total & Search // Full & Title
-export const initialState = {
+export const goalInitialState = {
     goalTotalFullList : [], // 전체 게시글
     loadGoalTotalFullListLoading : false, // 전체 게시글 로딩 중
     loadGoalTotalFullListDone : false,
@@ -81,7 +81,7 @@ export const MODIFY_GOAL_FAILURE = 'MODIFY_GOAL_FAILURE';
 
 
 //reducer
-const goalReducer = (state=initialState, action) =>{
+const goalReducer = (state=goalInitialState, action) =>{
     switch(action.type) {
         case LOAD_GOALTOTALFULLLIST_REQUEST: // 전체 게시글 로딩 중
             return {

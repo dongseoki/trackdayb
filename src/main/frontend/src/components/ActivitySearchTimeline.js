@@ -12,15 +12,18 @@ import "./ActivitySearchTimeline.css";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
+import { useSelector } from "react-redux";
 
 export default function ActivitySearchTimeline() {
   // getActivityListTEST
   // 참조데이터(전체 리스트 -> 파생 그룹바이)
-  const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
+  // const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
+  
+  const { activitySearchFullList }  = useSelector((state) => state.activity)
+  
   const [ activitySearchGroupby,  ] = useContext(ActivitySearchGroupbyContext)
 
-
-  if (activitySearchList.length === 0) {
+  if (activitySearchFullList.length === 0) {
     return (
       <div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>
     )
@@ -30,7 +33,7 @@ export default function ActivitySearchTimeline() {
     return (
       <>
       <Timeline position="alternate">
-        { activitySearchList && Object.entries(activitySearchGroupby).map((activityPerDay, index) => (
+        { activitySearchFullList && Object.entries(activitySearchGroupby).map((activityPerDay, index) => (
           <TimelineItem key={index}>
             <TimelineOppositeContent
               sx={{ m: 'auto 0' }}

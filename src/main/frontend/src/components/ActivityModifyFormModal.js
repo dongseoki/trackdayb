@@ -20,13 +20,13 @@ import TextField from '@material-ui/core/TextField';
 import {toast} from "react-toastify";
 import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import { useMediaQuery } from "react-responsive";
 
 function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
     
     const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
-    // const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
+    const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
     // const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
     

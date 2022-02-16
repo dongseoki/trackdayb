@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Time.css";
 import { LeftNavigation } from '../components/index';
 
@@ -24,18 +24,26 @@ import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext
 import { useMediaQuery } from "react-responsive";
 import useTitle from '../hooks/useTitle';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { LOAD_ACTIVITYSEARCHFULLLIST_REQUEST } from '../reducers/activity';
 
 
 function Time() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type : LOAD_ACTIVITYSEARCHFULLLIST_REQUEST,
+    });
+  }, [])
+
+  const { activitySearchFullList } = useSelector((state) => state.activity)
+
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("시간관리"), 100);
 
   // 검색조건
-  const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
-  const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
-  const [searchGoalIdList, setSearchGoalIdList] = useState([]);
   const [writeDate, setWriteDate] = useState(new Date());
-  const [otherIncludedYn, setOtherIncludedYn ] = useState(true); //시간관리 기타포함
   const [ checker, setChecker] = useState(true); //작성일 변경 감지 변수 
 
   const MinusOneDay = ()=>{
@@ -68,51 +76,26 @@ function Time() {
   
   return (
     <div className="time">
-      <GoalTotalTitleListProvider>
-      <GoalSearchTitleListProvider
-        searchStartDatetime={searchStartDatetime}
-        searchEndDatetime={searchEndDatetime}>
-        <aside className="side">
-          {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
-          {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation 
-              searchStartDatetime={searchStartDatetime}
-              searchEndDatetime={searchEndDatetime}
-              setSearchStartDatetime={setSearchStartDatetime}
-              setSearchEndDatetime={setSearchEndDatetime}
-              searchGoalIdList={searchGoalIdList}
-              setSearchGoalIdList={setSearchGoalIdList}
-              otherIncludedYn={otherIncludedYn}
-              setOtherIncludedYn={setOtherIncludedYn}
-              />
-          )}
-        </aside>
-
-        
-        <ActivitySearchListProvider
-          searchStartDatetime={searchStartDatetime}
-          searchEndDatetime={searchEndDatetime}
-          searchGoalIdList={searchGoalIdList}
-          otherIncludedYn={otherIncludedYn}
-        >
-          <ActivitySearchGroupbyProvider>
-          <section className='time-contents'>
+      <aside className="side">
+        {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
+        {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation />)}
+      </aside>
+      <ActivitySearchGroupbyProvider>
+        <section className='time-contents'>
           {isSmallScreen ? <div className="active-search-fold" onClick={()=>{setActiveSearchFoldState(!activeSearchFoldState)}}>액티비티 접기 {activeSearchFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> } </div> : null}
-        
           {isSmallScreen && activeSearchFoldState ? null : (
           <div className="timeline-search">
             <ActivitySearchTimeline/>
           </div>
           )}
-        
-
           <div className="timeline">
-            <GoalModalSearchTitleListProvider
+            {/* <GoalModalSearchTitleListProvider
               writeDate={writeDate}
-              checker={checker}>
-                            
+              checker={checker}> */}
               <div className="date-picker-wrapper">
                 <button className="arrow-icon" onClick={MinusOneDay}><IoIosArrowBack/></button>
-                <div className="datePicker-wrap"><DatePicker
+                <div className="datePicker-wrap">
+                  <DatePicker
                   className="date-picker"
                   selected={writeDate}
                   onChange={(date) => {
@@ -126,13 +109,10 @@ function Time() {
               <ActivityTimeline 
               writeDate={writeDate}
               checker={checker}/>
-            </GoalModalSearchTitleListProvider>
+            {/* </GoalModalSearchTitleListProvider> */}
           </div>
-          </section>
-          </ActivitySearchGroupbyProvider>
-        </ActivitySearchListProvider>
-      </GoalSearchTitleListProvider>
-      </GoalTotalTitleListProvider>
+        </section>
+      </ActivitySearchGroupbyProvider>
     </div>
   );
 }

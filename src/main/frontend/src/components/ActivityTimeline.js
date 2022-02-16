@@ -20,17 +20,26 @@ import axiosInstance from "../axiosConfig";
 // import axios from "axios";
 //Context
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import "./ActivityTimeline.css";
 import ActivityInsertFormModal from "../components/ActivityInsertFormModal";
 import ActivityModifyFormModal from "../components/ActivityModifyFormModal";
 
+import { useDispatch, useSelector } from "react-redux";
+import { LOAD_ACTIVITYDAYLIST_REQUEST } from "../reducers/activity";
+
 export default function ActivityTimeline({writeDate, checker}) {
-    // 오늘의 활동내역 리스트)
-    const [activityList, setActivityList] = useState([]);
+  const dispatch = useDispatch();
+    // 오늘의 활동내역 리스트
+    const { activityDayList } = useSelector((state) => state.activity);
+    const [activityList, setActivityList] = useState([...activityDayList]);
     
+
     // 참조데이터(전체 리스트 -> 파생 그룹바이)
-    const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext)
+    // const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext)
+    
+    const { activitySearchFullList } = useSelector((state) => state.activity)
+
     // const [ activitySearchGroupby, setActivitySearchGroupby ] = useContext(ActivitySearchGroupbyContext)
 
     // YYYY-MM-DD 형태로 반환
@@ -42,37 +51,45 @@ export default function ActivityTimeline({writeDate, checker}) {
     }
 
     useEffect(() => {
-        const fetchActivityList = async () => {
-          try {
-            const result = await axiosInstance.get("/timeManage/activityList", {
-              params:{
-                searchStartDatetime :makeYYMMDD(writeDate),
-                searchEndDatetime : makeYYMMDD(writeDate),
-                orderColumn: "start_datetime",
-                orderType: "asc",
-              },
-            });
-            //리스트에 세팅하기(원본)
-            setActivityList(result.data.activityList);
-          }
-          catch(err) {
-            console.error(err)
-          }
+      dispatch({
+        type : LOAD_ACTIVITYDAYLIST_REQUEST,
+        data : {
+          // searchStartDatetime : makeYYMMDD(writeDate),
+          // searchEndDatetime : makeYYMMDD(writeDate),
         }
-        fetchActivityList();
+      })
+        // const fetchActivityList = async () => {
+        //   try {
+        //     const result = await axiosInstance.get("/timeManage/activityList", {
+        //       params:{
+        //         searchStartDatetime :makeYYMMDD(writeDate),
+        //         searchEndDatetime : makeYYMMDD(writeDate),
+        //         orderColumn: "start_datetime",
+        //         orderType: "asc",
+        //       },
+        //     });
+        //     //리스트에 세팅하기(원본)
+        //     setActivityList(result.data.activityList);
+        //   }
+        //   catch(err) {
+        //     console.error(err)
+        //   }
+        // }
+        // fetchActivityList();
+
     }, [writeDate, checker]);
 
   if (activityList.length === 0) {
     return (
       <>
       <div className="writeForm">
-        <ActivityInsertFormModal 
+        {/* <ActivityInsertFormModal 
           writeDate={writeDate}
           activityList = {activityList}
           setActivityList = {setActivityList}
           activitySearchList={activitySearchList}
           setActivitySearchList = {setActivitySearchList}
-        />
+        /> */}
       </div>
 
       <div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>
@@ -84,13 +101,13 @@ export default function ActivityTimeline({writeDate, checker}) {
     return (
       <>
       <div className="writeForm">
-        <ActivityInsertFormModal 
+        {/* <ActivityInsertFormModal 
           writeDate={writeDate}
           activityList = {activityList}
           setActivityList = {setActivityList}
           activitySearchList={activitySearchList}
           setActivitySearchList = {setActivitySearchList}
-        />
+        /> */}
       </div>
       
       <div className="cards">
@@ -119,13 +136,13 @@ export default function ActivityTimeline({writeDate, checker}) {
                               activityList = {activityList}
                               setActivityList = {setActivityList}
                             />
-                            <DeleteModal 
+                            {/* <DeleteModal 
                               activityId = {activity.activityId}
                               activityList = {activityList}
                               setActivityList = {setActivityList}
                               activitySearchList={activitySearchList}
                               setActivitySearchList = {setActivitySearchList}
-                            />
+                            /> */}
                           </div>
                         </div>
                       

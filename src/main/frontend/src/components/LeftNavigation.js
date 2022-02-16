@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 
 import { useDispatch } from 'react-redux';
 import { LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
+import { LOAD_ACTIVITYSEARCHFULLLIST_REQUEST } from "../reducers/activity";
 
 import dayjs from 'dayjs';
 //checkbox
@@ -22,7 +23,7 @@ function LeftNavigation(props){
   // 로컬변수들
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
-
+  const [otherIncludedYn, setOtherIncludedYn ] = useState(true); //시간관리 기타포함
 
   // 목표조회 조건 update Action
   useEffect(()=> {
@@ -41,6 +42,18 @@ function LeftNavigation(props){
       }
     })
   }, [searchStartDatetime, searchEndDatetime])
+
+  // 활동조회 조건
+  useEffect(()=> {
+    dispatch({
+        type : LOAD_ACTIVITYSEARCHFULLLIST_REQUEST,
+        data : {
+            searchStartDatetime : dayjs(searchStartDatetime).format("YYYY-MM-DD"),
+            searchEndDatetime : dayjs(searchEndDatetime).format("YYYY-MM-DD"),
+            otherIncludedYn : otherIncludedYn? 'Y' : 'N',
+            }
+      });
+  }, [searchStartDatetime, searchEndDatetime, otherIncludedYn])
 
 
     // 시간관리(time) 탭에서만 작동    
@@ -67,7 +80,7 @@ function LeftNavigation(props){
     }
     const OthercheckHandler = (e, checked) =>{
         e.stopPropagation() //이벤트 버블링 막기
-        props.setOtherIncludedYn(checked);
+        setOtherIncludedYn(checked);
     }
 
     // // Mobile 기준 breakpoint
@@ -100,16 +113,14 @@ function LeftNavigation(props){
                     <i className="search-icon"><BiSearch/></i>
                 </div>
                 <GoalTitleList 
-                goalTitleList={searchTerm.length < 1 ? goalSearchTitleList : searchResults}
-                // searchGoalIdList={props.searchGoalIdList}
-                // setSearchGoalIdList={props.setSearchGoalIdList}
+                    goalTitleList={searchTerm.length < 1 ? goalSearchTitleList : searchResults}
                 />
             </div>
             
             {currentURI === "/time" ? <div className="other-include-area">
                 <div className="checkbox-wrapper" onClick={(e) => {OthercheckHandler(e, e.target.checked)}}> 
                     <Checkbox {...label} 
-                        checked={props.otherIncludedYn}
+                        checked={otherIncludedYn}
                     />
                 </div>
                 <div className="total-check">기타포함</div>
