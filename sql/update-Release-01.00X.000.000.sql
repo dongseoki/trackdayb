@@ -12,11 +12,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- trackday 데이터베이스 구조 내보내기
-CREATE DATABASE IF NOT EXISTS `trackday` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `trackday`;
-
 -- 테이블 trackday.sns_link_info 구조 내보내기
 DROP TABLE IF EXISTS `sns_link_info`;
 CREATE TABLE IF NOT EXISTS `sns_link_info` (
