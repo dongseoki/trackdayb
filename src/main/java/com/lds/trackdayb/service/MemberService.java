@@ -1,7 +1,5 @@
 package com.lds.trackdayb.service;
 
-import java.util.Optional;
-
 import com.lds.trackdayb.dto.MemberDTO;
 
 import com.lds.trackdayb.dto.TokenDTO;
@@ -16,10 +14,7 @@ public abstract class MemberService implements UserDetailsService{
 
     public abstract MemberDTO login(String memberId, String password);
 
-    public abstract MemberDTO signup(MemberDTO memberDTO);
-
-    public abstract void RSApreprocess(HttpServletRequest request, MemberDTO memberDTO) throws Exception;
-
+    public abstract TokenDTO signup(HttpServletRequest request,MemberDTO memberDTO) throws  Exception;
 
     public abstract Authentication springSecurityUsernamePasswordAuthenticate(String memberId, String decodedPassword) throws Exception;
 
@@ -41,4 +36,6 @@ public abstract class MemberService implements UserDetailsService{
     public abstract void withdrawal(String memberSerialNumber) throws Exception;
 
     public abstract MemberDTO snslogin(String email) throws Exception ;
+
+    public abstract TokenDTO idPwdLogin(HttpServletRequest request, MemberDTO memberDTO) throws Exception;
 }

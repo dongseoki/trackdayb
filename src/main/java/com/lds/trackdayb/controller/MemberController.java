@@ -59,6 +59,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.util.StringUtils;
 
+import java.lang.reflect.Member;
 import java.security.*;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.*;
@@ -272,15 +273,12 @@ public class MemberController {
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        memberService.RSApreprocess(request,memberDTO);
 
-        // spring security Authentication and create access and refreshtoken
+
+
         try{
-            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityUsernamePasswordAuthenticate(memberDTO.getUsername(), memberDTO.getPassword()));
+            TokenDTO tokenInfo =  memberService.idPwdLogin(request, memberDTO);
             resultMVO.setTokenInfo(tokenInfo);
-            // refresh token 수정.
-            memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
-
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
             httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
             return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
@@ -504,17 +502,9 @@ public class MemberController {
 
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         try {
-            memberService.RSApreprocess(request,memberDTO);
-
-            MemberDTO memberInfo =memberService.signup(memberDTO);
-
-            // spring security Authentication and create access and refreshtoken
-            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityUsernamePasswordAuthenticate(memberDTO.getUsername(), memberDTO.getPassword()));
+            TokenDTO tokenInfo =memberService.signup(request, memberDTO);
             resultMVO.setTokenInfo(tokenInfo);
 
-            // refresh token 수정.
-            memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
-            
             // memberId
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
 

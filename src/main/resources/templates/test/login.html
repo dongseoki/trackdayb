@@ -248,18 +248,18 @@
         response = fetch("http://localhost:8080/member/requestpublickey", {
           method: 'get'
         }).then((response) => response.json())
-                .then(function (data){
+        .then(function (data){
 
-                  //1
-                  // rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
-                  // rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
+          //1
+          // rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
+          // rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
 
-                  //2
-                  publicKeyStr = data.publicKeyInfo.publicKeyStr;
-                });
+          //2
+          publicKeyStr = data.publicKeyInfo.publicKeyStr;
+        });
 
-        const googleLoginBtn = document.getElementById("googleLoginBtn");
-        googleLoginBtn.addEventListener("click", onClickGoogleLogin);
+        // const googleLoginBtn = document.getElementById("googleLoginBtn");
+        // googleLoginBtn.addEventListener("click", onClickGoogleLogin);
 
       });
     </script>
@@ -282,9 +282,9 @@
     </form> <br>
 
     <a href="/test/signup">Go to join! →</a>
-    <div id="googleLoginBtn" style="cursor: pointer">
-      Google Login
-    </div>
+<!--    <div id="googleLoginBtn" style="cursor: pointer">-->
+<!--      Google Login-->
+<!--    </div>-->
 <!--    <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
     <div class="g-signin2" onclick="onSignInByLoginBtnOnly();"></div>
   </body>

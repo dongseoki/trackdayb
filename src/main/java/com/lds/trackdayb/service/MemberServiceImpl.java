@@ -7,7 +7,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.lds.trackdayb.controller.TimeManageController;
 import com.lds.trackdayb.dto.MemberDTO;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
@@ -41,11 +40,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Cipher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import static com.lds.trackdayb.util.RSAHelper.RSApreprocess;
 
 @RequiredArgsConstructor
 @Service
@@ -104,7 +104,13 @@ public class MemberServiceImpl extends MemberService {
     }
 
     @Override
-    public MemberDTO signup(MemberDTO memberDTO) {
+    public TokenDTO signup(HttpServletRequest request, MemberDTO memberDTO) throws Exception{
+        // RSA 복호화를 하여 password 해석.
+        memberDTO =  RSApreprocess(request, memberDTO);
+        String rsaDecrytedPwd = memberDTO.getPassword();
+
+
+
         if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
@@ -120,32 +126,14 @@ public class MemberServiceImpl extends MemberService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         memberDTO.setPassword(encoder.encode(memberDTO.getPassword()));
         memberRepository.save(memberDTO);
-        return memberDTO;
-    }
 
-    private String decryptRsa(PrivateKey privateKey, String securedValue) throws Exception {
-        System.out.println("will decrypt : " + securedValue);
-        Cipher cipher = Cipher.getInstance("RSA");
+        // spring security Authentication and create access and refreshtoken
+        TokenDTO tokenDTO = tokenProvider.createAccessAndRefreshToken(springSecurityUsernamePasswordAuthenticate(memberDTO.getUsername(), rsaDecrytedPwd));
 
-        byte[] encryptedBytes = Base64.getDecoder().decode(securedValue);;
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-        String decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
-        return decryptedValue;
-    }
+        // refresh token 수정.
+        updateRefreshToken(memberDTO.getMemberId(),tokenDTO.getRefreshToken());
 
-    @Override
-    public void RSApreprocess(HttpServletRequest request, MemberDTO memberDTO) throws Exception {
-        HttpSession session = request.getSession();
-        PrivateKey privateKey = (PrivateKey) session.getAttribute("__rsaPrivateKey__");
-        session.removeAttribute("__rsaPrivateKey__"); // 키의 재사용을 막는다. 항상 새로운 키를 받도록 강제.
-        if (privateKey == null) {
-            throw new RuntimeException("암호화 비밀키 정보를 찾을 수 없습니다.");
-        }
-        String decodedMemberId = decryptRsa(privateKey, memberDTO.getMemberId());
-        String decodedPassword = decryptRsa(privateKey, memberDTO.getPassword());
-        memberDTO.setMemberId(decodedMemberId);
-        memberDTO.setPassword(decodedPassword);
+        return tokenDTO;
     }
 
     @Override
@@ -326,6 +314,19 @@ public class MemberServiceImpl extends MemberService {
             throw new NoLinkedMemberException("no such linked member.");
         }
         return memberDTO;
+    }
+
+    @Override
+    public TokenDTO idPwdLogin(HttpServletRequest request, MemberDTO memberDTO) throws Exception {
+        // pwd 를 복호화함.
+        memberDTO =  RSApreprocess(request,memberDTO);
+
+        // spring security Authentication and create access and refreshtoken
+        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(springSecurityUsernamePasswordAuthenticate(memberDTO.getUsername(), memberDTO.getPassword()));
+
+        // refresh token 수정.
+        updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+        return tokenInfo;
     }
 
     @Override
