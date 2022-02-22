@@ -11,10 +11,7 @@ import com.lds.trackdayb.dto.MemberDTO;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
 import com.lds.trackdayb.entity.SnsLinkInfo;
-import com.lds.trackdayb.exception.DeletedUserException;
-import com.lds.trackdayb.exception.DuplicateMemberException;
-import com.lds.trackdayb.exception.NoLinkedMemberException;
-import com.lds.trackdayb.exception.ValidateException;
+import com.lds.trackdayb.exception.*;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.repository.MemberRepository;
 import com.lds.trackdayb.util.CommonCodeUtil;
@@ -273,7 +270,7 @@ public class MemberServiceImpl extends MemberService {
     }
 
     @Override
-    public MemberDTO simplesignup(MemberDTO memberDTO, String snsName,String linkedEmail) {
+    public MemberDTO simplesignup(MemberDTO memberDTO, String snsName,String linkedEmail) throws Exception{
 
         if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
@@ -284,11 +281,8 @@ public class MemberServiceImpl extends MemberService {
         // 임으로 memberid email로 설정.
         memberRepository.save(memberDTO);
 
-        SnsLinkInfo snsLinkInfo = new SnsLinkInfo();
-        snsLinkInfo.setMemberSerialNumber(memberDTO.getMemberSerialNumber());
-        snsLinkInfo.setSnsType(CommonCodeUtil.snsNameToTypeMap.get(snsName));
-        snsLinkInfo.setLinkedEmail(linkedEmail);
-        memberRepository.upsertSnsLinkInfo(snsLinkInfo);
+        linkAccount(memberDTO,snsName,linkedEmail);
+
         return memberDTO;
     }
 
@@ -299,6 +293,11 @@ public class MemberServiceImpl extends MemberService {
         snsLinkInfo.setSnsType(CommonCodeUtil.snsNameToTypeMap.get(snsName));
         snsLinkInfo.setLinkedEmail(linkedEmail);
         memberRepository.upsertSnsLinkInfo(snsLinkInfo);
+
+        List<SnsLinkInfo> snsLinkInfoList = memberRepository.selectDuplicateLinkedEmailInSnsLinkInfo(linkedEmail);
+        if(snsLinkInfoList != null &&  snsLinkInfoList.size()>=2){
+            throw new DuplicateLinkedEmailException("DuplicateLinkedEmailException");
+        }
     }
 
     @Override

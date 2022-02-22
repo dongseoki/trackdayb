@@ -45,6 +45,10 @@
                       WHERE m.member_serial_number =sli.member_serial_number
                         AND sli.linked_email = #{value})
     </select>
+    <select id="selectDuplicateLinkedEmailInSnsLinkInfo" resultType="com.lds.trackdayb.entity.SnsLinkInfo">
+        SELECT * FROM sns_link_info /* MemberRepository.selectDuplicateLinkedEmailInSnsLinkInfo */
+        where linked_email = #{value}
+    </select>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="memberSerialNumber">
         insert into member(

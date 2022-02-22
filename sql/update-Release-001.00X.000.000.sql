@@ -33,6 +33,9 @@ CREATE TABLE IF NOT EXISTS `sns_link_info` (
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
 
 
+/* 유니크 키 제거*/
+ALTER TABLE trackday.sns_link_info DROP KEY sns_link_info_UN;
+
 
 /* memberId 컬럼 길이 변경*/
 ALTER TABLE trackday.`member` MODIFY COLUMN member_id varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '멤버 아이디';

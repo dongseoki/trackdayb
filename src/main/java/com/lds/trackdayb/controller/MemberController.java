@@ -21,10 +21,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.*;
-import com.lds.trackdayb.exception.DeletedUserException;
-import com.lds.trackdayb.exception.DuplicateMemberException;
-import com.lds.trackdayb.exception.NoLinkedMemberException;
-import com.lds.trackdayb.exception.ValidateException;
+import com.lds.trackdayb.exception.*;
 import com.lds.trackdayb.jwt.JwtFilter;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.mvo.PublicKeyInfo;
@@ -366,6 +363,10 @@ public class MemberController {
                 LOGGER.error("signup error : {}", e.toString());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER);
                 resultMVO.setMessage("signup fail. duplicate error");
+            }catch (DuplicateLinkedEmailException e){
+                LOGGER.error("linkAccount error {}",e.getMessage());
+                resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_SNS_EMAIL);
+                resultMVO.setMessage(e.getMessage());
             }catch (Exception e){
                 LOGGER.error("simplesignup error {}",e.getMessage());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
@@ -406,7 +407,7 @@ public class MemberController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         String email="";
-        MemberDTO memberDTO;
+        MemberDTO memberDTO = new MemberDTO();
         if(Arrays.asList(CommonCodeUtil.supportSNSarr).contains(snsName) == false){
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_UNSUPPORT_SNS);
             resultMVO.setMessage("unsupported sns");
@@ -423,7 +424,12 @@ public class MemberController {
             try{
                 memberDTO = memberService.getMyUserWithAuthorities();
                 memberService.linkAccount(memberDTO, snsName,email);
-            }catch (Exception e){
+            }catch (DuplicateLinkedEmailException e){
+                LOGGER.error("linkAccount error {}",e.getMessage());
+                resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_SNS_EMAIL);
+                resultMVO.setMessage(e.getMessage());
+            }
+            catch (Exception e){
                 LOGGER.error("linkAccount error {}",e.getMessage());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
                 return resultMVO;

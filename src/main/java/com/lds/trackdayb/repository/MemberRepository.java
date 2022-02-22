@@ -1,6 +1,7 @@
 package com.lds.trackdayb.repository;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.lds.trackdayb.dto.MemberDTO;
 
@@ -24,4 +25,6 @@ public interface MemberRepository {
     MemberDTO findByLinkedEmail(String email);
 
     void deleteSnsLinkInfo(String memberSerialNumber);
+
+    List<SnsLinkInfo> selectDuplicateLinkedEmailInSnsLinkInfo(String linkedEmail);
 }
