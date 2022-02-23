@@ -20,7 +20,7 @@
         WHERE member_serial_number = #{value};
     </delete>
 
-    <select id="findByMemberId" resultType="com.lds.trackdayb.dto.MemberDTO">
+    <select id="findByMemberId" resultType="com.lds.trackdayb.entity.MemberEntity">
     SELECT *
     FROM member
     WHERE
@@ -28,7 +28,7 @@
     LIMIT 1;
     </select>
 
-    <select id="findByMemberIdAndPassword" resultType="com.lds.trackdayb.dto.MemberDTO">
+    <select id="findByMemberIdAndPassword" resultType="com.lds.trackdayb.entity.MemberEntity">
         SELECT *
         FROM member
         WHERE
@@ -37,7 +37,7 @@
         password=#{password}
         LIMIT 1;
     </select>
-    <select id="findByLinkedEmail" resultType="com.lds.trackdayb.dto.MemberDTO">
+    <select id="findByLinkedEmail" resultType="com.lds.trackdayb.entity.MemberEntity">
         SELECT * FROM member m
         WHERE EXISTS (SELECT 1
                       FROM
@@ -48,6 +48,11 @@
     <select id="selectDuplicateLinkedEmailInSnsLinkInfo" resultType="com.lds.trackdayb.entity.SnsLinkInfo">
         SELECT * FROM sns_link_info /* MemberRepository.selectDuplicateLinkedEmailInSnsLinkInfo */
         where linked_email = #{value}
+    </select>
+
+    <select id="findAllSnsLinkInfo" resultType="com.lds.trackdayb.entity.SnsLinkInfo">
+        SELECT * FROM sns_link_info /* MemberRepository.findAllSnsLinkInfo */
+        where member_serial_number = #{value}
     </select>
 
     <insert id="save" useGeneratedKeys="true" keyProperty="memberSerialNumber">

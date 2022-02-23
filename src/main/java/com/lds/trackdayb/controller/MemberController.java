@@ -1,12 +1,9 @@
 package com.lds.trackdayb.controller;
 
-import javax.crypto.Cipher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.xml.transform.Result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,6 +18,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.*;
+import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.exception.*;
 import com.lds.trackdayb.jwt.JwtFilter;
 import com.lds.trackdayb.jwt.TokenProvider;
@@ -32,7 +30,6 @@ import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import com.lds.trackdayb.vo.SnsAuthenticate;
-import ognl.Token;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +37,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
@@ -56,12 +45,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.util.StringUtils;
 
-import java.lang.reflect.Member;
 import java.security.*;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.*;
-
-import static com.lds.trackdayb.util.CommonCodeUtil.byteArrayToHex;
 
 @RequiredArgsConstructor
 @RestController
@@ -265,7 +251,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResultMVO> authorize(@Valid @RequestBody MemberDTO memberDTO, HttpServletRequest request) throws Exception {
+    public ResponseEntity<ResultMVO> authorize(@Valid @RequestBody MemberEntity memberEntity, HttpServletRequest request) throws Exception {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -274,7 +260,7 @@ public class MemberController {
 
 
         try{
-            TokenDTO tokenInfo =  memberService.idPwdLogin(request, memberDTO);
+            TokenDTO tokenInfo =  memberService.idPwdLogin(request, memberEntity);
             resultMVO.setTokenInfo(tokenInfo);
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
             httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
@@ -345,12 +331,12 @@ public class MemberController {
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_UNSUPPORT_SNS);
             resultMVO.setMessage("unsupported sns");
         }else{
-            MemberDTO memberDTO = new MemberDTO();
-            memberDTO.setName(snsAuthenticate.getName());
+            MemberEntity memberEntity = new MemberEntity();
+            memberEntity.setName(snsAuthenticate.getName());
             if(StringUtils.equals(snsName,"google")){
                 try{
                     email = memberService.googleAuthServerAuthenticate(snsAuthenticate.getTokenId());
-                    memberDTO.setMemberId(email); // 멤버 아이디로 이메일 설정.
+                    memberEntity.setMemberId(email); // 멤버 아이디로 이메일 설정.
                 }catch (Exception e){
                     LOGGER.error("googleAuthServerAuthenticate error {}",e.getMessage());
                     resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SNS_AUTH_SERVER_FAIL);
@@ -358,13 +344,13 @@ public class MemberController {
                 }
             }
             try{
-                MemberDTO memberInfo =memberService.simplesignup(memberDTO, snsName,email);
+                MemberEntity memberInfo =memberService.simplesignup(memberEntity, snsName,email);
             }catch (DuplicateMemberException e) {
                 LOGGER.error("signup error : {}", e.toString());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER);
                 resultMVO.setMessage("signup fail. duplicate error");
             }catch (DuplicateLinkedEmailException e){
-                LOGGER.error("linkAccount error {}",e.getMessage());
+                LOGGER.error("simplesignup error {}",e.getMessage());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_SNS_EMAIL);
                 resultMVO.setMessage(e.getMessage());
             }catch (Exception e){
@@ -374,11 +360,11 @@ public class MemberController {
             }
 
             // spring security Oauth2 Authentication and create access and refreshtoken
-            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityOauth2Authenticate(memberDTO.getMemberId()));
+            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityOauth2Authenticate(memberEntity.getMemberId()));
             resultMVO.setTokenInfo(tokenInfo);
 
             // refresh token 수정.
-            memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+            memberService.updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
 
             // memberId
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
@@ -392,9 +378,9 @@ public class MemberController {
     public ResultMVO withdrawal(){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-        MemberDTO memberDTO = memberService.getMyUserWithAuthorities();
+        MemberInfo memberInfo = memberService.getMyUserWithAuthorities();
         try{
-            memberService.withdrawal(memberDTO.getMemberSerialNumber());
+            memberService.withdrawal(memberInfo.getMemberSerialNumber());
         }catch(Exception e){
             LOGGER.error("withdrawal error {}",e.getMessage());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
@@ -407,7 +393,7 @@ public class MemberController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         String email="";
-        MemberDTO memberDTO = new MemberDTO();
+        MemberInfo memberInfo = new MemberInfo();
         if(Arrays.asList(CommonCodeUtil.supportSNSarr).contains(snsName) == false){
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_UNSUPPORT_SNS);
             resultMVO.setMessage("unsupported sns");
@@ -422,8 +408,8 @@ public class MemberController {
                 }
             }
             try{
-                memberDTO = memberService.getMyUserWithAuthorities();
-                memberService.linkAccount(memberDTO, snsName,email);
+                memberInfo = memberService.getMyUserWithAuthorities();
+                memberService.linkAccount(memberInfo, snsName,email);
             }catch (DuplicateLinkedEmailException e){
                 LOGGER.error("linkAccount error {}",e.getMessage());
                 resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_DUPLICATE_SNS_EMAIL);
@@ -436,11 +422,11 @@ public class MemberController {
             }
 
             // spring security Oauth2 Authentication and create access and refreshtoken
-            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityOauth2Authenticate(memberDTO.getMemberId()));
+            TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityOauth2Authenticate(memberInfo.getMemberId()));
             resultMVO.setTokenInfo(tokenInfo);
 
             // refresh token 수정.
-            memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+            memberService.updateRefreshToken(memberInfo.getMemberId(),tokenInfo.getRefreshToken());
 
             // memberId
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
@@ -456,14 +442,14 @@ public class MemberController {
 
         String email="";
         HttpHeaders httpHeaders = new HttpHeaders();
-        MemberDTO memberInfo;
+        MemberEntity memberInfo;
 
         if(Arrays.asList(CommonCodeUtil.supportSNSarr).contains(snsName) == false){
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_UNSUPPORT_SNS);
             resultMVO.setMessage("unsupported sns");
         }else{
-            MemberDTO memberDTO = new MemberDTO();
-            memberDTO.setName(snsAuthenticate.getName());
+            MemberEntity memberEntity = new MemberEntity();
+            memberEntity.setName(snsAuthenticate.getName());
             if(StringUtils.equals(snsName,"google")){
                 try{
                     email = memberService.googleAuthServerAuthenticate(snsAuthenticate.getTokenId());
@@ -481,7 +467,7 @@ public class MemberController {
                 resultMVO.setTokenInfo(tokenInfo);
 
                 // refresh token 수정.
-                memberService.updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+                memberService.updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
 
                 // memberId
                 resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
@@ -503,12 +489,12 @@ public class MemberController {
     }
 
     @PostMapping(value = "/signup")
-    public ResultMVO signup(@RequestBody MemberDTO memberDTO, HttpServletRequest request){
+    public ResultMVO signup(@RequestBody MemberEntity memberEntity, HttpServletRequest request){
         ResultMVO resultMVO = new ResultMVO();
 
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         try {
-            TokenDTO tokenInfo =memberService.signup(request, memberDTO);
+            TokenDTO tokenInfo =memberService.signup(request, memberEntity);
             resultMVO.setTokenInfo(tokenInfo);
 
             // memberId
@@ -544,8 +530,7 @@ public class MemberController {
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
         try {
-            MemberDTO memberDTO =memberService.getMyUserWithAuthorities();
-            MemberInfo memberInfo = modelMapper.map(memberDTO,MemberInfo.class);
+            MemberInfo memberInfo =memberService.getMyUserWithAuthorities();
             jo.add("memberInfo", new Gson().toJsonTree(memberInfo));
         } catch (Exception e) {
             LOGGER.error("getMyUserInfo error : {}", e.toString());
@@ -557,7 +542,7 @@ public class MemberController {
 
     @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<MemberDTO> getUserInfo(@PathVariable String username) {
+    public ResponseEntity<MemberEntity> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(memberService.getUserWithAuthorities(username));
     }
     

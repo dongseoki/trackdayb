@@ -1,13 +1,13 @@
 package com.lds.trackdayb.service;
 
-import java.security.PrivateKey;
 import java.util.*;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.lds.trackdayb.dto.MemberDTO;
+import com.lds.trackdayb.dto.MemberInfo;
+import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
 import com.lds.trackdayb.entity.SnsLinkInfo;
@@ -18,6 +18,7 @@ import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +39,7 @@ import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.crypto.Cipher;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import static com.lds.trackdayb.util.RSAHelper.RSApreprocess;
 
@@ -57,11 +56,12 @@ public class MemberServiceImpl extends MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final ModelMapper modelMapper;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     static final Logger LOGGER = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     @Override
-    public String save(MemberDTO memberDTO) {
+    public String save(MemberEntity memberEntity) {
         // MessageDigest md = null;
         // try {
         // md = MessageDigest.getInstance("SHA-512");
@@ -71,13 +71,13 @@ public class MemberServiceImpl extends MemberService {
         // md.update(memberDTO.getPassword().getBytes());
         // String hex = String.format("%0128x", new BigInteger(1, md.digest()));
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        memberDTO.setPassword(encoder.encode(memberDTO.getPassword()));
-        memberRepository.save(memberDTO);
-        return memberDTO.getMemberId();
+        memberEntity.setPassword(encoder.encode(memberEntity.getPassword()));
+        memberRepository.save(memberEntity);
+        return memberEntity.getMemberId();
     }
 
     @Override
-    public MemberDTO login(String memberId, String password) {
+    public MemberEntity login(String memberId, String password) {
         // TODO Auto-generated method stub
         HashMap<String, String> param = new HashMap<>();
         param.put("memberId", memberId);
@@ -87,48 +87,48 @@ public class MemberServiceImpl extends MemberService {
     }
 
     @Override
-    public MemberDTO loadUserByUsername(String memberId) throws UsernameNotFoundException {
+    public MemberEntity loadUserByUsername(String memberId) throws UsernameNotFoundException {
         // 시큐리티에서 지정한 서비스이기 때문에 이 메소드를 필수로 구현
-        MemberDTO memberDTO = memberRepository.findByMemberId(memberId);
-        if (memberDTO == null || StringUtils.isEmpty(memberDTO.getMemberId())) {
+        MemberEntity memberEntity = memberRepository.findByMemberId(memberId);
+        if (memberEntity == null || StringUtils.isEmpty(memberEntity.getMemberId())) {
             throw new UsernameNotFoundException(memberId);
         }
-        if(StringUtils.equals(memberDTO.getDeletionStatus(),"Y")){
+        if(StringUtils.equals(memberEntity.getDeletionStatus(),"Y")){
             throw new DeletedUserException("this is deleted user");
         }
 
-        return memberDTO;
+        return memberEntity;
     }
 
     @Override
-    public TokenDTO signup(HttpServletRequest request, MemberDTO memberDTO) throws Exception{
+    public TokenDTO signup(HttpServletRequest request, MemberEntity memberEntity) throws Exception{
         // RSA 복호화를 하여 password 해석.
-        memberDTO =  RSApreprocess(request, memberDTO);
-        String rsaDecrytedPwd = memberDTO.getPassword();
+        memberEntity =  RSApreprocess(request, memberEntity);
+        String rsaDecrytedPwd = memberEntity.getPassword();
 
 
 
-        if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
+        if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberEntity.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
-        String passwordMessage = SecurityUtil.isValidPassword(memberDTO.getPassword());
-        String idMessage = SecurityUtil.isValidMemberId(memberDTO.getMemberId());
+        String passwordMessage = SecurityUtil.isValidPassword(memberEntity.getPassword());
+        String idMessage = SecurityUtil.isValidMemberId(memberEntity.getMemberId());
         if(! StringUtils.equals(passwordMessage, CommonCodeUtil.SUCCESS)){
             throw new ValidateException(passwordMessage);
         }
         if(! StringUtils.equals(idMessage, CommonCodeUtil.SUCCESS)){
             throw new ValidateException(idMessage);
         }
-        memberDTO.setAuth("ROLE_USER");
+        memberEntity.setAuth("ROLE_USER");
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        memberDTO.setPassword(encoder.encode(memberDTO.getPassword()));
-        memberRepository.save(memberDTO);
+        memberEntity.setPassword(encoder.encode(memberEntity.getPassword()));
+        memberRepository.save(memberEntity);
 
         // spring security Authentication and create access and refreshtoken
-        TokenDTO tokenDTO = tokenProvider.createAccessAndRefreshToken(springSecurityUsernamePasswordAuthenticate(memberDTO.getUsername(), rsaDecrytedPwd));
+        TokenDTO tokenDTO = tokenProvider.createAccessAndRefreshToken(springSecurityUsernamePasswordAuthenticate(memberEntity.getUsername(), rsaDecrytedPwd));
 
         // refresh token 수정.
-        updateRefreshToken(memberDTO.getMemberId(),tokenDTO.getRefreshToken());
+        updateRefreshToken(memberEntity.getMemberId(),tokenDTO.getRefreshToken());
 
         return tokenDTO;
     }
@@ -164,11 +164,11 @@ public class MemberServiceImpl extends MemberService {
     // return userRepository.save(user);
     // }
 
-    public MemberDTO getUserWithAuthorities(String memberId) {
+    public MemberEntity getUserWithAuthorities(String memberId) {
         return memberRepository.findByMemberId(memberId);
     }
 
-    public MemberDTO getMyUserWithAuthorities() {
+    public MemberInfo getMyUserWithAuthorities() {
 
         // no jwt test code.
         // 테스트 시 아래 [1]번 주석을 풀고, 하단 [2]번을 주석처리 하시면 됩니다.
@@ -179,16 +179,20 @@ public class MemberServiceImpl extends MemberService {
         // memberDTO.setMemberSerialNumber("1");
         // return memberDTO;
 
+        MemberEntity memberEntity =  memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+        List<SnsLinkInfo> snsLinkInfoList = memberRepository.findAllSnsLinkInfo(memberEntity.getMemberSerialNumber());
+        MemberInfo memberInfo = modelMapper.map(memberEntity,MemberInfo.class);
+        memberInfo.setSnsLinkInfoList(snsLinkInfoList);
         // [2]
-        return memberRepository.findByMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+        return memberInfo;
     }
 
     @Override
     public void updateRefreshToken(String memberId, String refreshToken) {
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setMemberId(memberId);
-        memberDTO.setRefreshToken(refreshToken);
-        memberRepository.updateRefreshToken(memberDTO);
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberId(memberId);
+        memberEntity.setRefreshToken(refreshToken);
+        memberRepository.updateRefreshToken(memberEntity);
     }
 
     @Override
@@ -202,9 +206,9 @@ public class MemberServiceImpl extends MemberService {
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDTO.getAccessToken());
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        MemberDTO currentMemberDTO = memberRepository.findByMemberId(authentication.getName());
+        MemberEntity currentMemberEntity = memberRepository.findByMemberId(authentication.getName());
 
-        String dbRefreshTokenValue = currentMemberDTO.getRefreshToken();
+        String dbRefreshTokenValue = currentMemberEntity.getRefreshToken();
 
         // 3. Refresh Token 일치하는지 검사
         if (!StringUtils.equals(tokenRequestDTO.getRefreshToken(), dbRefreshTokenValue)) {
@@ -270,26 +274,26 @@ public class MemberServiceImpl extends MemberService {
     }
 
     @Override
-    public MemberDTO simplesignup(MemberDTO memberDTO, String snsName,String linkedEmail) throws Exception{
+    public MemberEntity simplesignup(MemberEntity memberEntity, String snsName, String linkedEmail) throws Exception{
 
-        if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberDTO.getUsername()))) {
+        if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberEntity.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
-        memberDTO.setAuth("ROLE_USER");
+        memberEntity.setAuth("ROLE_USER");
 //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 //        memberDTO.setPassword(encoder.encode(memberDTO.getMemberId()));
         // 임으로 memberid email로 설정.
-        memberRepository.save(memberDTO);
+        memberRepository.save(memberEntity);
+        MemberInfo memberInfo = modelMapper.map(memberEntity,MemberInfo.class);
+        linkAccount(memberInfo,snsName,linkedEmail);
 
-        linkAccount(memberDTO,snsName,linkedEmail);
-
-        return memberDTO;
+        return memberEntity;
     }
 
     @Override
-    public void linkAccount(MemberDTO memberDTO, String snsName, String linkedEmail) throws Exception {
+    public void linkAccount(MemberInfo memberInfo, String snsName, String linkedEmail) throws Exception {
         SnsLinkInfo snsLinkInfo = new SnsLinkInfo();
-        snsLinkInfo.setMemberSerialNumber(memberDTO.getMemberSerialNumber());
+        snsLinkInfo.setMemberSerialNumber(memberInfo.getMemberSerialNumber());
         snsLinkInfo.setSnsType(CommonCodeUtil.snsNameToTypeMap.get(snsName));
         snsLinkInfo.setLinkedEmail(linkedEmail);
         memberRepository.upsertSnsLinkInfo(snsLinkInfo);
@@ -307,24 +311,24 @@ public class MemberServiceImpl extends MemberService {
     }
 
     @Override
-    public MemberDTO snslogin(String email) throws Exception {
-        MemberDTO memberDTO = memberRepository.findByLinkedEmail(email);
-        if (memberDTO == null || StringUtils.isEmpty(memberDTO.getMemberId())) {
+    public MemberEntity snslogin(String email) throws Exception {
+        MemberEntity memberEntity = memberRepository.findByLinkedEmail(email);
+        if (memberEntity == null || StringUtils.isEmpty(memberEntity.getMemberId())) {
             throw new NoLinkedMemberException("no such linked member.");
         }
-        return memberDTO;
+        return memberEntity;
     }
 
     @Override
-    public TokenDTO idPwdLogin(HttpServletRequest request, MemberDTO memberDTO) throws Exception {
+    public TokenDTO idPwdLogin(HttpServletRequest request, MemberEntity memberEntity) throws Exception {
         // pwd 를 복호화함.
-        memberDTO =  RSApreprocess(request,memberDTO);
+        memberEntity =  RSApreprocess(request, memberEntity);
 
         // spring security Authentication and create access and refreshtoken
-        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(springSecurityUsernamePasswordAuthenticate(memberDTO.getUsername(), memberDTO.getPassword()));
+        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(springSecurityUsernamePasswordAuthenticate(memberEntity.getUsername(), memberEntity.getPassword()));
 
         // refresh token 수정.
-        updateRefreshToken(memberDTO.getMemberId(),tokenInfo.getRefreshToken());
+        updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
         return tokenInfo;
     }
 

@@ -1,4 +1,4 @@
-package com.lds.trackdayb.dto;
+package com.lds.trackdayb.entity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,7 +9,7 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class MemberDTO implements UserDetails {
+public class MemberEntity implements UserDetails {
     private String memberSerialNumber = "";  // INT NOT NULL AUTO_INCREMENT COMMENT '멤버테이블 일련번호(AUTOINCREAMENT)'
     private String auth = ""; // 권한.
     private String memberId = "";  // VARCHAR(20) NOT NULL  COMMENT '멤버 아이디'

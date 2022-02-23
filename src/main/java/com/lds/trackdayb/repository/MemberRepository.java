@@ -3,7 +3,7 @@ package com.lds.trackdayb.repository;
 import java.util.HashMap;
 import java.util.List;
 
-import com.lds.trackdayb.dto.MemberDTO;
+import com.lds.trackdayb.entity.MemberEntity;
 
 import com.lds.trackdayb.entity.SnsLinkInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -12,17 +12,19 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface MemberRepository {
-    void save(MemberDTO memberDTO);
+    void save(MemberEntity memberEntity);
 
-    MemberDTO findByMemberId(String memberId);
-    MemberDTO findByMemberIdAndPassword(HashMap<String, String> param);
-    void updateRefreshToken(MemberDTO memberDTO);
+    MemberEntity findByMemberId(String memberId);
+    MemberEntity findByMemberIdAndPassword(HashMap<String, String> param);
+    void updateRefreshToken(MemberEntity memberEntity);
 
     void upsertSnsLinkInfo(SnsLinkInfo snsLinkInfo);
 
     void withdrawal(String memberSerialNumber);
 
-    MemberDTO findByLinkedEmail(String email);
+    List<SnsLinkInfo> findAllSnsLinkInfo(String memberSerialNumber);
+
+    MemberEntity findByLinkedEmail(String email);
 
     void deleteSnsLinkInfo(String memberSerialNumber);
 
