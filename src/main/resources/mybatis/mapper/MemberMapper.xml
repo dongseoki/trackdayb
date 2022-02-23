@@ -71,12 +71,6 @@
             <if test="backgroundPhotoId != null and !backgroundPhotoId.equals('')">
                     ,background_photo_id
             </if>
-            <if test="snsLinkStatus != null and !snsLinkStatus.equals('')">
-                    ,sns_link_status
-            </if>
-            <if test="linkedEmail != null and !linkedEmail.equals('')">
-                    ,linked_email
-            </if>
             <if test="password != null and !password.equals('')">
                     ,password
             </if>
@@ -98,12 +92,6 @@
             </if>
             <if test="backgroundPhotoId != null and !backgroundPhotoId.equals('')">
                     ,#{backgroundPhotoId}
-            </if>
-            <if test="snsLinkStatus != null and !snsLinkStatus.equals('')">
-                    ,#{snsLinkStatus}
-            </if>
-            <if test="linkedEmail != null and !linkedEmail.equals('')">
-                    ,#{linkedEmail}
             </if>
             <if test="password != null and !password.equals('')">
                     ,#{password}

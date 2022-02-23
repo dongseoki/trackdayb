@@ -18,7 +18,5 @@ public class MemberInfo {
     private String introduction = "";  // VARCHAR(255)   COMMENT '소개말'
     private String profilePhotoId = "";  // INT   COMMENT '멤버페이지나 커뮤니티 페이지에서 보일 썸네일 프로필 사진 FILE ID'
     private String backgroundPhotoId = "";  // INT   COMMENT '멤버페이지나 커뮤니티 페이지에서 보일 배경 사진 FILE ID'
-    private String snsLinkStatus = "";  // ENUM('Y','N') NOT NULL  COMMENT 'SNS연동 여부'
-    private String linkedEmail = "";  // VARCHAR(60)   COMMENT 'SNS 연동 이메일(GOOGLE, KAKAO, ...)'
     private List<SnsLinkInfo> snsLinkInfoList;
 }
