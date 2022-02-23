@@ -39,3 +39,8 @@ ALTER TABLE trackday.sns_link_info DROP KEY sns_link_info_UN;
 
 /* memberId 컬럼 길이 변경*/
 ALTER TABLE trackday.`member` MODIFY COLUMN member_id varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '멤버 아이디';
+
+/* member 테이블 사용하지 않는 컬럼 및 키 제거. */
+ALTER TABLE trackday.`member` DROP KEY member_UN;
+ALTER TABLE trackday.`member` DROP COLUMN sns_link_status;
+ALTER TABLE trackday.`member` DROP COLUMN linked_email;
