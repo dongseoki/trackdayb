@@ -64,7 +64,8 @@ function Navigation(){
             <div className="sign">
                 <ul>
                     {curUser ? <>
-                        <li><span>{curUser.memberId}</span></li>
+                        {/* <li><span>{curUser.memberInfo.memberId}</span></li> */}
+                        <li><Link to='/mypage'>mypage</Link></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </> : ( 
                             <>

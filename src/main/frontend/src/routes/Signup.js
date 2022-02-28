@@ -108,9 +108,8 @@ function Signup() {
           fetchPublickKey();
         } else { // 서버 회원가입 성공시
           // 현재 유저 설정
-          setCurUser({
-            memberId : result.data.memberId
-          })
+          // setCurUser({memberInfo : result.data.memberInfo})
+          setCurUser({memberId : result.data.memberId})
           //로컬 스토리지에 저장하기       
           localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
           localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
