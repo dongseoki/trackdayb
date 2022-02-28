@@ -7,13 +7,23 @@ import { useMediaQuery } from "react-responsive";
 import {IoIosArrowDown} from "react-icons/io";
 import {IoIosArrowUp} from "react-icons/io";
 import useTitle from '../hooks/useTitle';
+import dayjs from 'dayjs';
 
 import { useDispatch } from 'react-redux';
-import { LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALTOTALTITLELIST_REQUEST } from "../reducers/goal";
+import { LOAD_GOALTOTALFULLLIST_REQUEST, 
+        LOAD_GOALTOTALTITLELIST_REQUEST,
+        LOAD_GOALSEARCHFULLLIST_REQUEST,
+        LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
 
 function Goal() {
   const dispatch = useDispatch();
 
+  // 로컬변수들
+  const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
+  const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
+  const [ searchGoalIdList, setSearchGoalIdList ] = useState([]);
+
+  // 목표 전체 
   useEffect(() => {
     dispatch({
       type : LOAD_GOALTOTALFULLLIST_REQUEST,
@@ -23,14 +33,34 @@ function Goal() {
     });
   }, [])
 
+  // 목표제목 조건 update Action
+  useEffect(()=> {
+    dispatch({
+      type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+      data : {
+        searchStartDatetime : dayjs(searchStartDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(searchEndDatetime).format("YYYY-MM-DD"),
+      }
+    })
+  }, [searchStartDatetime, searchEndDatetime])
+  
+  //목표 전체
+  useEffect(()=> {
+    dispatch({
+      type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+      data : {
+        searchStartDatetime : dayjs(searchStartDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(searchEndDatetime).format("YYYY-MM-DD"),
+        searchGoalIdList : searchGoalIdList.toString()
+      }
+    })
+  }, [searchStartDatetime,searchEndDatetime, searchGoalIdList])
+
+
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("목표관리"), 100);
    
   // 반응형 화면 BreakPoint
-  const isSmallScreen = useMediaQuery({
-    query: "(max-width: 740px)",
-  });
-
   const isMiddleScreen = useMediaQuery({
     query: "(max-width: 1040px)",
   });
@@ -42,7 +72,16 @@ function Goal() {
     <div className="goal">
       <aside className="side">
         {isMiddleScreen ? <div className="left-nav-fold" onClick={()=>{setLeftNavFoldState(!leftNavFoldState)}}>목표 조회/선택 {leftNavFoldState ? <IoIosArrowDown/> : <IoIosArrowUp/> }</div> : null}
-        {isMiddleScreen && leftNavFoldState ? null : (<LeftNavigation/>)}
+        {isMiddleScreen && leftNavFoldState ? null : 
+        (<LeftNavigation
+          searchStartDatetime = {searchStartDatetime}
+          setSearchStartDatetime = {setSearchStartDatetime}
+          searchEndDatetime = {searchEndDatetime}
+          setSearchEndDatetime = {setSearchEndDatetime}
+          searchGoalIdList = {searchGoalIdList}
+          setSearchGoalIdList = {setSearchGoalIdList}
+        />)
+        }
       </aside>
       <section className="goal-content">
         <GoalFullList/>

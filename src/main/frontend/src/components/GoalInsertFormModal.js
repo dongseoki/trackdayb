@@ -1,6 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
-import axiosInstance from "../axiosConfig";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
@@ -26,166 +24,72 @@ import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 // 전체목표제목리스트
 import GoalTitleListModal from "./GoalTitleListModal";
-import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
-import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 import {toast} from "react-toastify";
 import { useMediaQuery } from "react-responsive";
 import { ADD_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
 import { useDispatch } from 'react-redux';
-
 import dayjs from 'dayjs';
-
-// react-hook-form
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-
-// color
-import { HexColorPicker, HexColorInput } from "react-colorful";
-import { DebouncedPicker } from "./DebouncedPicker";
-
+import { HexColorPicker } from "react-colorful";
 
 function GoalInsertFormModal(){
-
-  const initialDate = {
-    startDate : new Date(),
-    endDate : new Date()
-  }
-
-  const [none, setNone ] = useState(false);
-  
+  const [startDatetime, setStartDatetime] = useState(new Date());
+  const [endDatetime, setEndDatetime] = useState(new Date());
+  const [shareStatus, setshareStatus] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [kind, setKind] = useState('regular');
+  //주기정보
+  const [timeUnit, setTimeUnit] = useState('D');
+  const [type, setType] = useState('count');
+  const [count, setCount] = useState('');
+  const [sun, setSun] = useState(false)
+  const [mon, setMon] = useState(false)
+  const [tue, setTue] = useState(false)
+  const [wed, setWed] = useState(false)
+  const [thu, setThu] = useState(false)
+  const [fri, setFri] = useState(false)
+  const [sat, setSat] = useState(false)
+  const [progressRate, setProgressRate] = useState("");
   const [ parentId, setParentId ] = useState("")
   const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
-  const [ color, setColor ] = useState(randomColor());
+  const [color, setColor] = useState(randomColor());
   
+  const InitializeForm = ()=>{
+    setStartDatetime(new Date());
+    setEndDatetime(new Date());
+    setshareStatus(false);
+    setTitle("");
+    setContent("");
+    setKind('regular');
+    //주기정보
+    setTimeUnit('D');
+    setType('count');
+    setCount('');
+    setSun(false)
+    setMon(false)
+    setTue(false)
+    setWed(false)
+    setThu(false)
+    setFri(false)
+    setSat(false)
+    setProgressRate(0);
+    setParentId("")
+    setParentGoalTitle("없음");
+    setColor(randomColor());
+  }
 
   const dispatch = useDispatch();
-
-  const schema = yup.object().shape({
-    startDatetime : yup.date("올바른 기간을 입력해주세요."),
-    endDatetime: yup.date("올바른 기간을 입력해주세요.").min(
-      yup.ref("startDatetime"),"올바른 기간을 입력해주세요."),
-    
-    shareState : yup.bool("공개/비공개 여부를 선택해주세요").required("공개/비공개 여부를 선택해주세요"),
-
-    title : yup.string().max(20, '제목은 20자 이내입니다').required('제목을 입력해 주세요').matches(/^((?!\/).)*$/, '제목에 슬래쉬(/)를 포함할 수 없습니다'),
-    content : yup.string().max(200, '내용은 200자 이내입니다').required('내용을 입력해 주세요'),
-    
-    kind: yup.string("목표 유형을 선택해주세요").required("목표 유형을 선택해주세요"),
-    // progressRate: yup.number("진행률을 선택해주세요").required("진행률을 선택해주세요"),
-
-    parentId : yup.string('부모 스트링'),
-
-    color: yup.string('태그컬러를 선택해주세요.').when('parentId', {
-      is : (value) => value.length == 0,
-      then : yup
-            .string('태그컬러를 선택해주세요')
-            .test(
-              "hex regex",
-              '올바른 태그컬러를 입력해주세요',
-              value => value.match("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
-            )
-            .required('태그컬러를 선택해주세요')
-    }),
-
-    periodicityInfo: yup.lazy(value => {
-      if (value !== undefined) {
-        return yup.object().shape({
-          count : yup
-                .number()
-                .when('timeUnit', {
-                  is : 'D',
-                  then : yup.number().transform((value, originalValue) => {
-                    return (originalValue === '' ? undefined : value)
-                  })
-                  .typeError('Parameter is not a valid numeric value.').required('입력하세요').positive('양수')
-                })
-                .when('timeUnit', {
-                  is : 'M',
-                  then : yup.number().transform((value, originalValue) => {
-                    return (originalValue === '' ? undefined : value)
-                  })
-                  .typeError('Parameter is not a valid numeric value.').required('입력하세요').positive('양수')
-                })
-                .when('timeUnit', {
-                  is : 'W',
-                  then : yup.number().transform((value, originalValue) => {
-                    return (originalValue === '' ? undefined : value)
-                  })
-                  .typeError('Parameter is not a valid numeric value.')
-                  .test(
-                    "none test",
-                    '횟수를 입력하세요123',
-                    (value) => {
-                      if(none) {
-                        if(value === undefined) return false
-                        else return true
-                      }else return true
-                    }
-                  ).positive('양수')
-                })
-        });
-      }
-      return yup.mixed().notRequired();
-    }),
-
-  })
-
-
-  const { register, unregister, reset, handleSubmit, getValues, watch, control, setValue, formState: {errors}} = useForm({ 
-    resolver : yupResolver(schema),
-    defaultValues: {
-      title: "",
-      content: "",
-      kind : 'regular',
-      progressRate : 0,
-      shareState : false,
-      color : color,
-      parentId : parentId,
-    },
-  });
-  
-
-  const [error, setError] = useState({ count :' 초기값'})
 
   // 시작일, 종료일 변경시 내부 모달 목표 타이틀 리스트 업데이트
   useEffect(() =>{
     dispatch({
       type : LOAD_GOALMODALTITLELIST_REQUEST,
       data : {
-        searchStartDatetime : dayjs(getValues('startDatetime')).format("YYYY-MM-DD"),
-        searchEndDatetime : dayjs(getValues('endDatetime')).format("YYYY-MM-DD")
+        searchStartDatetime : dayjs(startDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(endDatetime).format("YYYY-MM-DD")
       }
     })
-  },[watch('startDatetime'), watch('endDatetime')])
-
-
-
-  const onSubmit = (data) => {
-    console.log('error', error.count)
-    alert('data')
-    data.startDatetime = dayjs(data.startDatetime).format("YYYY-MM-DD")
-    data.endDatetime = dayjs(data.endDatetime).format("YYYY-MM-DD")
-
-    if(data.periodicityInfo){
-      if(data.periodicityInfo.count == 1) {
-        setError({
-          count :'ㅗ디ㅣㅐ'
-        })
-
-        console.log('error', error.count)
-        return false
-      }
-
-    }
-    console.log("form", data)
-
-    dispatch({
-      type : ADD_GOAL_REQUEST,
-      data : { formData : data }
-    });
-  };
-  
+  },[startDatetime, endDatetime])
 
 
   // 반응형 화면 BreakPoint
@@ -222,116 +126,104 @@ function GoalInsertFormModal(){
 
   const handleOpen = () => {
     setOpen(true);
-    // InitializeForm()
+    InitializeForm()
   };
 
   const handleClose = () => {
     setOpen(false);
-    // InitializeForm()
-    reset()
+    InitializeForm()
+    // reset()
   };
 
-  const noneCheckHandler = (e)=>{
-    setNone(e.target.checked)
-    setValue('periodicityInfo.sunYn', false)
-    setValue('periodicityInfo.monYn', false)
-    setValue('periodicityInfo.tueYn', false)
-    setValue('periodicityInfo.wedsYn', false)
-    setValue('periodicityInfo.thurYn', false)
-    setValue('periodicityInfo.friYn', false)
-    setValue('periodicityInfo.satYn', false)
-    setValue('periodicityInfo.type', 'count')
-  }
+  const handleFormSubmit = async (evt) => {
+    evt.preventDefault();
+    //제목 슬래시 검사
+    const titleValidation = () => {
+      var reg = /\//gi
+      if(reg.test(title)){
+        setTitle(title.replace(reg, ""))
+        return false;    
+      } else {
+        return true;
+      }  
+    }
 
-  // const handleFormSubmit = async (evt) => {
-  //   evt.preventDefault();
-  //   //제목 슬래시 검사
-  //   const titleValidation = () => {
-  //     var reg = /\//gi
-  //     if(reg.test(title)){
-  //       setTitle(title.replace(reg, ""))
-  //       return false;    
-  //     } else {
-  //       return true;
-  //     }  
-  //   }
+    // 역기간 검사
+    const dateRangeValidation = ()=>{
+      let startDateA = new Date(startDatetime).getTime();
+      let endDateB = new Date(endDatetime).getTime();
+      if(startDateA > endDateB){
+        return false
+      }else return true
+    }
+    // 횟수 음수 검사
+    const countValidation = ()=>{
+      if(count <= 0){
+        return false
+      } else{
+        return true
+      }
+    }
+    if(!titleValidation()){
+      toast.error("제목에 슬래시(/)를 포함할 수 없습니다.", {
+        autoClose : 5000
+      })
+    }
+    else if(!dateRangeValidation()){
+      toast.error("올바른 진행기간을 입력하세요.", {
+        autoClose : 5000
+      })
+    }else if(count && !countValidation()){
+      toast.error("올바른 횟수를 입력하세요", {
+        autoClose : 5000
+      })
+    }
+    else{
+      const formData = {
+        "parentId": parentId,
+        "title": title,
+        "kind":kind,
+        "content":content,
+        "startDatetime": dayjs(startDatetime).format("YYYY-MM-DD"),
+        "endDatetime":dayjs(endDatetime).format("YYYY-MM-DD"),
+        "progressRate":progressRate,
+        "color":color,
+        "shareStatus": shareStatus ? "N":"Y",
+      }
+      if(kind === "regular"){
+        formData['periodicityInfo'] = {
+          "timeUnit":timeUnit,
+          "type":type,
+          "count":count,
+          "sunYn":sun ? "Y":"N",
+          "monYn":mon ? "Y":"N",
+          "tueYn":tue ? "Y":"N",
+          "wedsYn":wed ? "Y":"N",
+          "thurYn":thu ? "Y":"N",
+          "friYn":fri ? "Y":"N",
+          "satYn":sat ? "Y":"N"
+        }
+      }
+      // 순차적 비동기 처리 필요(정렬조건 때문에)
+      dispatch({
+        type : ADD_GOAL_REQUEST,
+        data : { formData : formData }
+      });
+      dispatch({
+        type : LOAD_GOALTOTALFULLLIST_REQUEST,
+      })
+      dispatch({
+        type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+      })
+      dispatch({
+        type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+      })
+      handleClose();
+      // setUpdateTotalTitle(!updateTotalTitle)
+      // setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
 
-  //   // 역기간 검사
-  //   const dateRangeValidation = ()=>{
-  //     let startDateA = new Date(startDatetime).getTime();
-  //     let endDateB = new Date(endDatetime).getTime();
-  //     if(startDateA > endDateB){
-  //       return false
-  //     }else return true
-  //   }
-  //   // 횟수 음수 검사
-  //   const countValidation = ()=>{
-  //     if(count <= 0){
-  //       return false
-  //     } else{
-  //       return true
-  //     }
-  //   }
-  //   if(!titleValidation()){
-  //     toast.error("제목에 슬래시(/)를 포함할 수 없습니다.", {
-  //       autoClose : 5000
-  //     })
-  //   }
-  //   else if(!dateRangeValidation()){
-  //     toast.error("올바른 진행기간을 입력하세요.", {
-  //       autoClose : 5000
-  //     })
-  //   }else if(count && !countValidation()){
-  //     toast.error("올바른 횟수를 입력하세요", {
-  //       autoClose : 5000
-  //     })
-  //   }
-  //   else{
-  //     const formData = {
-  //       "parentId": parentId,
-  //       "title": title,
-  //       "kind":kind,
-  //       "content":content,
-  //       "startDatetime": makeYYMMDD(startDatetime),
-  //       "endDatetime":makeYYMMDD(endDatetime),
-  //       "progressRate":progressRate,
-  //       "color":color,
-  //       "shareStatus": shareStatus ? "N":"Y",
-  //     }
-  //     if(kind === "regular"){
-  //       formData['periodicityInfo'] = {
-  //         "timeUnit":timeUnit,
-  //         "type":type,
-  //         "count":count,
-  //         "sunYn":sun ? "Y":"N",
-  //         "monYn":mon ? "Y":"N",
-  //         "tueYn":tue ? "Y":"N",
-  //         "wedsYn":wed ? "Y":"N",
-  //         "thurYn":thu ? "Y":"N",
-  //         "friYn":fri ? "Y":"N",
-  //         "satYn":sat ? "Y":"N"
-  //       }
-  //     }
-  //     // 순차적 비동기 처리 필요(정렬조건 때문에)
-  //     dispatch({
-  //       type : ADD_GOAL_REQUEST,
-  //       data : { formData : formData }
-  //     },);
-  //     dispatch({
-  //       type : LOAD_GOALTOTALFULLLIST_REQUEST,
-  //     })
-  //     dispatch({
-  //       type : LOAD_GOALSEARCHFULLLIST_REQUEST,
-  //     })
-  //     dispatch({
-  //       type : LOAD_GOALSEARCHTITLELIST_REQUEST,
-  //     })
-  //     handleClose();
-  //     // setUpdateTotalTitle(!updateTotalTitle)
-  //     // setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
-
-  //   }
-  // };
+    }
+  };
   return (
     <div className="insert-form">
       <button className="goal-insert-btn" onClick={handleOpen}><FaPlus /></button>
@@ -350,247 +242,76 @@ function GoalInsertFormModal(){
         <Fade in={open}>
           <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
             <h3 id="transition-modal-title">목표 추가</h3>
-            <form className="goal-form" onSubmit={handleSubmit(onSubmit)}>
+            <form className="goal-form" onSubmit={handleFormSubmit}>
               <div className="top-wrapper"> 
                 <div className="modal-date-picker">
                   <div className="modal-title">진행기간</div>
                   <DateRangePickerForm
-                    initialDate={initialDate}
-                    control={control}
-                    watch={watch}
+                    startDate={startDatetime}
+                    endDate={endDatetime}
+                    setStartDate={setStartDatetime}
+                    setEndDate={setEndDatetime}
                   />
-                  {errors.endDatetime ? errors.endDatetime?.message : ''}
                 </div>
+
                 <div className="modal-share-toggle">
-                  <Controller
-                    name="shareState"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <div className="modal-title">{field.value? "비공개":"공개"}</div>
-                        <ToggleButton
-                          {...field}
-                          color="primary"
-                          value="check"
-                          selected={field.value}
-                          onChange={() => field.onChange(!field.value)}
-                        >
-                          <BiLock className="lock-icon"/>
-                        </ToggleButton>
-                      </>
-                    )}/>
-                </div>
-              </div>
-                <Controller 
-                name="title" 
-                control={control}
-                render={({ field }) => (
-                <TextField
-                  {...field}
-                  id="title" 
-                  label="제목" 
-                  size="small" 
-                  variant="outlined"
-                  style={{width:"100%", marginBottom:"10px"}}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  error={!!errors.title}
-                  helperText={errors.title ? errors.title?.message : ''}
-                />
-                )}/>
-                <Controller 
-                name="content" 
-                control={control}
-                render={({ field }) => (
-                <TextField
-                  {...field}
-                  id="content" 
-                  label="내용" 
-                  size="small" 
-                  variant="outlined"
-                  style={{width:"100%", marginBottom:"10px"}}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  error={!!errors.content}
-                  helperText={errors.content ? errors.content?.message : ''}
-                />
-                )}/>
-            <div className="goal-type-radio">
-              <Controller
-              name="kind"
-              control={control}
-              render={({field}) => (
-                <>
-                  <FormControl component="fieldset">
-                    <FormLabel style={{fontSize:"12px"}} component="legend">목표유형</FormLabel>
-                    <RadioGroup
-                     {...field}
-                      row 
-                      aria-label="kind"
-                      value={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.target.value)
-                        if(e.target.value === 'deadline'){
-                          unregister('periodicityInfo')
-                        }
-                      }}
-                      >
-                      <FormControlLabel value="regular" control={<Radio />} label="주기성 목표" />
-                      <FormControlLabel value="deadline" control={<Radio />} label="기한성 목표" />
-                    </RadioGroup>
-                  </FormControl>
-                </>
-              )} />
-            </div>
-            {/* 주기성 목표일 때 */}
-            {watch("kind") === "regular" ? 
-              <div className="count-wrapper">
-                <Controller
-                name="periodicityInfo.timeUnit"
-                control={control}
-                defaultValue="D"
-                render={({ field }) => (
-                  <select  {...field} className="timeUnit-select" value={field.value} 
-                    onChange={(e)=> {
-                      field.onChange(e.target.value)
-                      setValue('periodicityInfo.count', '')
-                      unregister('periodicityInfo.sunYn')
-                      unregister('periodicityInfo.monYn')
-                      unregister('periodicityInfo.tueYn')
-                      unregister('periodicityInfo.wedsYn')
-                      unregister('periodicityInfo.thurYn')
-                      unregister('periodicityInfo.friYn')
-                      unregister('periodicityInfo.satYn')
-                      if(e.target.value === 'W') {
-                        setValue('periodicityInfo.type', 'day')
-                      } else {
-                        setValue('periodicityInfo.type', 'count')
-                      }
+                  {/* <div className="modal-title">비공개</div> */}
+                  <div className="modal-title">{shareStatus? "비공개":"공개"}</div>
+                    <ToggleButton
+                    color="primary"
+                    value="check"
+                    selected={shareStatus}
+                    onChange={() => {
+                      setshareStatus(!shareStatus);
                     }}
-                  >
-                    <option value="D">일</option>
-                    <option value="W">주</option>
-                    <option value="M">월</option>
-                  </select>
-                )}/>
-
-
-                {/* 요일별 지정일 때(day) */}
-                {watch("periodicityInfo.timeUnit") === "W" ? 
-                <div className="dayCheckbox-wrapper">
-                  <FormGroup row>
-                    <Controller name="periodicityInfo.sunYn" control={control} defaultValue={false} 
-                      render={({ field }) => (
-                        <FormControlLabel 
-                        control={
-                          <Checkbox 
-                            size="small" 
-                            checked={field.value} 
-                            onChange={(e)=>{
-                              setValue('periodicityInfo.type', 'day')
-                              field.onChange(e.target.checked)
-                            }}
-                          />
-                          } 
-                          label="일" 
-                          disabled={none}
-                        />
-                    )}/>
-                    <Controller name="periodicityInfo.monYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
-                        setValue('periodicityInfo.type', 'day')
-                        field.onChange(e.target.checked)
-                      }}/>} label="월" disabled={none}/>
-                    )}/>
-                    <Controller name="periodicityInfo.tueYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
-                        setValue('periodicityInfo.type', 'day')
-                        field.onChange(e.target.checked)
-                      }}/>} label="화" disabled={none}/>
-                    )}/>
-                    <Controller name="periodicityInfo.wedsYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
-                        setValue('periodicityInfo.type', 'day')
-                        field.onChange(e.target.checked)
-                      }}/>} label="수" disabled={none}/>
-                    )}/>
-                    <Controller name="periodicityInfo.thurYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
-                        setValue('periodicityInfo.type', 'day')
-                        field.onChange(e.target.checked)
-                      }}/>} label="목" disabled={none}/>
-                    )}/>
-                    <Controller name="periodicityInfo.friYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
-                        setValue('periodicityInfo.type', 'day')
-                        field.onChange(e.target.checked)
-                      }}/>} label="금" disabled={none}/>
-                    )}/>
-                    <Controller name="periodicityInfo.satYn" control={control} defaultValue={false} render={({ field }) => (
-                      <FormControlLabel control={<Checkbox size="small" checked={field.value} onChange={(e)=>{
-                        setValue('periodicityInfo.type', 'day')
-                        field.onChange(e.target.checked)
-                      }}/>} label="토" disabled={none}/>
-                    )}/>
-                  </FormGroup>
-
-                  <div className="none-count-wrapper">
-                    <FormControlLabel control={<Checkbox size="small"/>} onChange={noneCheckHandler} label="요일미지정" />
-                    <Controller 
-                    name="periodicityInfo.count" 
-                    control={control} 
-                    defaultValue=""
-                    render={({ field }) => (
-                      <TextField 
-                      {...field}
-                      disabled={!none}
-                      id="count" 
-                      type="number"
-                      label="횟수" 
-                      size="small" 
-                      variant="outlined"
-                      style={{width:"200px", height:"30px"}}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      // error={!!errors.periodicityInfo?.count}
-                      // helperText={errors.periodicityInfo?.count.message}
-
-                      error={!!error.count}
-                      helperText={error.count}
-                      />
-                    )} />
+                    >
+                      <BiLock className="lock-icon"/>
+                    </ToggleButton>
                   </div>
                 </div>
-                :
-                // 월/일 N회 일때(count)
-                <div>
-                  <Controller 
-                  name="periodicityInfo.count" 
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                  <TextField 
-                    {...field}
-                    id="count" 
-                    type="number"
-                    label="횟수" 
-                    size="small"   
-                    variant="outlined"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    error={!!errors.periodicityInfo?.count}
-                    helperText={errors.periodicityInfo?.count.message}
-                    />
-                  )}/>
-                </div>}
-              </div>
-            : null}
-            
-            {/* <PeriodicityInfo 
+                <TextField 
+                  required
+                  id="title" 
+                  label="제목" 
+                  value={title}
+                  size="small" 
+                  variant="outlined"
+                  style={{width:"100%", marginBottom:"10px"}}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={function(e){
+                    setTitle(e.target.value)
+                  }}
+                />
+                <TextField
+                  style={{width:"100%", marginBottom:"10px"}}
+                  id="content"
+                  label="내용"
+                  multiline
+                  rows={4}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                  value={content}
+                  onChange={function(e){
+                    setContent(e.target.value)
+                  }}
+                />
+            <div className="goal-type-radio">
+              <FormControl component="fieldset">
+                <FormLabel style={{fontSize:"12px"}} component="legend">목표유형</FormLabel>
+                <RadioGroup row aria-label="kind" name="row-radio-buttons-group" value={kind} 
+                onChange={(e)=>{
+                  setKind(e.target.value)
+                }} >
+                  <FormControlLabel value="regular" control={<Radio />} label="주기성 목표" />
+                  <FormControlLabel value="deadline" control={<Radio />} label="기한성 목표" />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <PeriodicityInfo 
               kind={kind}
               timeUnit={timeUnit}
               setTimeUnit={setTimeUnit}
@@ -605,47 +326,42 @@ function GoalInsertFormModal(){
               thu={thu} setThu={setThu}
               fri={fri} setFri={setFri}
               sat={sat} setSat={setSat} 
-            /> */}
+            />
             <div className="slider-wrapper">
               <label className="modal-title">진행률</label>
               <div className="slider-border">
-                <Controller
-                name="progressRate"
-                control={control}
-                render={({ field }) =>(
-                  <Slider
+                <Slider
                   style={{width:"90%"}}
                   aria-label="progressRate"
+                  defaultValue={0}
                   valueLabelDisplay="auto"
                   step={10}
                   marks
                   min={0}
                   max={100}
-                  value={parseInt(field.value)}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  />
-                )}/>
-                
+                  value={parseInt(progressRate)}
+                  onChange={function(e){
+                    setProgressRate(e.target.value)
+                  }}
+                />
               </div>
             </div>
             <div className="parent-modal-wrapper">
               <GoalTitleListModal 
-                control={control}
-                setValue={setValue}
-                watch={watch}
                 parentId={parentId}
                 setParentId={setParentId}
                 parentGoalTitle={parentGoalTitle}
                 setParentGoalTitle={setParentGoalTitle}
                 setColor={setColor}
+                startDatetime={startDatetime}
+                endDatetime={endDatetime}
               />   
               <div className="parent-title">{parentGoalTitle}</div>
             </div>
-
-            {parentId ?  null : <DebouncedPicker color={color} onChange={setColor} setValue={setValue} errors={errors}/>}
-
+            {parentId ?  null : <ColorTag color={color} setColor={setColor} />}
+              
             <div className="button-wrapper">
-              <input type="submit" className="submitBtn" />
+              <button type="submit" className="submitBtn">저장</button>
               <button type="button" className="cancleBtn" onClick={handleClose}>취소</button>
             </div>
             </form>
@@ -655,11 +371,11 @@ function GoalInsertFormModal(){
     </div>
   );
 }
-  
+
 function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}) {
   
-  // const [none, setNone] = useState(false)
+  const [none, setNone] = useState(false)
   const timeUnitChangeHandler = (event) => {
     setTimeUnit(event.target.value);
     setCount("")
@@ -672,6 +388,7 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
       setThu(false)
       setFri(false)
       setSat(false)
+      setNone(false)
     }
   };
   
@@ -689,6 +406,7 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
           setType={setType}
           count={count}
           setCount={setCount}
+          none={none} setNone={setNone}
           sun={sun} setSun={setSun}
           mon={mon} setMon={setMon}
           tue={tue} setTue={setTue}
@@ -703,6 +421,7 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
       return null
   }
 }
+
 
 function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNone,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
@@ -769,10 +488,9 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
         </FormGroup>
 
         <div className="none-count-wrapper">
-          {/* <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} onChange={noneCheckHandler} label="요일미지정" /> */}
-          <Checkbox size="small" checked={false} label="요일미지정" />
+          <FormControlLabel control={<Checkbox sx={checkboxStyle} size="small"/>} onChange={noneCheckHandler} label="요일미지정" />
           <TextField 
-            defaultValue={3}
+            required
             disabled={!none}
             type="number"
             id="count" 
@@ -811,5 +529,38 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
   }
 }
 
+
+function ColorTag({color, setColor}){
+  const [pickerShow, setPickerShow] = useState(false)
+  const pickerHandler = (e)=>{
+    e.preventDefault();
+    setPickerShow(!pickerShow)
+  }
+    return (
+      <>
+      <div className="color-picker-area">
+        <TextField 
+          className="textfield-title"
+          id="color" 
+          label="태그컬러" 
+          size="small" 
+          variant="outlined"
+          value={color}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          onChange={function(e){
+            setColor(e.target.value)
+          }}/>
+          <div className="color-tag-wrapper">
+            <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
+            {pickerShow ? (<div className="color-picker small">
+              <HexColorPicker  color={color} onChange={setColor} />
+            </div>) : null}
+          </div>
+      </div>
+      </>
+    )
+}
 
 export default GoalInsertFormModal;

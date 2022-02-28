@@ -14,37 +14,15 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
+import { useSelector } from 'react-redux';
 
 function GoalFullList() {
-  const dispatch = useDispatch();
   // 정렬조건 로컬변수
   const [ orderColumn, setOrderColumn ] = useState("");
   const [ orderType, setOrderType ] = useState("desc");
   const [gatherGoalYn, setGatherGoalYn] = useState(false); //목표 모아보기 변수
 
-  useEffect(() =>{
-      dispatch({
-        type : LOAD_GOALSEARCHFULLLIST_REQUEST,
-        data : { 
-          orderColumn : orderColumn,
-          orderType : orderType,
-          gatherGoalYn : gatherGoalYn
-        }
-      })
-      dispatch({
-        type : LOAD_GOALSEARCHTITLELIST_REQUEST,
-        data : { 
-          orderColumn : orderColumn,
-          orderType : orderType,
-          gatherGoalYn : gatherGoalYn 
-        }
-      })
-  }, [orderColumn, orderType, gatherGoalYn])
-
   const { goalSearchFullList, goalSearchTitleList } = useSelector((state) => state.goal)
-
 
   const toggleOrderType = (preValue)=>{
     if (preValue === 'asc'){

@@ -144,7 +144,7 @@ function* deleteGoal(action) {
 
 // 목표 추가
 function addGoalAPI(data) {
-    return axiosInstance.post('/goalManage/goalfake', data)
+    return axiosInstance.post('/goalManage/goal', data)
 }
 function* addGoal(action) {
     try{

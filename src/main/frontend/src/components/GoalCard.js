@@ -1,9 +1,6 @@
 import React from 'react';
-
 import { BiLock } from "react-icons/bi";
-
 import GoalModifyFormModal from "./GoalModifyFormModal";
-
 import GoalDeleteModal from "./GoalDeleteModal";
 
 function GoalCard({ index, goalTitlePath, title, startDatetime, endDatetime, content, goalId, kind, progressRate, color, topGoalColor, shareStatus, periodicityInfo, goalSearchTitleList, setGoalSearchTitleList, goalSearchFullList, setGoalFullList, updateTotalTitle, setUpdateTotalTitle, orderColumn, orderType}){

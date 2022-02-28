@@ -22,11 +22,14 @@ import GoalTitleListModal from "./GoalTitleListModal";
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import { useMediaQuery } from "react-responsive";
+import {useDispatch } from 'react-redux';
+import { MODIFY_ACTIVITY_REQUEST } from "../reducers/activity";
+import dayjs from "dayjs";
 
 function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
-    
-    const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
-    const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
+    const dispatch = useDispatch();
+    // const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
+    // const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
     // const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
 
     
@@ -37,13 +40,7 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
             return false
         }
     }
-    // YYYY-MM-DD 형태로 반환
-    function makeYYMMDD(value){
-      // korea utc timezone(zero offset) 설정
-      let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-      let dateOffset = new Date(value.getTime() - offset);
-      return dateOffset.toISOString().substring(0,10);
-    }
+
     // 초기화 폼
     const [startDatetime, setStartDatetime] = useState("");
     const [endDatetime, setEndDatetime] = useState("");
@@ -124,14 +121,19 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
             activityId : modifyData.activityId,
             goalId:parentId,
             title : title,
-            startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
-            endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
+            startDatetime: dayjs(writeDate).format("YYYY-MM-DD") +' '+ startDatetime + ':00',
+            endDatetime: dayjs(writeDate).format("YYYY-MM-DD") +' '+ endDatetime + ':00',
             content : content,
             activityScore : activityScore,
             shareStatus: shareStatus ? "N":"Y",
         }; 
         try{
-            const result_activity = await axiosInstance.patch("/timeManage/activity", formData_activity);
+            // const result_activity = await axiosInstance.patch("/timeManage/activity", formData_activity);
+            dispatch({
+              type : MODIFY_ACTIVITY_REQUEST,
+              data : formData_activity
+            })
+            
             //목표진행률 업데이트
             if(parentId){
                 const formData_goal = {
@@ -148,13 +150,13 @@ function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityLi
               return dateA > dateB ? 1 : -1;
             };
             // 수정한 데이터 반영
-            let tempArray = [...activityList];
-            tempArray[targetIndex] = result_activity.data.activityInfo;
-            setActivityList(tempArray.sort(data_sorting))
+            // let tempArray = [...activityList];
+            // tempArray[targetIndex] = result_activity.data.activityInfo;
+            // setActivityList(tempArray.sort(data_sorting))
             
-            let tempSearchArray = [...activitySearchList];
-            tempSearchArray[targetIndex] = result_activity.data.activityInfo;
-            setActivitySearchList(tempSearchArray.sort(data_sorting))
+            // let tempSearchArray = [...activitySearchList];
+            // tempSearchArray[targetIndex] = result_activity.data.activityInfo;
+            // setActivitySearchList(tempSearchArray.sort(data_sorting))
           
         }catch(err){
             console.error(err)

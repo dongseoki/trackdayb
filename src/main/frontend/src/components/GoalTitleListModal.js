@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalTitleListModal.css"
@@ -19,9 +19,9 @@ import { BiSearch } from "react-icons/bi";
 import { useMediaQuery } from "react-responsive";
 import randomColor from "randomcolor";
 import { useSelector } from 'react-redux';
-// import { Controller } from 'react-hook-form';
+import dayjs from 'dayjs';
 
-function GoalTitleListModal({control, setValue, watch, goalId, parentId, setParentId, setParentGoalTitle, setColor, setParentProgressRate, writeDate}){
+function GoalTitleListModal({ goalId, parentId, setParentId, setParentGoalTitle, setColor, startDatetime, endDatetime, setParentProgressRate, writeDate}){
   
   const pathname = window.location.pathname; // time or goal
 
@@ -32,14 +32,6 @@ function GoalTitleListModal({control, setValue, watch, goalId, parentId, setPare
   const [ tempParentProgressRate, setTempParentProgressRate] = useState(0); //시간관리용 목표진행률
   const [searchTerm, setSearchTerm] = useState("") //검색어
   const [searchResults, setSearchResults] = useState([]) //검색결과
-
-  // YYYY-MM-DD 형태로 반환
-  function makeYYMMDD(value){
-    // korea utc timezone(zero offset) 설정
-    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-    let dateOffset = new Date(value.getTime() - offset);
-    return dateOffset.toISOString().substring(0,10);
-  }
 
   // 반응형 화면 BreakPoint
   const isMobileScreen = useMediaQuery({
@@ -69,6 +61,7 @@ function GoalTitleListModal({control, setValue, watch, goalId, parentId, setPare
     },
   }));
   const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const handleOpen = (e) => {
     e.preventDefault();
@@ -80,16 +73,11 @@ function GoalTitleListModal({control, setValue, watch, goalId, parentId, setPare
   };
   const handleSubmit = () =>{
     setParentId(tempParentId);
-    setValue('parentId', tempParentId);
-    // parentId 만 form에 전달
-
-
     setParentGoalTitle(tempParentTitle);
     // 목표관리 탭에서만 setColor
     if(pathname === '/goal'){
       const colorValue = randomColor()
       setColor(tempParentId ? "" : colorValue)
-      setValue('color', tempParentId ? "" : colorValue)
     }
     //시간관리 탭에서만 setParentProgressRate
     if(pathname === '/time'){
@@ -134,17 +122,15 @@ function GoalTitleListModal({control, setValue, watch, goalId, parentId, setPare
               {pathname === '/time' ? 
                 <>
                   <div className="modal-goalList-desc" id="transition-modal-description">활동과 관련된 목표를 선택하세요</div> 
-                  <p className="modal-goalList-time-p">활동일 (<span>{makeYYMMDD(writeDate)}</span>) 이 포함되는 목표 리스트입니다.</p>
+                  <p className="modal-goalList-time-p">활동일 (<span>{dayjs(writeDate).format("YYYY-MM-DD")}</span>) 이 포함되는 목표 리스트입니다.</p>
                 </>: 
                 <>
                   <div className="modal-goalList-desc" id="transition-modal-description">상위 목표를 선택하세요</div>
                   <p className="modal-goalList-goal-p">목표 등록시 설정한 진행기간이 포함되는 리스트입니다.</p>
-                  <p className="modal-goalList-period-p">진행기간 : <span>{makeYYMMDD(watch("startDatetime"))}</span> - <span>{makeYYMMDD(watch("endDatetime"))}</span></p>
+                  <p className="modal-goalList-period-p">진행기간 : <span>{dayjs(startDatetime).format("YYYY-MM-DD")}</span> - <span>{dayjs(endDatetime).format("YYYY-MM-DD")}</span></p>
                 </>
               }
-
               <GoalTitleChoiceList
-                control={control}
                 goalId = {goalId}
                 goalTitleList = {searchTerm.length < 1 ? goalModalTitleList : searchResults} // 기간검색 제목리스트
                 tempParentId={tempParentId}
@@ -166,7 +152,7 @@ function GoalTitleListModal({control, setValue, watch, goalId, parentId, setPare
   )
 }
 
-function GoalTitleChoiceList({control, goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler, setTempParentProgressRate}){
+function GoalTitleChoiceList({ goalId, goalTitleList, tempParentId,setTempParentId,setTempParentTitle,searchTerm,searchHandler, setTempParentProgressRate}){
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
   const inputEl = useRef("")

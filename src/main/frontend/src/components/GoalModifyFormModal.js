@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from 'react-redux';
 import { MODIFY_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
+import dayjs from "dayjs";
 
 function GoalModifyFormModal({modifyData, targetIndex}){
   const { goalTotalTitleList } = useSelector((state) => state.goal)
@@ -154,16 +155,16 @@ function GoalModifyFormModal({modifyData, targetIndex}){
     setOpen(false);
   };
 
-  useEffect(() => {
-    dispatch({
-      type : LOAD_GOALMODALTITLELIST_REQUEST,
-      data : {
-        searchStartDatetime : makeYYMMDD(startDatetime),
-        searchEndDatetime : makeYYMMDD(endDatetime)
-      }
-    })
+  // useEffect(() => {
+  //   dispatch({
+  //     type : LOAD_GOALMODALTITLELIST_REQUEST,
+  //     data : {
+  //       searchStartDatetime : makeYYMMDD(startDatetime),
+  //       searchEndDatetime : makeYYMMDD(endDatetime)
+  //     }
+  //   })
 
-  },[startDatetime, endDatetime])
+  // },[startDatetime, endDatetime])
 
   const handleFormSubmit = async (evt) =>{
     evt.preventDefault();
@@ -213,8 +214,8 @@ function GoalModifyFormModal({modifyData, targetIndex}){
         "title": title,
         "kind":kind,
         "content":content,
-        "startDatetime": makeYYMMDD(startDatetime),
-        "endDatetime":makeYYMMDD(endDatetime),
+        "startDatetime": dayjs(startDatetime).format("YYYY-MM-DD"),
+        "endDatetime":dayjs(endDatetime).format("YYYY-MM-DD"),
         "progressRate":progressRate,
         "color":color,
         "shareStatus": shareStatus ? "N":"Y",
@@ -594,11 +595,5 @@ function ColorTag({color, setColor}){
       </>
     )
 }
-  // YYYY-MM-DD 형태로 반환
-  function makeYYMMDD(value){
-    // korea utc timezone(zero offset) 설정
-    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-    let dateOffset = new Date(value.getTime() - offset);
-    return dateOffset.toISOString().substring(0,10);
-}
+
 export default GoalModifyFormModal;
