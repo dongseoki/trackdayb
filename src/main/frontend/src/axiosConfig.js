@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { store } from './store/store';
 
 const axiosInstance = axios.create({
   // timeout: 1000, // 세션만료 시간
@@ -17,8 +17,14 @@ axiosInstance.interceptors.request.use(
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
    const accessToken = localStorage.getItem('accessToken');
+
+  //  const accessToken = store.getState().user.accessToken;
+
+
    if(accessToken){
       config.headers.Authorization = `Bearer ${accessToken}`;
+      // store.user.refreshToken.setState('test')
+      // console.log('accessToekn', accessToken)
    }else{
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -79,6 +85,8 @@ axiosInstance.interceptors.response.use(
 
       const accessToken = localStorage.getItem('accessToken');
       const refreshToken = localStorage.getItem('refreshToken');
+      // const accessToken = store.getState().user.accessToken;
+      // const refreshToken = store.getState().user.refreshToken;
 
       const tokenData = {
         accessToken,
@@ -88,6 +96,7 @@ axiosInstance.interceptors.response.use(
       return new Promise(function(resolve, reject) {
         axios.post('/member/reissue', tokenData)
         .then(({data}) => {
+          store.user.refreshToken.setState('test')
           localStorage.setItem('accessToken', data.tokenInfo.accessToken);
           originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
           resolve(axios(originalRequest))
@@ -96,6 +105,7 @@ axiosInstance.interceptors.response.use(
         .catch((err) => {
           processQueue(err, null);
           reject(err);
+          // storage.removeItem('persist:root')
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           window.location.href = '/login'

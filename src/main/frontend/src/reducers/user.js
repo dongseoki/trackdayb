@@ -2,7 +2,7 @@ export const userInitialState = {
     loadMyInfoLoading : false, //로그인한 사용자 정보 시도 중
     loadMyInfoDone : false,
     loadMyInfoError : null,
-    me = null,
+    myInfo : null, // localStorage 저장 데이터
     logInLoading : false, //로그인 시도 중
     logInDone : false,
     logInError : null,
@@ -12,6 +12,12 @@ export const userInitialState = {
     signUpLoading : false, // 회원가입 시도중
     signUpDone : false,
     signUpError : null,
+    publicKeyLoading : false, // 공개키 시도중
+    publicKeyDone : false,
+    publicKeyError : null,
+    publicKey : null,
+    accessToken : null,
+    refreshToken : null,
 }
 
 // action 은 생략 그때그때 만들어서 사용
@@ -20,6 +26,10 @@ export const userInitialState = {
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST'
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS'
 export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE'
+
+export const GET_PUBLICKEY_REQUEST = 'GET_PUBLICKEY_REQUEST'
+export const GET_PUBLICKEY_SUCCESS = 'GET_PUBLICKEY_SUCCESS'
+export const GET_PUBLICKEY_FAILURE = 'GET_PUBLICKEY_FAILURE'
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST'
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'
@@ -35,7 +45,7 @@ export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE'
 
 
 //reducer
-const userReducer = (state=goalInitialState, action) =>{
+const userReducer = (state=userInitialState, action) =>{
     switch(action.type) {
         case LOAD_MY_INFO_REQUEST: // 현재 유저 정보
             return {
@@ -49,13 +59,33 @@ const userReducer = (state=goalInitialState, action) =>{
                 ...state,
                 loadMyInfoLoading : false, 
                 loadMyInfoDone : true,
-                me = action.data
+                myInfo : action.data
             }
         case LOAD_MY_INFO_FAILURE:
             return {
                 ...state,
                 loadMyInfoLoading : false, 
                 loadMyInfoError : action.error,
+            }
+        case GET_PUBLICKEY_REQUEST: // 공개키 시도
+            return {
+                ...state,
+                publicKeyLoading : true, 
+                publickKeyDone : false,
+                publickKeyError : null,
+            }
+        case GET_PUBLICKEY_SUCCESS:
+            return {
+                ...state,
+                publicKeyLoading : false, 
+                publicKeyDone : true,
+                publicKey : action.data
+            }
+        case GET_PUBLICKEY_FAILURE:
+            return {
+                ...state,
+                publicKeyLoading : false, 
+                publicKeyError : action.error,
             }
         case LOG_IN_REQUEST: // 로그인 시도
             return {
@@ -69,7 +99,9 @@ const userReducer = (state=goalInitialState, action) =>{
                 ...state,
                 logInLoading : false, 
                 logInDone : true,
-                me = action.data
+                myInfo : action.data,
+                accessToken : action.data.tokenInfo.accessToken,
+                refreshToken : action.data.tokenInfo.refreshToken
             }
         case LOG_IN_FAILURE:
             return {
@@ -89,7 +121,9 @@ const userReducer = (state=goalInitialState, action) =>{
                 ...state,
                 logOutLoading : false, 
                 logOutDone : true,
-                me = null
+                myInfo : null,
+                accessToken : null,
+                refreshToken : null,
             }
         case LOG_OUT_FAILURE:
             return {
