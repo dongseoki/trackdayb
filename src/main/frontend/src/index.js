@@ -13,9 +13,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store = {store}>
       <AuthProvider>
-        <PersistGate persistor={persistor}>
+        {/* <PersistGate persistor={persistor}> */}
           <App />
-        </PersistGate>
+        {/* </PersistGate> */}
       </AuthProvider>
     </Provider>
   </React.StrictMode>,

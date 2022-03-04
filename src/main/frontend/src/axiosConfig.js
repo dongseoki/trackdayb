@@ -17,14 +17,10 @@ axiosInstance.interceptors.request.use(
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
    const accessToken = localStorage.getItem('accessToken');
-
-  //  const accessToken = store.getState().user.accessToken;
-
-
+   
    if(accessToken){
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      // store.user.refreshToken.setState('test')
-      // console.log('accessToekn', accessToken)
+      config.headers.Authorization = `test1 ${accessToken}`;
+      console.log('axios instance request', accessToken)
    }else{
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -73,7 +69,7 @@ axiosInstance.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({resolve, reject})
         }).then(token => {
-          originalRequest.headers['Authorization'] = `Bearer ` + token;
+          originalRequest.headers['Authorization'] = `test2 ` + token;
           return axios(originalRequest);
         }).catch(err => {
           return err
@@ -85,27 +81,23 @@ axiosInstance.interceptors.response.use(
 
       const accessToken = localStorage.getItem('accessToken');
       const refreshToken = localStorage.getItem('refreshToken');
-      // const accessToken = store.getState().user.accessToken;
-      // const refreshToken = store.getState().user.refreshToken;
 
       const tokenData = {
-        accessToken,
+        accessToken : "sdfsdf",
         refreshToken,
       };
 
       return new Promise(function(resolve, reject) {
         axios.post('/member/reissue', tokenData)
         .then(({data}) => {
-          store.user.refreshToken.setState('test')
           localStorage.setItem('accessToken', data.tokenInfo.accessToken);
-          originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
+          originalRequest.headers.Authorization = `test3 ${data.tokenInfo.accessToken}`;
           resolve(axios(originalRequest))
           processQueue(null, data.tokenInfo.accessToken);
         })
         .catch((err) => {
           processQueue(err, null);
           reject(err);
-          // storage.removeItem('persist:root')
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           window.location.href = '/login'
