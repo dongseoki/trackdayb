@@ -18,5 +18,5 @@ const rootReducer = combineReducers({
     user : userReducer
 });
 
-
-export default persistReducer(persistConfig, rootReducer);
+export default rootReducer;
+// export default persistReducer(persistConfig, rootReducer);

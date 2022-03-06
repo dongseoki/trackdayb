@@ -75,7 +75,7 @@ axiosInstance.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({resolve, reject})
         }).then(token => {
-          originalRequest.headers['Authorization'] = `Bearer ` + token;
+          originalRequest.headers['Authorization'] = `test2 ` + token;
           return axios(originalRequest);
         }).catch(err => {
           return err
@@ -91,7 +91,7 @@ axiosInstance.interceptors.response.use(
       const refreshToken = store.getState().user.refreshToken;
 
       const tokenData = {
-        accessToken,
+        accessToken : "sdfsdf",
         refreshToken,
       };
 
@@ -104,9 +104,8 @@ axiosInstance.interceptors.response.use(
 
         
         .then(({data}) => {
-
           localStorage.setItem('accessToken', data.tokenInfo.accessToken);
-          originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
+          originalRequest.headers.Authorization = `test3 ${data.tokenInfo.accessToken}`;
           resolve(axios(originalRequest))
           processQueue(null, data.tokenInfo.accessToken);
         })

@@ -67,6 +67,9 @@ function* logIn(action) {
             type : LOG_IN_SUCCESS,
             data : result.data, //서버로 부터 받아온 데이터
         })
+        //로컬 스토리지에 저장하기
+        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
     }catch(err) {
         console.error(err);
         yield put({
