@@ -16,6 +16,9 @@ export const userInitialState = {
     publicKeyDone : false,
     publicKeyError : null,
     publicKey : null,
+    reissueLoading : false, // accessToken Reissue 시도중
+    reissueDone : false,
+    reissueError : null,
     accessToken : null,
     refreshToken : null,
 }
@@ -43,6 +46,9 @@ export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST'
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS'
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE'
 
+export const REISSUE_REQUEST = 'REISSUE_REQUEST' // accessToken 재발행
+export const REISSUE_SUCCESS = 'REISSUE_SUCCESS'
+export const REISSUE_FAILURE = 'REISSUE_FAILURE'
 
 //reducer
 const userReducer = (state=userInitialState, action) =>{
@@ -149,6 +155,26 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 signUpLoading : false, 
                 signUpError : action.error,
+            }
+        case REISSUE_REQUEST: // accessToken 재발행 시도
+            return {
+                ...state,
+                reissueLoading : true, 
+                reissueDone : false,
+                reissueError : null,
+            }
+        case REISSUE_SUCCESS:
+            return {
+                ...state,
+                reissueLoading : false, 
+                reissueDone : true,
+                accessToken : action.data.tokenInfo.accessToken,
+            }
+        case REISSUE_FAILURE:
+            return {
+                ...state,
+                reissueLoading : false, 
+                reissueError : action.error,
             }
         default:
             return state;

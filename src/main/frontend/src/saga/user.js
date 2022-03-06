@@ -12,7 +12,10 @@ import { GET_PUBLICKEY_FAILURE,
         LOG_IN_FAILURE,
         LOG_OUT_REQUEST,
         LOG_OUT_SUCCESS,
-        LOG_OUT_FAILURE } from "../reducers/user";
+        LOG_OUT_FAILURE, 
+        REISSUE_REQUEST,
+        REISSUE_SUCCESS,
+        REISSUE_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -87,6 +90,26 @@ function* logOut() {
     }
 }
 
+
+function reissueAPI(data) { // accessToken 재발급
+    return axios.post('/member/reissue', data)
+}
+function* reissue(action) {
+    try{
+        const result = yield call(reissueAPI, action.data);
+        yield put({
+            type : REISSUE_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: REISSUE_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
@@ -99,6 +122,9 @@ function* watchLogIn() {
 function* watchLogOut() {
     yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
+function* watchReissu() {
+    yield takeLatest(REISSUE_REQUEST, reissue);
+}
 
 
 export default function* userSaga() {
@@ -108,5 +134,6 @@ export default function* userSaga() {
         fork(watchLogIn),
         fork(watchLogOut),
         // fork(watchSignUp),
+        fork(watchReissu),
     ])
 }

@@ -16,8 +16,6 @@ import { store } from '../store/store';
 function Navigation(){
     const dispatch = useDispatch();
 
-    console.log('hello Nav', localStorage.getItem("persist:user.loadMyInfoLoading"))
-
     const { myInfo } = useSelector((state)=>state.user);
     const history = useHistory();
 
