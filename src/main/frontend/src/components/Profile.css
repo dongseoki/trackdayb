@@ -1,7 +1,162 @@
-.profile-content{
-    margin: 20px;
-    padding: 20px;
-    background-color: rgba(130, 143, 146, 0.08);
-    border-radius: 10px;
-    box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
+/* 저장 취소 버튼 공통 */
+.mypage .button-wrapper{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.mypage .submitBtn{
+  border: 1px solid #3292EB;
+  border-radius: 4px;
+  background-color: #3292EB;
+  min-width: 60px;
+  width: 50%;
+  color : white;
+  font-size: 14px;
+  margin-right: 4px;
+  cursor: pointer;
+  height: 40px;
+  /* min-height: 40px; */
+}
+.mypage .cancleBtn{
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
+  background-color: #eaf4fd;
+  min-width: 60px;
+  width: 50%;
+  cursor: pointer;
+  height: 40px;
+  /* min-height: 40px; */
+}
+
+.profile-name {
+  display: flex;
+  flex-direction: row;
+}
+.profile-introduction {
+  display: flex;
+  flex-direction: row;
+}
+
+/* 모바일용 저장 취소 버튼 */
+@media screen and (max-width: 1096px) {
+  .mypage .profile-name{
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-introduction {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+
+
+/* 전체 프로필 박스 */
+.profile-main-wrapper{
+  box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
+  height: 300px;
+  border-radius: 10px;
+}
+
+.profile-background-wrapper{
+  position: relative;
+}
+.profile-background{
+  position: absolute;
+  z-index: -99;
+}
+.profile-background-wrapper .edit-icon{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.profile-contents-wrapper {
+  background-color: rgba(255,255,255, 0.5);
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.profile-photo{
+  margin : 0 50px;
+  position: relative;
+}
+.profile-photo .edit-icon {
+  position: absolute;
+  bottom :0;
+  right :0;
+}
+
+.profile-texts{
+  display: flex;
+  flex-direction: column;
+  
+  flex-grow: 1;
+
+  margin-right: 50px;
+}
+
+/* 이름, 소개 공통 */
+.profile-text {
+  display: flex;
+  padding: 10px 0;
+  font-size: 16px;
+}
+.profile-text-content {
+  padding-right : 10px;
+}
+
+.edit-icon{
+  font-size: 12px;
+  border: none;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  color: rgba(5, 23, 42, 0.6);
+}
+
+/* 파일선택 버튼 공통 */
+.profile-background-wrapper .file-wrapper{
+  display: flex;
+  flex-direction: row;
+}
+.profile-photo .file-wrapper{
+  display: flex;
+  flex-direction: row;
+}
+
+.file-dropper label { 
+  display: inline-block; 
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+  /* border: 1px solid #b2e0e0; */
+  border : 1px solid rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
+  background-color: #b2e0e0;
+  color : black;
+  font-size: 14px;
+  margin-right: 4px;
+  cursor: pointer;
+} 
+.file-dropper input[type="file"] { 
+  /* 파일 필드 숨기기 */ 
+  position: absolute; 
+  width: 1px; 
+  height: 1px; 
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip:rect(0,0,0,0); 
+  border: 0; 
+  color: white;
 }

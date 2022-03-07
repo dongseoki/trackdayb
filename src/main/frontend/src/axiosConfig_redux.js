@@ -1,4 +1,6 @@
 import axios from "axios";
+import { LOAD_MY_INFO_REQUEST, LOG_OUT_REQUEST, REISSUE_REQUEST } from "./reducers/user";
+import { store } from './store/store';
 
 const axiosInstance = axios.create({
   // timeout: 1000, // 세션만료 시간
@@ -15,12 +17,19 @@ axiosInstance.interceptors.request.use(
     토큰에 대한 정보를 여러곳에서 처리하지 않아도 된다.
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
-   const accessToken = localStorage.getItem('accessToken');
+  //  const accessToken = localStorage.getItem('accessToken');
+
+   const accessToken = store.getState().user.accessToken;
+  console.log('acceToken', accessToken)
+
    if(accessToken){
       config.headers.Authorization = `Bearer ${accessToken}`;
    }else{
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+     store.dispatch({
+       type : LOG_OUT_REQUEST
+     })
+    // localStorage.removeItem("accessToken");
+    // localStorage.removeItem("refreshToken");
     window.location.href = '/login'
    }
     return config;
@@ -66,7 +75,7 @@ axiosInstance.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({resolve, reject})
         }).then(token => {
-          originalRequest.headers['Authorization'] = `Bearer ` + token;
+          originalRequest.headers['Authorization'] = `test2 ` + token;
           return axios(originalRequest);
         }).catch(err => {
           return err
@@ -76,28 +85,41 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const accessToken = localStorage.getItem('accessToken');
-      const refreshToken = localStorage.getItem('refreshToken');
+      // const accessToken = localStorage.getItem('accessToken');
+      // const refreshToken = localStorage.getItem('refreshToken');
+      const accessToken = store.getState().user.accessToken;
+      const refreshToken = store.getState().user.refreshToken;
 
       const tokenData = {
-        accessToken,
+        accessToken : "sdfsdf",
         refreshToken,
       };
 
       return new Promise(function(resolve, reject) {
-        axios.post('/member/reissue', tokenData)
+        // axios.post('/member/reissue', tokenData)
+        store.dispatch({
+          type : REISSUE_REQUEST,
+          data : tokenData
+        })
+
+        
         .then(({data}) => {
           localStorage.setItem('accessToken', data.tokenInfo.accessToken);
-          originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
+          originalRequest.headers.Authorization = `test3 ${data.tokenInfo.accessToken}`;
           resolve(axios(originalRequest))
           processQueue(null, data.tokenInfo.accessToken);
         })
         .catch((err) => {
           processQueue(err, null);
           reject(err);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          window.location.href = '/login'
+          // storage.removeItem('persist:root')
+          // localStorage.removeItem("accessToken");
+          // localStorage.removeItem("refreshToken");
+          store.dispatch({
+            type : LOG_OUT_REQUEST
+          })
+
+          // window.location.href = '/login'
         })
         .then(() => { isRefreshing = false })
       })

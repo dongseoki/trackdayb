@@ -7,8 +7,6 @@ import AccountInfo from "../components/AccountInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 
-import Avatar from '@mui/material/Avatar';
-
 
 const fakeUser = {
     activeUserStatus: "N",
@@ -42,28 +40,6 @@ function Mypage() {
 
     // const { myInfo } = useSelector((state)=> state.user)
     const myInfo = fakeUser;
-
-    const [ editName, setEditName ] = useState(false);
-    const [ editIntroduction, setEditIntroduction ] = useState(false);
-
-    
-
-    const editNameHandler = () => {
-        setEditName(true)
-    };
-    const saveNameHandler = () => {
-        setEditName(false);
-    }
-
-
-    const editIntroductionHandler = () => {
-        setEditIntroduction(true)
-    };
-    const saveIntroductionHandler = () => {
-        setEditIntroduction(false);
-    }
-
-
     
     useEffect(()=>{
         dispatch({
@@ -73,45 +49,8 @@ function Mypage() {
 
     return (
         <div className="mypage">
-            <div className="profile-main">
-                <Avatar
-                alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
-                sx={{ width: 100, height: 100, mx : 10 }}
-                />
-                <div>
-                    {editName? 
-                    <div className="profile-name">
-                        <input type="text" />
-                        <button onClick={saveNameHandler}>저장</button>
-                    </div>
-                    :
-                    <div className="profile-name">
-                        <div>{ myInfo.name }</div>
-                        <button onClick={editNameHandler}>수정</button>
-                    </div>
-                    }
-
-                    {editIntroduction? 
-                    <div>
-                        <input type="text" />
-                        <button onClick={saveIntroductionHandler}>저장</button>
-                    </div>
-                    :
-                    <div>
-                        <div>{ myInfo.introduction }</div>
-                        <button onClick={editIntroductionHandler}>수정</button>
-                    </div>  
-                    }
-                    
-                    
-                </div>
-            </div>
-            <ImageUploadForm/>
-
-            <Profile curUser={myInfo}/>
+            <Profile myInfo={myInfo}/>
             <AccountInfo curUser={myInfo}/>
-
         </div>
     )
 }

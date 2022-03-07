@@ -156,14 +156,14 @@
     font-size: 14px;
 }
 
-.button-wrapper {
+.goal-form .button-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 10px;
 }
 
-.submitBtn {
+.goal-form .submitBtn {
     border: 1px solid #3292EB;
     border-radius: 4px;
     background-color: #3292EB;
@@ -175,7 +175,7 @@
     cursor: pointer;
 }
 
-.cancleBtn {
+.goal-form .cancleBtn {
     border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
     background-color: #eaf4fd;

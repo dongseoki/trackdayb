@@ -79,11 +79,14 @@ function* logIn(action) {
     }
 }
 
-function* logOut() {
+function* logOut() { // 로그아웃
     try{
         yield put({
             type : LOG_OUT_SUCCESS,
         })
+        //로컬 스토리지 삭제하기
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
     }catch(err) {
         console.error(err);
         yield put({

@@ -1,77 +1,166 @@
 import React, { useState } from "react";
 import './Profile.css';
 import Avatar from '@mui/material/Avatar';
+import { BiEdit } from "react-icons/bi";
+import TextField from '@mui/material/TextField';
+import CardMedia from '@mui/material/CardMedia';
 
-const Profile = ({curUser}) => {
-    // 닉네임
-    const [ name , setName ] = useState('홍길동');
-    const [ message, setMessage ] = useState('안녕하세요, 홍길동 입니다.');
-    
-    // 아바타 이미지 파일
-    const [ file, setFile ] = useState(null);
-    // 아바타 이미지 미리보기(소스)
-    const [imgSrc, setImgSrc] = useState(null);
+
+const Profile = ({myInfo}) => {
     // 수정 활성화 flag
-    const [ modifyMode, setModifyMode ] = useState(false);
+    const [ editFlag, setEditFlag ] = useState(false);
 
 
-    const imageSelectHandler = (event) => {
+    const [ name, setName ] = useState(myInfo.name);
+    const [ introduction, setIntroduction ] = useState(myInfo.introduction);
+    // 아바타 이미지 파일
+    const [ photo, setPhoto ] = useState(null);
+    // 아바타 이미지 미리보기(소스)
+    const [ photoSrc, setPhotoSrc] = useState(null);
+    // 배경 이미지 파일
+    const [ background, setBackground ] = useState(null);
+    // 배경 이미지 미리보기(소스)
+    const [ backgroundSrc, setBackgroundSrc] = useState(null);
+
+
+
+    /// 하나로 전체 수정
+    const editFlagHandler = () => {
+        setEditFlag(true)
+    };
+    const saveFlagHandler = () => {
+        setEditFlag(false);
+    }
+    const cancleFlagHandler = () => {
+        setEditFlag(false);
+    }
+
+    // 프로필 사진 변경
+    const photoSelectHandler = (event) => {
         const imageFile = event.target.files[0]
-        setFile(imageFile);
+        setPhoto(imageFile);
         // setFileName(imageFile.name);
         const fileReader = new FileReader();
         fileReader.readAsDataURL(imageFile);
-        fileReader.onload = (evt) => setImgSrc(evt.target.result)
+        fileReader.onload = (evt) => setPhotoSrc(evt.target.result)
     };
-    const modifyBtnHandler = () => {
-        console.log('수정');
-        setModifyMode(true);
-    }
-    const submitHandler = ()=> {
-        setModifyMode(false);
-        console.log('저장');
-    }
+
+    // 배경 이미지 변경
+    const backgroundSelectHandler = (event) => {
+        const imageFile = event.target.files[0]
+        setBackground(imageFile);
+        // setFileName(imageFile.name);
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(imageFile);
+        fileReader.onload = (evt) => setBackgroundSrc(evt.target.result)
+    };
 
     return (
-        <div className="profile-content">
-            {modifyMode? 
-                <button onClick={submitHandler}>저장</button> : 
-                <button onClick={modifyBtnHandler}>수정</button>}
-            
-            <div>
-                <Avatar
-                    alt="Remy Sharp"
-                    src={imgSrc}
-                    sx={{ width: 56, height: 56 }}
+        <>
+        <div className="profile-main-wrapper">
+            {editFlag? 
+            <div className="button-wrapper">
+                <button type="submit" className="submitBtn" onClick={saveFlagHandler}>저장</button>
+                <button type="button" className="cancleBtn" onClick={cancleFlagHandler}>취소</button>
+            </div>
+            :
+            <button type="submit" className="submitBtn" onClick={editFlagHandler}>수정</button>
+            }
+
+
+            <div className="profile-background-wrapper">
+                <CardMedia
+                    className="profile-background"
+                    component="img"
+                    height="300"
+                    image={backgroundSrc}
+                    alt="Paella dish"
                 />
-                {modifyMode? 
-                <div className="file-dropper">
-                    <input id="image" type="file" accept="image/*" onChange={imageSelectHandler}/>
-                </div> : 
-                <></>}
+                
+                
+                <div className="file-wrapper">
+                    {editFlag?
+                    <div className="file-dropper">
+                        <label for="background">파일선택</label>
+                        <input id="background" type="file" accept="image/*" onChange={backgroundSelectHandler}/>
+                    </div> 
+                   : null}
+                </div>
+
                 
             </div>
-            <div>
-                {modifyMode?
-                    <>
-                        <span>닉네임</span><input id='name' type='text' value={name} onChange={(e) => setName(e.target.value)}/>
-                        <span>소개</span><input id='message' type='text' value={message} onChange={(e) => setMessage(e.target.value)}/>
-                    </> :
-                    <>
-                    <div>
-                        <span>닉네임</span>
-                        <span>{name}</span>
+        
+            <div className="profile-contents-wrapper">
+                
+                <div className="profile-photo">
+                    <Avatar
+                        className="profile-avatar"
+                        alt="Profile Image"
+                        src={photoSrc}
+                        sx={{ width: 100, height: 100, mx: 2}}
+                    />
+
+                    <div className="file-wrapper">
+                        {editFlag?
+                        <div className="file-dropper">
+                            <label for="photo">파일선택</label>
+                            <input id="photo" type="file" accept="image/*" onChange={photoSelectHandler}/>
+                        </div> 
+                        : null}
+                    </div>
+
+                </div>
+
+                <div className="profile-texts">
+
+                    <div className="profile-name">
+                        {editFlag? 
+                        <TextField 
+                            id="name" 
+                            defaultValue={name}
+                            label="이름" 
+                            size="small" 
+                            variant="outlined"
+                            style={{width:"100%",marginBottom:"14px", marginRight:"4px"}}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function(e){
+                                setName(e.target.value)
+                            }}
+                        />
+                        :
+                        <div className="profile-text-content">{ myInfo.name }</div>
+                        }
                     </div>
                     
-                    <div>
-                        <span>소개</span>
-                        <span>{message}</span>
+                    <div className="profile-introduction">
+                        {editFlag? 
+                        <TextField
+                            id="introduction"
+                            defaultValue={introduction}
+                            label="소개"
+                            multiline
+                            rows={2}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            variant="outlined"
+                            style={{width:"100%", marginBottom:"14px", marginRight:"4px"}}
+                            onChange={function(e){
+                                setIntroduction(e.target.value)
+                            }}
+                        />
+                        :
+                        <div className="profile-text-content">{ myInfo.introduction }</div>
+                        }
                     </div>
-                    </>
-                }
-                
+
+                </div>
+
             </div>
         </div>
+        </>
     )
 }
 
