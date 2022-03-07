@@ -27,13 +27,15 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import javax.security.auth.message.AuthException;
+
 @Component
 public class TokenProvider implements InitializingBean {
 
    private final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
 
    private static final String AUTHORITIES_KEY = "auth";
-   private static final String BEARER_TYPE = "bearer";
+   private static final String BEARER_TYPE = "Bearer";
 
    private final String secret;
    private final long accessTokenValidityInMilliseconds;
@@ -135,6 +137,9 @@ public class TokenProvider implements InitializingBean {
 //              .build()
 //              .parseClaimsJws(token)
 //              .getBody();
+      if (claims.get(AUTHORITIES_KEY) == null) {
+         throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+      }
 
       Collection<? extends GrantedAuthority> authorities =
          Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
@@ -147,7 +152,7 @@ public class TokenProvider implements InitializingBean {
    }
 
    // 토큰과 가지고 있던 키값을 이용하여, 유효성을 검증한다.
-   public boolean validateToken(String token) {
+   public boolean validateToken(String token){
       try {
          LOGGER.info("토큰 값 확인 : {}", token);
          Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

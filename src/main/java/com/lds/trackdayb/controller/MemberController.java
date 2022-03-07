@@ -256,9 +256,6 @@ public class MemberController {
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         HttpHeaders httpHeaders = new HttpHeaders();
 
-
-
-
         try{
             TokenDTO tokenInfo =  memberService.idPwdLogin(request, memberEntity);
             resultMVO.setTokenInfo(tokenInfo);

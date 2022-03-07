@@ -2,6 +2,7 @@ package com.lds.trackdayb.jwt;
 
 import java.io.IOException;
 
+import javax.security.auth.message.AuthException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -33,7 +34,7 @@ public class JwtFilter extends GenericFilterBean {
     // 인증정보 authentication을 SecurityContextHolder에 저장하는 역할을 한다.
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-       throws IOException, ServletException {
+       throws IOException, ServletException{
        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
        String jwt = resolveToken(httpServletRequest);
        String requestURI = httpServletRequest.getRequestURI();

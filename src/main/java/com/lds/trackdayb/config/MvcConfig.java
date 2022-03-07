@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer{
   // @Autowired
   // LoginInterceptor loginInterceptor;
@@ -27,7 +28,7 @@ public class MvcConfig implements WebMvcConfigurer{
     // registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
     //     .setViewName("forward:/");
   }
-  
+
   // test
   // @Override
   // public void addInterceptors(InterceptorRegistry registry) {

@@ -205,7 +205,7 @@ public class GoalManageController {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
 
-        try {
+  //      try {
             String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
             GoalVO goalVO = new GoalVO();
             goalVO.setGoalId(updateMap.get("goalId"));
@@ -220,11 +220,11 @@ public class GoalManageController {
             param1.setMemberSerialNumber(goalVO.getMemberSerialNumber());
             param1.setSearchGoalIdList(Arrays.asList(searchGoalIdArray));
             resultMVO.setGoalInfo(goalService.getGoalFullList(param1).get(0));
-
+/*
         } catch (Exception e) {
             LOGGER.error("update error : {}", e.toString());
             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-        }
+        }*/
 
         return resultMVO;
     }
