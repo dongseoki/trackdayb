@@ -68,8 +68,8 @@ function* logIn(action) {
             data : result.data, //서버로 부터 받아온 데이터
         })
         //로컬 스토리지에 저장하기
-        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
-        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+        // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
     }catch(err) {
         console.error(err);
         yield put({
@@ -85,8 +85,8 @@ function* logOut() { // 로그아웃
             type : LOG_OUT_SUCCESS,
         })
         //로컬 스토리지 삭제하기
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        // localStorage.removeItem("accessToken");
+        // localStorage.removeItem("refreshToken");
     }catch(err) {
         console.error(err);
         yield put({
@@ -97,24 +97,24 @@ function* logOut() { // 로그아웃
 }
 
 
-function reissueAPI(data) { // accessToken 재발급
-    return axios.post('/member/reissue', data)
-}
-function* reissue(action) {
-    try{
-        const result = yield call(reissueAPI, action.data);
-        yield put({
-            type : REISSUE_SUCCESS,
-            data : result.data, //서버로 부터 받아온 데이터
-        })
-    }catch(err) {
-        console.error(err);
-        yield put({
-            type: REISSUE_FAILURE,
-            error : err.response.data
-        })
-    }
-}
+// function reIssueAPI(data) { // accessToken 재발급
+//     return axios.post('/member/reissue', data)
+// }
+// function* reIssue(action) {
+//     try{
+//         const result = yield call(reIssueAPI, action.data);
+//         yield put({
+//             type : REISSUE_SUCCESS,
+//             data : result.data, //서버로 부터 받아온 데이터
+//         })
+//     }catch(err) {
+//         console.error(err);
+//         yield put({
+//             type: REISSUE_FAILURE,
+//             error : err.response.data
+//         })
+//     }
+// }
 
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
@@ -128,9 +128,9 @@ function* watchLogIn() {
 function* watchLogOut() {
     yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
-function* watchReissu() {
-    yield takeLatest(REISSUE_REQUEST, reissue);
-}
+// function* watchReIssue() {
+//     yield takeLatest(REISSUE_REQUEST, reIssue);
+// }
 
 
 export default function* userSaga() {
@@ -140,6 +140,6 @@ export default function* userSaga() {
         fork(watchLogIn),
         fork(watchLogOut),
         // fork(watchSignUp),
-        fork(watchReissu),
+        // fork(watchReIssue),
     ])
 }

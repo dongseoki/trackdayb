@@ -1,4 +1,7 @@
 import axios from "axios";
+import { store } from './store/store';
+import { LOG_OUT_REQUEST, REISSUE_SUCCESS } from "./reducers/user";
+
 
 const axiosInstance = axios.create({
   // timeout: 1000, // 세션만료 시간
@@ -15,12 +18,14 @@ axiosInstance.interceptors.request.use(
     토큰에 대한 정보를 여러곳에서 처리하지 않아도 된다.
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
-   const accessToken = localStorage.getItem('accessToken');
-   if(accessToken){
+    const accessToken = store.getState().user.accessToken;
+
+    if(accessToken){
       config.headers.Authorization = `Bearer ${accessToken}`;
    }else{
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+     store.dispatch({
+       type: LOG_OUT_REQUEST
+     })
     window.location.href = '/login'
    }
     return config;
@@ -76,18 +81,21 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const accessToken = localStorage.getItem('accessToken');
-      const refreshToken = localStorage.getItem('refreshToken');
+      const accessToken = store.getState().user.accessToken;
+      const refreshToken = store.getState().user.refreshToken;
 
       const tokenData = {
         accessToken,
         refreshToken,
       };
 
-      return new Promise(function(resolve, reject) {
+      return new Promise( function (resolve, reject) {
         axios.post('/member/reissue', tokenData)
         .then(({data}) => {
-          localStorage.setItem('accessToken', data.tokenInfo.accessToken);
+          store.dispatch({
+            type : REISSUE_SUCCESS,
+            data : data.tokenInfo.accessToken
+          });
           originalRequest.headers.Authorization = `Bearer ${data.tokenInfo.accessToken}`;
           resolve(axios(originalRequest))
           processQueue(null, data.tokenInfo.accessToken);
@@ -95,8 +103,9 @@ axiosInstance.interceptors.response.use(
         .catch((err) => {
           processQueue(err, null);
           reject(err);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+          store.dispatch({
+            type : LOG_OUT_REQUEST
+          })
           window.location.href = '/login'
         })
         .then(() => { isRefreshing = false })

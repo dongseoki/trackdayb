@@ -14,7 +14,7 @@ function Login() {
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("로그인"), 100);
 
-  const { publicKey, myInfo } = useSelector((state)=> state.user);
+  const { publicKey, logInError, myId } = useSelector((state)=> state.user);
 
   useEffect(()=>{
     dispatch({
@@ -53,12 +53,20 @@ function Login() {
     })
   }
 
+  // 로그인 성공시
   useEffect(() => {
-    if(myInfo) {
+    if(myId) {
       history.push("/")
-      toast.success(`${myInfo.memberId}님, 반갑습니다!`)
+      toast.success(`${myId}님, 반갑습니다!`)
     }
-  },[myInfo])
+  },[myId])
+
+  // 로그인 에러 발생시
+  useEffect(() => {
+    if(logInError){
+        alert(logInError)
+    }
+}, [logInError]);
 
   return (
     <div className="login">

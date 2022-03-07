@@ -2,7 +2,8 @@ export const userInitialState = {
     loadMyInfoLoading : false, //로그인한 사용자 정보 시도 중
     loadMyInfoDone : false,
     loadMyInfoError : null,
-    myInfo : null, // localStorage 저장 데이터
+    myInfo : null, // 로그인 사용자 전체 정보{}
+    myId : null, // 로그인 사용자 아이디
     logInLoading : false, //로그인 시도 중
     logInDone : false,
     logInError : null,
@@ -16,9 +17,6 @@ export const userInitialState = {
     publicKeyDone : false,
     publicKeyError : null,
     publicKey : null,
-    reissueLoading : false, // accessToken Reissue 시도중
-    reissueDone : false,
-    reissueError : null,
     accessToken : null,
     refreshToken : null,
 }
@@ -101,11 +99,12 @@ const userReducer = (state=userInitialState, action) =>{
                 logInError : null,
             }
         case LOG_IN_SUCCESS:
+            console.log('로그인 성공 action.data', action.data)
             return {
                 ...state,
                 logInLoading : false, 
                 logInDone : true,
-                myInfo : action.data,
+                myId : action.data.memberId,
                 accessToken : action.data.tokenInfo.accessToken,
                 refreshToken : action.data.tokenInfo.refreshToken
             }
@@ -123,11 +122,13 @@ const userReducer = (state=userInitialState, action) =>{
                 logOutError : null,
             }
         case LOG_OUT_SUCCESS:
+            console.log("로그인 실패")
             return {
                 ...state,
                 logOutLoading : false, 
                 logOutDone : true,
                 myInfo : null,
+                myId : null,
                 accessToken : null,
                 refreshToken : null,
             }
@@ -156,25 +157,10 @@ const userReducer = (state=userInitialState, action) =>{
                 signUpLoading : false, 
                 signUpError : action.error,
             }
-        case REISSUE_REQUEST: // accessToken 재발행 시도
+        case REISSUE_SUCCESS: // accessToken 재발행 성공시 값만 업데이트
             return {
                 ...state,
-                reissueLoading : true, 
-                reissueDone : false,
-                reissueError : null,
-            }
-        case REISSUE_SUCCESS:
-            return {
-                ...state,
-                reissueLoading : false, 
-                reissueDone : true,
-                accessToken : action.data.tokenInfo.accessToken,
-            }
-        case REISSUE_FAILURE:
-            return {
-                ...state,
-                reissueLoading : false, 
-                reissueError : action.error,
+                accessToken : action.data,
             }
         default:
             return state;
