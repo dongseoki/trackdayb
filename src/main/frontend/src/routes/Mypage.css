@@ -1,0 +1,31 @@
+.mypage{
+  flex : 1;
+  display: grid;
+  grid-template-rows: 300px 1fr;
+  margin : 0 200px;
+}
+
+
+@media screen and (max-width : 1040px) {
+  .mypage{
+    margin : 0 80px;
+  }
+}
+@media screen and (max-width : 740px) {
+  .mypage{
+    margin : 0;
+  }
+}
+
+@media screen and (max-width : 600px) {
+  .mypage .profile-photo{
+    margin : 0 20px;
+
+  }
+  .mypage .profile-avatar{
+    width: 70px;
+    height: 70px;
+  }
+}
+
+

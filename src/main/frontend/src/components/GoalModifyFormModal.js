@@ -1,9 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css";
-// import axios from "axios";
-import axiosInstance from "../axiosConfig";
 //icon
 import { BiEdit } from "react-icons/bi";
 import { BiLock } from "react-icons/bi";
@@ -11,11 +9,9 @@ import { BiLock } from "react-icons/bi";
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-// import GoalModifyForm from "./GoalModifyForm";
-
 //goalModifyForm
 import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
+import DateRangePickerForm from './DateRangePickerForm';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -23,28 +19,24 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 //color picker
 import { HexColorPicker } from "react-colorful";
-
 // 토글버튼
 import ToggleButton from '@mui/material/ToggleButton';
-
 //slider-score
 import Slider from '@mui/material/Slider';
 import GoalTitleListModal from "./GoalTitleListModal";
-
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-
-import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
-// import { GoalFullListContext } from "../context/GoalFullListContext";
-import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import { useMediaQuery } from "react-responsive";
+import { useSelector, useDispatch } from 'react-redux';
+import { MODIFY_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
+import dayjs from "dayjs";
 
-function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, goalSearchTitleList, setGoalSearchTitleList, updateChecker, setUpdateChecker}){
-  const [ goalTotalTitleList, ] = useContext(GoalTotalTitleListContext);
-  // const [ goalFullList, setGoalFullList ] = useContext(GoalFullListContext);
-  const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
+function GoalModifyFormModal({modifyData, targetIndex}){
+  const { goalTotalTitleList } = useSelector((state) => state.goal)
+  const dispatch = useDispatch();
 
+  
   const YNtoTF = (value)=>{
       if(value === "Y"){
           return true
@@ -65,8 +57,8 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
           return "없음"
       }
   }
-  // const [startDatetime, setStartDatetime] = useState(new Date());
-  // const [endDatetime, setEndDatetime] = useState(new Date());
+  const [startDatetime, setStartDatetime] = useState(new Date());
+  const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -163,6 +155,16 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
     setOpen(false);
   };
 
+  // useEffect(() => {
+  //   dispatch({
+  //     type : LOAD_GOALMODALTITLELIST_REQUEST,
+  //     data : {
+  //       searchStartDatetime : makeYYMMDD(startDatetime),
+  //       searchEndDatetime : makeYYMMDD(endDatetime)
+  //     }
+  //   })
+
+  // },[startDatetime, endDatetime])
 
   const handleFormSubmit = async (evt) =>{
     evt.preventDefault();
@@ -212,8 +214,8 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
         "title": title,
         "kind":kind,
         "content":content,
-        "startDatetime": makeYYMMDD(startDatetime),
-        "endDatetime":makeYYMMDD(endDatetime),
+        "startDatetime": dayjs(startDatetime).format("YYYY-MM-DD"),
+        "endDatetime":dayjs(endDatetime).format("YYYY-MM-DD"),
         "progressRate":progressRate,
         "color":color,
         "shareStatus": shareStatus ? "N":"Y",
@@ -232,13 +234,22 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
         "satYn":sat ? "Y":"N"
         }
       }
-      try{
-        const result = await axiosInstance.patch("/goalManage/goal", formData);
-        handleClose();
-        setUpdateChecker(!updateChecker) // 수정시 DB에서 goalFullList 업데이트
-      }catch(err){
-        console.error(err)
-      }
+      // try{
+      //   const result = await axiosInstance.patch("/goalManage/goal", formData);
+      //   handleClose();
+      //   // setUpdateChecker(!updateChecker) // 수정시 DB에서 goalFullList 업데이트
+      // }catch(err){
+      //   console.error(err)
+      // }
+      // 순차적 비동기 처리 필요(정렬조건 때문에)
+      dispatch({
+        type : MODIFY_GOAL_REQUEST,
+        data : { formData : formData }
+      });
+      dispatch({
+        type : LOAD_GOALTOTALFULLLIST_REQUEST,
+      })
+      handleClose();
     }
   }
   return (
@@ -265,7 +276,7 @@ function GoalModifyFormModal({modifyData, targetIndex, orderColumn, orderType, g
             <div className="top-wrapper">  
               <div className="modal-date-picker">
                 <div className="modal-title">진행기간</div>
-                <DateRangePickerCustom 
+                <DateRangePickerForm 
                   startDate={startDatetime}
                   endDate={endDatetime}
                   setStartDate={setStartDatetime} 
@@ -584,11 +595,5 @@ function ColorTag({color, setColor}){
       </>
     )
 }
-  // YYYY-MM-DD 형태로 반환
-  function makeYYMMDD(value){
-    // korea utc timezone(zero offset) 설정
-    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-    let dateOffset = new Date(value.getTime() - offset);
-    return dateOffset.toISOString().substring(0,10);
-}
+
 export default GoalModifyFormModal;

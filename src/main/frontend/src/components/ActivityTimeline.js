@@ -20,58 +20,32 @@ import axiosInstance from "../axiosConfig";
 // import axios from "axios";
 //Context
 import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import "./ActivityTimeline.css";
 import ActivityInsertFormModal from "../components/ActivityInsertFormModal";
 import ActivityModifyFormModal from "../components/ActivityModifyFormModal";
 
-export default function ActivityTimeline({writeDate, checker}) {
-    // 오늘의 활동내역 리스트)
-    const [activityList, setActivityList] = useState([]);
+import { useDispatch, useSelector } from "react-redux";
+import { DELETE_ACTIVITY_REQUEST, LOAD_ACTIVITYDAYLIST_REQUEST } from "../reducers/activity";
+
+export default function ActivityTimeline({writeDate}) {
+  const dispatch = useDispatch();
+    // 오늘의 활동내역 리스트
+    const { activityDayList } = useSelector((state) => state.activity);
+    const [activityList, setActivityList] = useState([...activityDayList]);
+
+    console.log('activityList', activityDayList)
     
-    // 참조데이터(전체 리스트 -> 파생 그룹바이)
-    const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext)
-    // const [ activitySearchGroupby, setActivitySearchGroupby ] = useContext(ActivitySearchGroupbyContext)
-
-    // YYYY-MM-DD 형태로 반환
-    function makeYYMMDD(value){
-      // korea utc timezone(zero offset) 설정
-      let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-      let dateOffset = new Date(value.getTime() - offset);
-      return dateOffset.toISOString().substring(0,10);
-    }
-
-    useEffect(() => {
-        const fetchActivityList = async () => {
-          try {
-            const result = await axiosInstance.get("/timeManage/activityList", {
-              params:{
-                searchStartDatetime :makeYYMMDD(writeDate),
-                searchEndDatetime : makeYYMMDD(writeDate),
-                orderColumn: "start_datetime",
-                orderType: "asc",
-              },
-            });
-            //리스트에 세팅하기(원본)
-            setActivityList(result.data.activityList);
-          }
-          catch(err) {
-            console.error(err)
-          }
-        }
-        fetchActivityList();
-    }, [writeDate, checker]);
-
-  if (activityList.length === 0) {
+  if (activityDayList.length === 0) {
     return (
       <>
       <div className="writeForm">
         <ActivityInsertFormModal 
           writeDate={writeDate}
-          activityList = {activityList}
-          setActivityList = {setActivityList}
-          activitySearchList={activitySearchList}
-          setActivitySearchList = {setActivitySearchList}
+          // activityList = {activityList}
+          // setActivityList = {setActivityList}
+          // activitySearchList={activitySearchList}
+          // setActivitySearchList = {setActivitySearchList}
         />
       </div>
 
@@ -86,16 +60,16 @@ export default function ActivityTimeline({writeDate, checker}) {
       <div className="writeForm">
         <ActivityInsertFormModal 
           writeDate={writeDate}
-          activityList = {activityList}
-          setActivityList = {setActivityList}
-          activitySearchList={activitySearchList}
-          setActivitySearchList = {setActivitySearchList}
+          // activityList = {activityList}
+          // setActivityList = {setActivityList}
+          // activitySearchList={activitySearchList}
+          // setActivitySearchList = {setActivitySearchList}
         />
       </div>
       
       <div className="cards">
         <Timeline className="activity-timeline">
-          {activityList && activityList.map((activity, index) => (
+          {activityDayList && activityDayList.map((activity, index) => (
               <TimelineItem key={index}>
                   <div key={index} className="activity-card-wrapper">
                       <TimelineSeparator>
@@ -114,17 +88,17 @@ export default function ActivityTimeline({writeDate, checker}) {
                             {(activity.shareStatus==="N") ? (<BiLock className="lock-icon" title="비공개"/>) : null}
                             <ActivityModifyFormModal 
                               writeDate = {writeDate}
-                              modifyData = {activityList[index]}
+                              modifyData = {activityDayList.find(v => v.activityId == activity.activityId)}
                               targetIndex={index}
-                              activityList = {activityList}
-                              setActivityList = {setActivityList}
+                              // activityList = {activityList}
+                              // setActivityList = {setActivityList}
                             />
                             <DeleteModal 
                               activityId = {activity.activityId}
-                              activityList = {activityList}
-                              setActivityList = {setActivityList}
-                              activitySearchList={activitySearchList}
-                              setActivitySearchList = {setActivitySearchList}
+                              // activityList = {activityList}
+                              // setActivityList = {setActivityList}
+                              // activitySearchList={activitySearchList}
+                              // setActivitySearchList = {setActivitySearchList}
                             />
                           </div>
                         </div>
@@ -148,6 +122,7 @@ export default function ActivityTimeline({writeDate, checker}) {
 
 // 삭제 버튼 모달
 function DeleteModal({activityId, activityList, setActivityList, activitySearchList, setActivitySearchList}) {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -160,14 +135,20 @@ function DeleteModal({activityId, activityList, setActivityList, activitySearchL
 
   const deleteHandler = async ()=>{
     try{
-      const result= await axiosInstance.delete("/timeManage/activity", {
-        params:{
+      dispatch({
+        type : DELETE_ACTIVITY_REQUEST,
+        data : {
           activityId: activityId
         }
       })
+      // const result= await axiosInstance.delete("/timeManage/activity", {
+      //   params:{
+      //     activityId: activityId
+      //   }
+      // })
       handleClose()
-      setActivityList(activityList.filter(activity => activity.activityId !== activityId))
-      setActivitySearchList(activitySearchList.filter(activity => activity.activityId !== activityId))
+      // setActivityList(activityList.filter(activity => activity.activityId !== activityId))
+      // setActivitySearchList(activitySearchList.filter(activity => activity.activityId !== activityId))
     }catch(err){
       console.error(err)
     }

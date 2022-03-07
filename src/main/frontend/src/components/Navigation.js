@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {useHistory} from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
@@ -9,9 +9,14 @@ import { useMediaQuery } from "react-responsive";
 //icon
 import {GiHamburgerMenu} from "react-icons/gi"
 import GuidePopup from "./GuidePopup";
+import { useDispatch, useSelector } from "react-redux";
+import { LOG_OUT_REQUEST } from "../reducers/user";
+import { store } from '../store/store';
 
 function Navigation(){
-    const [curUser, setCurUser] = useContext(AuthContext);
+    const dispatch = useDispatch();
+
+    const { myInfo } = useSelector((state)=>state.user);
     const history = useHistory();
 
     // 가이드 모달 팝업
@@ -20,19 +25,18 @@ function Navigation(){
         setShowGuide(true);
     };
 
-    const logoutHandler = async () =>{
-        try{
-            setCurUser()
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            delete axios.defaults.headers.common.Authorization;
-            toast.success("로그아웃 되었습니다.")
-            history.push("/")
-        }catch(err){
-            toast.error("fail");
-            console.error(err)
-        }
+    const logoutHandler = () =>{
+        dispatch({
+            type : LOG_OUT_REQUEST,
+        })
     }
+
+    useEffect(() => {
+        if(!myInfo) {
+          history.push("/")
+          toast.success("로그아웃 되었습니다.")
+        }
+      },[myInfo])
 
     // 반응형 화면 BreakPoint
     const isSmallScreen = useMediaQuery({
@@ -53,8 +57,8 @@ function Navigation(){
             {isSmallScreen ? <div className="nav-fold" onClick={()=>{setNavFoldState(!navFoldState)}}><GiHamburgerMenu/></div> : null}
                 <div className="inline-block-menu">
                     <ul>
-                        <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
-                        <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
+                        <li><Link to={myInfo ? "/goal" : "/login"}>목표관리</Link></li>
+                        <li><Link to={myInfo ? "/time" : "/login"}>시간관리</Link></li>
                         <li><Link to="/report">리포트</Link></li>
                         <li><Link to="/community">커뮤니티</Link></li>
                     </ul>
@@ -63,8 +67,9 @@ function Navigation(){
 
             <div className="sign">
                 <ul>
-                    {curUser ? <>
-                        <li><span>{curUser.memberId}</span></li>
+                    {myInfo ? <>
+                        {/* <li><span>{myInfo.memberInfo.memberId}</span></li> */}
+                        <li><Link to='/mypage'>mypage</Link></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </> : ( 
                             <>
@@ -79,8 +84,8 @@ function Navigation(){
         {isSmallScreen && navFoldState ? (
             <div className="hidden-block-menu">
                 <ul>
-                    <li><Link to={curUser ? "/goal" : "/login"}>목표관리</Link></li>
-                    <li><Link to={curUser ? "/time" : "/login"}>시간관리</Link></li>
+                    <li><Link to={myInfo ? "/goal" : "/login"}>목표관리</Link></li>
+                    <li><Link to={myInfo ? "/time" : "/login"}>시간관리</Link></li>
                     <li><Link to="/report">리포트</Link></li>
                     <li><Link to="/community">커뮤니티</Link></li>
                     <li><button className="guide-btn" onClick={handleOpen}>가이드</button></li>

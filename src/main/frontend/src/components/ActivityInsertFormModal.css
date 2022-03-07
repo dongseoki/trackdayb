@@ -146,13 +146,13 @@ height: 20px;
 .dayCheckbox-wrapper .MuiFormControlLabel-label{
     font-size: 14px;
 }
-.button-wrapper{
+.activity-form .button-wrapper{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 10px;
 }
-.submitBtn{
+.activity-form .submitBtn{
     border: 1px solid #3292EB;
     border-radius: 4px;
     background-color: #3292EB;
@@ -163,7 +163,7 @@ height: 20px;
     margin-right: 2px;
     cursor: pointer;
 }
-.cancleBtn{
+.activity-form .cancleBtn{
     border: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 4px;
     background-color: #eaf4fd;

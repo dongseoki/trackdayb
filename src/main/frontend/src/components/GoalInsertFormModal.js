@@ -1,6 +1,4 @@
-import React, { useState, useContext } from "react";
-import axiosInstance from "../axiosConfig";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
 //css
 import { makeStyles } from '@material-ui/core/styles';
 import "./GoalInsertFormModal.css"
@@ -14,7 +12,7 @@ import Fade from '@material-ui/core/Fade';
 import randomColor from "randomcolor";
 //goalInsertForm
 import TextField from '@material-ui/core/TextField';
-import DateRangePickerCustom from './DateRangePickerCustom';
+import DateRangePickerForm from './DateRangePickerForm';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -24,20 +22,18 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
-import { HexColorPicker } from "react-colorful";
 // 전체목표제목리스트
 import GoalTitleListModal from "./GoalTitleListModal";
-import { GoalTotalTitleListContext } from "../context/GoalTotalTitleListContext";
-import { GoalModalSearchTitleListContext } from "../context/GoalModalSearchTitleListContext";
 import {toast} from "react-toastify";
 import { useMediaQuery } from "react-responsive";
+import { ADD_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
+import { useDispatch } from 'react-redux';
+import dayjs from 'dayjs';
+import { HexColorPicker } from "react-colorful";
 
-function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullList, goalSearchTitleList, setGoalSearchTitleList, updateChecker, setUpdateChecker}){
-  const [ , , updateTotalTitle, setUpdateTotalTitle ] = useContext(GoalTotalTitleListContext);
-  const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
-  
-  // const [startDatetime, setStartDatetime] = useState(new Date());
-  // const [endDatetime, setEndDatetime] = useState(new Date());
+function GoalInsertFormModal(){
+  const [startDatetime, setStartDatetime] = useState(new Date());
+  const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -54,7 +50,6 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
   const [fri, setFri] = useState(false)
   const [sat, setSat] = useState(false)
   const [progressRate, setProgressRate] = useState("");
-  
   const [ parentId, setParentId ] = useState("")
   const [ parentGoalTitle, setParentGoalTitle ] = useState("없음");
   const [color, setColor] = useState(randomColor());
@@ -82,6 +77,20 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
     setParentGoalTitle("없음");
     setColor(randomColor());
   }
+
+  const dispatch = useDispatch();
+
+  // 시작일, 종료일 변경시 내부 모달 목표 타이틀 리스트 업데이트
+  useEffect(() =>{
+    dispatch({
+      type : LOAD_GOALMODALTITLELIST_REQUEST,
+      data : {
+        searchStartDatetime : dayjs(startDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(endDatetime).format("YYYY-MM-DD")
+      }
+    })
+  },[startDatetime, endDatetime])
+
 
   // 반응형 화면 BreakPoint
   const isMobileScreen = useMediaQuery({
@@ -123,6 +132,7 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
   const handleClose = () => {
     setOpen(false);
     InitializeForm()
+    // reset()
   };
 
   const handleFormSubmit = async (evt) => {
@@ -174,8 +184,8 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
         "title": title,
         "kind":kind,
         "content":content,
-        "startDatetime": makeYYMMDD(startDatetime),
-        "endDatetime":makeYYMMDD(endDatetime),
+        "startDatetime": dayjs(startDatetime).format("YYYY-MM-DD"),
+        "endDatetime":dayjs(endDatetime).format("YYYY-MM-DD"),
         "progressRate":progressRate,
         "color":color,
         "shareStatus": shareStatus ? "N":"Y",
@@ -194,14 +204,24 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
           "satYn":sat ? "Y":"N"
         }
       }
-      try{
-        const result = await axiosInstance.post("/goalManage/goal", formData);
-        handleClose();
-        setUpdateTotalTitle(!updateTotalTitle)
-        setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
-      }catch(err){
-        console.error(err)
-      }
+      // 순차적 비동기 처리 필요(정렬조건 때문에)
+      dispatch({
+        type : ADD_GOAL_REQUEST,
+        data : { formData : formData }
+      });
+      dispatch({
+        type : LOAD_GOALTOTALFULLLIST_REQUEST,
+      })
+      dispatch({
+        type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+      })
+      dispatch({
+        type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+      })
+      handleClose();
+      // setUpdateTotalTitle(!updateTotalTitle)
+      // setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
+
     }
   };
   return (
@@ -223,59 +243,62 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
           <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
             <h3 id="transition-modal-title">목표 추가</h3>
             <form className="goal-form" onSubmit={handleFormSubmit}>
-            <div className="top-wrapper">  
-              <div className="modal-date-picker">
-                <div className="modal-title">진행기간</div>
-                <DateRangePickerCustom 
-                  startDate={startDatetime}
-                  endDate={endDatetime}
-                  setStartDate={setStartDatetime} 
-                  setEndDate={setEndDatetime}/>
-              </div>
-              <div className="modal-share-toggle">
-                <div className="modal-title">비공개</div>
-                <ToggleButton
-                color="primary"
-                value="check"
-                selected={shareStatus}
-                onChange={() => {
-                  setshareStatus(!shareStatus);
-                }}
-                >
-                  <BiLock className="lock-icon"/>
-                </ToggleButton>
-              </div>
-            </div>
-            <TextField 
-              required
-              id="title" 
-              label="제목" 
-              value={title}
-              size="small" 
-              variant="outlined"
-              style={{width:"100%", marginBottom:"10px"}}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={function(e){
-                setTitle(e.target.value)
-              }}
-            />
-            <TextField
-              style={{width:"100%", marginBottom:"10px"}}
-              id="content"
-              label="내용"
-              multiline
-              rows={4}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              variant="outlined"
-              value={content}
-              onChange={function(e){
-                setContent(e.target.value)
-              }}
-            />
+              <div className="top-wrapper"> 
+                <div className="modal-date-picker">
+                  <div className="modal-title">진행기간</div>
+                  <DateRangePickerForm
+                    startDate={startDatetime}
+                    endDate={endDatetime}
+                    setStartDate={setStartDatetime}
+                    setEndDate={setEndDatetime}
+                  />
+                </div>
+
+                <div className="modal-share-toggle">
+                  {/* <div className="modal-title">비공개</div> */}
+                  <div className="modal-title">{shareStatus? "비공개":"공개"}</div>
+                    <ToggleButton
+                    color="primary"
+                    value="check"
+                    selected={shareStatus}
+                    onChange={() => {
+                      setshareStatus(!shareStatus);
+                    }}
+                    >
+                      <BiLock className="lock-icon"/>
+                    </ToggleButton>
+                  </div>
+                </div>
+                <TextField 
+                  required
+                  id="title" 
+                  label="제목" 
+                  value={title}
+                  size="small" 
+                  variant="outlined"
+                  style={{width:"100%", marginBottom:"10px"}}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={function(e){
+                    setTitle(e.target.value)
+                  }}
+                />
+                <TextField
+                  style={{width:"100%", marginBottom:"10px"}}
+                  id="content"
+                  label="내용"
+                  multiline
+                  rows={4}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                  value={content}
+                  onChange={function(e){
+                    setContent(e.target.value)
+                  }}
+                />
             <div className="goal-type-radio">
               <FormControl component="fieldset">
                 <FormLabel style={{fontSize:"12px"}} component="legend">목표유형</FormLabel>
@@ -348,7 +371,7 @@ function GoalInsertFormModal({orderColumn, orderType, goalFullList, setGoalFullL
     </div>
   );
 }
-  
+
 function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, setCount,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}) {
   
@@ -398,6 +421,7 @@ function PeriodicityInfo({kind, timeUnit, setTimeUnit, type, setType, count, set
       return null
   }
 }
+
 
 function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNone,
   sun, setSun, mon, setMon, tue, setTue, wed, setWed, thu, setThu, fri, setFri, sat, setSat}){
@@ -505,44 +529,38 @@ function WeekPeriodSelect({timeUnit, type, setType, count, setCount, none, setNo
   }
 }
 
+
 function ColorTag({color, setColor}){
   const [pickerShow, setPickerShow] = useState(false)
   const pickerHandler = (e)=>{
     e.preventDefault();
     setPickerShow(!pickerShow)
   }
-  return (
-    <>
-    <div className="color-picker-area">
-      <TextField 
-        className="textfield-title"
-        id="color" 
-        label="태그컬러" 
-        size="small" 
-        variant="outlined"
-        value={color}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        onChange={function(e){
-          setColor(e.target.value)
-        }}/>
-        <div className="color-tag-wrapper">
-          <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
-          {pickerShow ? (<div className="color-picker small">
-            <HexColorPicker  color={color} onChange={setColor} />
-          </div>) : null}
-        </div>
-    </div>
-    </>
-  )
-}
-  // YYYY-MM-DD 형태로 반환
-function makeYYMMDD(value){
-  // korea utc timezone(zero offset) 설정
-  let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-  let dateOffset = new Date(value.getTime() - offset);
-  return dateOffset.toISOString().substring(0,10);
+    return (
+      <>
+      <div className="color-picker-area">
+        <TextField 
+          className="textfield-title"
+          id="color" 
+          label="태그컬러" 
+          size="small" 
+          variant="outlined"
+          value={color}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          onChange={function(e){
+            setColor(e.target.value)
+          }}/>
+          <div className="color-tag-wrapper">
+            <button className="color-picker-btn" onClick={pickerHandler}>🎨</button>
+            {pickerShow ? (<div className="color-picker small">
+              <HexColorPicker  color={color} onChange={setColor} />
+            </div>) : null}
+          </div>
+      </div>
+      </>
+    )
 }
 
 export default GoalInsertFormModal;

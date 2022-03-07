@@ -1,37 +1,29 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Login.css";
 import TextField from '@material-ui/core/TextField';
-import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import { toast } from 'react-toastify';
 import useTitle from '../hooks/useTitle';
 import JSEncrypt from 'jsencrypt';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_PUBLICKEY_REQUEST, LOG_IN_REQUEST } from "../reducers/user";
 
 function Login() {
+  const dispatch = useDispatch();
+
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("로그인"), 100);
 
-  const [ publicKey, setPublicKey ] = useState('')
+  const { publicKey, myInfo } = useSelector((state)=> state.user);
 
-  // 공개키 요청함수
-  const fetchPublickKey = async () => {
-    try {
-      const result = await axios.get('/member/requestpublickey')
-      setPublicKey(result.data.publicKeyInfo.publicKeyStr)
-    }catch(err) {
-      console.error(err)
-    }
-  }
-  // 페이지로드시 함수 호출
-  useEffect(()=> {
-    fetchPublickKey();
+  useEffect(()=>{
+    dispatch({
+        type: GET_PUBLICKEY_REQUEST,
+    })
   },[])
 
   const [memberId, setMemberId] = useState("");
   const [password, setPassword] = useState("");
-  const [ , setCurUser ] = useContext(AuthContext);
   const history = useHistory();
 
   const validateForm = ()=>{
@@ -39,7 +31,7 @@ function Login() {
   }
 
   // 로그인 제출
-  const handleSubmit = async (evt) =>{
+  const handleSubmit = (evt) =>{
     evt.preventDefault();
     if(!validateForm()){
       toast.error("올바른 정보를 입력하세요")
@@ -54,24 +46,19 @@ function Login() {
       memberId : rsaEncryptedMemberId,
       password : rsaEncryptedPassword,
     };
-    try{
-      const result = await axios.post("/member/login", formData);
-      //현재 유저 설정
-      setCurUser({memberId:result.data.memberId})
 
-      //로컬 스토리지에 저장하기
-      localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
-      localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
-
-      history.push("/");
-      toast.success(`${result.data.memberId}님, 반갑습니다!`)
-      
-    }catch(err){
-      toast.error(`올바른 정보를 입력하세요 (${err.response.statusText})`)
-      fetchPublickKey(); // 실패시 새로운 키 요청
-    }
+    dispatch({
+      type : LOG_IN_REQUEST,
+      data : formData
+    })
   }
 
+  useEffect(() => {
+    if(myInfo) {
+      history.push("/")
+      toast.success(`${myInfo.memberId}님, 반갑습니다!`)
+    }
+  },[myInfo])
 
   return (
     <div className="login">

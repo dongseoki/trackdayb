@@ -20,8 +20,13 @@ import TextField from '@material-ui/core/TextField';
 import {toast} from "react-toastify";
 import GoalTitleListModal from "./GoalTitleListModal";
 import { useMediaQuery } from "react-responsive";
+import { useDispatch } from 'react-redux';
+import { ADD_ACTIVITY_REQUEST } from "../reducers/activity";
+import dayjs from "dayjs";
 
 function ActivityInsertFormModal({writeDate, activityList, setActivityList, activitySearchList, setActivitySearchList}){
+  const dispatch = useDispatch();
+
     //write Form
     const [startDatetime, setStartDatetime] = useState("");
     const [endDatetime, setEndDatetime] = useState("");
@@ -32,15 +37,7 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
     const [parentGoalTitle, setParentGoalTitle] = useState("");
     const [parentId, setParentId] = useState("");
     const [parentProgressRate, setParentProgressRate] = useState(0);
-    
-    // YYYY-MM-DD 형태로 반환
-    function makeYYMMDD(value){
-      // korea utc timezone(zero offset) 설정
-      let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-      let dateOffset = new Date(value.getTime() - offset);
-      return dateOffset.toISOString().substring(0,10);
-    }
-    
+       
     const InitializeForm = ()=>{
       setStartDatetime("");
       setEndDatetime("");
@@ -109,21 +106,25 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
         toast.error("올바른 진행기간을 입력하세요.", {
           autoClose : 5000
         })
-      } else{
+      }else {
         const formData_activity = {
           goalId:parentId,
           title : title,
-          startDatetime: makeYYMMDD(writeDate) +' '+ startDatetime + ':00',
-          endDatetime: makeYYMMDD(writeDate) +' '+ endDatetime + ':00',
+          startDatetime: dayjs(writeDate).format("YYYY-MM-DD") +' '+ startDatetime + ':00',
+          endDatetime: dayjs(writeDate).format("YYYY-MM-DD") +' '+ endDatetime + ':00',
           content : content,
           activityScore : activityScore,
           shareStatus: shareStatus ? "N":"Y",
-        }; 
-        try{
-          console.log('formData_activity', formData_activity)
-          //활동 추가
-          const result_activity = await axiosInstance.post("/timeManage/activity", formData_activity);
+        };
 
+        console.log('formData_activity', formData_activity)
+        //활동 추가
+        dispatch({
+          type : ADD_ACTIVITY_REQUEST,
+          data : formData_activity
+        })
+        
+        try{
           //목표진행률 업데이트
           if(parentId){
             const formData_goal = {
@@ -139,8 +140,8 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
             var dateB = new Date(b['startDatetime']).getTime();
             return dateA > dateB ? 1 : -1;
           };
-          setActivityList([...activityList, result_activity.data.activityInfo].sort(data_sorting))
-          setActivitySearchList([...activitySearchList, result_activity.data.activityInfo].sort(data_sorting))
+          // setActivityList([...activityList, result_activity.data.activityInfo].sort(data_sorting))
+          // setActivitySearchList([...activitySearchList, result_activity.data.activityInfo].sort(data_sorting))
         } catch(err){
           console.error(err)
         }

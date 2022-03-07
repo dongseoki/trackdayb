@@ -1,23 +1,21 @@
-import React, { useContext, useState, useRef } from "react"
+import React, { useState, useRef } from "react"
 import "./LeftNavigation.css";
-import DateRangePickerCustom from './DateRangePickerCustom';
+import DateRangePicker from './DateRangePicker';
 import GoalTitleList from "./GoalTitleList";
-import { GoalSearchTitleListContext } from "../context/GoalSearchTitleListContext";
 //icon
 import { BiSearch } from "react-icons/bi";
 import Checkbox from '@mui/material/Checkbox';
-// import { useMediaQuery } from "react-responsive";
+
+import { useSelector } from 'react-redux';
 
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-
-
 function LeftNavigation(props){
     // 시간관리(time) 탭에서만 작동    
     const currentURI = window.location.pathname;
+    const { goalSearchTitleList } = useSelector((state) => state.goal)
 
-    const [goalSearchTitleList ] = useContext(GoalSearchTitleListContext);
     const [searchTerm, setSearchTerm] = useState("") //검색어
     const [searchResults, setSearchResults] = useState([]) //검색결과
 
@@ -41,24 +39,16 @@ function LeftNavigation(props){
         props.setOtherIncludedYn(checked);
     }
 
-    // // Mobile 기준 breakpoint
-    // const isMiddleScreen = useMediaQuery({
-    //     query: "(max-width: 768px)",
-    // });
-       
-    // // LeftNav 접기 State
-    // const [foldState, setFoldState] = useState(isMiddleScreen ? true : false);
     return (
         <>
-        
         <nav className="left-nav">
             <div className="search-dateRange-area">
                 <p>조회기간</p>
-                <DateRangePickerCustom 
-                startDate={props.searchStartDatetime}
-                endDate={props.searchEndDatetime}
-                setStartDate={props.setSearchStartDatetime} 
-                setEndDate={props.setSearchEndDatetime}/>
+                <DateRangePicker
+                    startDate={props.searchStartDatetime}
+                    setStartDate={props.setSearchStartDatetime}
+                    endDate={props.searchEndDatetime}
+                    setEndDate={props.setSearchEndDatetime}/>
             </div>
             
             <div className="search-goalTitle-area">
@@ -69,9 +59,9 @@ function LeftNavigation(props){
                     <i className="search-icon"><BiSearch/></i>
                 </div>
                 <GoalTitleList 
-                goalTitleList={searchTerm.length < 1 ? goalSearchTitleList : searchResults}
-                searchGoalIdList={props.searchGoalIdList}
-                setSearchGoalIdList={props.setSearchGoalIdList}
+                    goalTitleList={searchTerm.length < 1 ? goalSearchTitleList : searchResults}
+                    searchGoalIdList={props.searchGoalIdList}
+                    setSearchGoalIdList={props.setSearchGoalIdList}
                 />
             </div>
             

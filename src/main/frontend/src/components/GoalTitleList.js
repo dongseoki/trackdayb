@@ -5,10 +5,35 @@ import "./GoalTitleList.css"
 import Tree from '@naisutech/react-tree'
 //icon
 import { RiArrowDropDownLine } from "react-icons/ri";
+
+import { useDispatch } from 'react-redux';
+import { LOAD_GOALSEARCHFULLLIST_REQUEST } from "../reducers/goal";
+import { LOAD_ACTIVITYSEARCHFULLLIST_REQUEST } from "../reducers/activity";
+
 //checkbox
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function GoalTitleList({goalTitleList, searchGoalIdList, setSearchGoalIdList}) {
+  const dispatch = useDispatch();
+  // 조건 로컬 변수
+  // const [ searchGoalIdList, setSearchGoalIdList ] = useState([]);
+  
+  // 목표조회&활동조회 조건 update Action
+  // useEffect(()=> {
+  //   dispatch({
+  //     type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+  //     data : {
+  //       searchGoalIdList : searchGoalIdList.toString()
+  //     }
+  //   })
+  //   dispatch({
+  //     type : LOAD_ACTIVITYSEARCHFULLLIST_REQUEST,
+  //     data : {
+  //       searchGoalIdList : searchGoalIdList.toString()
+  //     }
+  //   })
+  // }, [searchGoalIdList])
+
   // TreeNode를 위한 goalIdList
   const [goalIdList, setGoalIdList] = useState([])
   useEffect(()=>{

@@ -2,6 +2,7 @@
 import React, { createContext, useEffect, useState } from "react";
 // import axios from "axios";
 import axiosInstance from "../axiosConfig";
+import dayjs from "dayjs";
 export const ActivitySearchListContext = createContext();
 
 export const ActivitySearchListProvider = (props) =>{
@@ -10,20 +11,13 @@ export const ActivitySearchListProvider = (props) =>{
     useEffect(()=>{
         const fetchActivitySearchList = async () => {
             try {
-                // YYYY-MM-DD 형태로 반환
-                function makeYYMMDD(value){
-                    // korea utc timezone(zero offset) 설정
-                    let offset = value.getTimezoneOffset() * 60000; //ms단위라 60000곱해줌
-                    let dateOffset = new Date(value.getTime() - offset);
-                    return dateOffset.toISOString().substring(0,10);
-                }
                 if(!props.searchGoalIdList.length){
                     setActivitySearchList([])
                 } else{
                     const result = await axiosInstance.get("/timeManage/activityList", {
                         params:{
-                            searchStartDatetime :makeYYMMDD(props.searchStartDatetime),
-                            searchEndDatetime : makeYYMMDD(props.searchEndDatetime),
+                            searchStartDatetime :dayjs(props.searchStartDatetime).format("YYYY-MM-DD"),
+                            searchEndDatetime : dayjs(props.searchEndDatetime).format("YYYY-MM-DD"),
                             orderColumn: "start_datetime",
                             orderType: "asc",
                             searchGoalIdList: props.searchGoalIdList.toString(),

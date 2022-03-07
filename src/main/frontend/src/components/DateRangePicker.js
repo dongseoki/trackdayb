@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import { ko } from 'date-fns/esm/locale';
 
-function DateRangePickerCustom(props) {
+function DateRangePicker(props) {
     return (
       <>
       <div className="date-picker-wrapper">
@@ -37,4 +37,4 @@ function DateRangePickerCustom(props) {
   };
 
 
-  export default DateRangePickerCustom;
+  export default DateRangePicker;
