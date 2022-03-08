@@ -9,10 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 const Profile = ({myInfo}) => {
     // 수정 활성화 flag
     const [ editFlag, setEditFlag ] = useState(false);
-
-
-    const [ name, setName ] = useState(myInfo.name);
-    const [ introduction, setIntroduction ] = useState(myInfo.introduction);
+    
     // 아바타 이미지 파일
     const [ photo, setPhoto ] = useState(null);
     // 아바타 이미지 미리보기(소스)
@@ -22,6 +19,10 @@ const Profile = ({myInfo}) => {
     // 배경 이미지 미리보기(소스)
     const [ backgroundSrc, setBackgroundSrc] = useState(null);
 
+    const [ name, setName ] = useState(myInfo.name);
+    const [ introduction, setIntroduction ] = useState(myInfo.introduction);
+    const [ emailAddress, setEmailAddress ] = useState(myInfo.emailAddress);
+    const [ phoneNumber, setPhoneNumber ] = useState(myInfo.phoneNumber);
 
 
     /// 하나로 전체 수정
@@ -58,14 +59,17 @@ const Profile = ({myInfo}) => {
     return (
         <>
         <div className="profile-main-wrapper">
-            {editFlag? 
             <div className="button-wrapper">
+            {editFlag? 
+                <>
                 <button type="submit" className="submitBtn" onClick={saveFlagHandler}>저장</button>
                 <button type="button" className="cancleBtn" onClick={cancleFlagHandler}>취소</button>
-            </div>
+                </>
             :
-            <button type="submit" className="submitBtn" onClick={editFlagHandler}>수정</button>
+            // <BiEdit className="modifyBtn" onClick={editFlagHandler}/>
+                <button type="submit" className="modifyBtn" onClick={editFlagHandler}>수정</button>
             }
+            </div>
 
 
             <div className="profile-background-wrapper">
@@ -91,25 +95,6 @@ const Profile = ({myInfo}) => {
             </div>
         
             <div className="profile-contents-wrapper">
-                
-                <div className="profile-photo">
-                    <Avatar
-                        className="profile-avatar"
-                        alt="Profile Image"
-                        src={photoSrc}
-                        sx={{ width: 100, height: 100, mx: 2}}
-                    />
-
-                    <div className="file-wrapper">
-                        {editFlag?
-                        <div className="file-dropper">
-                            <label for="photo">파일선택</label>
-                            <input id="photo" type="file" accept="image/*" onChange={photoSelectHandler}/>
-                        </div> 
-                        : null}
-                    </div>
-
-                </div>
 
                 <div className="profile-texts">
 
@@ -154,6 +139,67 @@ const Profile = ({myInfo}) => {
                         :
                         <div className="profile-text-content">{ myInfo.introduction }</div>
                         }
+                    </div>
+
+                    <div className="profile-emailAddress">
+                        {editFlag? 
+                        <TextField 
+                            id="emailAddress" 
+                            defaultValue={name}
+                            label="이메일" 
+                            size="small" 
+                            variant="outlined"
+                            style={{width:"100%",marginBottom:"14px", marginRight:"4px"}}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function(e){
+                                setEmailAddress(e.target.value)
+                            }}
+                        />
+                        :
+                        <div className="profile-text-content">{ myInfo.emailAddress }</div>
+                        }
+                    </div>
+
+                    <div className="profile-phoneNumber">
+                        {editFlag? 
+                        <TextField 
+                            id="phoneNumber" 
+                            defaultValue={name}
+                            label="연락처" 
+                            size="small" 
+                            variant="outlined"
+                            style={{width:"100%",marginBottom:"14px", marginRight:"4px"}}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={function(e){
+                                setPhoneNumber(e.target.value)
+                            }}
+                        />
+                        :
+                        <div className="profile-text-content">{ myInfo.phoneNumber }</div>
+                        }
+                    </div>
+                    
+                </div>
+
+                <div className="profile-photo">
+                    <Avatar
+                        className="profile-avatar"
+                        alt="Profile Image"
+                        src={photoSrc}
+                        sx={{ width: 100, height: 100, mx: 2}}
+                    />
+
+                    <div className="file-wrapper">
+                        {editFlag?
+                        <div className="file-dropper">
+                            <label for="photo">파일선택</label>
+                            <input id="photo" type="file" accept="image/*" onChange={photoSelectHandler}/>
+                        </div> 
+                        : null}
                     </div>
 
                 </div>
