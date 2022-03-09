@@ -5,20 +5,27 @@ import { SiKakaotalk, SiGoogle, SiNaver} from "react-icons/si";
 const AccountInfo = () => {
 
     return (
-        <div className="accountInfo-content">
-            <div style={{display:'flex'}}>
-                <div>비밀번호</div>
-                <button>수정하기</button>
+        <div className="accountInfo-main-wrapper">
+            <div className="accountInfo-content-wrapper">
+                <div className="accountInfo-title">비밀번호</div>
+                <button className="accountInfo-button">비밀번호 변경</button>
             </div>
-            <div style={{display:'flex'}}>
-                <div>계정연동</div>
-                <div><SiKakaotalk/></div>
-                <div><SiGoogle/></div>
-                <div><SiNaver/></div>
+            
+
+            <div className="accountInfo-content-wrapper">
+                <div className="accountInfo-title">계정연동</div>
+
+                <div className="accountInfo-icon"><SiKakaotalk title="카카오톡연동"/></div>
+                <div className="accountInfo-icon"><SiGoogle title="구글연동"/></div>
+                <div className="accountInfo-icon"><SiNaver title="네이버연동"/></div>
+            </div>
+
+
+            <div className="accountInfo-content-wrapper">
+                <div className="accountInfo-title">탈퇴</div>
+                <button className="accountInfo-button">탈퇴하기</button>
                 
-                <button>추가</button>
             </div>
-            <div>탈퇴</div>
         </div>
     )
 }

@@ -1,14 +1,14 @@
 /* 저장 취소 버튼 공통 */
 .mypage .button-wrapper{
-  /* position:absolute;
-  right : 0;
-  z-index:10; */
-
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 14px;
+  margin: 14px 14px 0 0 ;
+
+  position: absolute;
+  right: 0;
+  z-index: 99;
 }
 .mypage .submitBtn{
   border: 1px solid #3292EB;
@@ -39,78 +39,72 @@
   margin-right: 4px;
   cursor: pointer;
   height: 40px;
-
-  /* position:absolute;
-  right : 0; */
-  /* z-index:10; */
-  /* margin-right: 4px;
-  cursor: pointer;
-  border: none;
-  font-size: 24px;
-  background-color: transparent;
-  color: rgba(5, 23, 42, 0.6);
-  margin: 5px; */
 }
 
 
 /* 전체 프로필 박스 */
 .profile-main-wrapper{
-  border : 2px solid red;
-  box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
-  /* height: 300px; */
+  min-height: 300px;
   border-radius: 10px;
-  /* position: relative; */
+  position: relative;
+  /* height: auto; */
+
 
 }
 
+.profile-wrapper{
+
+  position: relative;
+
+}
+
+
 .profile-background-wrapper{
-  border : 3px solid blue;
-  /* margin : 10px; */
-  /* position: absolute; */
   width : 100%;
   height: 100%;
+  box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
   border-radius: 10px;
 }
 .profile-background{
-  position: absolute;
-  height: 100%;
   z-index: -99;
   border-radius: 10px;
 }
 
 .profile-contents-wrapper {
-  
-  background-color: rgba(255,255,255, 0.5);
-  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  width : 100%;
   height: 100%;
-  width: 100%;
-
+  padding : 0 100px;
+  background-color: rgba(0,0,0, 0.1);
+  border-radius: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
-
+  justify-content: center;
+  gap: 50px;
 }
 
-.profile-photo{
-  margin : 0 50px;
-  position: relative;
+@media screen and (max-width : 740px) {
+  .profile-contents-wrapper{
+    flex-direction: column;
+    padding : 0 30px;
+  }
+  .profile-contents-wrapper .profile-texts{
+    order : 2;
+  }
 }
-.profile-photo .edit-icon {
-  position: absolute;
-  bottom :0;
-  right :0;
-}
+
+
+
 
 .profile-texts{
   display: flex;
   flex-direction: column;
-  
+  gap : 5px;
   flex-grow: 1;
 
-  margin-right: 50px;
-
-  padding: 50px 0;
-  height: 100%;
+  padding : 30px 0;
 }
 
 /* 이름, 소개 공통 */
@@ -123,13 +117,34 @@
   padding-right : 10px;
 }
 
-.edit-icon{
-  font-size: 12px;
-  border: none;
-  font-size: 20px;
-  background-color: transparent;
+
+
+.profile-name .profile-text-content{
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.profile-emailAddress .profile-text-content{
+  font-size: 0.9em;
+}
+.profile-phoneNumber .profile-text-content{
+  font-size: 0.9em;
+}
+
+.profile-photo{
+  /* margin : 0 50px; */
+  position: relative;
+}
+
+.edit-icon {
+  color : #3292EB;
+  font-size: 30px;
   cursor: pointer;
-  color: rgba(5, 23, 42, 0.6);
+}
+
+
+
+.profile-background-wrapper .edit-icon{
+  margin : 0 10px 10px 0;
 }
 
 /* 파일선택 버튼 공통 */
@@ -143,18 +158,20 @@
 }
 
 .file-dropper label { 
-  display: inline-block; 
-  height: 40px;
-  line-height: 40px;
-  padding: 0 10px;
+  position: absolute;
+  bottom : 0;
+  right : 0;
+  z-index: 10;
+  /* display: inline-block;  */
+  /* height: 40px; */
+  /* line-height: 40px; */
+  /* padding: 0 10px; */
   /* border: 1px solid #b2e0e0; */
-  border : 1px solid rgba(0, 0, 0, 0.22);
-  border-radius: 4px;
-  background-color: #b2e0e0;
-  color : black;
-  font-size: 14px;
-  margin-right: 4px;
-  cursor: pointer;
+  /* border : 1px solid rgba(0, 0, 0, 0.22); */
+  /* border-radius: 4px; */
+  /* background-color: #b2e0e0; */
+  
+  
 } 
 .file-dropper input[type="file"] { 
   /* 파일 필드 숨기기 */ 
@@ -168,3 +185,4 @@
   border: 0; 
   color: white;
 }
+
