@@ -50,9 +50,6 @@ public class MemberServiceImpl extends MemberService {
     @Value("${sns.google.client-id}")
     private String SNS_GOOGLE_CLIENT_ID;
 
-    @Value("${sns.google.client-secret}")
-    private String SNS_GOOGLE_CLIENT_SECRET;
-
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;

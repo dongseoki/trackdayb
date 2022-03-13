@@ -3,7 +3,7 @@
 <!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">-->
   <head>
     <meta charset="UTF-8">
-    <meta name="google-signin-client_id" content="618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com">
+    <meta name="google-signin-client_id"  th:content="${snsGoogleCliendId}">
     <title>login</title>
     <script	src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
 <!--    <script type="text/javascript" src="/resources/js/jsbn.js"></script>-->
@@ -318,5 +318,16 @@
       </ul>
       <input type="submit"/>
     </form>
+
+    <form action="/test/uploadspring"method="post" enctype="multipart/form-data">
+      <ul>
+        <li>상품명 <input type="text" name="itemName"></li>
+        <li>첨부파일<input type="file" name="attachFile" ></li>
+        <li>이미지 파일들<input type="file" multiple="multiple" name="imageFiles" ></li>
+      </ul>
+      <input type="submit"/>
+    </form>
   </body>
+
+
 </html>
