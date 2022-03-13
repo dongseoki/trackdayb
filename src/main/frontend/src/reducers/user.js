@@ -19,6 +19,9 @@ export const userInitialState = {
     publicKey : null,
     accessToken : null,
     refreshToken : null,
+    changePwLoading : false, // 비밀번호 변경 시도중
+    changePwDone : false,
+    changePwError : null,
 }
 
 // action 은 생략 그때그때 만들어서 사용
@@ -47,6 +50,10 @@ export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE'
 export const REISSUE_REQUEST = 'REISSUE_REQUEST' // accessToken 재발행
 export const REISSUE_SUCCESS = 'REISSUE_SUCCESS'
 export const REISSUE_FAILURE = 'REISSUE_FAILURE'
+
+export const CHANGE_PW_REQUEST = 'CHANGE_PW_REQUEST' // pw 변경
+export const CHANGE_PW_SUCCESS = 'CHANGE_PW_SUCCESS'
+export const CHANGE_PW_FAILURE = 'CHANGE_PW_FAILURE'
 
 //reducer
 const userReducer = (state=userInitialState, action) =>{
@@ -161,6 +168,25 @@ const userReducer = (state=userInitialState, action) =>{
             return {
                 ...state,
                 accessToken : action.data,
+            }
+        case CHANGE_PW_REQUEST: // 비밀번호 변경 시도
+            return {
+                ...state,
+                changePwLoading : true, 
+                changePwDone : false,
+                changePwError : null,
+            }
+        case CHANGE_PW_SUCCESS:
+            return {
+                ...state,
+                changePwLoading : false, 
+                changePwDone : true,
+            }
+        case CHANGE_PW_FAILURE:
+            return {
+                ...state,
+                changePwLoading : false, 
+                changePwError : action.error,
             }
         default:
             return state;

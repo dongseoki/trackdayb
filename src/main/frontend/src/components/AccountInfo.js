@@ -1,6 +1,7 @@
 import React from "react";
 import './AccountInfo.css';
 import { SiKakaotalk, SiGoogle, SiNaver} from "react-icons/si";
+import ChangePwModal from './ChangePwModal';
 
 const AccountInfo = () => {
 
@@ -8,7 +9,7 @@ const AccountInfo = () => {
         <div className="accountInfo-main-wrapper">
             <div className="accountInfo-content-wrapper">
                 <div className="accountInfo-title">비밀번호</div>
-                <button className="accountInfo-button">비밀번호 변경</button>
+                <ChangePwModal/>
             </div>
             
 

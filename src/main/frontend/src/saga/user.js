@@ -15,7 +15,10 @@ import { GET_PUBLICKEY_FAILURE,
         LOG_OUT_FAILURE, 
         REISSUE_REQUEST,
         REISSUE_SUCCESS,
-        REISSUE_FAILURE} from "../reducers/user";
+        REISSUE_FAILURE,
+        CHANGE_PW_REQUEST,
+        CHANGE_PW_SUCCESS,
+        CHANGE_PW_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -116,6 +119,26 @@ function* logOut() { // 로그아웃
 //     }
 // }
 
+function chagePwAPI(data) { // 패스워드 변경
+    return axios.post('/member/changepwd', data)
+}
+function* changePw(action) { // 패스워드 변경
+    try{
+        const result = yield call(chagePwAPI, action.data)
+        yield put({
+            type : CHANGE_PW_SUCCESS,
+        })
+    }catch(err) {
+        console.log(err);
+        yield put({
+            type: CHANGE_PW_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
+
+
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
@@ -131,7 +154,9 @@ function* watchLogOut() {
 // function* watchReIssue() {
 //     yield takeLatest(REISSUE_REQUEST, reIssue);
 // }
-
+function* watchChangePw() {
+    yield takeLatest(CHANGE_PW_REQUEST, changePw);
+}
 
 export default function* userSaga() {
     yield all([
@@ -141,5 +166,6 @@ export default function* userSaga() {
         fork(watchLogOut),
         // fork(watchSignUp),
         // fork(watchReIssue),
+        fork(watchChangePw),
     ])
 }
