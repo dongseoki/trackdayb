@@ -21,7 +21,10 @@ import { GET_PUBLICKEY_FAILURE,
         CHANGE_PW_FAILURE,
         SIGN_UP_REQUEST,
         SIGN_UP_SUCCESS,
-        SIGN_UP_FAILURE} from "../reducers/user";
+        SIGN_UP_FAILURE,
+        SNS_LOG_IN_SUCCESS,
+        SNS_LOG_IN_REQUEST,
+        SNS_LOG_IN_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -102,7 +105,7 @@ function* logOut() { // 로그아웃
     }
 }
 
-function signUpAPI(data) { // 로그인
+function signUpAPI(data) { // 회원가입
     return axios.post('/member/signup', data)
 }
 function* signUp(action) {
@@ -160,7 +163,27 @@ function* changePw(action) { // 패스워드 변경
     }
 }
 
-
+function snsLogInAPI(data) { // SNS 로그인
+    return axios.post('/member/snslogin/google', data)
+}
+function* snsLogIn(action) {
+    try{
+        const result = yield call(snsLogInAPI, action.data);
+        yield put({
+            type : SNS_LOG_IN_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+        //로컬 스토리지에 저장하기
+        // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: SNS_LOG_IN_FAILURE,
+            error : err.response.data
+        })
+    }
+}
 
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
@@ -183,6 +206,9 @@ function* watchSignUp() {
 function* watchChangePw() {
     yield takeLatest(CHANGE_PW_REQUEST, changePw);
 }
+function* watchSnsLogIn() {
+    yield takeLatest(SNS_LOG_IN_REQUEST, snsLogIn);
+}
 
 export default function* userSaga() {
     yield all([
@@ -193,5 +219,6 @@ export default function* userSaga() {
         fork(watchSignUp),
         // fork(watchReIssue),
         fork(watchChangePw),
+        fork(watchSnsLogIn),
     ])
 }

@@ -23,6 +23,13 @@ export const userInitialState = {
     changePwDone : false,
     changePwError : null,
 
+    snsLogInLoading : false, //SNS 로그인 시도 중
+    snsLogInDone : false,
+    snsLogInError : null,
+    snsResultCode : null, // SNS 로그인 에러코드
+
+    
+
 }
 
 // action 은 생략 그때그때 만들어서 사용
@@ -55,6 +62,11 @@ export const REISSUE_FAILURE = 'REISSUE_FAILURE'
 export const CHANGE_PW_REQUEST = 'CHANGE_PW_REQUEST' // pw 변경
 export const CHANGE_PW_SUCCESS = 'CHANGE_PW_SUCCESS'
 export const CHANGE_PW_FAILURE = 'CHANGE_PW_FAILURE'
+
+export const SNS_LOG_IN_REQUEST = 'SNS_LOG_IN_REQUEST' //SNS 로그인
+export const SNS_LOG_IN_SUCCESS = 'SNS_LOG_IN_SUCCESS'
+export const SNS_LOG_IN_FAILURE = 'SNS_LOG_IN_FAILURE'
+
 
 //reducer
 const userReducer = (state=userInitialState, action) =>{
@@ -189,6 +201,29 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 changePwLoading : false, 
                 changePwError : action.error,
+            }
+        case SNS_LOG_IN_REQUEST: // SNS 로그인 시도
+            return {
+                ...state,
+                snsLogInLoading : true, 
+                snsLogInDone : false,
+                snsLogInError : null,
+            }
+        case SNS_LOG_IN_SUCCESS:
+            console.log('로그인 성공 action.data', action.data)
+            return {
+                ...state,
+                snsLogInLoading : false, 
+                snsLogInDone : true,
+                myId : action.data.memberId,
+                snsResultCode : action.data.resultCode,
+            }
+        case SNS_LOG_IN_FAILURE:
+            console.log("로그인 실패")
+            return {
+                ...state,
+                snsLogInLoading : false, 
+                snsLogInError : action.error,
             }
         default:
             return state;

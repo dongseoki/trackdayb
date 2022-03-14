@@ -9,7 +9,8 @@ import userReducer from "./user";
 const persistConfig = {
     key : 'user',
     storage : storage,
-    whitelist : ["user"] // 스토리지에 저장할 값
+    whitelist : ["user"], // 스토리지에 저장할 값
+    blacklist : ["user.snsResultCode"]
 }
 
 const rootReducer = combineReducers({
