@@ -7,6 +7,7 @@ import useTitle from '../hooks/useTitle';
 import JSEncrypt from 'jsencrypt';
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_PUBLICKEY_REQUEST, LOG_IN_REQUEST } from "../reducers/user";
+import GoogleLoginBtn from "../components/GoogleLoginBtn";
 
 function Login() {
   const dispatch = useDispatch();
@@ -95,6 +96,7 @@ function Login() {
           />
           <button type="submit" className="submitBtn">로그인</button>
         </form>
+          <GoogleLoginBtn />
       </div>
     </div>
   );
