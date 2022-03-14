@@ -1,6 +1,8 @@
 package com.lds.trackdayb.exception;
 
-public class NoLinkedMemberException extends RuntimeException {
-    public NoLinkedMemberException(String msg) { super(msg); }
+import com.lds.trackdayb.util.ResponseCodeUtil;
+
+public class NoLinkedMemberException extends CustomException {
+    public NoLinkedMemberException(String msg) { super(ResponseCodeUtil.RESULT_CODE_NO_LINKED_MEMBER,msg); }
 
 }

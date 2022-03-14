@@ -2,6 +2,7 @@ package com.lds.trackdayb.util;
 
 public final class ResponseCodeUtil {
     public final static String RESULT_CODE_SUCESS = "0000";					// 성공
+    public static final String RESULT_CODE_UNOWNEED_RESOURCES_ACCESS = "9987";
     public static final String RESULT_CODE_NO_LINKED_MEMBER = "9989";
     public static final String RESULT_CODE_DELETED_USER = "9990";
     public final static String RESULT_CODE_UNSUPPORT_SNS = "9991";       // 지원하지않는 SNS.

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.lds.trackdayb.exception.UnownedResourcesAccessException;
 import com.lds.trackdayb.mvo.ActivityMVO;
 import com.lds.trackdayb.mvo.GoalMVO;
 import com.lds.trackdayb.mvo.TimeRecordMVO;
@@ -121,7 +122,7 @@ public class TimeManageServiceImpl implements TimeManageService{
             goalVO.setMemberSerialNumber(activityVO.getMemberSerialNumber());
             goalVO.setGoalId(activityVO.getGoalId());
             if (!goalManageService.checkGoalOwnership(goalVO)){
-                throw new IllegalStateException();
+                throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
             }
         }
         timeManageRepository.insertActivity(activityVO);
@@ -144,7 +145,7 @@ public class TimeManageServiceImpl implements TimeManageService{
     public void updateActivity(ActivityVO activityVO) {
         // activity ID 소유권 파악
         if(!checkActivityOwnership(activityVO)){
-            throw new IllegalStateException();
+            throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
         }
 
         // 입력된 goal의 소유권 파악.
@@ -154,7 +155,7 @@ public class TimeManageServiceImpl implements TimeManageService{
             goalVO.setMemberSerialNumber(activityVO.getMemberSerialNumber());
             goalVO.setGoalId(activityVO.getGoalId());
             if (!goalManageService.checkGoalOwnership(goalVO)){
-                throw new IllegalStateException();
+                throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
             }
         }
 
@@ -165,7 +166,7 @@ public class TimeManageServiceImpl implements TimeManageService{
     public void deleteActivity(ActivityVO activityVO) {
         // activity ID 소유권 파악
         if(!checkActivityOwnership(activityVO)){
-            throw new IllegalStateException();
+            throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
         }
         timeManageRepository.deleteActivity(activityVO);
         

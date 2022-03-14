@@ -1,16 +1,9 @@
 package com.lds.trackdayb.exception;
 
-public class DuplicateMemberException extends RuntimeException {
-    public DuplicateMemberException() {
-        super();
-    }
-    public DuplicateMemberException(String message, Throwable cause) {
-        super(message, cause);
-    }
+import com.lds.trackdayb.util.ResponseCodeUtil;
+
+public class DuplicateMemberException extends CustomException {
     public DuplicateMemberException(String message) {
-        super(message);
-    }
-    public DuplicateMemberException(Throwable cause) {
-        super(cause);
+        super(ResponseCodeUtil.RESULT_CODE_DUPLICATE_MEMBER,message);
     }
 }

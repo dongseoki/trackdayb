@@ -1,5 +1,7 @@
 package com.lds.trackdayb.exception;
 
-public class DuplicateLinkedEmailException  extends RuntimeException {
-    public DuplicateLinkedEmailException(String msg) { super(msg); }
+import com.lds.trackdayb.util.ResponseCodeUtil;
+
+public class DuplicateLinkedEmailException  extends CustomException {
+    public DuplicateLinkedEmailException(String msg) { super(ResponseCodeUtil.RESULT_CODE_DUPLICATE_SNS_EMAIL,msg); }
 }

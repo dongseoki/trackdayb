@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.lds.trackdayb.dto.PeriodicityInfoDTO;
+import com.lds.trackdayb.exception.UnownedResourcesAccessException;
 import com.lds.trackdayb.mvo.GoalMVO;
 import com.lds.trackdayb.repository.GoalManageRepository;
 import com.lds.trackdayb.util.CommonCodeUtil;
@@ -47,7 +48,7 @@ public class GoalManageServiceImpl implements GoalManageService {
     @Override
     public void updateGoal(GoalVO goalVO) {
         if (!checkGoalOwnership(goalVO)){
-            throw new IllegalStateException();
+            throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
         }
 
         goalManageRepository.updateGoal(goalVO);
@@ -61,7 +62,7 @@ public class GoalManageServiceImpl implements GoalManageService {
     @Override
     public void updateGoalProgressRate(GoalVO goalVO) {
         if (!checkGoalOwnership(goalVO)){
-            throw new IllegalStateException();
+            throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
         }
         goalManageRepository.updateGoalProgressRate(goalVO);
     }
@@ -70,7 +71,7 @@ public class GoalManageServiceImpl implements GoalManageService {
     @Override
     public void deleteGoal(GoalVO goalVO) {
         if (!checkGoalOwnership(goalVO)){
-            throw new IllegalStateException();
+            throw new UnownedResourcesAccessException("UnownedResourcesAccessException occured");
         }
 
         // 계층관계. A->B->C,D 인 경우.

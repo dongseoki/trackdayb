@@ -204,14 +204,7 @@ public class TimeManageController {
         activityVO.setMemberSerialNumber(loginSerialNumber);
 
         List<ActivityMVO> activityList = new ArrayList<ActivityMVO>();
-        try {
-            activityList = timeManageService.getActivityList(activityVO);
-        } catch (Exception e) {
-            LOGGER.error("getAcitivityList fail {}", e.toString());
-            jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_FAIL);
-            return jo.toString();
-        }
-
+        activityList = timeManageService.getActivityList(activityVO);
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
         JsonArray activityListJsonArray = new Gson().toJsonTree(activityList).getAsJsonArray();
         jo.add("activityList", activityListJsonArray);
@@ -258,23 +251,16 @@ public class TimeManageController {
         
         String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
-        
-        try {
-            timeManageService.insertActivity(activityVO);
-            LOGGER.info("insertActivity Id : {}", activityVO.getActivityId());
 
-            //set activity Info
-            String[] searchGoalIdArray = {activityVO.getActivityId()}; 
-            ActivityVO param1 = new ActivityVO();
-            param1.setMemberSerialNumber(param1.getMemberSerialNumber());
-            param1.setSearchActivityIdList(Arrays.asList(searchGoalIdArray));
-            resultMVO.setActivityInfo(timeManageService.getActivityList(param1).get(0));
-        } catch (Exception e) {
-            LOGGER.error("insert activity fail : {}", e.toString());
-            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-        }
+        timeManageService.insertActivity(activityVO);
+        LOGGER.info("insertActivity Id : {}", activityVO.getActivityId());
 
-
+        //set activity Info
+        String[] searchGoalIdArray = {activityVO.getActivityId()};
+        ActivityVO param1 = new ActivityVO();
+        param1.setMemberSerialNumber(param1.getMemberSerialNumber());
+        param1.setSearchActivityIdList(Arrays.asList(searchGoalIdArray));
+        resultMVO.setActivityInfo(timeManageService.getActivityList(param1).get(0));
 
         return resultMVO;
     }
@@ -308,23 +294,15 @@ public class TimeManageController {
         
         String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
-        
-        try {
-            timeManageService.updateActivity(activityVO);
 
-            //set activity Info
-            String[] searchGoalIdArray = {activityVO.getActivityId()}; 
-            ActivityVO param1 = new ActivityVO();
-            param1.setMemberSerialNumber(param1.getMemberSerialNumber());
-            param1.setSearchActivityIdList(Arrays.asList(searchGoalIdArray));
-            resultMVO.setActivityInfo(timeManageService.getActivityList(param1).get(0));
+        timeManageService.updateActivity(activityVO);
 
-        } catch (Exception e) {
-            LOGGER.error("update activity fail : {}", e.toString());
-            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-        }
-
-
+        //set activity Info
+        String[] searchGoalIdArray = {activityVO.getActivityId()};
+        ActivityVO param1 = new ActivityVO();
+        param1.setMemberSerialNumber(param1.getMemberSerialNumber());
+        param1.setSearchActivityIdList(Arrays.asList(searchGoalIdArray));
+        resultMVO.setActivityInfo(timeManageService.getActivityList(param1).get(0));
 
         return resultMVO;
     }

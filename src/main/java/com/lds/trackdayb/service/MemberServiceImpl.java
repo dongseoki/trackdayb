@@ -196,7 +196,7 @@ public class MemberServiceImpl extends MemberService {
     public TokenDTO reissue(TokenRequestDTO tokenRequestDTO) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenRequestDTO.getRefreshToken())) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+            throw new InvalidRefreshTokenException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
@@ -209,7 +209,7 @@ public class MemberServiceImpl extends MemberService {
 
         // 3. Refresh Token 일치하는지 검사
         if (!StringUtils.equals(tokenRequestDTO.getRefreshToken(), dbRefreshTokenValue)) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+            throw new InvalidRefreshTokenException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         // 4. 새로운 토큰 생성 및 리턴.
@@ -223,8 +223,6 @@ public class MemberServiceImpl extends MemberService {
 //        //HTTP Request를 위한 RestTemplate
 //        RestTemplate restTemplate = new RestTemplate();
 
-//        String CLIENT_ID = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
-//        String clientSecret = "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";
         // google example code
 
         GoogleIdTokenVerifier verifier =
@@ -259,13 +257,13 @@ public class MemberServiceImpl extends MemberService {
                 // ...
                 LOGGER.info("test tokensignin : userId : {}, email : {} emailVerified:{}, name:{}, pictureUrl:{}, local:{}",userId,email,emailVerified,name,pictureUrl,locale);
                 if (StringUtils.isEmpty(email) || emailVerified == false){
-                    throw new Exception();
+                    throw new SnsAuthServerException("emailVerified false.");
                 }
             } else {
                 LOGGER.info("test tokensignin : {}","Invalid ID token");
             }
         }catch (Exception e){
-            throw new Exception();
+            throw new SnsAuthServerException("unexpected sns auth server fail.");
         }
         return email;
     }
