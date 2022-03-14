@@ -14,5 +14,5 @@ const middleware = [sagaMiddleware];
 export const store = createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(...middleware)));
 store.sagaTask = sagaMiddleware.run(rootSaga);
 
-// export default store;
+export default store;
 export const persistor = persistStore(store);

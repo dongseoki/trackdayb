@@ -36,4 +36,12 @@
   .signup-form .submitBtn{
     width: 100%;
     margin: 20px 0;
+    border: 1px solid #3292EB;
+    border-radius: 4px;
+    background-color: #3292EB;
+    height: 40px;
+    color : white;
+    font-size: 14px;
+    margin-right: 2px;
+    cursor: pointer;
   }

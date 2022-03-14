@@ -18,7 +18,8 @@ axiosInstance.interceptors.request.use(
     토큰에 대한 정보를 여러곳에서 처리하지 않아도 된다.
     2. 요청 method에 따른 외부로 드러내지 않고 처리하고 싶은 부분에 대한 작업이 가능.
     **/
-    const accessToken = store.getState().user.accessToken;
+    // const accessToken = store.getState().user.accessToken;
+    const accessToken = localStorage.getItem('accessToken');
 
     if(accessToken){
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -26,7 +27,7 @@ axiosInstance.interceptors.request.use(
      store.dispatch({
        type: LOG_OUT_REQUEST
      })
-    window.location.href = '/login'
+    window.location.href = '/'
    }
     return config;
   },
@@ -81,8 +82,11 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const accessToken = store.getState().user.accessToken;
-      const refreshToken = store.getState().user.refreshToken;
+      // const accessToken = store.getState().user.accessToken;
+      // const refreshToken = store.getState().user.refreshToken;
+
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
 
       const tokenData = {
         accessToken,

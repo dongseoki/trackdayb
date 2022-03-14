@@ -10,7 +10,7 @@ import { useMediaQuery } from "react-responsive";
 import {GiHamburgerMenu} from "react-icons/gi"
 import GuidePopup from "./GuidePopup";
 import { useDispatch, useSelector } from "react-redux";
-import { LOG_OUT_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST, LOG_OUT_REQUEST } from "../reducers/user";
 // import { store } from '../store/store';
 
 function Navigation(){
@@ -36,7 +36,8 @@ function Navigation(){
           history.push("/")
           toast.success("로그아웃 되었습니다.")
         }
-      },[myId])
+    },[myId])
+
 
     // 반응형 화면 BreakPoint
     const isSmallScreen = useMediaQuery({
@@ -69,7 +70,7 @@ function Navigation(){
                 <ul>
                     {myId ? <>
                         {/* <li><span>{myId.memberInfo.memberId}</span></li> */}
-                        <li><Link to='/mypage'>mypage</Link></li>
+                        <li><Link to='/mypage'>{myId}</Link></li>
                         <li><button className="logout-btn" onClick={logoutHandler}>로그아웃</button></li>
                         </> : ( 
                             <>

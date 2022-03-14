@@ -18,7 +18,10 @@ import { GET_PUBLICKEY_FAILURE,
         REISSUE_FAILURE,
         CHANGE_PW_REQUEST,
         CHANGE_PW_SUCCESS,
-        CHANGE_PW_FAILURE} from "../reducers/user";
+        CHANGE_PW_FAILURE,
+        SIGN_UP_REQUEST,
+        SIGN_UP_SUCCESS,
+        SIGN_UP_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -71,8 +74,8 @@ function* logIn(action) {
             data : result.data, //서버로 부터 받아온 데이터
         })
         //로컬 스토리지에 저장하기
-        // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
-        // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
     }catch(err) {
         console.error(err);
         yield put({
@@ -88,8 +91,8 @@ function* logOut() { // 로그아웃
             type : LOG_OUT_SUCCESS,
         })
         //로컬 스토리지 삭제하기
-        // localStorage.removeItem("accessToken");
-        // localStorage.removeItem("refreshToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
     }catch(err) {
         console.error(err);
         yield put({
@@ -99,7 +102,27 @@ function* logOut() { // 로그아웃
     }
 }
 
-
+function signUpAPI(data) { // 로그인
+    return axios.post('/member/signup', data)
+}
+function* signUp(action) {
+    try{
+        const result = yield call(signUpAPI, action.data);
+        yield put({
+            type : SIGN_UP_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+        //로컬 스토리지에 저장하기
+        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: SIGN_UP_FAILURE,
+            error : err.response.data
+        })
+    }
+}
 // function reIssueAPI(data) { // accessToken 재발급
 //     return axios.post('/member/reissue', data)
 // }
@@ -151,6 +174,9 @@ function* watchLogIn() {
 function* watchLogOut() {
     yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
+function* watchSignUp() {
+    yield takeLatest(SIGN_UP_REQUEST, signUp);
+}
 // function* watchReIssue() {
 //     yield takeLatest(REISSUE_REQUEST, reIssue);
 // }
@@ -164,7 +190,7 @@ export default function* userSaga() {
         fork(watchGetPublicKey),
         fork(watchLogIn),
         fork(watchLogOut),
-        // fork(watchSignUp),
+        fork(watchSignUp),
         // fork(watchReIssue),
         fork(watchChangePw),
     ])

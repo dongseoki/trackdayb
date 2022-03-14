@@ -17,11 +17,12 @@ export const userInitialState = {
     publicKeyDone : false,
     publicKeyError : null,
     publicKey : null,
-    accessToken : null,
-    refreshToken : null,
+    // accessToken : null,
+    // refreshToken : null,
     changePwLoading : false, // 비밀번호 변경 시도중
     changePwDone : false,
     changePwError : null,
+
 }
 
 // action 은 생략 그때그때 만들어서 사용
@@ -112,8 +113,8 @@ const userReducer = (state=userInitialState, action) =>{
                 logInLoading : false, 
                 logInDone : true,
                 myId : action.data.memberId,
-                accessToken : action.data.tokenInfo.accessToken,
-                refreshToken : action.data.tokenInfo.refreshToken
+                // accessToken : action.data.tokenInfo.accessToken,
+                // refreshToken : action.data.tokenInfo.refreshToken
             }
         case LOG_IN_FAILURE:
             return {
@@ -136,8 +137,8 @@ const userReducer = (state=userInitialState, action) =>{
                 logOutDone : true,
                 myInfo : null,
                 myId : null,
-                accessToken : null,
-                refreshToken : null,
+                // accessToken : null,
+                // refreshToken : null,
             }
         case LOG_OUT_FAILURE:
             return {
@@ -157,6 +158,7 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 signUpLoading : false, 
                 signUpDone : true,
+                myId : action.data.memberId,
             }
         case SIGN_UP_FAILURE:
             return {
@@ -167,7 +169,7 @@ const userReducer = (state=userInitialState, action) =>{
         case REISSUE_SUCCESS: // accessToken 재발행 성공시 값만 업데이트
             return {
                 ...state,
-                accessToken : action.data,
+                // accessToken : action.data,
             }
         case CHANGE_PW_REQUEST: // 비밀번호 변경 시도
             return {
