@@ -260,3 +260,4 @@ Release
   - SNS 간편 회원가입, SNS 계정 정보 연동시 중복 SNS 연동 이메일 오류 처리
   - member 테이블 사용하지 않는 컬럼 및 키 제거.
   - Exception을 한곳에서 관리하도록 처리.(ControllerExceptionHandler 참고.)
+  - changePassword API 구현 완료.

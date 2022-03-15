@@ -2,6 +2,7 @@ package com.lds.trackdayb.repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.lds.trackdayb.entity.MemberEntity;
 
@@ -16,6 +17,9 @@ public interface MemberRepository {
 
     MemberEntity findByMemberId(String memberId);
     MemberEntity findByMemberIdAndPassword(HashMap<String, String> param);
+
+    void changePassword(Map<String, String> param);
+
     void updateRefreshToken(MemberEntity memberEntity);
 
     void upsertSnsLinkInfo(SnsLinkInfo snsLinkInfo);

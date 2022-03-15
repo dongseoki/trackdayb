@@ -223,6 +223,37 @@
                 .catch(error => console.log('error', error));
       }
 
+      function ajax_change_password_send(){
+        // 1. Using publicKey by JSEncrypt
+        let rsaEncrypt = new JSEncrypt();
+        rsaEncrypt.setPublicKey(publicKeyStr);
+
+        // debugger;
+
+        let beforePwd = document.querySelectorAll("[name=beforePwd]")[0].value;
+        let afterPwd = document.querySelectorAll("[name=afterPwd]")[0].value;
+        let securedBeforePwd = rsaEncrypt.encrypt(beforePwd);
+        let securedAfterPwd = rsaEncrypt.encrypt(afterPwd);
+
+        console.log("securedBeforePwd : "+ securedBeforePwd)
+        console.log("securedAfterPwd : "+ securedAfterPwd)
+
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", grantType+" "+accessToken);
+        myHeaders.append("Content-Type", "application/json");
+
+        response = fetch("/member/changepwd", {
+          method: 'post',
+          headers: myHeaders,
+          body: JSON.stringify({
+            beforePwd : securedBeforePwd,
+            afterPwd : securedAfterPwd
+          })
+        }).then((response) => response.json())
+                .then(function(data){
+                console.log(data)
+                });
+      }
 
       function ajax_send(){
 
@@ -248,6 +279,7 @@
         console.log("securedMemberId : "+ securedMemberId)
         console.log("securedPassword : "+ securedPassword)
         response = fetch("/member/login", {
+        // response = fetch("/member/loginTest", {
           method: 'post',
           headers: {
             "Content-Type": "application/json",
@@ -265,21 +297,24 @@
       });
       }
 
-      document.addEventListener("DOMContentLoaded", function(){
-// Handler when the DOM is fully loaded
-        console.log("hello world");
-        response = fetch("http://localhost:8080/member/requestpublickey", {
+      function requestPublicKey(){
+        response = fetch("/member/requestpublickey", {
           method: 'get'
         }).then((response) => response.json())
-        .then(function (data){
+                .then(function (data){
 
-          //1
-          // rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
-          // rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
+                  //1
+                  // rsaPublicKeyModulus = data.publicKeyInfo.publicKeyModulus;
+                  // rsaPublicKeyExponent = data.publicKeyInfo.publicKeyExponent;
 
-          //2
-          publicKeyStr = data.publicKeyInfo.publicKeyStr;
-        });
+                  //2
+                  publicKeyStr = data.publicKeyInfo.publicKeyStr;
+                });
+      }
+
+      document.addEventListener("DOMContentLoaded", function(){
+// Handler when the DOM is fully loaded
+        requestPublicKey()
 
         // const googleLoginBtn = document.getElementById("googleLoginBtn");
         // googleLoginBtn.addEventListener("click", onClickGoogleLogin);
@@ -299,6 +334,12 @@
     </form> <br> -->
 
     <form id="loginForm">
+      beforePwd : <input type="password" name="beforePwd"> <br>
+      afterPwd : <input type="password" name="afterPwd"> <br>
+      <input type="button" onclick="ajax_change_password_send()" value="Change Password">Change Password </input>
+    </form> <br>
+
+    <form id="changePwdForm">
       memberId : <input type="text" name="memberId"> <br>
       password : <input type="password" name="password"> <br>
       <input type="button" onclick="ajax_send()" value="login">Login</input>

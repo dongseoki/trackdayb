@@ -1,6 +1,7 @@
 package com.lds.trackdayb.service;
 
 import com.lds.trackdayb.dto.MemberInfo;
+import com.lds.trackdayb.dto.PasswordChangeDTO;
 import com.lds.trackdayb.entity.MemberEntity;
 
 import com.lds.trackdayb.dto.TokenDTO;
@@ -39,4 +40,8 @@ public abstract class MemberService implements UserDetailsService{
     public abstract MemberEntity snslogin(String email) throws Exception ;
 
     public abstract TokenDTO idPwdLogin(HttpServletRequest request, MemberEntity memberEntity) throws Exception;
+
+    public abstract void RSApreprocessTest2(HttpServletRequest request, MemberEntity memberEntity) throws Exception;
+
+    public abstract void changePassword(HttpServletRequest request, PasswordChangeDTO passwordChangeDTO, MemberInfo memberInfo) throws Exception;
 }

@@ -49,6 +49,8 @@ import java.security.*;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.*;
 
+import static com.lds.trackdayb.util.RSAHelper.RSApreprocess;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/member")
@@ -249,6 +251,29 @@ public class MemberController {
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
 
+    @PostMapping("/loginTest")
+    public ResponseEntity<ResultMVO> authorizeTest(@Valid @RequestBody MemberEntity memberEntity, HttpServletRequest request) throws Exception {
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+
+        // pwd 를 복호화함.
+        memberService.RSApreprocessTest2(request, memberEntity);
+
+        // spring security Authentication and create access and refreshtoken
+        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityUsernamePasswordAuthenticate(memberEntity.getUsername(), memberEntity.getPassword()));
+
+        // refresh token 수정.
+        memberService.updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
+
+
+        resultMVO.setTokenInfo(tokenInfo);
+        resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
+        return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
+    }
+
     @GetMapping("/requestpublickey")
     public  ResponseEntity<ResultMVO> requestpublickey(HttpSession session) throws Exception{
         ResultMVO resultMVO = new ResultMVO();
@@ -327,6 +352,14 @@ public class MemberController {
         return resultMVO;
     }
 
+    @PostMapping(value="/changepwd")
+    public ResultMVO changePassword(HttpServletRequest request,@RequestBody PasswordChangeDTO passwordChangeDTO) throws Exception {
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        memberService.changePassword(request,passwordChangeDTO,memberService.getMyUserWithAuthorities());
+
+        return resultMVO;
+    }
 
     @DeleteMapping(value="/withdrawal")
     public ResultMVO withdrawal() throws Exception {

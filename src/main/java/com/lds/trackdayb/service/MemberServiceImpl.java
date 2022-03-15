@@ -1,5 +1,6 @@
 package com.lds.trackdayb.service;
 
+import java.security.PrivateKey;
 import java.util.*;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -7,6 +8,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.lds.trackdayb.dto.MemberInfo;
+import com.lds.trackdayb.dto.PasswordChangeDTO;
 import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
@@ -29,6 +31,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -40,8 +43,9 @@ import org.springframework.util.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import static com.lds.trackdayb.util.RSAHelper.RSApreprocess;
+import static com.lds.trackdayb.util.RSAHelper.*;
 
 @RequiredArgsConstructor
 @Service
@@ -340,6 +344,50 @@ public class MemberServiceImpl extends MemberService {
         return oAuth2AuthenticationToken;
     }
 
+
+    public void RSApreprocessTest2(HttpServletRequest request, MemberEntity memberEntity) throws Exception {
+        HttpSession session = request.getSession();
+        PrivateKey privateKey = (PrivateKey) session.getAttribute("__rsaPrivateKey__");
+        session.removeAttribute("__rsaPrivateKey__"); // 키의 재사용을 막는다. 항상 새로운 키를 받도록 강제.
+        if (privateKey == null) {
+            throw new RuntimeException("암호화 비밀키 정보를 찾을 수 없습니다.");
+        }
+        String decodedMemberId = decryptRsa(privateKey, memberEntity.getMemberId());
+        String decodedPassword = decryptRsa(privateKey, memberEntity.getPassword());
+        memberEntity.setMemberId(decodedMemberId);
+        memberEntity.setPassword(decodedPassword);
+        return;
+    }
+
+    @Override
+    public void changePassword(HttpServletRequest request, PasswordChangeDTO passwordChangeDTO, MemberInfo memberInfo) throws Exception {
+        //        RSApreprocess  로 복호화를 한다.
+        List<String> ciphertextList = new ArrayList<>();
+        ciphertextList.add(passwordChangeDTO.getBeforePwd());
+        ciphertextList.add(passwordChangeDTO.getAfterPwd());
+        List<String> decrytedTextList = RSApreprocessUsingList(request,ciphertextList);
+
+        MemberEntity member = new MemberEntity();
+        member.setPassword(decrytedTextList.get(0));
+
+         if(!passwordEncoder.matches(member.getPassword(), memberRepository.findByMemberId(memberInfo.getMemberId()).getPassword()) ){
+             throw new UsernameNotFoundException(memberInfo.getMemberId());
+         }
+
+//      신규 비밀번호의 유효성을 확인한다.
+        String passwordMessage = SecurityUtil.isValidPassword(decrytedTextList.get(1));
+        if(! StringUtils.equals(passwordMessage, CommonCodeUtil.SUCCESS)){
+            throw new ValidateException(passwordMessage);
+        }
+
+//        비밀번호를 수정한다.
+        //            신규 패스워드 BCrypt 암호화 하고 수정.
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        Map<String, String> changePasswordParam = new HashMap<String, String>();
+        changePasswordParam.put("newPassword",encoder.encode(decrytedTextList.get(1)));
+        changePasswordParam.put("memberSerialNumber", memberInfo.getMemberSerialNumber());
+        memberRepository.changePassword(changePasswordParam);
+    }
 
 
 }

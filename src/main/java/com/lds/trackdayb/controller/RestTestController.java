@@ -2,8 +2,10 @@ package com.lds.trackdayb.controller;
 
 import java.util.List;
 
+import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.mvo.ResultMVO;
 import com.lds.trackdayb.repository.GoalManageRepository;
+import com.lds.trackdayb.service.TestService;
 import com.lds.trackdayb.util.ResponseCodeUtil;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class RestTestController {
 
     private final GoalManageRepository goalManageRepository;
+    private final TestService testService;
     static final Logger LOGGER = LoggerFactory.getLogger(RestTestController.class);
 
     @GetMapping("param-list")
@@ -33,6 +36,16 @@ public class RestTestController {
       String[] args = {"1","2 ","3"};
       
       return goalManageRepository.argListTest(args);
+    }
+
+    @GetMapping(value="/callTest")
+    public String callTest(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setPassword("1234");
+        System.out.println("memberEntity.getPassword() = " + memberEntity.getPassword());
+        testService.editTest(memberEntity);
+        System.out.println("memberEntity.getPassword() = " + memberEntity.getPassword());
+        return "hi";
     }
 
     @PostMapping(value="/typetest")

@@ -15,6 +15,11 @@
             modification_datetime = NOW()
         WHERE member_serial_number = #{value};
     </update>
+    <update id="changePassword" parameterType="map">
+        UPDATE member
+        SET password = #{newPassword}
+        WHERE member_serial_number = #{memberSerialNumber}
+    </update>
     <delete id="deleteSnsLinkInfo" parameterType="string">
         DELETE FROM sns_link_info
         WHERE member_serial_number = #{value};
