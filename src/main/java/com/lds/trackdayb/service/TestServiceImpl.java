@@ -1,5 +1,6 @@
 package com.lds.trackdayb.service;
 
+import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.repository.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,10 @@ public class TestServiceImpl implements TestService{
         // FIXME 제대로된 것으로 바꾸자.
         return "1";
     }
+
+    @Override
+    public void editTest(MemberEntity memberEntity){
+        memberEntity.setPassword("99999");
+    }
+
 }
