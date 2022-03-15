@@ -95,3 +95,30 @@
     padding-right: 10px;
     padding-bottom: 2px;
 }
+
+.modal-goalList-form .button-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.modal-goalList-form .submitBtn{
+    border: 1px solid #3292EB;
+    border-radius: 4px;
+    background-color: #3292EB;
+    height: 40px;
+    width: 50%;
+    color : white;
+    font-size: 14px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+.modal-goalList-form .cancleBtn{
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    border-radius: 4px;
+    background-color: #eaf4fd;
+    height: 40px;
+    width: 50%;
+    margin-left: 2px;
+    cursor: pointer;
+}

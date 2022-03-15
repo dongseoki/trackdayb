@@ -116,7 +116,7 @@ function GoalTitleListModal({ goalId, parentId, setParentId, setParentGoalTitle,
         }}
       >
         <Fade in={open}>
-          <div className= {isMobileScreen ? classes.paperMobile : classes.paper}>
+          <div className={isMobileScreen ? classes.paperMobile : classes.paper}>
             <div className="modal-goalList-title" id="transition-modal-title">목표 리스트</div>
             <div className="modal-goalList-form">
               {pathname === '/time' ? 

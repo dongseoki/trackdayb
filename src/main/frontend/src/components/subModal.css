@@ -1,0 +1,43 @@
+/* 모바일용 모달 스크롤 */
+@media (max-height: 700px) {
+    .sub-modal-content {
+        max-height: 70vh;
+    }
+}
+.sub-modal-content {
+    overflow-y: auto;
+    padding-right: 10px;
+}
+.sub-modal-content .chpw-input-wrapper{
+    display: flex;
+    flex-direction: column;
+    padding : 0 10px 20px 10px;
+}
+
+.sub-modal-content .button-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.sub-modal-content .submitBtn {
+    border: 1px solid #3292EB;
+    border-radius: 4px;
+    background-color: #3292EB;
+    height: 40px;
+    width: 50%;
+    color: white;
+    font-size: 14px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+.sub-modal-content .cancleBtn {
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    border-radius: 4px;
+    background-color: #eaf4fd;
+    height: 40px;
+    width: 50%;
+    margin-left: 2px;
+    cursor: pointer;
+}

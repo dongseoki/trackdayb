@@ -11,13 +11,11 @@ import './ChangePwModal.css';
 import axios from "axios";
 import { toast } from 'react-toastify';
 import JSEncrypt from 'jsencrypt';
-import {useHistory} from "react-router-dom";
 import { CHANGE_PW_REQUEST, GET_PUBLICKEY_REQUEST, LOG_IN_REQUEST } from "../reducers/user";
 import { useDispatch, useSelector } from 'react-redux';
 
 const ChangePwModal = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
 
     const [open, setOpen] = useState(false);
 

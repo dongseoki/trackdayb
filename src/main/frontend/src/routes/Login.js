@@ -65,9 +65,13 @@ function Login() {
   // 로그인 에러 발생시
   useEffect(() => {
     if(logInError){
-        alert(logInError)
+      toast.error(logInError.message)
+      // 공개키 새로요청
+      dispatch({
+        type: GET_PUBLICKEY_REQUEST,
+      })
     }
-}, [logInError]);
+  }, [logInError]);
 
   return (
     <div className="login">
@@ -96,7 +100,9 @@ function Login() {
           />
           <button type="submit" className="submitBtn">로그인</button>
         </form>
-          <GoogleLoginBtn />
+          <div className="snsLoginBtn-wrapper">
+            <GoogleLoginBtn />
+          </div>
       </div>
     </div>
   );

@@ -22,12 +22,19 @@ export const userInitialState = {
     changePwLoading : false, // 비밀번호 변경 시도중
     changePwDone : false,
     changePwError : null,
-
     snsLogInLoading : false, //SNS 로그인 시도 중
     snsLogInDone : false,
     snsLogInError : null,
-    snsResultCode : null, // SNS 로그인 에러코드
+    snsSignUpLoading : false, // 간편 회원가입(SNS) 시도중
+    snsSignUpDone : false,
+    snsSignUpError : null,
+    snsLinkLoading : false, // SNS 계정연동
+    snsLinkDone : false,
+    snsLinkError : null,
 
+    withdrawalLoading : false, // 탈퇴
+    withdrawalDone : false,
+    withdrawalError : null,
     
 
 }
@@ -67,6 +74,19 @@ export const SNS_LOG_IN_REQUEST = 'SNS_LOG_IN_REQUEST' //SNS 로그인
 export const SNS_LOG_IN_SUCCESS = 'SNS_LOG_IN_SUCCESS'
 export const SNS_LOG_IN_FAILURE = 'SNS_LOG_IN_FAILURE'
 
+export const SNS_SIGN_UP_REQUEST = 'SNS_SIGN_UP_REQUEST' // 간편 회원가입(SNS)
+export const SNS_SIGN_UP_SUCCESS = 'SNS_SIGN_UP_SUCCESS'
+export const SNS_SIGN_UP_FAILURE = 'SNS_SIGN_UP_FAILURE'
+export const SNS_SIGN_UP_CANCLE = 'SNS_SIGN_UP_CANCLE' //취소
+
+export const SNS_LINK_REQUEST = 'SNS_LINK_REQUEST' //SNS 계정연동
+export const SNS_LINK_SUCCESS = 'SNS_LINK_SUCCESS'
+export const SNS_LINK_FAILURE = 'SNS_LINK_FAILURE'
+
+export const WITHDRAWAL_REQUEST = 'WITHDRAWAL_REQUEST' // 회원 탈퇴
+export const WITHDRAWAL_SUCCESS = 'WITHDRAWAL_SUCCESS'
+export const WITHDRAWAL_FAILURE = 'WITHDRAWAL_FAILURE'
+
 
 //reducer
 const userReducer = (state=userInitialState, action) =>{
@@ -79,11 +99,13 @@ const userReducer = (state=userInitialState, action) =>{
                 loadMyInfoError : null,
             }
         case LOAD_MY_INFO_SUCCESS:
+            console.log('현재 유저 정보', action.data)
             return {
                 ...state,
                 loadMyInfoLoading : false, 
                 loadMyInfoDone : true,
-                myInfo : action.data
+                myInfo : action.data,
+                myId : action.data.memberId,
             }
         case LOAD_MY_INFO_FAILURE:
             return {
@@ -210,20 +232,92 @@ const userReducer = (state=userInitialState, action) =>{
                 snsLogInError : null,
             }
         case SNS_LOG_IN_SUCCESS:
-            console.log('로그인 성공 action.data', action.data)
+            console.log('SNS 로그인 성공', action.data)
             return {
                 ...state,
                 snsLogInLoading : false, 
                 snsLogInDone : true,
                 myId : action.data.memberId,
-                snsResultCode : action.data.resultCode,
             }
         case SNS_LOG_IN_FAILURE:
-            console.log("로그인 실패")
+            console.log("SNS 로그인 실패", action.error)
             return {
                 ...state,
                 snsLogInLoading : false, 
                 snsLogInError : action.error,
+            }
+
+        case SNS_SIGN_UP_REQUEST: // SNS 간편 회원가입 시도
+            return {
+                ...state,
+                snsSignUpLoading : true, 
+                snsSignUpDone : false,
+                snsSignUpError : null,
+            }
+        case SNS_SIGN_UP_SUCCESS:
+            return {
+                ...state,
+                snsSignUpLoading : false, 
+                snsSignUpDone : true,
+                myId : action.data.memberId,
+            }
+        case SNS_SIGN_UP_FAILURE:
+            return {
+                ...state,
+                snsSignUpLoading : false, 
+                snsSignUpError : action.error,
+            }
+        case SNS_SIGN_UP_CANCLE:
+            return {
+                ...state,
+                snsSignUpError : null,
+                snsLogInError : null,
+            }
+
+        case SNS_LINK_REQUEST: // SNS 계정연동 시도
+            return {
+                ...state,
+                snsLinkLoading : true, 
+                snsLinkDone : false,
+                snsLinkError : null,
+            }
+        case SNS_LINK_SUCCESS:
+            console.log('SNS 계정연동 성공', action.data)
+            return {
+                ...state,
+                snsLinkLoading : false, 
+                snsLinkDone : true,
+                // myInfo : null,
+            }
+        case SNS_LINK_FAILURE:
+            console.log("SNS 계정연동 실패", action.error)
+            return {
+                ...state,
+                snsLinkLoading : false, 
+                snsLinkError : action.error,
+            }
+        case WITHDRAWAL_REQUEST: // 회원 탈퇴
+            return {
+                ...state,
+                withdrawalLoading : true, 
+                withdrawalDone : false,
+                withdrawalError : null,
+            }
+        case WITHDRAWAL_SUCCESS:
+            console.log('회원 탈퇴 성공', action.data)
+            return {
+                ...state,
+                withdrawalLoading : false, 
+                withdrawalDone : true,
+                myInfo : null,
+                myId : null,
+            }
+        case WITHDRAWAL_FAILURE:
+            console.log("회원 탈퇴 실패", action.error)
+            return {
+                ...state,
+                withdrawalLoading : false, 
+                withdrawalError : action.error,
             }
         default:
             return state;

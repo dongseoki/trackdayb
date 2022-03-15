@@ -1,7 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Signup.css";
-import axios from "axios";
-import {AuthContext} from "../context/AuthContext";
 import {useHistory} from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { toast } from 'react-toastify';
@@ -18,7 +16,7 @@ function Signup() {
   const titleUpdater = useTitle("trackDay");
   setTimeout(()=>titleUpdater("회원가입"), 100);
 
-  const { publicKey, signUpError } = useSelector((state)=> state.user); 
+  const { publicKey, signUpError, myId } = useSelector((state)=> state.user); 
 
   useEffect(()=>{
     dispatch({
@@ -32,8 +30,6 @@ function Signup() {
   const [passwordCheck, setPasswordCheck] = useState('')
   // const [phoneNumber, setPhoneNumber] = useState('')
   // const [emailAddress, setEmailAddress] = useState('')
-  // 현재 로그인 정보 Context
-  // const [, setCurUser] = useContext(AuthContext);
 
   const history = useHistory();
 
@@ -94,36 +90,10 @@ function Signup() {
           // emailAddress : emailAddress
         }
         console.log("formData", formData)
-        // const result = await axios.post('/member/signup', formData)
-        // console.log('result.data', result.data)
-
         dispatch({
           type : SIGN_UP_REQUEST,
           data : formData,
         })
-
-        // => signUpError로 빼고, resultCode 처리 
-        
-        // if(result.data.resultCode === "9997"){
-        //   toast.error(`ID가 중복됩니다. (${result.data.message})`)
-        //   fetchPublickKey();
-        // } else if (result.data.resultCode === "9996"){
-        //   toast.error(`올바른 정보를 입력하세요. (${result.data.message})`)
-        //   fetchPublickKey();
-        // }  else if (result.data.resultCode === "9999"){
-        //   toast.error(`서버에러. (${result.data.message})`)
-        //   fetchPublickKey();
-        // } else { // 서버 회원가입 성공시
-        //   // 현재 유저 설정
-        //   // setCurUser({memberInfo : result.data.memberInfo})
-        //   // setCurUser({memberId : result.data.memberId})
-        //   //로컬 스토리지에 저장하기       
-        //   // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
-        //   // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
-
-        //   history.push('/')
-        //   toast.success(`${result.data.memberId}님, 환영합니다!`)
-        // }
       } else {
         if(!hasMemberIdError('memberId')) toast.error("ID는 4자 이상입니다.");
         if(!hasPasswordError(password)) toast.error("Password는 영문, 숫자, 특수문자 포함 8자 이상입니다.");
@@ -131,41 +101,32 @@ function Signup() {
         // if(phoneNumber && hasPhoneError(phoneNumber)) toast.error('올바른 Phone Number를 입력하세요.');
         // if(emailAddress && hasEmailError(emailAddress)) toast.error('올바른 Email Address를 입력하세요.');
       }
-    // }catch(err){
-    //   toast.error(`Oops! 메인 페이지로 이동합니다. ${err}`)
-    //   history.push('/')
-    // }
   }
+    
+  // 회원가입 성공시
+  useEffect(() => {
+    if(myId) {
+      history.push("/")
+      toast.success(`${myId}님, 반갑습니다!`)
+    }
+  },[myId])
 
-
-  // 회원가입 에러처리 -> resultCode 나중에 처리 필요
+  // 회원가입 signUpError 에러처리
   useEffect(() => {
     if(signUpError){
-      toast.error(`Oops! 메인 페이지로 이동합니다. ${signUpError}`)
-      history.push('/')
+      if(signUpError.resultCode === "9997"){
+        toast.error('아이디가 중복됩니다.')
+      }else if(signUpError.resultCode === "9996"){
+        toast.error(signUpError.message)
+      }else if(signUpError.resultCode === "9999"){
+        toast.error('서버에러')
+      }else{
+        toast.error('Oops! 알수 없는 에러')
+      }
+      dispatch({
+        type: GET_PUBLICKEY_REQUEST,
+      })
     }
-
-    // if(resultCode === "9997"){
-    //   toast.error(`ID가 중복됩니다.`)
-    //   fetchPublickKey();
-    // } else if (resultCode === "9996"){
-    //   toast.error(`올바른 정보를 입력하세요.`)
-    //   fetchPublickKey();
-    // }  else if (resultCode === "9999"){
-    //   toast.error(`서버에러`)
-    //   fetchPublickKey();
-    // } else { // 서버 회원가입 성공시
-    //   // 현재 유저 설정
-    //   // setCurUser({memberInfo : result.data.memberInfo})
-    //   // setCurUser({memberId : result.data.memberId})
-    //   //로컬 스토리지에 저장하기       
-    //   // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
-    //   // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
-
-    //   history.push('/')
-    //   toast.success(`${result.data.memberId}님, 환영합니다!`)
-    // }
-
   }, [signUpError])
 
 

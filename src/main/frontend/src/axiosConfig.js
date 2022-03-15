@@ -110,7 +110,7 @@ axiosInstance.interceptors.response.use(
           store.dispatch({
             type : LOG_OUT_REQUEST
           })
-          window.location.href = '/login'
+          window.location.href = '/'
         })
         .then(() => { isRefreshing = false })
       })

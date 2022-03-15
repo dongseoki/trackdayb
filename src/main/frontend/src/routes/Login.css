@@ -43,3 +43,57 @@
     margin-right: 2px;
     cursor: pointer;
   }
+  .login-container .snsLoginBtn-wrapper{
+    padding: 0 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .login-container .snsLoginBtn-wrapper .snsLoginBtn {
+    width: 100%;
+  }
+
+/* 간편 회원가입 모달 */
+/* 모바일용 모달 스크롤 */
+@media (max-height: 700px) {
+  .simple-signup-form {
+      max-height: 70vh;
+  }
+}
+.simple-signup-form {
+  overflow-y: auto;
+  padding-right: 10px;
+}
+.simple-signup-form .simple-signup-input-wrapper{
+  display: flex;
+  flex-direction: column;
+  padding : 0 30px 20px 30px;
+}
+
+.simple-signup-form .button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.simple-signup-form .submitBtn {
+  border: 1px solid #3292EB;
+  border-radius: 4px;
+  background-color: #3292EB;
+  height: 40px;
+  width: 50%;
+  color: white;
+  font-size: 14px;
+  margin-right: 2px;
+  cursor: pointer;
+}
+.simple-signup-form .cancleBtn {
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  border-radius: 4px;
+  background-color: #eaf4fd;
+  height: 40px;
+  width: 50%;
+  margin-left: 2px;
+  cursor: pointer;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { PersistGate } from 'redux-persist/integration/react';
+// import { PersistGate } from 'redux-persist/integration/react';
 import { AuthProvider } from './context/AuthContext'; //로그인 유저 정보
 import {store, persistor} from './store/store';
 
@@ -13,9 +13,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store = {store}>
       <AuthProvider>
-        <PersistGate persistor={persistor}>
+        {/* <PersistGate persistor={persistor}> */}
           <App />
-        </PersistGate>
+        {/* </PersistGate> */}
       </AuthProvider>
     </Provider>
   </React.StrictMode>,
