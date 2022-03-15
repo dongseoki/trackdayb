@@ -7,7 +7,8 @@ import { AuthProvider } from './context/AuthContext'; //로그인 유저 정보
 import {store, persistor} from './store/store';
 
 import { Provider } from 'react-redux';
-
+import dotenv from "dotenv";
+dotenv.config();
 
 ReactDOM.render(
   <React.StrictMode>

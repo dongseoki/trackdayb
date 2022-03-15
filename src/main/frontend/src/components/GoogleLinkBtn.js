@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import { SNS_LINK_REQUEST, SNS_LOG_IN_REQUEST } from '../reducers/user';
 
 import { SiKakaotalk, SiGoogle, SiNaver} from "react-icons/si";
-const clientId = '618262920527-9bhlc7np1t27qdumad3g11nlsmsg3c0e.apps.googleusercontent.com';
+
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const GoogleLinkBtn = ()=>{
   const dispatch = useDispatch();
