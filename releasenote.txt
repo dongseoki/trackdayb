@@ -261,3 +261,12 @@ Release
   - member 테이블 사용하지 않는 컬럼 및 키 제거.
   - Exception을 한곳에서 관리하도록 처리.(ControllerExceptionHandler 참고.)
   - changePassword API 구현 완료.
+
+Release 
+  - goal&activity redux-saga 전환
+  - user redux-saga 전환
+  - sns 로그인 기능 개발
+  - sns 간편 회원가입 기능 개발
+  - sns 계정 연동 기능 개발
+  - myPage 기능 개발
+  - 회원 탈퇴 기능 개발
