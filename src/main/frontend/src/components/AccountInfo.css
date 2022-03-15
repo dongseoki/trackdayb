@@ -37,3 +37,10 @@
     color : rgba(0,0,0, 0.2);
     cursor: pointer;
 }
+.accountInfo-liked{
+    padding :5px;
+    width: 32px;
+    margin : 0 10px;
+    cursor: pointer;
+}
+

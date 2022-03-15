@@ -30,14 +30,8 @@ function Navigation(){
             type : LOG_OUT_REQUEST,
         })
         toast.success("로그아웃 되었습니다.")
+        history.push("/")
     }
-
-    useEffect(() => {
-        if(!myId) {
-          history.push("/")
-        }
-    },[myId])
-
 
     // 새로고침시 로그인 유저 정보 확인
     const accessToken = localStorage.getItem('accessToken');
@@ -50,7 +44,6 @@ function Navigation(){
             })
         }
     },[])
-
 
     // 반응형 화면 BreakPoint
     const isSmallScreen = useMediaQuery({

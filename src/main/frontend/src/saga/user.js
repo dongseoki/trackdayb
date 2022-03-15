@@ -27,7 +27,13 @@ import { GET_PUBLICKEY_FAILURE,
         SNS_LOG_IN_FAILURE,
         SNS_SIGN_UP_REQUEST,
         SNS_SIGN_UP_SUCCESS,
-        SNS_SIGN_UP_FAILURE} from "../reducers/user";
+        SNS_SIGN_UP_FAILURE,
+        SNS_LINK_REQUEST,
+        SNS_LINK_SUCCESS,
+        SNS_LINK_FAILURE,
+        WITHDRAWAL_REQUEST,
+        WITHDRAWAL_SUCCESS,
+        WITHDRAWAL_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -214,6 +220,52 @@ function* snsSignUp(action) {
     }
 }
 
+function snsLinkAPI(data) { // SNS 계정연동
+    return axiosInstance.patch(`/member/linkaccount/${data.snsName}`, data.payload)
+}
+function* snsLink(action) {
+    try{
+        const result = yield call(snsLinkAPI, action.data);
+        yield put({
+            type : SNS_LINK_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+        //로컬 스토리지에 저장하기
+        // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+        // //SNS 토큰은 지우기
+        // localStorage.removeItem('tokenId')
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: SNS_LINK_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
+function withdrawalAPI() { // 회원 탈퇴
+    return axiosInstance.delete('/member/withdrawal')
+}
+function* withdrawal() {
+    try{
+        const result = yield call(withdrawalAPI);
+        yield put({
+            type : WITHDRAWAL_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+        //로컬 스토리지 삭제하기
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: WITHDRAWAL_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
@@ -241,6 +293,12 @@ function* watchSnsLogIn() {
 function* watchSnsSignUp() {
     yield takeLatest(SNS_SIGN_UP_REQUEST, snsSignUp);
 }
+function* watchSnsLink() {
+    yield takeLatest(SNS_LINK_REQUEST, snsLink);
+}
+function* watchWithdrawal() {
+    yield takeLatest(WITHDRAWAL_REQUEST, withdrawal);
+}
 
 export default function* userSaga() {
     yield all([
@@ -253,5 +311,7 @@ export default function* userSaga() {
         fork(watchChangePw),
         fork(watchSnsLogIn),
         fork(watchSnsSignUp),
+        fork(watchSnsLink),
+        fork(watchWithdrawal),
     ])
 }

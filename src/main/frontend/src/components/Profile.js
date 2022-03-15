@@ -8,7 +8,34 @@ import TextField from '@mui/material/TextField';
 import CardMedia from '@mui/material/CardMedia';
 
 
-const Profile = ({myInfo}) => {
+const Profile = () => {
+    const fakeUser = {
+        activeUserStatus: "N",
+        auth: "ROLE_USER",
+        backgroundPhotoId: "",
+        createDatetime: "2021-09-24 06:56:48",
+        deletionStatus: "N",
+        emailAddress: "trackday@gmail.com",
+        failCount: "0",
+        introduction: "안녕하세요 갓생사는 직장인입니다.",
+        lastLoginDatetime: "",
+        linkedEmail: "",
+        memberId: "test",
+        memberSerialNumber: "1",
+        modificationDatetime: "2021-09-24 06:56:48",
+        name: "홍길동",
+        password: "$2a$10$yGU6hHyBQjloD6VJK1zmdu5S4.tMVR3EqnQIw7S57eIdgIBUf06CO",
+        phoneNumber: "010-0000-0000",
+        profilePhotoId: "",
+        refreshToken: "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDYzODA4Nzh9.LH8GsDVKlwxJwJem-IIzUAPnbWuuMEM6evh9dwmwPAbo5uS68XHFFaxO0x9gQF507guayjmknZELGMPh3ETcfQ",
+        remark: "",
+        snsLinkStatus: "N",
+        withdrawalDatetime: "",
+    };
+
+    const myInfo = fakeUser;
+
+
     // 수정 활성화 flag
     const [ editFlag, setEditFlag ] = useState(false);
     
