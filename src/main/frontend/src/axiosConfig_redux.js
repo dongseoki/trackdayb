@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOAD_MY_INFO_REQUEST, LOG_OUT_REQUEST, REISSUE_REQUEST } from "./reducers/user";
+import { LOG_OUT_REQUEST, REISSUE_REQUEST } from "./reducers/user";
 import { store } from './store/store';
 
 const axiosInstance = axios.create({

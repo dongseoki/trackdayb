@@ -40,12 +40,6 @@ function Mypage() {
 
     // const { myInfo } = useSelector((state)=> state.user)
     const myInfo = fakeUser;
-    
-    useEffect(()=>{
-        dispatch({
-            type: LOAD_MY_INFO_REQUEST,
-        })
-    },[])
 
     return (
         <div className="mypage">

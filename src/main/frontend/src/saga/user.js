@@ -24,7 +24,10 @@ import { GET_PUBLICKEY_FAILURE,
         SIGN_UP_FAILURE,
         SNS_LOG_IN_SUCCESS,
         SNS_LOG_IN_REQUEST,
-        SNS_LOG_IN_FAILURE} from "../reducers/user";
+        SNS_LOG_IN_FAILURE,
+        SNS_SIGN_UP_REQUEST,
+        SNS_SIGN_UP_SUCCESS,
+        SNS_SIGN_UP_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -164,7 +167,7 @@ function* changePw(action) { // 패스워드 변경
 }
 
 function snsLogInAPI(data) { // SNS 로그인
-    return axios.post('/member/snslogin/google', data)
+    return axios.post(`/member/snslogin/${data.snsName}`, data.payload)
 }
 function* snsLogIn(action) {
     try{
@@ -174,12 +177,38 @@ function* snsLogIn(action) {
             data : result.data, //서버로 부터 받아온 데이터
         })
         //로컬 스토리지에 저장하기
-        // localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
-        // localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+        //tokenId 삭제하기
+        localStorage.removeItem('tokenId');
     }catch(err) {
         console.error(err);
         yield put({
             type: SNS_LOG_IN_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
+function snsSignUpAPI(data) { // SNS 간편 회원가입
+    return axios.post(`/member/simplesignup/${data.snsName}`, data.payload)
+}
+function* snsSignUp(action) {
+    try{
+        const result = yield call(snsSignUpAPI, action.data);
+        yield put({
+            type : SNS_SIGN_UP_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+        //로컬 스토리지에 저장하기
+        localStorage.setItem("accessToken", result.data.tokenInfo.accessToken)
+        localStorage.setItem("refreshToken", result.data.tokenInfo.refreshToken)
+        //SNS 토큰은 지우기
+        localStorage.removeItem('tokenId')
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: SNS_SIGN_UP_FAILURE,
             error : err.response.data
         })
     }
@@ -209,6 +238,9 @@ function* watchChangePw() {
 function* watchSnsLogIn() {
     yield takeLatest(SNS_LOG_IN_REQUEST, snsLogIn);
 }
+function* watchSnsSignUp() {
+    yield takeLatest(SNS_SIGN_UP_REQUEST, snsSignUp);
+}
 
 export default function* userSaga() {
     yield all([
@@ -220,5 +252,6 @@ export default function* userSaga() {
         // fork(watchReIssue),
         fork(watchChangePw),
         fork(watchSnsLogIn),
+        fork(watchSnsSignUp),
     ])
 }

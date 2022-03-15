@@ -1,22 +1,19 @@
-import React, { useState, useContext, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import { useMediaQuery } from "react-responsive";
-
 import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles } from '@material-ui/core/styles';
-import './ChangePwModal.css';
-import {useHistory} from "react-router-dom";
+// import './ChangePwModal.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { SNS_SIGN_UP_CANCLE, SNS_SIGN_UP_REQUEST } from "../reducers/user";
+import { toast } from "react-toastify";
 
-const SimpleSignUpModal = ({open, setOpen}) => {
+const SimpleSignUpModal = ({open, setOpen, snsName}) => {
     const dispatch = useDispatch();
-    const history = useHistory();
-
     const [name, setName] = useState("");
-
+    const { snsSignUpError } = useSelector((state)=> state.user); 
 
     // 반응형 화면 BreakPoint
     const isMobileScreen = useMediaQuery({
@@ -48,31 +45,55 @@ const SimpleSignUpModal = ({open, setOpen}) => {
     }));
 
     const classes = useStyles();
-    
-
-    const handleOpen = () => {
-        console.log('hello')
-        setOpen(true);
-    };
 
     const handleClose = () => {
         setOpen(false);
+        localStorage.removeItem('tokenId');
+        dispatch({
+            type: SNS_SIGN_UP_CANCLE
+        })
     };
-
-
 
     const submitHandler = (e) => {
         console.log('hello', name)
         e.preventDefault();
-        
-
+        const tokenId = localStorage.getItem('tokenId');
+        const formData = {
+            name : name,
+            tokenId : tokenId,
+        }
+        dispatch({
+            type : SNS_SIGN_UP_REQUEST,
+            data : {
+                snsName : snsName,
+                payload : formData,
+            }
+        })
     }
+
+    // snsSignUpError 처리
+    useEffect(() => {
+        if(snsSignUpError){
+        if(snsSignUpError.resultCode === "9997"){
+            toast.error('아이디가 중복됩니다.');
+            localStorage.removeItem('tokenId');
+        }else if(snsSignUpError.resultCode === "9999"){
+            toast.error('서버오류')
+            localStorage.removeItem('tokenId');
+        }else if(snsSignUpError.resultCode === "9994"){
+            toast.error('SNS 인증 서버 처리 실패')
+            localStorage.removeItem('tokenId');
+        }else if(snsSignUpError.resultCode === "9992"){
+            toast.error('이미 연동된 이메일입니다.')
+            localStorage.removeItem('tokenId');
+        }
+        }
+    },[snsSignUpError])
     
 
 
     return (
         <div>
-            {/* <button className="accountInfo-button" onClick={handleOpen}>간편회원가입</button> */}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

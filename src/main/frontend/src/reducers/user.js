@@ -26,7 +26,12 @@ export const userInitialState = {
     snsLogInLoading : false, //SNS 로그인 시도 중
     snsLogInDone : false,
     snsLogInError : null,
-    snsResultCode : null, // SNS 로그인 에러코드
+
+    snsSignUpLoading : false, // 간편 회원가입(SNS) 시도중
+    snsSignUpDone : false,
+    snsSignUpError : null,
+
+
 
     
 
@@ -67,6 +72,12 @@ export const SNS_LOG_IN_REQUEST = 'SNS_LOG_IN_REQUEST' //SNS 로그인
 export const SNS_LOG_IN_SUCCESS = 'SNS_LOG_IN_SUCCESS'
 export const SNS_LOG_IN_FAILURE = 'SNS_LOG_IN_FAILURE'
 
+export const SNS_SIGN_UP_REQUEST = 'SNS_SIGN_UP_REQUEST' // 간편 회원가입(SNS)
+export const SNS_SIGN_UP_SUCCESS = 'SNS_SIGN_UP_SUCCESS'
+export const SNS_SIGN_UP_FAILURE = 'SNS_SIGN_UP_FAILURE'
+export const SNS_SIGN_UP_CANCLE = 'SNS_SIGN_UP_CANCLE' //취소
+
+
 
 //reducer
 const userReducer = (state=userInitialState, action) =>{
@@ -79,11 +90,13 @@ const userReducer = (state=userInitialState, action) =>{
                 loadMyInfoError : null,
             }
         case LOAD_MY_INFO_SUCCESS:
+            console.log('현재 유저 정보', action.data)
             return {
                 ...state,
                 loadMyInfoLoading : false, 
                 loadMyInfoDone : true,
-                myInfo : action.data
+                myInfo : action.data,
+                myId : action.data.memberId,
             }
         case LOAD_MY_INFO_FAILURE:
             return {
@@ -210,20 +223,46 @@ const userReducer = (state=userInitialState, action) =>{
                 snsLogInError : null,
             }
         case SNS_LOG_IN_SUCCESS:
-            console.log('로그인 성공 action.data', action.data)
+            console.log('SNS 로그인 성공', action.data)
             return {
                 ...state,
                 snsLogInLoading : false, 
                 snsLogInDone : true,
                 myId : action.data.memberId,
-                snsResultCode : action.data.resultCode,
             }
         case SNS_LOG_IN_FAILURE:
-            console.log("로그인 실패")
+            console.log("SNS 로그인 실패", action.error)
             return {
                 ...state,
                 snsLogInLoading : false, 
                 snsLogInError : action.error,
+            }
+
+        case SNS_SIGN_UP_REQUEST: // SNS 간편 회원가입 시도
+            return {
+                ...state,
+                snsSignUpLoading : true, 
+                snsSignUpDone : false,
+                snsSignUpError : null,
+            }
+        case SNS_SIGN_UP_SUCCESS:
+            return {
+                ...state,
+                snsSignUpLoading : false, 
+                snsSignUpDone : true,
+                myId : action.data.memberId,
+            }
+        case SNS_SIGN_UP_FAILURE:
+            return {
+                ...state,
+                snsSignUpLoading : false, 
+                snsSignUpError : action.error,
+            }
+        case SNS_SIGN_UP_CANCLE:
+            return {
+                ...state,
+                snsSignUpError : null,
+                snsLogInError : null,
             }
         default:
             return state;

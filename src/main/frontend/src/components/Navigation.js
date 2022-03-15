@@ -29,14 +29,27 @@ function Navigation(){
         dispatch({
             type : LOG_OUT_REQUEST,
         })
+        toast.success("로그아웃 되었습니다.")
     }
 
     useEffect(() => {
         if(!myId) {
           history.push("/")
-          toast.success("로그아웃 되었습니다.")
         }
     },[myId])
+
+
+    // 새로고침시 로그인 유저 정보 확인
+    const accessToken = localStorage.getItem('accessToken');
+    useEffect(() => {
+        if(!accessToken) {
+            return;
+        } else{
+            dispatch({
+                type : LOAD_MY_INFO_REQUEST,
+            })
+        }
+    },[])
 
 
     // 반응형 화면 BreakPoint
