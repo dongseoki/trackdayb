@@ -261,6 +261,7 @@ Release
   - member 테이블 사용하지 않는 컬럼 및 키 제거.
   - Exception을 한곳에서 관리하도록 처리.(ControllerExceptionHandler 참고.)
   - changePassword API 구현 완료.
+  - sns계정연동, 로그인, 회원가입, 간편회원가입, sns 로그인 API 수정 :  memberInfo 값을 추가하여 반환하도록 조치.
 
 Release 
   - goal&activity redux-saga 전환

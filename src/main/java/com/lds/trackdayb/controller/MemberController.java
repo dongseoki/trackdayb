@@ -247,6 +247,7 @@ public class MemberController {
         TokenDTO tokenInfo =  memberService.idPwdLogin(request, memberEntity);
         resultMVO.setTokenInfo(tokenInfo);
         resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+        resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
@@ -345,8 +346,9 @@ public class MemberController {
             // refresh token 수정.
             memberService.updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
 
-            // memberId
+            // memberId & memberInfo
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+            resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
 
         }
         return resultMVO;
@@ -393,8 +395,9 @@ public class MemberController {
         // refresh token 수정.
         memberService.updateRefreshToken(memberInfo.getMemberId(),tokenInfo.getRefreshToken());
 
-        // memberId
+        // memberId & memberInfo
         resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+        resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
 
         return resultMVO;
     }
@@ -425,8 +428,10 @@ public class MemberController {
             // refresh token 수정.
             memberService.updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
 
-            // memberId
+            // memberId & memberInfo
             resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+            resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
+
             httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
         }
 
@@ -443,6 +448,7 @@ public class MemberController {
 
         // memberId
         resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
+        resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
         return resultMVO;
     }
 
