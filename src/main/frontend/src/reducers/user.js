@@ -147,6 +147,7 @@ const userReducer = (state=userInitialState, action) =>{
                 logInLoading : false, 
                 logInDone : true,
                 myId : action.data.memberId,
+                myInfo : action.data.memberInfo,
                 // accessToken : action.data.tokenInfo.accessToken,
                 // refreshToken : action.data.tokenInfo.refreshToken
             }
@@ -171,6 +172,16 @@ const userReducer = (state=userInitialState, action) =>{
                 logOutDone : true,
                 myInfo : null,
                 myId : null,
+                loadMyInfoError : null,
+                logInError : null,
+                logOutError : null,
+                signUpError : null,
+                publicKeyError : null,
+                changePwError : null,
+                snsLogInError : null,
+                snsSignUpError : null,
+                snsLinkError : null,
+                withdrawalError : null,
                 // accessToken : null,
                 // refreshToken : null,
             }
@@ -193,6 +204,7 @@ const userReducer = (state=userInitialState, action) =>{
                 signUpLoading : false, 
                 signUpDone : true,
                 myId : action.data.memberId,
+                myInfo : action.data.memberInfo,
             }
         case SIGN_UP_FAILURE:
             return {
@@ -232,12 +244,12 @@ const userReducer = (state=userInitialState, action) =>{
                 snsLogInError : null,
             }
         case SNS_LOG_IN_SUCCESS:
-            console.log('SNS 로그인 성공', action.data)
             return {
                 ...state,
                 snsLogInLoading : false, 
                 snsLogInDone : true,
                 myId : action.data.memberId,
+                myInfo : action.data.memberInfo,
             }
         case SNS_LOG_IN_FAILURE:
             console.log("SNS 로그인 실패", action.error)
@@ -260,6 +272,7 @@ const userReducer = (state=userInitialState, action) =>{
                 snsSignUpLoading : false, 
                 snsSignUpDone : true,
                 myId : action.data.memberId,
+                myInfo : action.data.memberInfo,
             }
         case SNS_SIGN_UP_FAILURE:
             return {

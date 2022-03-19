@@ -22,6 +22,10 @@ function Goal() {
   const [searchStartDatetime, setSearchStartDatetime] = useState(new Date());
   const [searchEndDatetime, setSearchEndDatetime] = useState(new Date());
   const [ searchGoalIdList, setSearchGoalIdList ] = useState([]);
+  // 정렬조건 로컬변수
+  const [ orderColumn, setOrderColumn ] = useState("");
+  const [ orderType, setOrderType ] = useState("desc");
+  const [ gatherGoalYn, setGatherGoalYn ] = useState(false); //목표 모아보기 변수
 
   // 목표 전체 
   useEffect(() => {
@@ -51,10 +55,16 @@ function Goal() {
       data : {
         searchStartDatetime : dayjs(searchStartDatetime).format("YYYY-MM-DD"),
         searchEndDatetime : dayjs(searchEndDatetime).format("YYYY-MM-DD"),
-        searchGoalIdList : searchGoalIdList.toString()
+        searchGoalIdList : searchGoalIdList.toString(),
+        ...(orderColumn ? { 
+          orderColumn : orderColumn,
+          orderType : orderType
+        } : null
+        ),
+        gatherGoalYn : gatherGoalYn === true ? "Y" : "N"
       }
     })
-  }, [searchStartDatetime,searchEndDatetime, searchGoalIdList])
+  }, [searchStartDatetime,searchEndDatetime, searchGoalIdList, orderColumn, orderType, gatherGoalYn])
 
 
   const titleUpdater = useTitle("trackDay");
@@ -84,7 +94,14 @@ function Goal() {
         }
       </aside>
       <section className="goal-content">
-        <GoalFullList/>
+        <GoalFullList 
+        orderColumn ={orderColumn}
+        setOrderColumn={setOrderColumn}
+        orderType={orderType}
+        setOrderType={setOrderType}
+        gatherGoalYn={gatherGoalYn}
+        setGatherGoalYn={setGatherGoalYn}
+        />
       </section>
     </div>
   );

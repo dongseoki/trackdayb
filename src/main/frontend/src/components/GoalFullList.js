@@ -16,11 +16,11 @@ import FormControl from '@mui/material/FormControl';
 
 import { useSelector } from 'react-redux';
 
-function GoalFullList() {
-  // 정렬조건 로컬변수
-  const [ orderColumn, setOrderColumn ] = useState("");
-  const [ orderType, setOrderType ] = useState("desc");
-  const [gatherGoalYn, setGatherGoalYn] = useState(false); //목표 모아보기 변수
+function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gatherGoalYn, setGatherGoalYn}) {
+  // // 정렬조건 로컬변수
+  // const [ orderColumn, setOrderColumn ] = useState("");
+  // const [ orderType, setOrderType ] = useState("desc");
+  // const [ gatherGoalYn, setGatherGoalYn ] = useState(false); //목표 모아보기 변수
 
   const { goalSearchFullList, goalSearchTitleList } = useSelector((state) => state.goal)
 

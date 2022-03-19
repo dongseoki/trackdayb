@@ -20,10 +20,8 @@ export const goalInitialState = {
         searchStartDatetime:'2021-01-01',
         searchEndDatetime:'2021-01-30',
         // searchKind:"deadline",
-        // ...(props.orderColumn && { orderColumn: props.orderColumn}), //값이 있을때만 parmas 보냄
-        // ...(props.orderColumn && { orderType: props.orderType}), //값이 있을때만 parmas 보냄
         searchGoalIdList: [],
-        // gatherGoalYn: props.gatherGoalYn===true ? "Y" : "N", //목표 모아보기변수
+        gatherGoalYn: "N", //목표 모아보기변수
     }, // 목표 검색 조건
 
     goalModalTitleList : [], // 모달창 내부 목표제목리스트
