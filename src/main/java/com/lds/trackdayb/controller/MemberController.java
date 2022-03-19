@@ -29,6 +29,7 @@ import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
+import com.lds.trackdayb.vo.SimpleSignUpVO;
 import com.lds.trackdayb.vo.SnsAuthenticate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -322,7 +323,7 @@ public class MemberController {
     // }
 
     @PostMapping(value="/simplesignup/{snsName}")
-    public ResultMVO simpleSignUp(@PathVariable("snsName") String snsName, @RequestBody SnsAuthenticate snsAuthenticate) throws Exception {
+    public ResultMVO simpleSignUp(@PathVariable("snsName") String snsName, @RequestBody SimpleSignUpVO simpleSignUpVO) throws Exception {
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         String email="";
@@ -331,10 +332,10 @@ public class MemberController {
             resultMVO.setMessage("unsupported sns");
         }else{
             MemberEntity memberEntity = new MemberEntity();
-            memberEntity.setName(snsAuthenticate.getName());
+            memberEntity.setName(simpleSignUpVO.getName());
             if(StringUtils.equals(snsName,"google")){
-                email = memberService.googleAuthServerAuthenticate(snsAuthenticate.getTokenId());
-                memberEntity.setMemberId(email); // 멤버 아이디로 이메일 설정.
+                email = memberService.googleAuthServerAuthenticate(simpleSignUpVO.getTokenId());
+                memberEntity.setMemberId(simpleSignUpVO.getMemberId());
             }
             MemberEntity memberInfo =memberService.simplesignup(memberEntity, snsName,email);
 

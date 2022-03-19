@@ -274,14 +274,15 @@ public class MemberServiceImpl extends MemberService {
 
     @Override
     public MemberEntity simplesignup(MemberEntity memberEntity, String snsName, String linkedEmail) throws Exception{
+        String idMessage = SecurityUtil.isValidMemberId(memberEntity.getMemberId());
+        if(! StringUtils.equals(idMessage, CommonCodeUtil.SUCCESS)){
+            throw new ValidateException(idMessage);
+        }
 
         if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberEntity.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
         memberEntity.setAuth("ROLE_USER");
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        memberDTO.setPassword(encoder.encode(memberDTO.getMemberId()));
-        // 임으로 memberid email로 설정.
         memberRepository.save(memberEntity);
         MemberInfo memberInfo = modelMapper.map(memberEntity,MemberInfo.class);
         linkAccount(memberInfo,snsName,linkedEmail);
