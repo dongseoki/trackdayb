@@ -114,13 +114,14 @@
                 // .catch(error => console.log('error', error));
       }
 
-      function simpleSignUpTest(name){
+      function simpleSignUpTest(name, memberId){
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
           "tokenId": id_token,
-          "name" : name
+          "name" : name,
+          "memberId" : memberId
         });
 
         var requestOptions = {
