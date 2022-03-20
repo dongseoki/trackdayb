@@ -276,3 +276,4 @@ Release
 Release
  - 로그인,회원가입,sns로그인,간편회원가입에 myInfo state 추가
  - 목표 정렬조건 서버로 요청 구현
+ - 간편가입시 memberId + 이름 받기 처리

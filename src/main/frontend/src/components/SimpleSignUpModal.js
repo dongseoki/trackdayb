@@ -12,7 +12,10 @@ import { toast } from "react-toastify";
 
 const SimpleSignUpModal = ({open, setOpen, snsName}) => {
     const dispatch = useDispatch();
+
+    const [memberId, setMemberId] = useState("");
     const [name, setName] = useState("");
+
     const { snsSignUpError } = useSelector((state)=> state.user); 
 
     // 반응형 화면 BreakPoint
@@ -55,10 +58,11 @@ const SimpleSignUpModal = ({open, setOpen, snsName}) => {
     };
 
     const submitHandler = (e) => {
-        console.log('hello', name)
+        console.log('hello', memberId, name)
         e.preventDefault();
         const tokenId = localStorage.getItem('tokenId');
         const formData = {
+            memberId : memberId,
             name : name,
             tokenId : tokenId,
         }
@@ -111,6 +115,15 @@ const SimpleSignUpModal = ({open, setOpen, snsName}) => {
                     <h3 id="transition-modal-title">간편회원가입</h3>
                     <form className="simple-signup-form" onSubmit={submitHandler}>
                         <div className="simple-signup-input-wrapper">
+                            <TextField
+                                required
+                                className="simple-signup-memberId"
+                                id="outlined-memberId-input"
+                                label="memberId"
+                                type="text"
+                                onChange={(e) => setMemberId(e.target.value)}
+                                inputProps={{maxLength: 20}}
+                            />
                             <TextField
                                 required
                                 className="simple-signup-name"
