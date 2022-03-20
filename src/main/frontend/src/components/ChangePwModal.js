@@ -11,12 +11,12 @@ import './ChangePwModal.css';
 import axios from "axios";
 import { toast } from 'react-toastify';
 import JSEncrypt from 'jsencrypt';
-import { CHANGE_PW_REQUEST, GET_PUBLICKEY_REQUEST, LOG_IN_REQUEST } from "../reducers/user";
+import { CHANGE_PW_REQUEST, CHANGE_PW_RESET, GET_PUBLICKEY_REQUEST, LOG_IN_REQUEST } from "../reducers/user";
 import { useDispatch, useSelector } from 'react-redux';
 
 const ChangePwModal = () => {
     const dispatch = useDispatch();
-
+    const { publicKey, changePwError, changePwDone } = useSelector((state)=> state.user);
     const [open, setOpen] = useState(false);
 
     const [prevPassword, setPrevPassword] = useState('')
@@ -29,6 +29,8 @@ const ChangePwModal = () => {
             type: GET_PUBLICKEY_REQUEST,
         })
     },[open])
+
+    
 
     // 비밀번호 validation check
     const hasPasswordError = (password) =>{
@@ -97,11 +99,6 @@ const ChangePwModal = () => {
         setOpen(false);
     };
 
-    const { publicKey, changePwError } = useSelector((state)=> state.user);
-
-    
-
-
     const submitHandler = async (e) => {
         console.log('hello')
         e.preventDefault();
@@ -116,38 +113,42 @@ const ChangePwModal = () => {
                 beforePwd : rsaEncryptedPrevPassword,
                 afterPwd : rsaEncryptedPassword
             }
-            console.log("formData", formData)
             dispatch({
                 type : CHANGE_PW_REQUEST,
                 data : formData
             })
-            // const result = await axios.post('/member/signup', formData)
-            // console.log('result.data', result.data)
-
-            // if (result.data.resultCode === "9996"){
-            // toast.error(`올바른 정보를 입력하세요. (${result.data.message})`)
-            // fetchPublickKey();
-            // }  else { // 비밀번호 성공시
-            //     toast.success(`비밀번호가 변경되었습니다.`)
-            // }
+            handleClose();
         } else {
             if(!hasPasswordError(password)) toast.error("Password는 영문, 숫자, 특수문자 포함 8자 이상입니다.");
             if(!hasNotSameError('passwordCheck')) toast.error("Password가 일치 하지 않습니다.");
         }
-        // }catch(err){
-        //     toast.error(`Oops! 메인 페이지로 이동합니다. ${err}`)
-        // }
-
-
     }
-    
-    // 비밀번호 변경 에러 발생시
+
+    // 비밀번호 변경 성공시
+    useEffect(() => {
+        if(changePwDone) {
+            toast.success(`비밀번호를 변경하였습니다.`)
+            dispatch({
+                type : CHANGE_PW_RESET
+            })
+        }
+    },[changePwDone])
+
+    // 비밀번호 변경 changePwError 에러처리
     useEffect(() => {
         if(changePwError){
-            alert(changePwError.error)
+        if(changePwError.resultCode === "9996"){
+            toast.error(changePwError.message)
+        }else if(changePwError.resultCode === "9998"){
+            toast.error('비밀번호가 올바르지 않습니다.')
+        }else{
+            toast.error('Oops! 알수 없는 에러')
         }
-    }, [changePwError]);
-
+        dispatch({
+            type: GET_PUBLICKEY_REQUEST,
+        })
+        }
+    }, [changePwError])
 
     return (
         <div>

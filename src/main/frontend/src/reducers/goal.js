@@ -130,7 +130,7 @@ const goalReducer = (state=goalInitialState, action) =>{
                 loadGoalSearchFullListError : null,
                 searchParams : {
                     ...state.searchParams,
-                    ...action.data
+                    ...(action.data? {...action.data} : null)
                 }
             }
         case LOAD_GOALSEARCHFULLLIST_SUCCESS:

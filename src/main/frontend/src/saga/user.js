@@ -155,7 +155,7 @@ function* signUp(action) {
 // }
 
 function chagePwAPI(data) { // 패스워드 변경
-    return axios.post('/member/changepwd', data)
+    return axiosInstance.post('/member/changepwd', data)
 }
 function* changePw(action) { // 패스워드 변경
     try{

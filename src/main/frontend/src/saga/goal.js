@@ -153,6 +153,9 @@ function* addGoal(action) {
             type : ADD_GOAL_SUCCESS,
             data : result
         })
+        yield put({
+            type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+        })
     }catch(err) {
         yield put({
             type : ADD_GOAL_FAILURE,

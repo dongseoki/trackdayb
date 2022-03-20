@@ -69,6 +69,7 @@ export const REISSUE_FAILURE = 'REISSUE_FAILURE'
 export const CHANGE_PW_REQUEST = 'CHANGE_PW_REQUEST' // pw 변경
 export const CHANGE_PW_SUCCESS = 'CHANGE_PW_SUCCESS'
 export const CHANGE_PW_FAILURE = 'CHANGE_PW_FAILURE'
+export const CHANGE_PW_RESET = 'CHANGE_PW_RESET'
 
 export const SNS_LOG_IN_REQUEST = 'SNS_LOG_IN_REQUEST' //SNS 로그인
 export const SNS_LOG_IN_SUCCESS = 'SNS_LOG_IN_SUCCESS'
@@ -235,6 +236,11 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 changePwLoading : false, 
                 changePwError : action.error,
+            }
+        case CHANGE_PW_RESET:
+            return {
+                ...state,
+                changePwDone : false,
             }
         case SNS_LOG_IN_REQUEST: // SNS 로그인 시도
             return {

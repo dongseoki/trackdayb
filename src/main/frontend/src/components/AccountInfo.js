@@ -2,12 +2,10 @@ import React from "react";
 import './AccountInfo.css';
 import { SiKakaotalk, SiGoogle, SiNaver} from "react-icons/si";
 import ChangePwModal from './ChangePwModal';
-
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import GoogleLinkBtn from "./GoogleLinkBtn";
 import WithdrawalModal from "./WithdrawalModal";
 import UnlinkAccountModal from "./UnlinkAccountModal";
-
 
 const AccountInfo = () => {
     const { myInfo } = useSelector((state)=> state.user)
