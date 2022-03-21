@@ -263,6 +263,7 @@ Release
   - changePassword API 구현 완료.
   - sns계정연동, 로그인, 회원가입, 간편회원가입, sns 로그인 API 수정 :  memberInfo 값을 추가하여 반환하도록 조치.
   - SNS 간편 회원가입 API 수정 : 아이디를 입력받도록 조치함.
+  - 회원 정보 변경 API 추가.
 
 Release 
   - goal&activity redux-saga 전환

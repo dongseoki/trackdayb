@@ -313,6 +313,68 @@
                 });
       }
 
+      // async function managing upload operation
+      async function uploadFile() {
+        // function return value
+        let return_data = { error: 0, message: '' };
+
+        try {
+          // // no file selected
+          // if(document.querySelector("#file-to-upload").files.length == 0) {
+          //   throw new Error('No file selected');
+          // }
+          // formdata
+          let data = new FormData();
+          for (item of document.querySelectorAll("#changeMemberInfoDiv input[type='text']")){
+            // console.log(item.getAttribute("name"))
+            // console.log(item.value)
+            data.append(item.getAttribute("name"), item.value)
+          }
+
+          if(document.querySelector("[name=profilePhoto]").files.length != 0) {
+            data.append('profilePhoto', document.querySelector("[name=profilePhoto]").files[0]);
+          }
+          if(document.querySelector("[name=backgroundPhoto]").files.length != 0) {
+            data.append('backgroundPhoto', document.querySelector("[name=backgroundPhoto]").files[0]);
+          }
+
+
+
+
+          var myHeaders = new Headers();
+          myHeaders.append("Authorization", grantType+" "+accessToken);
+          // myHeaders.append("Content-Type", "multipart/form-data");
+
+          // send fetch along with cookies
+          let response = await fetch('/member/memberinfo', {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: data,
+            headers: myHeaders
+          }).then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
+
+          // server responded with http response != 200
+          if(response.status != 200)
+            throw new Error('HTTP response code != 200');
+
+          // read json response from server
+          // success response example : {"error":0,"message":""}
+          // error response example : {"error":1,"message":"File type not allowed"}
+          let json_response = await response.json();
+          if(json_response.error == 1)
+            throw new Error(json_response.message);
+
+        }
+        catch(e) {
+          // catch rejected Promises and Error objects
+          return_data = { error: 1, message: e.message };
+        }
+
+        return return_data;
+      }
+
       document.addEventListener("DOMContentLoaded", function(){
 // Handler when the DOM is fully loaded
         requestPublicKey()
@@ -320,12 +382,21 @@
         // const googleLoginBtn = document.getElementById("googleLoginBtn");
         // googleLoginBtn.addEventListener("click", onClickGoogleLogin);
 
+        // addEventListener
+        document.querySelector("#chageMemberInfoBtn").addEventListener('click', async function() {
+          let upload = await uploadFile();
+        //   if(upload.error == 0)
+        //     alert('File uploaded successful');
+        //   else if(upload.error == 1)
+        //     alert('File uploading failed - ' + upload.message);
+        });
       });
     </script>
   </head>
   <body>
     <h1>Login</h1> <hr>
     <img src="/img/info.jpeg" />
+    <img src="/member/image/e37bfa7f-aa03-4055-a4a2-3f2e533cb59b.png" width="300" height="300">
 
     <!-- <form action="/member/login" method="POST">
       <input type="hidden" />
@@ -369,6 +440,18 @@
       </ul>
       <input type="submit"/>
     </form>
+    <h1>실 파일 업로드 테스트.</h1>
+    <div id="changeMemberInfoDiv">
+      <ul>
+        <li>name <input type="text" name="name"></li>
+        <li>phoneNumber <input type="text" name="phoneNumber"></li>
+        <li>emailAddress <input type="text" name="emailAddress"></li>
+        <li>introduction <input type="text" name="introduction"></li>
+        <li>profilePhoto<input type="file" name="profilePhoto" ></li>
+        <li>backgroundPhoto<input type="file" name="backgroundPhoto" ></li>
+        <button id="chageMemberInfoBtn">수정</button>
+      </ul>
+    </div>
   </body>
 
 

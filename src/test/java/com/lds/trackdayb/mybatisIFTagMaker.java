@@ -36,7 +36,8 @@ public class mybatisIFTagMaker {
 
         ArrayList<String> camelCaseList = new ArrayList<String>();
         // String[] camelCaseStrArr = {"startDatetime", "endDatetime", "progressRate", "color"};
-        String[] camelCaseStrArr = {"memberSerialNumber", "goalId", "title", "startDatetime", "endDatetime", "content", "activityScore", "shareStatus"};
+//        String[] camelCaseStrArr = {"memberSerialNumber", "goalId", "title", "startDatetime", "endDatetime", "content", "activityScore", "shareStatus"};
+        String[] camelCaseStrArr = {"originalFileName", "storeFileName", "capacity", "width", "height"};
         camelCaseList = new ArrayList<>(Arrays.asList(camelCaseStrArr));
 // 출처: https://mommoo.tistory.com/32 [개발자로 홀로 서기]
 

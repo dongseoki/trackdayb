@@ -1,5 +1,6 @@
 package com.lds.trackdayb.service;
 
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.*;
 
@@ -9,16 +10,21 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.lds.trackdayb.dto.MemberInfo;
 import com.lds.trackdayb.dto.PasswordChangeDTO;
+import com.lds.trackdayb.entity.File;
 import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
 import com.lds.trackdayb.entity.SnsLinkInfo;
 import com.lds.trackdayb.exception.*;
+import com.lds.trackdayb.file.FileStore;
 import com.lds.trackdayb.jwt.TokenProvider;
+import com.lds.trackdayb.repository.FileRepository;
 import com.lds.trackdayb.repository.MemberRepository;
 import com.lds.trackdayb.util.CommonCodeUtil;
+import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
+import com.lds.trackdayb.vo.MemberForm;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -41,10 +47,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static com.lds.trackdayb.util.CommonCodeUtil.supportFilePartNameToFilePartIdMap;
 import static com.lds.trackdayb.util.RSAHelper.*;
 
 @RequiredArgsConstructor
@@ -54,9 +62,11 @@ public class MemberServiceImpl extends MemberService {
     @Value("${sns.google.client-id}")
     private String SNS_GOOGLE_CLIENT_ID;
 
+    private final FileRepository fileRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final FileStore fileStore;
     private final ModelMapper modelMapper;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     static final Logger LOGGER = LoggerFactory.getLogger(MemberServiceImpl.class);
@@ -184,8 +194,20 @@ public class MemberServiceImpl extends MemberService {
         List<SnsLinkInfo> snsLinkInfoList = memberRepository.findAllSnsLinkInfo(memberEntity.getMemberSerialNumber());
         MemberInfo memberInfo = modelMapper.map(memberEntity,MemberInfo.class);
         memberInfo.setSnsLinkInfoList(snsLinkInfoList);
+
+        // photoUrlPath setting
+        if(!StringUtils.isEmpty(memberInfo.getProfilePhotoId())){
+            memberInfo.setProfilePhotoUrlPath(getFileUrlPath(memberInfo.getProfilePhotoId()));
+        }
+        if(!StringUtils.isEmpty(memberInfo.getBackgroundPhotoId())){
+            memberInfo.setBackgroundPhotoUrlPath(getFileUrlPath(memberInfo.getBackgroundPhotoId()));
+        }
+
         // [2]
         return memberInfo;
+    }
+    private String getFileUrlPath(String photoId){
+        return StringUtils.defaultString("/member/image/"+fileRepository.getFileInfo(photoId).getStoreFileName());
     }
 
     @Override
@@ -388,6 +410,58 @@ public class MemberServiceImpl extends MemberService {
         changePasswordParam.put("newPassword",encoder.encode(decrytedTextList.get(1)));
         changePasswordParam.put("memberSerialNumber", memberInfo.getMemberSerialNumber());
         memberRepository.changePassword(changePasswordParam);
+    }
+
+    @Override
+    public void changeMemberInfo(MemberForm memberForm) throws IOException {
+        // text 값 처리.
+        // 유효성 체크.(필요시).
+
+        // text 저장 메서드 호출.
+        memberRepository.updateMemberTextInfo(memberForm);
+
+        // file 처리시도.
+        if(!ObjectUtils.isEmpty(memberForm.getProfilePhoto()) && !memberForm.getProfilePhoto().isEmpty())
+            processMemberPhoto(memberForm.getProfilePhoto(),memberForm.getMemberSerialNumber());
+        if(!ObjectUtils.isEmpty(memberForm.getBackgroundPhoto()) && !memberForm.getBackgroundPhoto().isEmpty())
+            processMemberPhoto(memberForm.getBackgroundPhoto(),memberForm.getMemberSerialNumber());
+    }
+
+    @Override
+    public void unlinkAccount(MemberInfo memberInfo, String snsName) throws IOException {
+
+    }
+
+    private void processMemberPhoto(MultipartFile multipartFile,String memberSerialNumber) throws IOException {
+        if(Arrays.asList(CommonCodeUtil.supportFilePartNameArr).contains(multipartFile.getName()) == false){
+            throw new UnsupportFilePartNameException("unsupport file part name");
+        }
+
+        // 파일 각각에 대해 유효성체크.
+        uploadFileValidateCheck(multipartFile);
+
+        // 특정 경로에 파일 저장.
+        File uploadFile = fileStore.storeFile(multipartFile);
+
+        // memberFile 로 변경 예정.
+        // 메모리 관리를 위한 삭제 처리.
+        // 차후 논의.
+//        fileStore.deleteFiles(memberSerialNumberber);
+
+        // DB에 경로 저장.
+        // 멤버 file id 변경.
+        memberRepository.insertFile(uploadFile);
+        Map<String, Integer> updateMemberFileIdVO = new HashMap<String,Integer>();
+        updateMemberFileIdVO.put(supportFilePartNameToFilePartIdMap.get(uploadFile.getOriginalFileName()) , uploadFile.getFileId());
+        updateMemberFileIdVO.put("memberSerialNumber",Integer.parseInt(memberSerialNumber));
+
+        memberRepository.updateMemberFileId(updateMemberFileIdVO);
+    }
+
+    private void uploadFileValidateCheck(MultipartFile profilePhoto) {
+        if(profilePhoto.getContentType().contains("image/") == false){
+            throw new InvalidFileTypeException("only image/* available");
+        }
     }
 
 

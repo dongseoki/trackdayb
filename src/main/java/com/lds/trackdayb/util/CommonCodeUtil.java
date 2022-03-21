@@ -32,6 +32,15 @@ public final class CommonCodeUtil {
         put("kakao","K");
     }};
 
+    // 유효 file part name 모음.
+    public static String[] supportFilePartNameArr = new String[]{"profilePhoto","backgroundPhoto"};
+
+    // 유효 file part name 와 file part 용 id 매핑.
+    public static Map<String, String> supportFilePartNameToFilePartIdMap = new HashMap<>() {{
+        put("profilePhoto","profilePhotoId");
+        put("backgroundPhoto","backgroundPhotoId");
+    }};
+
     // google 관련 정보.
     public static final String GOOGLE_TOKEN_BASE_URL ="https://oauth2.googleapis.com/token";
 

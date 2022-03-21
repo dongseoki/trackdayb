@@ -6,10 +6,12 @@ import com.lds.trackdayb.entity.MemberEntity;
 
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
+import com.lds.trackdayb.vo.MemberForm;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 public abstract class MemberService implements UserDetailsService{
     public abstract String save(MemberEntity memberEntity);
@@ -44,4 +46,8 @@ public abstract class MemberService implements UserDetailsService{
     public abstract void RSApreprocessTest2(HttpServletRequest request, MemberEntity memberEntity) throws Exception;
 
     public abstract void changePassword(HttpServletRequest request, PasswordChangeDTO passwordChangeDTO, MemberInfo memberInfo) throws Exception;
+
+    public abstract void changeMemberInfo(MemberForm memberForm) throws IOException;
+
+    public abstract void unlinkAccount(MemberInfo memberInfo, String snsName) throws  IOException;
 }

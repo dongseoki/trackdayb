@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.lds.trackdayb.dto.*;
 import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.exception.*;
+import com.lds.trackdayb.file.FileStore;
 import com.lds.trackdayb.jwt.JwtFilter;
 import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.mvo.PublicKeyInfo;
@@ -29,23 +30,31 @@ import com.lds.trackdayb.util.CommonCodeUtil;
 import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
+import com.lds.trackdayb.vo.MemberForm;
 import com.lds.trackdayb.vo.SimpleSignUpVO;
 import com.lds.trackdayb.vo.SnsAuthenticate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.util.StringUtils;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.security.*;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.*;
@@ -58,6 +67,7 @@ import static com.lds.trackdayb.util.RSAHelper.RSApreprocess;
 public class MemberController {
     private final MemberService memberService;
     private final TokenProvider tokenProvider;
+    private final FileStore fileStore;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final ModelMapper modelMapper;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
@@ -476,5 +486,58 @@ public class MemberController {
     public ResponseEntity<MemberEntity> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(memberService.getUserWithAuthorities(username));
     }
-    
+
+    @PostMapping("/memberinfo")
+//    public ResultMVO changeMemberInfo(@RequestParam(value = "name",required = false) String name,
+//                                      @RequestParam(value = "phoneNumber",required = false) String phoneNumber,
+//                                      @RequestParam(value = "emailAddress",required = false) String emailAddress,
+//                                      @RequestParam(value = "introduction",required = false) String introduction,
+//                                      @RequestParam(value = "profilePhoto",required = false) MultipartFile profilePhoto,
+//                                      @RequestParam(value = "backgroundPhoto",required = false) MultipartFile backgroundPhoto) throws IOException {
+    public ResultMVO changeMemberInfo(@ModelAttribute MemberForm memberForm) throws IOException {
+
+//        MemberForm memberForm = new MemberForm();
+//        if(!StringUtils.isEmpty(name)){
+//            memberForm.setName(name);
+//        }
+//        if(!StringUtils.isEmpty(phoneNumber)){
+//            memberForm.setPhoneNumber(phoneNumber);
+//        }
+//        if(!StringUtils.isEmpty(emailAddress)){
+//            memberForm.setEmailAddress(emailAddress);
+//        }
+//        if(!StringUtils.isEmpty(introduction)){
+//            memberForm.setIntroduction(introduction);
+//        }
+//        if(!ObjectUtils.isEmpty(profilePhoto)){
+//            memberForm.setProfilePhoto(profilePhoto);
+//        }
+//        if(!ObjectUtils.isEmpty(backgroundPhoto)){
+//            memberForm.setBackgroundPhoto(backgroundPhoto);
+//        }
+
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        memberForm.setMemberSerialNumber(memberService.getMyUserWithAuthorities().getMemberSerialNumber());
+        memberService.changeMemberInfo(memberForm);
+        return resultMVO;
+    }
+
+    @GetMapping("/image/{filename}")
+    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        return new UrlResource("file:"+fileStore.getFullPath(filename));
+    }
+
+    @DeleteMapping("/unlinkaccount/{snsName}")
+    public ResultMVO unlinkAccount(@PathVariable("snsName") String snsName) throws IOException {
+        ResultMVO resultMVO = new ResultMVO();
+        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
+        if(Arrays.asList(CommonCodeUtil.supportSNSarr).contains(snsName) == false){
+            throw new UnsupportSnsException("unsupported sns");
+        }
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo = memberService.getMyUserWithAuthorities();
+        memberService.unlinkAccount(memberInfo, snsName);
+        return resultMVO;
+    }
 }
