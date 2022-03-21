@@ -46,3 +46,4 @@ nohup.out
 
 replay_pid.*.log
 hs_err_pid.*.log
+.env

@@ -26,12 +26,15 @@ import Checkbox from '@mui/material/Checkbox';
 import GoalTitleListModal from "./GoalTitleListModal";
 import {toast} from "react-toastify";
 import { useMediaQuery } from "react-responsive";
-import { ADD_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
-import { useDispatch } from 'react-redux';
+import { ADD_GOAL_REQUEST, LOAD_GOALTOTALTITLELIST_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALSEARCHFULLLIST_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
+import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { HexColorPicker } from "react-colorful";
 
 function GoalInsertFormModal(){
+  // state 변수
+  const { searchParams } = useSelector((state) => state.goal);
+  // 로컬 변수
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
   const [shareStatus, setshareStatus] = useState(false);
@@ -204,7 +207,10 @@ function GoalInsertFormModal(){
           "satYn":sat ? "Y":"N"
         }
       }
+
+      // addPost()
       // 순차적 비동기 처리 필요(정렬조건 때문에)
+       
       // await Promise.all([
         dispatch({
           type : ADD_GOAL_REQUEST,
@@ -212,14 +218,20 @@ function GoalInsertFormModal(){
         })
 
         // dispatch({
+        //   type : LOAD_GOALTOTALTITLELIST_REQUEST,
+        // })
+        // dispatch({
         //   type : LOAD_GOALTOTALFULLLIST_REQUEST,
         // })
         // dispatch({
-        //   type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+        //   type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+        //   data : searchParams,
         // })
         // dispatch({
-        //   type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+        //   type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+        //   data : searchParams,
         // })
+        
       // ])
       handleClose();
       // setUpdateTotalTitle(!updateTotalTitle)
@@ -227,6 +239,25 @@ function GoalInsertFormModal(){
 
     }
   };
+
+  // function addPost(callback) {
+  //   return new Promise(function(resolve, reject) {
+  //     dispatch({
+  //       type : ADD_GOAL_REQUEST,
+  //       data : { formData : formData }
+  //     })
+  //     resolve();
+  //   })
+  // }
+
+  // addPost().then(function() {
+  //   dispatch({
+  //     type : LOAD_GOALSEARCHFULLLIST_REQUEST,
+  //     data : searchParams,
+  //   })
+  // })
+
+
   return (
     <div className="insert-form">
       <button className="goal-insert-btn" onClick={handleOpen}><FaPlus /></button>
