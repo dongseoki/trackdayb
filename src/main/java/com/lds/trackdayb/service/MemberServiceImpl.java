@@ -10,7 +10,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.lds.trackdayb.dto.MemberInfo;
 import com.lds.trackdayb.dto.PasswordChangeDTO;
-import com.lds.trackdayb.entity.File;
+import com.lds.trackdayb.entity.UploadFile;
 import com.lds.trackdayb.entity.MemberEntity;
 import com.lds.trackdayb.dto.TokenDTO;
 import com.lds.trackdayb.dto.TokenRequestDTO;
@@ -21,7 +21,6 @@ import com.lds.trackdayb.jwt.TokenProvider;
 import com.lds.trackdayb.repository.FileRepository;
 import com.lds.trackdayb.repository.MemberRepository;
 import com.lds.trackdayb.util.CommonCodeUtil;
-import com.lds.trackdayb.util.ResponseCodeUtil;
 import com.lds.trackdayb.util.SecurityUtil;
 
 import com.lds.trackdayb.vo.MemberForm;
@@ -37,7 +36,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -441,7 +439,7 @@ public class MemberServiceImpl extends MemberService {
         uploadFileValidateCheck(multipartFile);
 
         // 특정 경로에 파일 저장.
-        File uploadFile = fileStore.storeFile(multipartFile);
+        UploadFile uploadFile = fileStore.storeFile(multipartFile);
 
         // memberFile 로 변경 예정.
         // 메모리 관리를 위한 삭제 처리.

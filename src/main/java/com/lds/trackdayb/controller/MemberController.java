@@ -1,5 +1,6 @@
 package com.lds.trackdayb.controller;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,6 +37,7 @@ import com.lds.trackdayb.vo.SnsAuthenticate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -70,6 +72,7 @@ public class MemberController {
     private final FileStore fileStore;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final ModelMapper modelMapper;
+    private final ServletContext servletContext;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
 
     @GetMapping("/google/auth")
@@ -474,6 +477,12 @@ public class MemberController {
     @GetMapping("/currentUser")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public String getMyUserInfo(HttpServletRequest request) {
+//        String testPath = servletContext.getRealPath("/");
+//        System.out.println("testPath = " + testPath);
+//        String testPath2 = servletContext.getContextPath();
+//        System.out.println("testPath2 = " + testPath2);
+//        System.out.println("testPath3 =" + System.getProperty("user.dir"));
+//        System.out.println("testPath4 =" + fileStore.getFullPath("testfile.txt"));
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
         MemberInfo memberInfo =memberService.getMyUserWithAuthorities();

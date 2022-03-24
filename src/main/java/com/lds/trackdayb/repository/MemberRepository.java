@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.lds.trackdayb.entity.File;
+import com.lds.trackdayb.entity.UploadFile;
 import com.lds.trackdayb.entity.MemberEntity;
 
 import com.lds.trackdayb.entity.SnsLinkInfo;
@@ -38,7 +38,7 @@ public interface MemberRepository {
 
     void updateMemberTextInfo(MemberForm memberForm);
 
-    void insertFile(File uploadFile);
+    void insertFile(UploadFile uploadFile);
 
     void updateMemberFileId(Map<String, Integer> updateMemberFileIdVO);
 }
