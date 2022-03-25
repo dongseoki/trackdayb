@@ -167,7 +167,7 @@ public class GoalManageController {
     }
 
 
-    @PatchMapping("/goal")
+    @PutMapping("/goal")
     public ResultMVO updateGoal(@RequestBody GoalVO goalVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
@@ -232,6 +232,10 @@ public class GoalManageController {
         goalVO.setMemberSerialNumber(loginSerialNumber);
 
         goalService.deleteGoal(goalVO);
+
+        GoalMVO goalMVO = new GoalMVO();
+        goalMVO.setGoalId(goalVO.getGoalId());
+        resultMVO.setGoalInfo(goalMVO);
 
         return resultMVO;
     }

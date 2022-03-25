@@ -284,3 +284,7 @@ Release
  - 운영 환경과 로컬 개발환경에 따른 upload file 폴더 변경이 가능하도록 설정.
  - SNS계정 연동 해지 API 개발 완료
  - 안쓰는 js파일 삭제
+ - 활동 수정 API 의 http method 변경 PATCH -> PUT 으로 #80
+ - 목표 수정 API 를 PUT으로 변경 #78
+ - 활동 삭제 API 수정 요청 - 삭제 성공시 activityId를 반환하도록 수정 #77
+ - 목표 삭제 API 수정 요청 - 삭제 성공시 goalId를 반환하도록 #76
