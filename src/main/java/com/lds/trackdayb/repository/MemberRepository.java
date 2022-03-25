@@ -41,4 +41,6 @@ public interface MemberRepository {
     void insertFile(UploadFile uploadFile);
 
     void updateMemberFileId(Map<String, Integer> updateMemberFileIdVO);
+
+    void deleteSnsLinkAccountBySnsType(Map<String, String> unlinkAccountVO);
 }

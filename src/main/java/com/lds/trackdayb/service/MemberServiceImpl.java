@@ -426,8 +426,11 @@ public class MemberServiceImpl extends MemberService {
     }
 
     @Override
-    public void unlinkAccount(MemberInfo memberInfo, String snsName) throws IOException {
-
+    public void unlinkAccount(MemberInfo memberInfo, String snsType) throws IOException {
+        Map<String, String> unlinkAccountVO = new HashMap<>();
+        unlinkAccountVO.put("memberSerialNumber",memberInfo.getMemberSerialNumber());
+        unlinkAccountVO.put("snsType",snsType);
+        memberRepository.deleteSnsLinkAccountBySnsType(unlinkAccountVO);
     }
 
     private void processMemberPhoto(MultipartFile multipartFile,String memberSerialNumber) throws IOException {

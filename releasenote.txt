@@ -282,3 +282,5 @@ Release
 
 Release
  - 운영 환경과 로컬 개발환경에 따른 upload file 폴더 변경이 가능하도록 설정.
+ - SNS계정 연동 해지 API 개발 완료
+ - 안쓰는 js파일 삭제

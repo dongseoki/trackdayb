@@ -56,6 +56,12 @@
         DELETE FROM sns_link_info
         WHERE member_serial_number = #{value};
     </delete>
+    <delete id="deleteSnsLinkAccountBySnsType">
+        DELETE FROM sns_link_info
+        WHERE member_serial_number = #{memberSerialNumber}
+            AND
+            sns_type = #{snsType}
+    </delete>
 
     <select id="findByMemberId" resultType="com.lds.trackdayb.entity.MemberEntity">
     SELECT *
