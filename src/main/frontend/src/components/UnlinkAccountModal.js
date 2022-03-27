@@ -53,7 +53,6 @@ const UnlinkAccountModal = ({imageSrc, snsName}) => {
     
 
     const handleOpen = () => {
-        console.log('hello')
         setOpen(true);
     };
 
@@ -62,7 +61,6 @@ const UnlinkAccountModal = ({imageSrc, snsName}) => {
     };
 
     const unlinkHandler = () =>{
-        console.log('계정연결 해제');
         dispatch({
             type : SNS_UNLINK_REQUEST,
             data : {

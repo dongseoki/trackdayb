@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import "./ActivityInsertFormModal.css"
 //toggle
 import ToggleButton from '@mui/material/ToggleButton';
@@ -19,8 +19,6 @@ import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import {toast} from "react-toastify";
 import GoalTitleListModal from "./GoalTitleListModal";
-import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import { useMediaQuery } from "react-responsive";
 import {useDispatch } from 'react-redux';
 import { MODIFY_ACTIVITY_REQUEST } from "../reducers/activity";
@@ -28,11 +26,6 @@ import dayjs from "dayjs";
 
 function ActivityModifyFormModal({writeDate, modifyData, targetIndex, activityList, setActivityList}){
     const dispatch = useDispatch();
-    // const [ activitySearchList, setActivitySearchList ] = useContext(ActivitySearchListContext);
-    // const [ activitySearchGroupby, setActivitySearchGroupby] = useContext(ActivitySearchGroupbyContext);
-    // const [ , , startDatetime, setStartDatetime,endDatetime, setEndDatetime] = useContext(GoalModalSearchTitleListContext);
-
-    
     const YNtoTF = (value)=>{
         if(value === "Y"){
             return true

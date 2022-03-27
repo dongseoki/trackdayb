@@ -14,21 +14,16 @@ import {IoIosArrowUp} from "react-icons/io"
 
 //TimeLine
 import ActivitySearchTimeline from '../components/ActivitySearchTimeline';
-import { GoalSearchTitleListProvider } from "../context/GoalSearchTitleListContext";
-import { GoalModalSearchTitleListProvider} from "../context/GoalModalSearchTitleListContext";
 import ActivityTimeline from "../components/ActivityTimeline";
 //context
-import { ActivitySearchListProvider } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyProvider} from "../context/ActivitySearchGroupbyContext";
-import { GoalTotalTitleListProvider } from "../context/GoalTotalTitleListContext";
 import { useMediaQuery } from "react-responsive";
 import useTitle from '../hooks/useTitle';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { LOAD_ACTIVITYSEARCHFULLLIST_REQUEST,
         LOAD_ACTIVITYDAYLIST_REQUEST } from '../reducers/activity';
-import { LOAD_GOALSEARCHFULLLIST_REQUEST,
-        LOAD_GOALSEARCHTITLELIST_REQUEST,
+import {LOAD_GOALSEARCHTITLELIST_REQUEST,
         LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
 
 import dayjs from 'dayjs';

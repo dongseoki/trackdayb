@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import {useHistory} from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Navigation.css";
-// import {AuthContext} from "../context/AuthContext";
-// import axios from "axios";
 import { toast } from 'react-toastify';
 import { useMediaQuery } from "react-responsive";
 //icon

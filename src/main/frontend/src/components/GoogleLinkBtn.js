@@ -13,7 +13,6 @@ const GoogleLinkBtn = ()=>{
   const { snsLinkError } = useSelector((state)=> state.user); 
 
   const onSuccess = (res) =>{
-    console.log("구글연동", res)
     // 구글에서 로그인 성공
     // localStorage.setItem('tokenId', res.tokenId);
     dispatch({

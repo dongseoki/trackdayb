@@ -1,13 +1,10 @@
 // 시간관리탭 참조 데이터용 활동리스트 날짜로 그룹바이 만들기(오브젝트)
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { ActivitySearchListContext } from "./ActivitySearchListContext";
+import React, { createContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export const ActivitySearchGroupbyContext = createContext();
 
 export const ActivitySearchGroupbyProvider = (props) =>{
-    // const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
-    
     const { activitySearchFullList } = useSelector((state) => state.activity)
 
     const [ activitySearchGroupby, setActivitySearchGroupby ] = useState({});

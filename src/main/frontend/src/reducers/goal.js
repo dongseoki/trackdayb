@@ -122,7 +122,6 @@ const goalReducer = (state=goalInitialState, action) =>{
                 loadGoalTotalTitleListError : action.error,
             }
         case LOAD_GOALSEARCHFULLLIST_REQUEST: //조건 검색 게시글 로딩 중 (action.data = searchParams)
-            console.log('acton.data', action.data)
             return {
                 ...state,
                 loadGoalSearchFullListLoading : true, 
@@ -148,7 +147,6 @@ const goalReducer = (state=goalInitialState, action) =>{
             }
         
         case LOAD_GOALSEARCHTITLELIST_REQUEST: //조건 검색 게시글 제목 로딩 중 (action.data = searchParams)
-            console.log('acton.data', action.data)
             return {
                 ...state,
                 loadGoalSearchTitleListLoading : true, 
@@ -173,7 +171,6 @@ const goalReducer = (state=goalInitialState, action) =>{
                 loadGoalSearchTitleListError : action.error,
             }
         case LOAD_GOALMODALTITLELIST_REQUEST: // 모달창 내부 목표 제목 로딩 중 (action.data = searchParams)
-            console.log('acton.data', action.data)
             return {
                 ...state,
                 loadGoalModalTitleListLoading : true, 

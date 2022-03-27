@@ -58,7 +58,6 @@ const SimpleSignUpModal = ({open, setOpen, snsName}) => {
     };
 
     const submitHandler = (e) => {
-        console.log('hello', memberId, name)
         e.preventDefault();
         const tokenId = localStorage.getItem('tokenId');
         const formData = {

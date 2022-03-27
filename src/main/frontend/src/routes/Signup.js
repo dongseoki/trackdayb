@@ -89,7 +89,6 @@ function Signup() {
           // phoneNumber : phoneNumber,
           // emailAddress : emailAddress
         }
-        console.log("formData", formData)
         dispatch({
           type : SIGN_UP_REQUEST,
           data : formData,

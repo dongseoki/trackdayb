@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import Modal from '@material-ui/core/Modal';
 import Fade from '@material-ui/core/Fade';
@@ -91,7 +91,6 @@ const ChangePwModal = () => {
     
 
     const handleOpen = () => {
-        console.log('hello')
         setOpen(true);
     };
 
@@ -100,7 +99,6 @@ const ChangePwModal = () => {
     };
 
     const submitHandler = async (e) => {
-        console.log('hello')
         e.preventDefault();
         // try{
         if(hasPasswordError(password) && hasNotSameError('passwordCheck')){

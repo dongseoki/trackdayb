@@ -117,7 +117,6 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
           shareStatus: shareStatus ? "N":"Y",
         };
 
-        console.log('formData_activity', formData_activity)
         //활동 추가
         dispatch({
           type : ADD_ACTIVITY_REQUEST,

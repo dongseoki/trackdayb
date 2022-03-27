@@ -53,7 +53,6 @@ const WithdrawalModal = () => {
     
 
     const handleOpen = () => {
-        console.log('hello')
         setOpen(true);
     };
 
@@ -62,7 +61,6 @@ const WithdrawalModal = () => {
     };
 
     const withdrawalHandler = () =>{
-        console.log('회원 탈퇴');
         dispatch({
             type : WITHDRAWAL_REQUEST
         })

@@ -44,7 +44,6 @@ function loadMyInfoAPI() { // 로그인 유저 정보
 function* loadMyInfo() {
     try{
         const result = yield call(loadMyInfoAPI)
-        console.log('myinfo result', result)
         yield put({
             type : LOAD_MY_INFO_SUCCESS,
             data : result.data.memberInfo, // 서버로부터 받아온 데이터
@@ -64,7 +63,6 @@ function getPublicKeyAPI() { //로그인&회원가입시 패스워드 암호화 
 function* getPublicKey() {
     try{
         const result = yield call(getPublicKeyAPI)
-        console.log('getPublicKeyAPI result', result)
         yield put({
             type : GET_PUBLICKEY_SUCCESS,
             data : result.data.publicKeyInfo.publicKeyStr, // 서버로부터 받아온 데이터

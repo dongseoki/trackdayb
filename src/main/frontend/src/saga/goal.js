@@ -71,7 +71,6 @@ function loadGoalSearchFullListAPI(data) {
     return axiosInstance.get('/goalManage/goalFullList', {params : data})
 }
 function* loadGoalSearchFullList(action) {
-    console.log('searchFull', action)
     try{
         const result = yield call(loadGoalSearchFullListAPI, action.data)
         yield put({
@@ -150,7 +149,6 @@ function addGoalAPI(data) {
 function* addGoal(action) {
     try{
         const result = yield call(addGoalAPI, action.data.formData)
-        console.log('add_result', result)
         yield put({
             type : ADD_GOAL_SUCCESS,
             data : result

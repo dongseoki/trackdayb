@@ -29,7 +29,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { toast } from "react-toastify";
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from 'react-redux';
-import { MODIFY_GOAL_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
+import { MODIFY_GOAL_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
 import dayjs from "dayjs";
 
 function GoalModifyFormModal({modifyData, targetIndex}){
@@ -154,15 +154,16 @@ function GoalModifyFormModal({modifyData, targetIndex}){
     setOpen(false);
   };
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type : LOAD_GOALMODALTITLELIST_REQUEST,
-  //     data : {
-  //       searchStartDatetime : makeYYMMDD(startDatetime),
-  //       searchEndDatetime : makeYYMMDD(endDatetime)
-  //     }
-  //   })
-  // },[startDatetime, endDatetime])
+  // 시작일, 종료일 변경시 내부 모달 목표 타이틀 리스트 업데이트
+  useEffect(() =>{
+    dispatch({
+      type : LOAD_GOALMODALTITLELIST_REQUEST,
+      data : {
+        searchStartDatetime : dayjs(startDatetime).format("YYYY-MM-DD"),
+        searchEndDatetime : dayjs(endDatetime).format("YYYY-MM-DD")
+      }
+    })
+  },[startDatetime, endDatetime])
 
   const handleFormSubmit = async (evt) =>{
     evt.preventDefault();

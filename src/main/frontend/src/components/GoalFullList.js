@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./GoalFullList.css";
 // import axios from "axios";
 import GoalInsertFormModal from "./GoalInsertFormModal";
@@ -8,7 +8,6 @@ import { CgArrowDown } from 'react-icons/cg';
 import { CgArrowUp } from 'react-icons/cg';
 import Button from '@mui/material/Button';
 
-import { GoalModalSearchTitleListProvider } from "../context/GoalModalSearchTitleListContext";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
@@ -33,8 +32,6 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
   }
   return (
     <div>
-      <GoalModalSearchTitleListProvider>
-
       <div className='button-wrapper'>
         <Button className={gatherGoalYn ? "gather-btn active" : "gather-btn"} color="primary" variant={gatherGoalYn===true ? "contained" : "outlined"} onClick={()=>{setGatherGoalYn(!gatherGoalYn)}}>목표 모아보기</Button>
         <FormControl size="small">
@@ -91,7 +88,6 @@ function GoalFullList({orderColumn, setOrderColumn, orderType, setOrderType, gat
         ))}
         <GoalInsertFormModal/>
       </div>
-      </GoalModalSearchTitleListProvider>
     </div>
   )
 }

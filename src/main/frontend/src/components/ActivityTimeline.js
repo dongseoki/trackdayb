@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState } from "react"
 import Timeline from '@material-ui/lab/Timeline';
 import TimelineItem from '@material-ui/lab/TimelineItem';
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
@@ -16,11 +16,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 
-// import axiosInstance from "../axiosConfig";
-// import axios from "axios";
-//Context
-// import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import "./ActivityTimeline.css";
 import ActivityInsertFormModal from "../components/ActivityInsertFormModal";
 import ActivityModifyFormModal from "../components/ActivityModifyFormModal";

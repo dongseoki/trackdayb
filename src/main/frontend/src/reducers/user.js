@@ -108,7 +108,6 @@ const userReducer = (state=userInitialState, action) =>{
                 loadMyInfoError : null,
             }
         case LOAD_MY_INFO_SUCCESS:
-            console.log('현재 유저 정보', action.data)
             return {
                 ...state,
                 loadMyInfoLoading : false, 
@@ -150,7 +149,6 @@ const userReducer = (state=userInitialState, action) =>{
                 logInError : null,
             }
         case LOG_IN_SUCCESS:
-            console.log('로그인 성공 action.data', action.data)
             return {
                 ...state,
                 logInLoading : false, 
@@ -316,7 +314,6 @@ const userReducer = (state=userInitialState, action) =>{
                 snsLinkError : null,
             }
         case SNS_LINK_SUCCESS:
-            console.log('SNS 계정연동 성공', action.data)
             return {
                 ...state,
                 snsLinkLoading : false, 
@@ -338,7 +335,6 @@ const userReducer = (state=userInitialState, action) =>{
                 snsUnlinkError : null,
             }
         case SNS_UNLINK_SUCCESS:
-            console.log('SNS 계정연동 해지 성공', action.data)
             return {
                 ...state,
                 snsUnlinkLoading : false, 

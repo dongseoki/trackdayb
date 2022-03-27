@@ -9,7 +9,6 @@ import TimelineDot from '@material-ui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 import "./ActivitySearchTimeline.css";
 //Context
-import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
 import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
 import { useSelector } from "react-redux";
@@ -18,22 +17,15 @@ import sortArray from 'sort-array';
 
 
 export default function ActivitySearchTimeline() {
-  // getActivityListTEST
   // 참조데이터(전체 리스트 -> 파생 그룹바이)
-  // const [ activitySearchList,  ] = useContext(ActivitySearchListContext)
-  
   const { activitySearchFullList }  = useSelector((state) => state.activity)
   
   const [ activitySearchGroupby,  ] = useContext(ActivitySearchGroupbyContext)
-
-  console.log('activitySearchGroupby', activitySearchGroupby)
-
-  // sortArray(activitySearchGroupby, {
-  //   by : 'startDatetime',
-  //   computed : {
-  //     startDatetime : row => row.startDatetime
-  //   }
-  // })
+  
+  sortArray(activitySearchFullList, {
+    by : 'startDatetime',
+    order : 'asc'
+  })
   
   if (activitySearchFullList.length === 0) {
     return (
