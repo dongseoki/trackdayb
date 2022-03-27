@@ -36,7 +36,10 @@ import { GET_PUBLICKEY_FAILURE,
         WITHDRAWAL_FAILURE,
         SNS_UNLINK_REQUEST,
         SNS_UNLINK_SUCCESS,
-        SNS_UNLINK_FAILURE} from "../reducers/user";
+        SNS_UNLINK_FAILURE,
+        CHANGE_MY_INFO_REQUEST,
+        CHANGE_MY_INFO_FAILURE,
+        CHANGE_MY_INFO_SUCCESS} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -56,7 +59,26 @@ function* loadMyInfo() {
         })
     }
 }
-
+function changeMyInfoAPI(data) { // 유저 정보 변경
+    return axiosInstance.post("/member/memberinfo", data, {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    })
+}
+function* changeMyInfo(action) {
+    try{
+        const result = yield call(changeMyInfoAPI, action.data)
+        yield put({
+            type : CHANGE_MY_INFO_SUCCESS,
+            data : result.data.memberInfo, // 서버로부터 받아온 데이터
+        })
+    }catch(err) {
+        console.erroe(err)
+        yield put({
+            type: CHANGE_MY_INFO_FAILURE,
+            error : err.response.data
+        })
+    }
+}
 function getPublicKeyAPI() { //로그인&회원가입시 패스워드 암호화 공개키
     return axios.get("/member/requestpublickey")
 }
@@ -291,6 +313,9 @@ function* withdrawal() {
 function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
+function* watchChangeMyInfo() {
+    yield takeLatest(CHANGE_MY_INFO_REQUEST, changeMyInfo);
+}
 function* watchGetPublicKey() {
     yield takeLatest(GET_PUBLICKEY_REQUEST, getPublicKey);
 }
@@ -328,6 +353,7 @@ function* watchWithdrawal() {
 export default function* userSaga() {
     yield all([
         fork(watchLoadMyInfo),
+        fork(watchChangeMyInfo),
         fork(watchGetPublicKey),
         fork(watchLogIn),
         fork(watchLogOut),

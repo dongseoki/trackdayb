@@ -2,6 +2,11 @@ export const userInitialState = {
     loadMyInfoLoading : false, //로그인한 사용자 정보 시도 중
     loadMyInfoDone : false,
     loadMyInfoError : null,
+
+    changeMyInfoLoading : false, // 회원정보 변경
+    changeMyInfoDone : false,
+    changeMyInfoError : null,
+
     myInfo : null, // 로그인 사용자 전체 정보{}
     myId : null, // 로그인 사용자 아이디
     logInLoading : false, //로그인 시도 중
@@ -17,8 +22,6 @@ export const userInitialState = {
     publicKeyDone : false,
     publicKeyError : null,
     publicKey : null,
-    // accessToken : null,
-    // refreshToken : null,
     changePwLoading : false, // 비밀번호 변경 시도중
     changePwDone : false,
     changePwError : null,
@@ -34,12 +37,9 @@ export const userInitialState = {
     snsUnlinkLoading : false, // SNS 계정 연동 해지
     snsUnlinkDone : false,
     snsUnlinkError : null,
-
     withdrawalLoading : false, // 탈퇴
     withdrawalDone : false,
     withdrawalError : null,
-    
-
 }
 
 // action 은 생략 그때그때 만들어서 사용
@@ -48,6 +48,10 @@ export const userInitialState = {
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST'
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS'
 export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE'
+
+export const CHANGE_MY_INFO_REQUEST = 'CHANGE_MY_INFO_REQUEST'
+export const CHANGE_MY_INFO_SUCCESS = 'CHANGE_MY_INFO_SUCCESS'
+export const CHANGE_MY_INFO_FAILURE = 'CHANGE_MY_INFO_FAILURE'
 
 export const GET_PUBLICKEY_REQUEST = 'GET_PUBLICKEY_REQUEST'
 export const GET_PUBLICKEY_SUCCESS = 'GET_PUBLICKEY_SUCCESS'
@@ -121,6 +125,27 @@ const userReducer = (state=userInitialState, action) =>{
                 loadMyInfoLoading : false, 
                 loadMyInfoError : action.error,
             }
+        case CHANGE_MY_INFO_REQUEST: // 유저 정보 변경
+            return {
+                ...state,
+                changeMyInfoLoading : true,
+                changeMyInfoDone : false,
+                changeMyInfoError : null,
+            }
+        case CHANGE_MY_INFO_SUCCESS:
+            return {
+                ...state,
+                changeMyInfoLoading : false, 
+                changeMyInfoDone : true,
+                // myInfo : action.data,
+                // myId : action.data.memberId,
+            }
+        case CHANGE_MY_INFO_FAILURE:
+            return {
+                ...state,
+                changeMyInfoLoading : false, 
+                changeMyInfoError : action.error,
+            }
         case GET_PUBLICKEY_REQUEST: // 공개키 시도
             return {
                 ...state,
@@ -157,8 +182,6 @@ const userReducer = (state=userInitialState, action) =>{
                 myInfo : action.data.memberInfo,
                 withdrawalDone : false,
                 withdrawalError : null,
-                // accessToken : action.data.tokenInfo.accessToken,
-                // refreshToken : action.data.tokenInfo.refreshToken
             }
         case LOG_IN_FAILURE:
             return {
@@ -191,8 +214,6 @@ const userReducer = (state=userInitialState, action) =>{
                 snsSignUpError : null,
                 snsLinkError : null,
                 withdrawalError : null,
-                // accessToken : null,
-                // refreshToken : null,
             }
         case LOG_OUT_FAILURE:
             return {
