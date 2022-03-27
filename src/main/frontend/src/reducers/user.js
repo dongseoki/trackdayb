@@ -31,6 +31,9 @@ export const userInitialState = {
     snsLinkLoading : false, // SNS 계정연동
     snsLinkDone : false,
     snsLinkError : null,
+    snsUnlinkLoading : false, // SNS 계정 연동 해지
+    snsUnlinkDone : false,
+    snsUnlinkError : null,
 
     withdrawalLoading : false, // 탈퇴
     withdrawalDone : false,
@@ -83,6 +86,11 @@ export const SNS_SIGN_UP_CANCLE = 'SNS_SIGN_UP_CANCLE' //취소
 export const SNS_LINK_REQUEST = 'SNS_LINK_REQUEST' //SNS 계정연동
 export const SNS_LINK_SUCCESS = 'SNS_LINK_SUCCESS'
 export const SNS_LINK_FAILURE = 'SNS_LINK_FAILURE'
+
+export const SNS_UNLINK_REQUEST = 'SNS_UNLINK_REQUEST' //SNS 계정연동 해지
+export const SNS_UNLINK_SUCCESS = 'SNS_UNLINK_SUCCESS'
+export const SNS_UNLINK_FAILURE = 'SNS_UNLINK_FAILURE'
+
 
 export const WITHDRAWAL_REQUEST = 'WITHDRAWAL_REQUEST' // 회원 탈퇴
 export const WITHDRAWAL_SUCCESS = 'WITHDRAWAL_SUCCESS'
@@ -300,7 +308,6 @@ const userReducer = (state=userInitialState, action) =>{
                 snsSignUpError : null,
                 snsLogInError : null,
             }
-
         case SNS_LINK_REQUEST: // SNS 계정연동 시도
             return {
                 ...state,
@@ -314,7 +321,7 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 snsLinkLoading : false, 
                 snsLinkDone : true,
-                // myInfo : null,
+                myInfo : action.data.memberInfo,
             }
         case SNS_LINK_FAILURE:
             console.log("SNS 계정연동 실패", action.error)
@@ -322,6 +329,28 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 snsLinkLoading : false, 
                 snsLinkError : action.error,
+            }
+        case SNS_UNLINK_REQUEST: // SNS 계정 연결 해지 시도
+            return {
+                ...state,
+                snsUnlinkLoading : true, 
+                snsUnlinkDone : false,
+                snsUnlinkError : null,
+            }
+        case SNS_UNLINK_SUCCESS:
+            console.log('SNS 계정연동 해지 성공', action.data)
+            return {
+                ...state,
+                snsUnlinkLoading : false, 
+                snsUnlinkDone : true,
+                myInfo : action.data.memberInfo,
+            }
+        case SNS_UNLINK_FAILURE:
+            console.log("SNS 계정연동 해지 실패", action.error)
+            return {
+                ...state,
+                snsUnlinkLoading : false, 
+                snsUnlinkError : action.error,
             }
         case WITHDRAWAL_REQUEST: // 회원 탈퇴
             return {

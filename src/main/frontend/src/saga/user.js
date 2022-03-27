@@ -33,7 +33,10 @@ import { GET_PUBLICKEY_FAILURE,
         SNS_LINK_FAILURE,
         WITHDRAWAL_REQUEST,
         WITHDRAWAL_SUCCESS,
-        WITHDRAWAL_FAILURE} from "../reducers/user";
+        WITHDRAWAL_FAILURE,
+        SNS_UNLINK_REQUEST,
+        SNS_UNLINK_SUCCESS,
+        SNS_UNLINK_FAILURE} from "../reducers/user";
 
 function loadMyInfoAPI() { // 로그인 유저 정보
     return axiosInstance.get("/member/currentUser")
@@ -244,6 +247,27 @@ function* snsLink(action) {
     }
 }
 
+function snsUnlinkAPI(data) { // SNS 계정연동 해지
+    return axiosInstance.delete(`/member/unlinkaccount/${data.snsName}`)
+}
+function* snsUnlink(action) {
+    try{
+        const result = yield call(snsUnlinkAPI, action.data);
+        yield put({
+            type : SNS_UNLINK_SUCCESS,
+            data : result.data, //서버로 부터 받아온 데이터
+        })
+        // //SNS 토큰은 지우기
+        // localStorage.removeItem('tokenId')
+    }catch(err) {
+        console.error(err);
+        yield put({
+            type: SNS_UNLINK_FAILURE,
+            error : err.response.data
+        })
+    }
+}
+
 function withdrawalAPI() { // 회원 탈퇴
     return axiosInstance.delete('/member/withdrawal')
 }
@@ -296,6 +320,9 @@ function* watchSnsSignUp() {
 function* watchSnsLink() {
     yield takeLatest(SNS_LINK_REQUEST, snsLink);
 }
+function* watchSnsUnlink() {
+    yield takeLatest(SNS_UNLINK_REQUEST, snsUnlink);
+}
 function* watchWithdrawal() {
     yield takeLatest(WITHDRAWAL_REQUEST, withdrawal);
 }
@@ -312,6 +339,7 @@ export default function* userSaga() {
         fork(watchSnsLogIn),
         fork(watchSnsSignUp),
         fork(watchSnsLink),
+        fork(watchSnsUnlink),
         fork(watchWithdrawal),
     ])
 }

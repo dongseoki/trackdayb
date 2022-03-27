@@ -8,7 +8,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles } from '@material-ui/core/styles';
 import './subModal.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { WITHDRAWAL_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST, SNS_UNLINK_REQUEST, WITHDRAWAL_REQUEST } from "../reducers/user";
 import { toast } from "react-toastify";
 import {useHistory} from "react-router-dom";
 
@@ -18,7 +18,7 @@ const UnlinkAccountModal = ({imageSrc, snsName}) => {
 
     const [open, setOpen] = useState(false);
 
-    // const { withdrawalError, withdrawalDone } = useSelector((state)=> state.user)
+    const { snsUnlinkError, snsUnlinkDone } = useSelector((state)=> state.user)
 
     // 반응형 화면 BreakPoint
     const isMobileScreen = useMediaQuery({
@@ -63,25 +63,28 @@ const UnlinkAccountModal = ({imageSrc, snsName}) => {
 
     const unlinkHandler = () =>{
         console.log('계정연결 해제');
-        // dispatch({
-        //     type : WITHDRAWAL_REQUEST
-        // })
+        dispatch({
+            type : SNS_UNLINK_REQUEST,
+            data : {
+                snsName : snsName
+            }
+        });
     }
 
-    // // 회원 탈퇴 성공시
-    // useEffect(() => {
-    //     if(withdrawalDone){
-    //         history.push("/")
-    //         toast.success('탈퇴 완료 되었습니다.')
-    //     }
-    // }, [withdrawalDone]);
+    // 연결해제 성공시
+    useEffect(() => {
+        if(snsUnlinkDone){
+            toast.success('계정 연동을 해지하였습니다.')
+        }
+        handleClose();
+    }, [snsUnlinkDone]);
 
-    // // 회원 탈퇴 에러 발생시
-    // useEffect(() => {
-    //     if(withdrawalError){
-    //         toast.error(withdrawalError.message)
-    //     }
-    // }, [withdrawalError]);
+    // 연결해제 에러 발생시
+    useEffect(() => {
+        if(snsUnlinkError){
+            toast.error(snsUnlinkError.message)
+        }
+    }, [snsUnlinkError]);
 
 
     return (
