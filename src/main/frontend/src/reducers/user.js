@@ -149,6 +149,8 @@ const userReducer = (state=userInitialState, action) =>{
                 logInDone : true,
                 myId : action.data.memberId,
                 myInfo : action.data.memberInfo,
+                withdrawalDone : false,
+                withdrawalError : null,
                 // accessToken : action.data.tokenInfo.accessToken,
                 // refreshToken : action.data.tokenInfo.refreshToken
             }
@@ -206,6 +208,8 @@ const userReducer = (state=userInitialState, action) =>{
                 signUpDone : true,
                 myId : action.data.memberId,
                 myInfo : action.data.memberInfo,
+                withdrawalDone : false,
+                withdrawalError : null,
             }
         case SIGN_UP_FAILURE:
             return {
@@ -256,6 +260,8 @@ const userReducer = (state=userInitialState, action) =>{
                 snsLogInDone : true,
                 myId : action.data.memberId,
                 myInfo : action.data.memberInfo,
+                withdrawalDone : false,
+                withdrawalError : null,
             }
         case SNS_LOG_IN_FAILURE:
             console.log("SNS 로그인 실패", action.error)
@@ -279,6 +285,8 @@ const userReducer = (state=userInitialState, action) =>{
                 snsSignUpDone : true,
                 myId : action.data.memberId,
                 myInfo : action.data.memberInfo,
+                withdrawalDone : false,
+                withdrawalError : null,
             }
         case SNS_SIGN_UP_FAILURE:
             return {
@@ -323,7 +331,6 @@ const userReducer = (state=userInitialState, action) =>{
                 withdrawalError : null,
             }
         case WITHDRAWAL_SUCCESS:
-            console.log('회원 탈퇴 성공', action.data)
             return {
                 ...state,
                 withdrawalLoading : false, 
