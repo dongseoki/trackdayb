@@ -16,13 +16,51 @@
         WHERE member_serial_number = #{value};
     </update>
     <update id="changePassword" parameterType="map">
-        UPDATE member
+        UPDATE member /* MemberRepository.changePassword */
         SET password = #{newPassword}
         WHERE member_serial_number = #{memberSerialNumber}
     </update>
+    <update id="updateMemberTextInfo" parameterType="MemberForm">
+        UPDATE member /* MemberRepository.updateMemberTextInfo */
+        SET
+            modification_datetime = NOW()
+            <if test="name != null">
+                ,name = #{name}
+            </if>
+            <if test="phoneNumber != null">
+                ,phone_number = #{phoneNumber}
+            </if>
+            <if test="emailAddress != null">
+                ,email_address = #{emailAddress}
+            </if>
+            <if test="introduction != null">
+                ,introduction = #{introduction}
+            </if>
+        WHERE member_serial_number = #{memberSerialNumber}
+    </update>
+
+    <update id="updateMemberFileId">
+        UPDATE member /* MemberRepository.updateMemberFileId */
+        SET
+            modification_datetime = NOW()
+        <if test="profilePhotoId != null">
+            ,profile_photo_id = #{profilePhotoId}
+        </if>
+        <if test="backgroundPhotoId != null">
+            ,background_photo_id = #{backgroundPhotoId}
+        </if>
+        WHERE member_serial_number = #{memberSerialNumber}
+    </update>
+
     <delete id="deleteSnsLinkInfo" parameterType="string">
         DELETE FROM sns_link_info
         WHERE member_serial_number = #{value};
+    </delete>
+    <delete id="deleteSnsLinkAccountBySnsType">
+        DELETE FROM sns_link_info
+        WHERE member_serial_number = #{memberSerialNumber}
+            AND
+            sns_type = #{snsType}
     </delete>
 
     <select id="findByMemberId" resultType="com.lds.trackdayb.entity.MemberEntity">
@@ -114,5 +152,29 @@
         VALUES(#{memberSerialNumber}, #{snsType}, #{linkedEmail}, NOW())
         ON DUPLICATE KEY UPDATE
             linked_email = #{linkedEmail}
+    </insert>
+    <insert id="insertFile" useGeneratedKeys="true" keyProperty="fileId">
+        INSERT INTO trackday.file ( /* MemberRepository.insertFile */
+            original_file_name
+            ,store_file_name
+            ,capacity
+            ,width
+            ,height
+            ,create_datetime
+            ,modification_datetime
+            ,deletion_status
+        )
+        VALUES (
+            #{originalFileName}
+            ,#{storeFileName}
+            ,#{capacity}
+            ,#{width}
+            ,#{height}
+            ,NOW()
+            ,NOW()
+            ,'N'
+        );
+
+
     </insert>
 </mapper>

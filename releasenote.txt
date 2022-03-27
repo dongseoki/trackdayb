@@ -263,6 +263,7 @@ Release
   - changePassword API 구현 완료.
   - sns계정연동, 로그인, 회원가입, 간편회원가입, sns 로그인 API 수정 :  memberInfo 값을 추가하여 반환하도록 조치.
   - SNS 간편 회원가입 API 수정 : 아이디를 입력받도록 조치함.
+  - 회원 정보 변경 API 추가.
 
 Release 
   - goal&activity redux-saga 전환
@@ -278,3 +279,13 @@ Release
  - 목표 정렬조건 서버로 요청 구현
  - 간편가입시 memberId + 이름 받기 처리
  - 비밀번호 변경 기능 개발
+
+Release
+ - 운영 환경과 로컬 개발환경에 따른 upload file 폴더 변경이 가능하도록 설정.
+ - SNS계정 연동 해지 API 개발 완료
+ - 안쓰는 js파일 삭제
+ - 활동 수정 API 의 http method 변경 PATCH -> PUT 으로 #80
+ - 목표 수정 API 를 PUT으로 변경 #78
+ - 활동 삭제 API 수정 요청 - 삭제 성공시 activityId를 반환하도록 수정 #77
+ - 목표 삭제 API 수정 요청 - 삭제 성공시 goalId를 반환하도록 #76
+ - git commit 으로 이슈 끄기.

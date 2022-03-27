@@ -79,6 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test","/testPage","/test/**").permitAll()
                 .antMatchers("/member/login","/member/loginTest","/member/signup","/member/reissue").permitAll()
                 .antMatchers("/member/requestpublickey").permitAll()
+                .antMatchers("/member/image").permitAll()
                 .antMatchers("/member/google/auth","/member/google/tokensignin").permitAll()
                 .antMatchers("/member/snslogin/**","/member/simplesignup/**").permitAll()
                 // [2] end.

@@ -42,8 +42,13 @@ logs/
 ### security information
 application.yml
 application-oauth.properties
-nohup.out
 
+.env
+
+### operation log
 replay_pid.*.log
 hs_err_pid.*.log
-.env
+nohup.out
+
+### upload file in local dev
+upload/

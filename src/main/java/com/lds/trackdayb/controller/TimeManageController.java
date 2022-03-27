@@ -287,7 +287,7 @@ public class TimeManageController {
      * @return ResultMVO
      * 
      */
-    @PatchMapping("activity")
+    @PutMapping("activity")
     public ResultMVO updateActivity(@RequestBody ActivityVO activityVO){
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
@@ -339,13 +339,12 @@ public class TimeManageController {
         
         String loginSerialNumber = memberService.getMyUserWithAuthorities().getMemberSerialNumber();
         activityVO.setMemberSerialNumber(loginSerialNumber);
-        
-        try {
-            timeManageService.deleteActivity(activityVO);
-        } catch (Exception e) {
-            LOGGER.error("delete activity fail : {}", e.toString());
-            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-        }
+
+        timeManageService.deleteActivity(activityVO);
+
+        ActivityMVO activityMVO = new ActivityMVO();
+        activityMVO.setActivityId(activityVO.getActivityId());;
+        resultMVO.setActivityInfo(activityMVO);
         return resultMVO;
     }
 
