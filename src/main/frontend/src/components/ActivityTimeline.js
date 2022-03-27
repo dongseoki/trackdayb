@@ -16,11 +16,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import axiosInstance from "../axiosConfig";
+// import axiosInstance from "../axiosConfig";
 // import axios from "axios";
 //Context
-import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
-import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
+// import { ActivitySearchListContext } from "../context/ActivitySearchListContext";
+// import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 import "./ActivityTimeline.css";
 import ActivityInsertFormModal from "../components/ActivityInsertFormModal";
 import ActivityModifyFormModal from "../components/ActivityModifyFormModal";
@@ -28,13 +28,19 @@ import ActivityModifyFormModal from "../components/ActivityModifyFormModal";
 import { useDispatch, useSelector } from "react-redux";
 import { DELETE_ACTIVITY_REQUEST, LOAD_ACTIVITYDAYLIST_REQUEST } from "../reducers/activity";
 
+
+import sortArray from 'sort-array';
+
+
 export default function ActivityTimeline({writeDate}) {
   const dispatch = useDispatch();
     // 오늘의 활동내역 리스트
     const { activityDayList } = useSelector((state) => state.activity);
-    const [activityList, setActivityList] = useState([...activityDayList]);
 
-    console.log('activityList', activityDayList)
+    sortArray(activityDayList, {
+      by : 'startDatetime',
+      order : 'asc'
+    })
     
   if (activityDayList.length === 0) {
     return (

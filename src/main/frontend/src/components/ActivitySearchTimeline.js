@@ -13,6 +13,9 @@ import { ActivitySearchListContext } from "../context/ActivitySearchListContext"
 import { ActivitySearchGroupbyContext } from "../context/ActivitySearchGroupbyContext";
 
 import { useSelector } from "react-redux";
+import sortArray from 'sort-array';
+
+
 
 export default function ActivitySearchTimeline() {
   // getActivityListTEST
@@ -23,6 +26,15 @@ export default function ActivitySearchTimeline() {
   
   const [ activitySearchGroupby,  ] = useContext(ActivitySearchGroupbyContext)
 
+  console.log('activitySearchGroupby', activitySearchGroupby)
+
+  // sortArray(activitySearchGroupby, {
+  //   by : 'startDatetime',
+  //   computed : {
+  //     startDatetime : row => row.startDatetime
+  //   }
+  // })
+  
   if (activitySearchFullList.length === 0) {
     return (
       <div className="null-text">조회기간에 해당하는 활동내역이 없습니다.</div>

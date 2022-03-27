@@ -135,11 +135,11 @@ function ActivityInsertFormModal({writeDate, activityList, setActivityList, acti
           }
           handleClose();
           // 기존 리스트들에 추가 업데이트(시작시간 기준 정렬)
-          function data_sorting(a, b) {
-            var dateA = new Date(a['startDatetime']).getTime();
-            var dateB = new Date(b['startDatetime']).getTime();
-            return dateA > dateB ? 1 : -1;
-          };
+          // function data_sorting(a, b) {
+          //   var dateA = new Date(a['startDatetime']).getTime();
+          //   var dateB = new Date(b['startDatetime']).getTime();
+          //   return dateA > dateB ? 1 : -1;
+          // };
           // setActivityList([...activityList, result_activity.data.activityInfo].sort(data_sorting))
           // setActivitySearchList([...activitySearchList, result_activity.data.activityInfo].sort(data_sorting))
         } catch(err){
