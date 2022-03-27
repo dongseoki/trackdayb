@@ -33,7 +33,7 @@ import { HexColorPicker } from "react-colorful";
 
 function GoalInsertFormModal(){
   // state 변수
-  const { searchParams } = useSelector((state) => state.goal);
+  const { addGoalDone, searchParams } = useSelector((state) => state.goal);
   // 로컬 변수
   const [startDatetime, setStartDatetime] = useState(new Date());
   const [endDatetime, setEndDatetime] = useState(new Date());
@@ -207,55 +207,28 @@ function GoalInsertFormModal(){
           "satYn":sat ? "Y":"N"
         }
       }
-
-      // addPost()
-      // 순차적 비동기 처리 필요(정렬조건 때문에)
-       
-      // await Promise.all([
         dispatch({
           type : ADD_GOAL_REQUEST,
           data : { formData : formData }
         })
-
-        // dispatch({
-        //   type : LOAD_GOALTOTALTITLELIST_REQUEST,
-        // })
-        // dispatch({
-        //   type : LOAD_GOALTOTALFULLLIST_REQUEST,
-        // })
-        // dispatch({
-        //   type : LOAD_GOALSEARCHTITLELIST_REQUEST,
-        //   data : searchParams,
-        // })
-        // dispatch({
-        //   type : LOAD_GOALSEARCHFULLLIST_REQUEST,
-        //   data : searchParams,
-        // })
-        
-      // ])
       handleClose();
       // setUpdateTotalTitle(!updateTotalTitle)
       // setUpdateChecker(!updateChecker) // GoalFullList DB에서 새로 데이터 받아오기
-
     }
   };
 
-  // function addPost(callback) {
-  //   return new Promise(function(resolve, reject) {
-  //     dispatch({
-  //       type : ADD_GOAL_REQUEST,
-  //       data : { formData : formData }
-  //     })
-  //     resolve();
-  //   })
-  // }
-
-  // addPost().then(function() {
-  //   dispatch({
-  //     type : LOAD_GOALSEARCHFULLLIST_REQUEST,
-  //     data : searchParams,
-  //   })
-  // })
+  // 성공시 새로 리스트 가져오기
+  useEffect(()=>{
+    if(addGoalDone){
+      dispatch({
+        type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+        data : {
+          searchStartDatetime : searchParams.searchStartDatetime,
+          searchEndDatetime : searchParams.searchEndDatetime,
+        }
+      })
+    }
+  },[addGoalDone])
 
 
   return (

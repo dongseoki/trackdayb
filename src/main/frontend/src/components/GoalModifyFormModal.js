@@ -29,14 +29,13 @@ import Checkbox from '@mui/material/Checkbox';
 import { toast } from "react-toastify";
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from 'react-redux';
-import { MODIFY_GOAL_REQUEST, LOAD_GOALTOTALFULLLIST_REQUEST, LOAD_GOALMODALTITLELIST_REQUEST } from "../reducers/goal";
+import { MODIFY_GOAL_REQUEST, LOAD_GOALSEARCHTITLELIST_REQUEST } from "../reducers/goal";
 import dayjs from "dayjs";
 
 function GoalModifyFormModal({modifyData, targetIndex}){
-  const { goalTotalTitleList } = useSelector((state) => state.goal)
+  const { goalTotalTitleList, modifyGoalDone, searchParams } = useSelector((state) => state.goal)
   const dispatch = useDispatch();
 
-  
   const YNtoTF = (value)=>{
       if(value === "Y"){
           return true
@@ -163,7 +162,6 @@ function GoalModifyFormModal({modifyData, targetIndex}){
   //       searchEndDatetime : makeYYMMDD(endDatetime)
   //     }
   //   })
-
   // },[startDatetime, endDatetime])
 
   const handleFormSubmit = async (evt) =>{
@@ -246,12 +244,23 @@ function GoalModifyFormModal({modifyData, targetIndex}){
         type : MODIFY_GOAL_REQUEST,
         data : { formData : formData }
       });
-      dispatch({
-        type : LOAD_GOALTOTALFULLLIST_REQUEST,
-      })
       handleClose();
     }
   }
+
+  // 성공시 새로 리스트 가져오기
+  useEffect(()=>{
+    if(modifyGoalDone){
+      dispatch({
+        type : LOAD_GOALSEARCHTITLELIST_REQUEST,
+        data : {
+          searchStartDatetime : searchParams.searchStartDatetime,
+          searchEndDatetime : searchParams.searchEndDatetime,
+        }
+      })
+    }
+  },[modifyGoalDone])
+
   return (
     <div>
       <button className="modifyBtn" variant="outlined" onClick={handleOpen}>
