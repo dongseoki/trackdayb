@@ -133,7 +133,7 @@ function* deleteGoal(action) {
         const result = yield call(deleteGoalAPI, { goalId : action.data.goalId })
         yield put({
             type : DELETE_GOAL_SUCCESS,
-            data : action.data.goalId
+            data : result.data.goalInfo.goalId
         })
     }catch(err) {
         yield put({
@@ -166,7 +166,7 @@ function* addGoal(action) {
 
 // 목표 수정
 function modifyGoalAPI(data) {
-    return axiosInstance.patch('/goalManage/goal', data)
+    return axiosInstance.put('/goalManage/goal', data)
 }
 function* modifyGoal(action) {
     try{

@@ -82,7 +82,7 @@ function* deleteActivity(action) {
         const result = yield call(deleteActivityAPI,  action.data)
         yield put({
             type : DELETE_ACTIVITY_SUCCESS,
-            data : action.data.activityId
+            data : result.data.activityInfo.activityId
         })
     }catch(err) {
         yield put({
@@ -94,7 +94,7 @@ function* deleteActivity(action) {
 
 // 활동 수정
 function modifyActivityAPI(data) {
-    return axiosInstance.patch('/timeManage/activity', data)
+    return axiosInstance.put('/timeManage/activity', data)
 }
 function* modifyActivity(action) {
     try{
