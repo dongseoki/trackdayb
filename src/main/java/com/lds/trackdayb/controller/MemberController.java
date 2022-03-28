@@ -547,7 +547,7 @@ public class MemberController {
         MemberInfo memberInfo = new MemberInfo();
         memberInfo = memberService.getMyUserWithAuthorities();
         memberService.unlinkAccount(memberInfo, CommonCodeUtil.snsNameToTypeMap.get(snsName));
-        resultMVO.setMemberInfo(memberInfo);
+        resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
         return resultMVO;
     }
 }
