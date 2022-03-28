@@ -52,7 +52,7 @@ function* loadMyInfo() {
             data : result.data.memberInfo, // 서버로부터 받아온 데이터
         })
     }catch(err) {
-        console.erroe(err)
+        console.error(err)
         yield put({
             type: LOAD_MY_INFO_FAILURE,
             error : err.response.data
@@ -60,9 +60,7 @@ function* loadMyInfo() {
     }
 }
 function changeMyInfoAPI(data) { // 유저 정보 변경
-    return axiosInstance.post("/member/memberinfo", data, {
-        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    })
+    return axiosInstance.post("/member/memberinfo", data)
 }
 function* changeMyInfo(action) {
     try{
@@ -72,7 +70,7 @@ function* changeMyInfo(action) {
             data : result.data.memberInfo, // 서버로부터 받아온 데이터
         })
     }catch(err) {
-        console.erroe(err)
+        console.error(err)
         yield put({
             type: CHANGE_MY_INFO_FAILURE,
             error : err.response.data
@@ -90,7 +88,7 @@ function* getPublicKey() {
             data : result.data.publicKeyInfo.publicKeyStr, // 서버로부터 받아온 데이터
         })
     }catch(err) {
-        console.erroe(err)
+        console.error(err)
         yield put({
             type: GET_PUBLICKEY_FAILURE,
             error : err.response.data

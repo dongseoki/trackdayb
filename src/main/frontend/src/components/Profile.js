@@ -6,9 +6,13 @@ import { BsPlusCircleFill } from "react-icons/bs";
 
 import TextField from '@mui/material/TextField';
 import CardMedia from '@mui/material/CardMedia';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { CHANGE_MY_INFO_REQUEST } from '../reducers/user';
 
 const Profile = () => {
+    const dispatch = useDispatch();
+    const { myInfo } = useSelector((state)=> state.user); 
+
     const fakeUser = {
         activeUserStatus: "N",
         auth: "ROLE_USER",
@@ -33,7 +37,7 @@ const Profile = () => {
         withdrawalDatetime: "",
     };
 
-    const myInfo = fakeUser;
+    // const myInfo = fakeUser;
 
 
     // 수정 활성화 flag
@@ -58,8 +62,31 @@ const Profile = () => {
     const editFlagHandler = () => {
         setEditFlag(true)
     };
-    const saveFlagHandler = () => {
-        setEditFlag(false);
+    // 제출 onClick={saveFlagHandler}
+    const submitHandler = async (e) => { 
+        e.preventDefault();
+
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("name", name)
+        formData.append("profilePhoto", photo)
+        formData.append("backgroundPhoto", background)
+
+        // const formData = {
+        //     name,
+        //     phoneNumber,
+        //     emailAddress,
+        //     introduction,
+        //     background,
+        //     photo
+        // }
+        console.log('formData', formData)
+        dispatch({
+            type : CHANGE_MY_INFO_REQUEST,
+            data : formData,
+        })
+
+        // setEditFlag(false);
     }
     const cancleFlagHandler = () => {
         setEditFlag(false);
@@ -88,153 +115,153 @@ const Profile = () => {
     return (
         <>
         <div className="profile-main-wrapper">
-            <div className="button-wrapper">
-            {editFlag? 
-                <>
-                <button type="submit" className="submitBtn" onClick={saveFlagHandler}>저장</button>
-                <button type="button" className="cancleBtn" onClick={cancleFlagHandler}>취소</button>
-                </>
-            :
-                <button type="submit" className="modifyBtn" onClick={editFlagHandler}>수정</button>
-            }
-            </div>
+            <form enctype="multipart/form-data" onSubmit={submitHandler}>
+                <div className="button-wrapper">
+                {editFlag? 
+                    <>
+                    <button type="submit" className="submitBtn">저장</button>
+                    <button type="button" className="cancleBtn" onClick={cancleFlagHandler}>취소</button>
+                    </>
+                :
+                    <button type="button" className="modifyBtn" onClick={editFlagHandler}>수정</button>
+                }
+                </div>
 
-            <div className="profile-wrapper">
-                <div className="profile-background-wrapper">
-                    <CardMedia
-                        className="profile-background"
-                        component="img"
-                        height="300"
-                        image={backgroundSrc? backgroundSrc : null}
-                    />
-                    
-                    <div className="file-wrapper">
-                        {editFlag?
-                        <div className="file-dropper">
-                            <label className="edit-label" for="background"><BsPlusCircleFill className="edit-icon" /></label>
-                            <input id="background" type="file" accept="image/*" onChange={backgroundSelectHandler}/>
-                        </div> 
-                    : null}
-                    </div>
-
-                </div>    
-            
-        
-                <div className="profile-contents-wrapper">
-
-                    <div className="profile-texts">
-
-                        <div className="profile-name">
-                            {editFlag? 
-                            <TextField 
-                                id="name" 
-                                defaultValue={name}
-                                label="이름" 
-                                size="small" 
-                                variant="outlined"
-                                style={{backgroundColor:"white", borderRadius: '5px', width:"100%",marginBottom:"5px", marginRight:"4px"}}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={function(e){
-                                    setName(e.target.value)
-                                }}
-                            />
-                            :
-                            <div className="profile-text-content">{ myInfo.name }</div>
-                            }
-                        </div>
-                        
-                        <div className="profile-introduction">
-                            {editFlag? 
-                            <TextField
-                                id="introduction"
-                                defaultValue={introduction}
-                                label="소개"
-                                multiline
-                                rows={2}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                variant="outlined"
-                                style={{backgroundColor:"white", borderRadius: '5px', width:"100%", marginBottom:"5px", marginRight:"4px" }}
-                                onChange={function(e){
-                                    setIntroduction(e.target.value)
-                                }}
-                            />
-                            :
-                            <div className="profile-text-content">{ myInfo.introduction }</div>
-                            }
-                        </div>
-
-                        <div className="profile-emailAddress">
-                            {editFlag? 
-                            <TextField 
-                                id="emailAddress" 
-                                defaultValue={emailAddress}
-                                label="이메일" 
-                                size="small" 
-                                variant="outlined"
-                                style={{backgroundColor:"white", borderRadius: '5px', width:"100%",marginBottom:"5px", marginRight:"4px"}}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={function(e){
-                                    setEmailAddress(e.target.value)
-                                }}
-                            />
-                            :
-                            <div className="profile-text-content">{ myInfo.emailAddress }</div>
-                            }
-                        </div>
-
-                        <div className="profile-phoneNumber">
-                            {editFlag? 
-                            <TextField 
-                                id="phoneNumber" 
-                                defaultValue={phoneNumber}
-                                label="연락처" 
-                                size="small" 
-                                variant="outlined"
-                                style={{backgroundColor:"white", borderRadius: '5px', width:"100%",marginBottom:"5px", marginRight:"4px"}}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onChange={function(e){
-                                    setPhoneNumber(e.target.value)
-                                }}
-                            />
-                            :
-                            <div className="profile-text-content">{ myInfo.phoneNumber }</div>
-                            }
-                        </div>
-                        
-                    </div>
-
-                    <div className="profile-photo">
-                        <Avatar
-                            className="profile-avatar"
-                            alt="Profile Image"
-                            src={photoSrc}
-                            sx={{ width: 100, height: 100, m: 1}}
+                <div className="profile-wrapper">
+                    <div className="profile-background-wrapper">
+                        <CardMedia
+                            className="profile-background"
+                            component="img"
+                            height="300"
+                            image={backgroundSrc? backgroundSrc : null}
                         />
-
+                        
                         <div className="file-wrapper">
                             {editFlag?
                             <div className="file-dropper">
-                                <label className="edit-label" for="photo"><BsPlusCircleFill className="edit-icon" /></label>
-                                <input id="photo" type="file" accept="image/*" onChange={photoSelectHandler}/>
+                                <label className="edit-label" for="background"><BsPlusCircleFill className="edit-icon" /></label>
+                                <input id="background" type="file" accept="image/*" onChange={backgroundSelectHandler}/>
                             </div> 
-                            : null}
+                        : null}
+                        </div>
+
+                    </div>    
+                
+            
+                    <div className="profile-contents-wrapper">
+
+                        <div className="profile-texts">
+
+                            <div className="profile-name">
+                                {editFlag? 
+                                <TextField 
+                                    id="name" 
+                                    defaultValue={name}
+                                    label="이름" 
+                                    size="small" 
+                                    variant="outlined"
+                                    style={{backgroundColor:"white", borderRadius: '5px', width:"100%",marginBottom:"5px", marginRight:"4px"}}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onChange={function(e){
+                                        setName(e.target.value)
+                                    }}
+                                />
+                                :
+                                <div className="profile-text-content">{ myInfo.name }</div>
+                                }
+                            </div>
+                            
+                            <div className="profile-introduction">
+                                {editFlag? 
+                                <TextField
+                                    id="introduction"
+                                    defaultValue={introduction}
+                                    label="소개"
+                                    multiline
+                                    rows={2}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    variant="outlined"
+                                    style={{backgroundColor:"white", borderRadius: '5px', width:"100%", marginBottom:"5px", marginRight:"4px" }}
+                                    onChange={function(e){
+                                        setIntroduction(e.target.value)
+                                    }}
+                                />
+                                :
+                                <div className="profile-text-content">{ myInfo.introduction }</div>
+                                }
+                            </div>
+
+                            <div className="profile-emailAddress">
+                                {editFlag? 
+                                <TextField 
+                                    id="emailAddress" 
+                                    defaultValue={emailAddress}
+                                    label="이메일" 
+                                    size="small" 
+                                    variant="outlined"
+                                    style={{backgroundColor:"white", borderRadius: '5px', width:"100%",marginBottom:"5px", marginRight:"4px"}}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onChange={function(e){
+                                        setEmailAddress(e.target.value)
+                                    }}
+                                />
+                                :
+                                <div className="profile-text-content">{ myInfo.emailAddress }</div>
+                                }
+                            </div>
+
+                            <div className="profile-phoneNumber">
+                                {editFlag? 
+                                <TextField 
+                                    id="phoneNumber" 
+                                    defaultValue={phoneNumber}
+                                    label="연락처" 
+                                    size="small" 
+                                    variant="outlined"
+                                    style={{backgroundColor:"white", borderRadius: '5px', width:"100%",marginBottom:"5px", marginRight:"4px"}}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onChange={function(e){
+                                        setPhoneNumber(e.target.value)
+                                    }}
+                                />
+                                :
+                                <div className="profile-text-content">{ myInfo.phoneNumber }</div>
+                                }
+                            </div>
+                            
+                        </div>
+
+                        <div className="profile-photo">
+                            <Avatar
+                                className="profile-avatar"
+                                alt="Profile Image"
+                                src={photoSrc}
+                                sx={{ width: 100, height: 100, m: 1}}
+                            />
+
+                            <div className="file-wrapper">
+                                {editFlag?
+                                <div className="file-dropper">
+                                    <label className="edit-label" for="photo"><BsPlusCircleFill className="edit-icon" /></label>
+                                    <input id="photo" type="file" accept="image/*" onChange={photoSelectHandler}/>
+                                </div> 
+                                : null}
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
-
-            </div>
-
-            
+                </div> 
+            </form>           
         </div>
         </>
     )
