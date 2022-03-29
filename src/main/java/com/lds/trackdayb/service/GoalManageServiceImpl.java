@@ -86,11 +86,10 @@ public class GoalManageServiceImpl implements GoalManageService {
 
 
             param.setSearchParentId(deleteGoal.getGoalId());
-            for (GoalMVO goalMVO : goalManageRepository.getGoalTitleList(param)){
-                GoalVO updateParam = new GoalVO();
-
-                updateParam.setGoalId(goalMVO.getGoalId());     
-
+            for (GoalMVO updateParam : goalManageRepository.getGoalFullList(param)){
+                // goal Id
+//                updateParam.setGoalId(goalMVO.getGoalId());
+                // parent Id
                 String parentId = deleteGoal.getParentId();
                 updateParam.setParentId(parentId);
                 if (StringUtils.isEmpty(parentId)){

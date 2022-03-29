@@ -2,6 +2,7 @@ package com.lds.trackdayb.repository;
 
 import java.util.List;
 
+import com.lds.trackdayb.dto.GoalDTO;
 import com.lds.trackdayb.dto.PeriodicityInfoDTO;
 import com.lds.trackdayb.mvo.GoalMVO;
 import com.lds.trackdayb.vo.GoalVO;
@@ -17,7 +18,7 @@ public interface GoalManageRepository {
 
     void insertPeriodicityInfo(PeriodicityInfoDTO pDto);
 
-    void updateGoal(GoalVO goalVO);
+    void updateGoal(GoalDTO goalDTO);
 
     void updateGoalProgressRate(GoalVO goalVO);
 
