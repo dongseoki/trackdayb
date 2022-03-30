@@ -2,8 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lds.trackdayb.repository.FileRepository">
+    <delete id="deleteFileInfo">
+        /* FileRepository.deleteFileInfo */
+        update file f
+        set deletion_status = "Y",
+            modification_datetime = NOW()
+        where f.file_id = #{value}
+    </delete>
     <select id="getFileInfo" resultType="com.lds.trackdayb.entity.UploadFile">
-        select *
+        select * /* FileRepository.getFileInfo */
         from file f
         where f.file_id = #{value}
         limit 1;
