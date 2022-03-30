@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileRepository {
     UploadFile getFileInfo(String photoId);
+
+    void deleteFileInfo(String photoId);
 }

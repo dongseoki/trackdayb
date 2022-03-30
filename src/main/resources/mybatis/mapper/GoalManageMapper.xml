@@ -265,7 +265,7 @@
             (   SELECT
             SUBSTRING_INDEX(FNC_GOAL_ID_PATH(goal_id), '/',1) AS top_goal_id,
             <choose>
-                <when test='orderType.equals("ASC")'> MIN(${orderColumn}) </when>
+                <when test='orderType.equalsIgnoreCase("asc")'> MIN(${orderColumn}) </when>
                 <otherwise> MAX(${orderColumn}) </otherwise>
             </choose> AS rep_val
             FROM goal as g

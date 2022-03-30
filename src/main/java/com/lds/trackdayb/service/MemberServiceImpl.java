@@ -1,5 +1,6 @@
 package com.lds.trackdayb.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.*;
@@ -25,6 +26,7 @@ import com.lds.trackdayb.util.SecurityUtil;
 
 import com.lds.trackdayb.vo.MemberForm;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -441,6 +443,10 @@ public class MemberServiceImpl extends MemberService {
         // 파일 각각에 대해 유효성체크.
         uploadFileValidateCheck(multipartFile);
 
+        // (1) 기존 파일경로 및 파일 아이디 따로 저장하기.
+        MemberInfo backupMemberInfo = getMyUserWithAuthorities();
+
+
         // 특정 경로에 파일 저장.
         UploadFile uploadFile = fileStore.storeFile(multipartFile);
 
@@ -457,6 +463,32 @@ public class MemberServiceImpl extends MemberService {
         updateMemberFileIdVO.put("memberSerialNumber",Integer.parseInt(memberSerialNumber));
 
         memberRepository.updateMemberFileId(updateMemberFileIdVO);
+
+        String photoId = "";
+        if(StringUtils.equals(uploadFile.getOriginalFileName(), "profilePhoto")){
+            photoId = backupMemberInfo.getProfilePhotoId();
+        }else if(StringUtils.equals(uploadFile.getOriginalFileName(), "backgroundPhoto")){
+            photoId = backupMemberInfo.getBackgroundPhotoId();
+        }
+
+        if(StringUtils.isNotEmpty(photoId)){
+            UploadFile deleteTargetFileInfo = fileRepository.getFileInfo(photoId);
+            // (2) 기존 파일 DB에서도 삭제 처리하기.(업데이트.)
+            fileRepository.deleteFileInfo(photoId);
+
+            // (3) 기존 파일 삭제하기.
+            File fileToDelete = new File(fileStore.getFullPath(deleteTargetFileInfo.getStoreFileName()));
+            if (fileToDelete.exists()){
+                if(fileToDelete.delete()){
+                    LOGGER.debug("파일삭제 : 성공");
+                }else{
+                    LOGGER.debug("파일삭제 : 실패");
+                }
+            }else{
+                LOGGER.debug("파일삭제 : 삭제할 파일이 존재하지 않음.");
+            }
+        }
+
     }
 
     private void uploadFileValidateCheck(MultipartFile profilePhoto) {
