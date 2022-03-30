@@ -529,6 +529,9 @@ public class MemberController {
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
         memberForm.setMemberSerialNumber(memberService.getMyUserWithAuthorities().getMemberSerialNumber());
         memberService.changeMemberInfo(memberForm);
+
+        // 성공시 변경된 회원정보 반환.
+        resultMVO.setMemberInfo(memberService.getMyUserWithAuthorities());
         return resultMVO;
     }
 
