@@ -47,15 +47,10 @@
   min-height: 300px;
   border-radius: 10px;
   position: relative;
-  /* height: auto; */
-
-
 }
 
 .profile-wrapper{
-
   position: relative;
-
 }
 
 
@@ -82,29 +77,33 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 50px;
+  gap: 30px;
 }
 
 @media screen and (max-width : 740px) {
   .profile-contents-wrapper{
     flex-direction: column;
     padding : 0 30px;
+    gap: 10px;
   }
   .profile-contents-wrapper .profile-texts{
     order : 2;
+    width:  90%;
+  }
+  .profile-photo{
+    margin-top: 60px;
+  }
+  .profile-wrapper .profile-background-wrapper .profile-backgroun{
+    height: 460px;
   }
 }
-
-
-
 
 .profile-texts{
   display: flex;
   flex-direction: column;
   gap : 5px;
   flex-grow: 1;
-
-  padding : 30px 0;
+  /* padding : 30px 0; */
 }
 
 /* 이름, 소개 공통 */
