@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Profile.css';
 import Avatar from '@mui/material/Avatar';
 import { BiEdit } from "react-icons/bi";
@@ -8,49 +8,24 @@ import TextField from '@mui/material/TextField';
 import CardMedia from '@mui/material/CardMedia';
 import { useDispatch, useSelector } from 'react-redux';
 import { CHANGE_MY_INFO_REQUEST } from '../reducers/user';
+import { toast } from "react-toastify";
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const { myInfo } = useSelector((state)=> state.user); 
-
-    const fakeUser = {
-        activeUserStatus: "N",
-        auth: "ROLE_USER",
-        backgroundPhotoId: "",
-        createDatetime: "2021-09-24 06:56:48",
-        deletionStatus: "N",
-        emailAddress: "trackday@gmail.com",
-        failCount: "0",
-        introduction: "안녕하세요 갓생사는 직장인입니다.",
-        lastLoginDatetime: "",
-        linkedEmail: "",
-        memberId: "test",
-        memberSerialNumber: "1",
-        modificationDatetime: "2021-09-24 06:56:48",
-        name: "홍길동",
-        password: "$2a$10$yGU6hHyBQjloD6VJK1zmdu5S4.tMVR3EqnQIw7S57eIdgIBUf06CO",
-        phoneNumber: "010-0000-0000",
-        profilePhotoId: "",
-        refreshToken: "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2NDYzODA4Nzh9.LH8GsDVKlwxJwJem-IIzUAPnbWuuMEM6evh9dwmwPAbo5uS68XHFFaxO0x9gQF507guayjmknZELGMPh3ETcfQ",
-        remark: "",
-        snsLinkStatus: "N",
-        withdrawalDatetime: "",
-    };
-
-    // const myInfo = fakeUser;
-
+    const { myInfo, changeMyInfoError, changeMyInfoDone } = useSelector((state)=> state.user); 
 
     // 수정 활성화 flag
     const [ editFlag, setEditFlag ] = useState(false);
     
-    // 아바타 이미지 파일
+    // 아바타 이미지 파일(보낼것)
     const [ photo, setPhoto ] = useState(null);
-    // 아바타 이미지 미리보기(소스)
-    const [ photoSrc, setPhotoSrc] = useState(null);
-    // 배경 이미지 파일
+    // 아바타 이미지 미리보기(소스:보여줄것)
+    const [ photoSrc, setPhotoSrc] = useState(myInfo.profilePhotoUrlPath);
+
+    // 배경 이미지 파일(보낼것)
     const [ background, setBackground ] = useState(null);
-    // 배경 이미지 미리보기(소스)
-    const [ backgroundSrc, setBackgroundSrc] = useState(null);
+    // 배경 이미지 미리보기(소스:보여줄것)
+    const [ backgroundSrc, setBackgroundSrc] = useState(myInfo.backgroundPhotoUrlPath);
 
     const [ name, setName ] = useState(myInfo.name);
     const [ introduction, setIntroduction ] = useState(myInfo.introduction);
@@ -65,21 +40,17 @@ const Profile = () => {
     // 제출 onClick={saveFlagHandler}
     const submitHandler = async (e) => { 
         e.preventDefault();
-
-        e.preventDefault();
         const formData = new FormData();
         formData.append("name", name)
-        formData.append("profilePhoto", photo)
-        formData.append("backgroundPhoto", background)
-
-        // const formData = {
-        //     name,
-        //     phoneNumber,
-        //     emailAddress,
-        //     introduction,
-        //     background,
-        //     photo
-        // }
+        formData.append("introduction", introduction)
+        formData.append("emailAddress", emailAddress)
+        formData.append("phoneNumber", phoneNumber)
+        if(photo) {
+            formData.append("profilePhoto", photo)
+        }
+        if(background) {
+            formData.append("backgroundPhoto", background)
+        }
         console.log('formData', formData)
         dispatch({
             type : CHANGE_MY_INFO_REQUEST,
@@ -90,6 +61,8 @@ const Profile = () => {
     }
     const cancleFlagHandler = () => {
         setEditFlag(false);
+        setPhotoSrc(myInfo.profilePhotoUrlPath);
+        setBackgroundSrc(myInfo.backgroundPhotoUrlPath);
     }
 
     // 프로필 사진 변경
@@ -112,10 +85,23 @@ const Profile = () => {
         fileReader.onload = (evt) => setBackgroundSrc(evt.target.result)
     };
 
+    // 에러처리
+    useEffect(() => {
+        if(changeMyInfoError) {
+            if(changeMyInfoError === '9999'){
+                toast.error("이미지 사이즈는 1MB 이하입니다.")
+            }else if(changeMyInfoError === '0086'){
+                toast.error('unsupport file part name')
+            }else if(changeMyInfoError === '9985'){
+                toast.error('이미지 파일 확장자만 업로드할 수 있습니다.')
+            }
+        }
+    }, [changeMyInfoError])
+
     return (
         <>
         <div className="profile-main-wrapper">
-            <form enctype="multipart/form-data" onSubmit={submitHandler}>
+            <form encType="multipart/form-data" onSubmit={submitHandler}>
                 <div className="button-wrapper">
                 {editFlag? 
                     <>
@@ -133,7 +119,7 @@ const Profile = () => {
                             className="profile-background"
                             component="img"
                             height="300"
-                            image={backgroundSrc? backgroundSrc : null}
+                            image={backgroundSrc}
                         />
                         
                         <div className="file-wrapper">
@@ -191,7 +177,7 @@ const Profile = () => {
                                     }}
                                 />
                                 :
-                                <div className="profile-text-content">{ myInfo.introduction }</div>
+                                <pre className="profile-text-content">{ myInfo.introduction }</pre>
                                 }
                             </div>
 
