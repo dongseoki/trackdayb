@@ -9,35 +9,37 @@ import CardMedia from '@mui/material/CardMedia';
 import { useDispatch, useSelector } from 'react-redux';
 import { CHANGE_MY_INFO_REQUEST } from '../reducers/user';
 import { toast } from "react-toastify";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const { myInfo, changeMyInfoError, changeMyInfoDone } = useSelector((state)=> state.user); 
 
+    const { myInfo, changeMyInfoError, changeMyInfoDone } = useSelector((state)=> state.user);
+    
     // 수정 활성화 flag
     const [ editFlag, setEditFlag ] = useState(false);
     
     // 아바타 이미지 파일(보낼것)
-    const [ photo, setPhoto ] = useState(null);
+    const [ photo, setPhoto ] = useState();
     // 아바타 이미지 미리보기(소스:보여줄것)
-    const [ photoSrc, setPhotoSrc] = useState(myInfo.profilePhotoUrlPath);
+    const [ photoSrc, setPhotoSrc] = useState();
 
     // 배경 이미지 파일(보낼것)
-    const [ background, setBackground ] = useState(null);
+    const [ background, setBackground ] = useState();
     // 배경 이미지 미리보기(소스:보여줄것)
-    const [ backgroundSrc, setBackgroundSrc] = useState(myInfo.backgroundPhotoUrlPath);
+    const [ backgroundSrc, setBackgroundSrc] = useState();
 
-    const [ name, setName ] = useState(myInfo.name);
-    const [ introduction, setIntroduction ] = useState(myInfo.introduction);
-    const [ emailAddress, setEmailAddress ] = useState(myInfo.emailAddress);
-    const [ phoneNumber, setPhoneNumber ] = useState(myInfo.phoneNumber);
+    const [ name, setName ] = useState();
+    const [ introduction, setIntroduction ] = useState();
+    const [ emailAddress, setEmailAddress ] = useState();
+    const [ phoneNumber, setPhoneNumber ] = useState();
 
-
-    /// 하나로 전체 수정
+    /// 수정 버튼
     const editFlagHandler = () => {
         setEditFlag(true)
     };
-    // 제출 onClick={saveFlagHandler}
+
+
     const submitHandler = async (e) => { 
         e.preventDefault();
         const formData = new FormData();
@@ -56,9 +58,9 @@ const Profile = () => {
             type : CHANGE_MY_INFO_REQUEST,
             data : formData,
         })
-
-        // setEditFlag(false);
     }
+
+    // 취소 버튼
     const cancleFlagHandler = () => {
         setEditFlag(false);
         setPhotoSrc(myInfo.profilePhotoUrlPath);
@@ -97,6 +99,14 @@ const Profile = () => {
             }
         }
     }, [changeMyInfoError])
+
+    // 성공처리
+    useEffect(() =>{
+        if(changeMyInfoDone){
+            setEditFlag(false);
+        }
+    },[changeMyInfoDone])
+
 
     return (
         <>

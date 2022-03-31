@@ -9,7 +9,7 @@ import UnlinkAccountModal from "./UnlinkAccountModal";
 
 const AccountInfo = () => {
     const { myInfo } = useSelector((state)=> state.user)
-    
+    console.log("myInof", myInfo)
     return (
         <div className="accountInfo-main-wrapper">
             <div className="accountInfo-content-wrapper">
