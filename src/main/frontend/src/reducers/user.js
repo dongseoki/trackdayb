@@ -137,7 +137,7 @@ const userReducer = (state=userInitialState, action) =>{
                 ...state,
                 changeMyInfoLoading : false, 
                 changeMyInfoDone : true,
-                myInfo : action.data.memberInfo,
+                myInfo : action.data,
             }
         case CHANGE_MY_INFO_FAILURE:
             return {

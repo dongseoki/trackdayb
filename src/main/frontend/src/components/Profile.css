@@ -44,7 +44,6 @@
 
 /* 전체 프로필 박스 */
 .profile-main-wrapper{
-  min-height: 300px;
   border-radius: 10px;
   position: relative;
 }
@@ -52,7 +51,6 @@
 .profile-wrapper{
   position: relative;
 }
-
 
 .profile-background-wrapper{
   width : 100%;
@@ -66,11 +64,7 @@
 }
 
 .profile-contents-wrapper {
-  position: absolute;
-  top: 0;
-  width : 100%;
-  height: 100%;
-  padding : 0 100px;
+  padding : 50px 100px;
   background-color: rgba(0,0,0, 0.1);
   border-radius: 10px;
   display: flex;
@@ -83,7 +77,7 @@
 @media screen and (max-width : 740px) {
   .profile-contents-wrapper{
     flex-direction: column;
-    padding : 0 30px;
+    padding : 40px 30px;
     gap: 10px;
   }
   .profile-contents-wrapper .profile-texts{
@@ -93,9 +87,9 @@
   .profile-photo{
     margin-top: 60px;
   }
-  .profile-wrapper .profile-background-wrapper .profile-backgroun{
+  /* .profile-wrapper .profile-background-wrapper .profile-backgroun{
     height: 460px;
-  }
+  } */
 }
 
 .profile-texts{
@@ -103,7 +97,6 @@
   flex-direction: column;
   gap : 5px;
   flex-grow: 1;
-  /* padding : 30px 0; */
 }
 
 /* 이름, 소개 공통 */
@@ -161,17 +154,8 @@
   bottom : 0;
   right : 0;
   z-index: 10;
-  /* display: inline-block;  */
-  /* height: 40px; */
-  /* line-height: 40px; */
-  /* padding: 0 10px; */
-  /* border: 1px solid #b2e0e0; */
-  /* border : 1px solid rgba(0, 0, 0, 0.22); */
-  /* border-radius: 4px; */
-  /* background-color: #b2e0e0; */
-  
-  
 } 
+
 .file-dropper input[type="file"] { 
   /* 파일 필드 숨기기 */ 
   position: absolute; 

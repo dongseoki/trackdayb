@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import './Profile.css';
 import Avatar from '@mui/material/Avatar';
 import { BsPlusCircleFill } from "react-icons/bs";
+
 import TextField from '@mui/material/TextField';
+import CardMedia from '@mui/material/CardMedia';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { CHANGE_MY_INFO_REQUEST } from "../reducers/user";
@@ -117,10 +119,10 @@ const Profile = () => {
         }
     },[changeMyInfoDone])
 
+
     const styles = {
         paperContainer: {
-            backgroundImage: `url(${backgroundSrc})`,
-            position: 'relative',
+            backgroundImage: `url(${backgroundSrc})`
         }
     };
 
@@ -138,7 +140,30 @@ const Profile = () => {
                         <button type="button" className="modifyBtn" onClick={editFlagHandler}>수정</button>
                     }
                     </div>
-                    <Paper style={styles.paperContainer}>
+
+                    <div className="profile-wrapper">
+                        <div className="profile-background-wrapper">
+                            {/* <CardMedia
+                                className="profile-background"
+                                component="img"
+                                image={backgroundSrc}
+                            /> */}
+                            <Paper style={styles.paperContainer}>
+                                hello<br/>
+                                hello<br/>
+                                hello<br/>
+                                hello<br/>
+
+                            </Paper>
+                            <div className="file-wrapper">
+                                {editFlag?
+                                <div className="file-dropper">
+                                    <label className="edit-label" htmlFor="background"><BsPlusCircleFill className="edit-icon" /></label>
+                                    <input id="background" type="file" accept="image/*" onChange={backgroundSelectHandler}/>
+                                </div> 
+                            : null}
+                            </div>
+                        </div>    
                         <div className="profile-contents-wrapper">
                             <div className="profile-texts">
                                 <div className="profile-name">
@@ -161,7 +186,7 @@ const Profile = () => {
                                     <div className="profile-text-content">{ name }</div>
                                     }
                                 </div>
-
+                                
                                 <div className="profile-introduction">
                                     {editFlag? 
                                     <TextField
@@ -183,6 +208,7 @@ const Profile = () => {
                                     <pre className="profile-text-content">{introduction}</pre>
                                     }
                                 </div>
+
                                 <div className="profile-emailAddress">
                                     {editFlag? 
                                     <TextField 
@@ -224,6 +250,7 @@ const Profile = () => {
                                     <div className="profile-text-content">{phoneNumber}</div>
                                     }
                                 </div>
+                                
                             </div>
 
                             <div className="profile-photo">
@@ -244,16 +271,7 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="file-wrapper">
-                            {editFlag?
-                            <div className="file-dropper">
-                                <label className="edit-label" htmlFor="background"><BsPlusCircleFill className="edit-icon" /></label>
-                                <input id="background" type="file" accept="image/*" onChange={backgroundSelectHandler}/>
-                            </div> 
-                            : null}
-                        </div>
-                    </Paper>
+                    </div> 
                 </form>           
             </div>
         </>
