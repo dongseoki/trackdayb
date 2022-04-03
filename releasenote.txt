@@ -250,7 +250,7 @@ Release 1.3.1.0
 Release 1.3.1.1
   - README 업데이트
 
-Release
+Release 1.4.0.0
   - currentUser API 수정(개인 보안정보(비밀번호 및 리프래시토큰)를 응답으로 반환하지 않도록 조치함.)
   - currentUser API 수정(연동 sns 정보 가져오도록 설정.)
   - Rxjava test.
@@ -265,7 +265,6 @@ Release
   - SNS 간편 회원가입 API 수정 : 아이디를 입력받도록 조치함.
   - 회원 정보 변경 API 추가.
 
-Release 
   - goal&activity redux-saga 전환
   - user redux-saga 전환
   - sns 로그인 기능 개발
@@ -274,13 +273,11 @@ Release
   - myPage 기능 개발
   - 회원 탈퇴 기능 개발
 
-Release
  - 로그인,회원가입,sns로그인,간편회원가입에 myInfo state 추가
  - 목표 정렬조건 서버로 요청 구현
  - 간편가입시 memberId + 이름 받기 처리
  - 비밀번호 변경 기능 개발
 
-Release
  - 운영 환경과 로컬 개발환경에 따른 upload file 폴더 변경이 가능하도록 설정.
  - SNS계정 연동 해지 API 개발 완료
  - 안쓰는 js파일 삭제
@@ -290,13 +287,11 @@ Release
  - 목표 삭제 API 수정 요청 - 삭제 성공시 goalId를 반환하도록 #76
  - git commit 으로 이슈 끄기.
 
-Release
  - 부모 목표 삭제시 자식 목표의 내용 및 제목이 빈 값으로 바뀌는 문제 해결.
  - 목표 관리 페이지 : 목표모아보기, 시작일, 오름차순을 선택시 적절히 정렬이 안되는 문제 해결.(원인 대소문자.)
  - 회정 정보 수정 API 변경 : 변경 전 파일 삭제 로직 추가.
  - 회원 정보 변경 API 수정 : 변경 된 회원정보를 반환하도록 수정.
 
-Release
  - goal, activity 정렬
  - bug) 탈퇴후 새로 가입/로그인시 탈퇴완료 메시지 뜨는 현상 해결
  - SNS 계정연동 해지기능 API 연결

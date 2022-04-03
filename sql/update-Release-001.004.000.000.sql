@@ -41,6 +41,29 @@ ALTER TABLE trackday.sns_link_info DROP KEY sns_link_info_UN;
 ALTER TABLE trackday.`member` MODIFY COLUMN member_id varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '멤버 아이디';
 
 /* member 테이블 사용하지 않는 컬럼 및 키 제거. */
-ALTER TABLE trackday.`member` DROP KEY member_UN;
 ALTER TABLE trackday.`member` DROP COLUMN sns_link_status;
 ALTER TABLE trackday.`member` DROP COLUMN linked_email;
+
+
+
+/*  --------------  */
+ALTER TABLE trackday.file CHANGE file_name original_file_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '확장자명을 포함한 이름';
+
+ALTER TABLE trackday.file MODIFY COLUMN `path` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '경로명';
+ALTER TABLE trackday.file MODIFY COLUMN original_file_name varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '확장자명을 포함한 이름';
+
+ALTER TABLE trackday.file CHANGE extension_name content_type varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '컨텐츠 타입';
+ALTER TABLE trackday.file MODIFY COLUMN content_type varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '컨텐츠 타입';
+
+ALTER TABLE trackday.file ADD uuid varchar(300) NULL;
+ALTER TABLE trackday.file CHANGE uuid uuid varchar(300) NULL AFTER original_file_name;
+
+/*  ----------------------*/
+
+ALTER TABLE trackday.file DROP COLUMN uuid;
+ALTER TABLE trackday.file DROP COLUMN content_type;
+ALTER TABLE trackday.file DROP COLUMN `path`;
+
+ALTER TABLE trackday.file ADD store_file_name varchar(1000) NOT NULL COMMENT '저장 파일명';
+ALTER TABLE trackday.file CHANGE store_file_name store_file_name varchar(1000) NOT NULL COMMENT '저장 파일명' AFTER original_file_name;
+ALTER TABLE trackday.file MODIFY COLUMN original_file_name varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '업로드 파일명';
