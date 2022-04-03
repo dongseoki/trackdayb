@@ -156,13 +156,15 @@ function GoalModifyFormModal({modifyData, targetIndex}){
 
   // 시작일, 종료일 변경시 내부 모달 목표 타이틀 리스트 업데이트
   useEffect(() =>{
-    dispatch({
-      type : LOAD_GOALMODALTITLELIST_REQUEST,
-      data : {
-        searchStartDatetime : dayjs(startDatetime).format("YYYY-MM-DD"),
-        searchEndDatetime : dayjs(endDatetime).format("YYYY-MM-DD")
-      }
-    })
+    if(open){
+      dispatch({
+        type : LOAD_GOALMODALTITLELIST_REQUEST,
+        data : {
+          searchStartDatetime : dayjs(startDatetime).format("YYYY-MM-DD"),
+          searchEndDatetime : dayjs(endDatetime).format("YYYY-MM-DD")
+        }
+      })
+    }
   },[startDatetime, endDatetime])
 
   const handleFormSubmit = async (evt) =>{
