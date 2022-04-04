@@ -5,7 +5,7 @@ import goalSaga from './goal';
 import activitySaga from './activity';
 import userSaga from './user';
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 // axios.defaults.withCredentials = true; // 다른포트로 쿠키 전달 허용
 
 export default function* rootSaga() {

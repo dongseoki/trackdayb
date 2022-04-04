@@ -43,7 +43,10 @@ logs/
 application.yml
 application-oauth.properties
 
+## 환경변수
 .env
+.env.development
+.env.production
 
 ### operation log
 replay_pid.*.log
