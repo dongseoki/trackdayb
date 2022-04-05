@@ -71,7 +71,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // .antMatchers("/**").permitAll()
                 // [1] end.
                 // [2]
-//                .antMatchers("/time*","/goal*", "/report*", "/community*", "/login*", "/signup*").permitAll()
+
+                //페이지 접근 허용 설정.
+                .antMatchers("/time*","/goal*", "/report*", "/community*", "/login*", "/signup*", "/mypage*").permitAll()
+
                 .antMatchers("/report*", "/community*", "/login*", "/signup*").permitAll()
                 .antMatchers("/index*", "/static/**", "/*.js", "/*.json", "/*.ico","/*.txt").permitAll()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()

@@ -300,3 +300,6 @@ Release 1.4.0.0
  - 활동 삭제 API 결과 acitivityId 받아서 처리
  - 목표 삭제 API 결과 goalId 받아서 처리
  - mypage myInfo 변경 기능 처리
+
+Release 1.4.0.1
+ - 페이지 접근 허용 설정.
