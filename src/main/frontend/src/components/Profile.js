@@ -121,7 +121,7 @@ const Profile = () => {
         paperContainer: {
             backgroundImage: `url(${backgroundSrc})`,
             position: 'relative',
-        }
+        },
     };
 
     return (
@@ -250,7 +250,8 @@ const Profile = () => {
                             <div className="file-dropper">
                                 <label className="edit-label" htmlFor="background"><BsPlusCircleFill className="edit-icon" /></label>
                                 <input id="background" type="file" accept="image/*" onChange={backgroundSelectHandler}/>
-                            </div> 
+                                <div className="size-guild">권장사이즈 (1150*350), 바둑판식 배열</div>
+                            </div>                          
                             : null}
                         </div>
                     </Paper>
