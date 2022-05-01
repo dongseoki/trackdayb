@@ -254,8 +254,12 @@ useEffect(() => {
 #### 개선 사항
 
 ### 실행 방법
+* 개발 환경을 구성하여 테스트 할수 있음.
+* 아래 링크 참조.
+https://bejewled-second-8a2.notion.site/20220501-ed1597ae51434ad2a89da163eebae88d
 
-### license
+### 작성된 문서
+* document 폴더 참고.
 
 ### 사용한 협업 도구.
 * notion
@@ -266,3 +270,7 @@ useEffect(() => {
   * API 테스트를 공유하기 위해 사용.
   * 
     [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/18053149-fb565c62-4e14-47f0-9f49-e439ea495e4a?action=collection%2Ffork&collection-url=entityId%3D18053149-fb565c62-4e14-47f0-9f49-e439ea495e4a%26entityType%3Dcollection%26workspaceId%3D02400cf2-b32d-40d2-b78a-a24fe6f53e68)
+
+### 참고사항
+* 위키에 설계에 대한 간단한 페이지가 있음.
+* 이슈의 처리 과정은 issue 탭에서 확인 가능.
