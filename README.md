@@ -95,20 +95,23 @@ http://52.79.223.169:8080/
 - 통신 :
   - Axios: 서버 통신을 위해 사용
 - 스타일 :
-  - styled-components : 가독성 및 편의성을 위해 사용
+  - material-UI : UI 통일성을 위해 사용
+  - emotion : mui 커스텀을 위해 사용
 - 프레임워크 : 
   - spring boot(ver 2.5.2)) : 자바 기반의 웹 어플리케이션을 만들수 있는 프레임 워크
   - spring security : Spring 기반의 애플리케이션의 보안(인증과 권한, 인가 등)을 담당하는 스프링 하위 프레임워크
   - mybatis : 개발자가 지정한 SQL, 저장프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크
 - 라이브러리(패키지) :
-  - React-Slick : Carousel 기능과 LazyLoad 기능을 통해 서버 효율성을 높이기 위해 사용
-  - Moment : 시간 및 날짜 설정을 위해 사용
-  - lombok : 어노테이션 기반으로 코드를 자동완성 해주는 라이브러리
-  - javax.validation :  오브젝트 레벨의 제약 선언 및 유효성 검사 기술
-  - swagger : API 문서 자동화를 지원하는 라이브러리
-  - gson : Java에서 Json을 파싱하고, 생성하기 위해 사용되는. 구글에서 개발한 오픈소스
-  - commons-lang3 :  java.lang API를 위한 수많은 도우미 유틸리티, 특히 문자열 조작 메서드, 기본 수치 메소드, 객체 반사, 동시성, 생성 및 직렬화, 시스템 속성을 제공
-  - commons-collections4 : collection과 관련된 새로운 인터페이스, 구현체 및 유틸리티를 제공함으로써 JDK 클래스를 기반으로 빌드하는 것을 추구.
+  - dayjs : Date 타입 처리를 위해 사용
+  - dotenv : React 내부 환경변수를 위해 사용
+  - randomcolor : 목표추가시 라벨 색상 랜덤값 생성을 위해 사용
+  - react-colorful : 목표추가시 라벨 색상 선택을 위한 컬러 picker
+  - react-datepicker : 목표/활동 조회시 기간선택을 위해 사용
+  - react-google-login : 구글아이디로 로그인 연동을 위해 사용
+  - react-icons : 아이콘을 위해 사용
+  - redux : 상태관리를 위해 사용
+  - redux-saga : 상태관리 비동기 처리를 위해 사용
+  - react-toastify : 알림창을 위해 사용
 <hr>
 
 ## ERD
