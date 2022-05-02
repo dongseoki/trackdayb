@@ -151,7 +151,7 @@ https://www.erdcloud.com/p/pMhndMEj8ag42BjaR
   * 원인 : javascript 소스파일을 React에서 import 하여 사용하는데 어려움
   * 해결방안 : 리액트 전용 JSEncrypt 라이브러리 사용(npm 모듈)
 
-* 리덕스 적용 accessToken/refreshToken 정보 날아감(22.03.03)
+* 리덕스 적용 이후 새로고침 시 accessToken/refreshToken 날아감(22.03.03)
   * 상황 : 리덕스를 적용하여 accessToken/refreshToken을 상태값으로 저장하고, 새로고침시 토큰 정보 날아감
   * 원인 : 토큰정보를 state 처럼 상태값으로 사용한 것
   * 해결방안 : 토큰정보들은 saga에서 API 통신 이후 localstorage.setItem 명령어로 로컬스토리지에 별도로 저장
