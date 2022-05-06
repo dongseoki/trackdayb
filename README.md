@@ -95,20 +95,23 @@ http://52.79.223.169:8080/
 - 통신 :
   - Axios: 서버 통신을 위해 사용
 - 스타일 :
-  - styled-components : 가독성 및 편의성을 위해 사용
+  - material-UI : UI 통일성을 위해 사용
+  - emotion : mui 커스텀을 위해 사용
 - 프레임워크 : 
   - spring boot(ver 2.5.2)) : 자바 기반의 웹 어플리케이션을 만들수 있는 프레임 워크
   - spring security : Spring 기반의 애플리케이션의 보안(인증과 권한, 인가 등)을 담당하는 스프링 하위 프레임워크
   - mybatis : 개발자가 지정한 SQL, 저장프로시저 그리고 몇가지 고급 매핑을 지원하는 퍼시스턴스 프레임워크
 - 라이브러리(패키지) :
-  - React-Slick : Carousel 기능과 LazyLoad 기능을 통해 서버 효율성을 높이기 위해 사용
-  - Moment : 시간 및 날짜 설정을 위해 사용
-  - lombok : 어노테이션 기반으로 코드를 자동완성 해주는 라이브러리
-  - javax.validation :  오브젝트 레벨의 제약 선언 및 유효성 검사 기술
-  - swagger : API 문서 자동화를 지원하는 라이브러리
-  - gson : Java에서 Json을 파싱하고, 생성하기 위해 사용되는. 구글에서 개발한 오픈소스
-  - commons-lang3 :  java.lang API를 위한 수많은 도우미 유틸리티, 특히 문자열 조작 메서드, 기본 수치 메소드, 객체 반사, 동시성, 생성 및 직렬화, 시스템 속성을 제공
-  - commons-collections4 : collection과 관련된 새로운 인터페이스, 구현체 및 유틸리티를 제공함으로써 JDK 클래스를 기반으로 빌드하는 것을 추구.
+  - dayjs : Date 타입 처리를 위해 사용
+  - dotenv : React 내부 환경변수를 위해 사용
+  - randomcolor : 목표추가시 라벨 색상 랜덤값 생성을 위해 사용
+  - react-colorful : 목표추가시 라벨 색상 선택을 위한 컬러 picker
+  - react-datepicker : 목표/활동 조회시 기간선택을 위해 사용
+  - react-google-login : 구글아이디로 로그인 연동을 위해 사용
+  - react-icons : 아이콘을 위해 사용
+  - redux : 상태관리를 위해 사용
+  - redux-saga : 상태관리 비동기 처리를 위해 사용
+  - react-toastify : 알림창을 위해 사용
 <hr>
 
 ## ERD
@@ -141,54 +144,23 @@ https://www.erdcloud.com/p/pMhndMEj8ag42BjaR
 
 <hr>
 
-## 🙉 Troubleshooting (예시)
+## 🙉 Troubleshooting
 ### Frontend
-#### 1. 하위 컴포넌트의 이벤트로 상위 컴포넌트의 state 변경 문제
+* 로그인 및 회원가입 등에서 패스워드 RSA암호화 하여 전달(22.01.17)
+  * 상황 : 로그인 및 회원가입시 패스워드를 RSA로 암호화하여 전달, RSA암호화를 위한 JS 소스파일을 사용하지 못하는 상황
+  * 원인 : javascript 소스파일을 React에서 import 하여 사용하는데 어려움
+  * 해결방안 : 리액트 전용 JSEncrypt 라이브러리 사용(npm 모듈)
 
-- 상위 컴포넌트에 이벤트를 생성하여 Prop로 전달하는 방법 -> driling 이슈 발생
+* 리덕스 적용 이후 새로고침 시 accessToken/refreshToken 날아감(22.03.03)
+  * 상황 : 리덕스를 적용하여 accessToken/refreshToken을 상태값으로 저장하고, 새로고침시 토큰 정보 날아감
+  * 원인 : 토큰정보를 state 처럼 상태값으로 사용한 것
+  * 해결방안 : 토큰정보들은 saga에서 API 통신 이후 localstorage.setItem 명령어로 로컬스토리지에 별도로 저장
 
-```jsx
-const [state, setState] = useState(false);
+* 성능 개선 (22.03.28)
+  * 상황 : 목표조회 페이지 랜더링시 지나치게 많은 API 요청
+  * 원인 : 목표카드 하나하나 마다 modifyModal 코드 내부의 API 요청이 가는 것
+  * 해결방안 : 목표카드 개수별로 다 요청이 가던 것을 수정 모달창이 open 되었을 때만 요청가도록 처리
 
-const render = temp => {
-  setState(temp);
-};
-```
-
-- history로 props를 전달하고, uselocation을 활용하여 데이터를 전달하는 방법  
-  -> 변경이 필요한 데이터의 관리가 어렵고, 컴포넌트 구조가 복잡해짐에 따라 사용이 제한적
-
-```jsx
-const goToMulti = () => {
-  history.push({
-    pathname: "/multi",
-    state: { multiId: multiId },
-  });
-};
-```
-
-- **모든 페이지의 paramsId를 Redux Store에 저장하여 필요시 사용하는 방법울 사용하여 해결**
-
-```jsx
-const paramsSlice = createSlice({
-  name: "params",
-  initialState,
-  reducers: {
-    SetParams: (state, action) => {
-      state.paramsId = action.payload;
-    },
-  },
-});
-```
-
-```jsx
-useEffect(() => {
-  dispatch(DetailDB(multiId));
-  dispatch(SetParams(multiId));
-}, [dispatch, multiId]);
-```
-
-<hr>
 
 ### Backend
 * 서버다운이슈(21.12.25)
@@ -212,6 +184,22 @@ useEffect(() => {
 
 ## 회고
 ### Frontend
+#### 좋았던 점
+* 실전 프로젝트를 통해 모호하던 개념을 정리할 수 있었다.
+  * 혼자 공부하던 React를 서비스에 응용해 본 것이 좋았다.
+  * 함께 프로젝트를 진행한 분께 정말 많은 걸 배웠다. 동석님 감사드립니다.
+   
+#### 아쉬웠던 점
+* 웹개발자는 신속정확이 생명이다. 하지만 그렇게 진행하지 못했다.
+* 다양한 기술을 적용해보지 않았다.
+* 디버깅을 구글링에만 의존하고, 면밀히 검토하지 않았다.
+* 리팩토링이나, 기능수정을 하면서, 영향도를 깊이 생각하지 않고 작업하여 중간에 배포 주기를 딜레이 하였다.
+   
+#### 앞으로 나아갈 방향
+* Javascript Deep Dive
+* 아이디어를 신속 정확하게 구현하는 연습
+* 테스트 코드 작성
+* 풀스택을 위한 트랙데이 뜯어보기
 
 ### Backend
 #### 좋았던 점
