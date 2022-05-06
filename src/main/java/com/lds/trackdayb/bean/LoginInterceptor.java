@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 // test
 // @Component
+// 더이상 사용하지 않는 클레스.(이전에 스프링 세큐리티 없이 로그인을 구현할때 사용함.)
 public class LoginInterceptor implements HandlerInterceptor{
     static final Logger LOGGER = LoggerFactory.getLogger(LoginInterceptor.class);
     private ObjectMapper objectMapper = new ObjectMapper();

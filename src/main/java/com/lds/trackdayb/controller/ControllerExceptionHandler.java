@@ -19,16 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ControllerExceptionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-//    @ExceptionHandler(IllegalStateException.class)
-//    protected ResponseEntity<ResultMVO> handleCustomException(IllegalStateException e){
-//        LOGGER.error("handle Exception Test");
-//        ResultMVO resultMVO = new ResultMVO();
-//        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-//        resultMVO.setMessage("error test");
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.BAD_REQUEST);
-//    }
-
 //    UsernameNotFoundException
     @ExceptionHandler(UsernameNotFoundException.class)
     protected ResponseEntity<ResultMVO> handleUsernameNotFoundException(UsernameNotFoundException e){

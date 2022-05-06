@@ -86,7 +86,4 @@ public final class CommonCodeUtil {
         return sb.toString();
     }
 
-//    출처
-//    https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=loverman85&logNo=221090063698
-
 }

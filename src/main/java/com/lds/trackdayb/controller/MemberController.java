@@ -180,15 +180,6 @@ public class MemberController {
 
         }
 
-//        String redirect_uri = request.getScheme() + "://" +   // "http" + "://
-//                request.getServerName() +       // "myhost"
-//                ":" + request.getServerPort(); // ":" + "8080"
-//        try{
-//            response.sendRedirect(redirect_uri);
-//        }catch (Exception exception){
-//
-//        }
-        //
         return "success?";
     }
 
@@ -210,6 +201,7 @@ public class MemberController {
         return resultMVO;
     }
 
+    // 로그인 인터셉터를 이용한 login 예시.
     // @PostMapping(value = "/login")
     // public ResultMVO login(@RequestBody MemberDTO memberDTO,HttpServletRequest request){
     //     ResultMVO resultMVO = new ResultMVO();
@@ -234,6 +226,8 @@ public class MemberController {
 
     //     return resultMVO; 
     // }
+
+
     @PostMapping("/reissue")
     public ResponseEntity<ResultMVO> reissue(@Valid @RequestBody TokenRequestDTO tokenRequestDTO){
         ResultMVO resultMVO = new ResultMVO();
@@ -320,6 +314,7 @@ public class MemberController {
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
 
+    // login interceptor를 사용한 테스트.
     // @PostMapping(value = "/signup")
     // public ResultMVO signup(@RequestBody MemberDTO memberDTO){
     //     ResultMVO resultMVO = new ResultMVO();
@@ -467,12 +462,6 @@ public class MemberController {
     }
 
 
-    // @PostMapping("/signup")
-    // public ResponseEntity<User> signup(
-    //         @Valid @RequestBody UserDto userDto
-    // ) {
-    //     return ResponseEntity.ok(userService.signup(userDto));
-    // }
 
     @GetMapping("/currentUser")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -497,33 +486,7 @@ public class MemberController {
     }
 
     @PostMapping("/memberinfo")
-//    public ResultMVO changeMemberInfo(@RequestParam(value = "name",required = false) String name,
-//                                      @RequestParam(value = "phoneNumber",required = false) String phoneNumber,
-//                                      @RequestParam(value = "emailAddress",required = false) String emailAddress,
-//                                      @RequestParam(value = "introduction",required = false) String introduction,
-//                                      @RequestParam(value = "profilePhoto",required = false) MultipartFile profilePhoto,
-//                                      @RequestParam(value = "backgroundPhoto",required = false) MultipartFile backgroundPhoto) throws IOException {
     public ResultMVO changeMemberInfo(@ModelAttribute MemberForm memberForm) throws IOException {
-
-//        MemberForm memberForm = new MemberForm();
-//        if(!StringUtils.isEmpty(name)){
-//            memberForm.setName(name);
-//        }
-//        if(!StringUtils.isEmpty(phoneNumber)){
-//            memberForm.setPhoneNumber(phoneNumber);
-//        }
-//        if(!StringUtils.isEmpty(emailAddress)){
-//            memberForm.setEmailAddress(emailAddress);
-//        }
-//        if(!StringUtils.isEmpty(introduction)){
-//            memberForm.setIntroduction(introduction);
-//        }
-//        if(!ObjectUtils.isEmpty(profilePhoto)){
-//            memberForm.setProfilePhoto(profilePhoto);
-//        }
-//        if(!ObjectUtils.isEmpty(backgroundPhoto)){
-//            memberForm.setBackgroundPhoto(backgroundPhoto);
-//        }
 
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);

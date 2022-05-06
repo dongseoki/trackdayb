@@ -25,11 +25,9 @@ public class MvcConfig implements WebMvcConfigurer{
         .setViewName("forward:/");
     registry.addViewController("/**/{spring:\\w+}")
         .setViewName("forward:/");
-    // registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
-    //     .setViewName("forward:/");
   }
 
-  // test
+  // 로그인 인터셉터를 이용할 경우 사용.
   // @Override
   // public void addInterceptors(InterceptorRegistry registry) {
   //     registry.addInterceptor(loginInterceptor)

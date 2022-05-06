@@ -27,16 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
-// @RestController
-// public class TestController {
-//     @Autowired
-//     private TestService testService;
-
-//     @GetMapping("/v1/board")
-//     public List<Map<String, Object>> getCitys() {
-//         return testService.getCitys();
-//     }
-// }
 
 @RequiredArgsConstructor
 @Controller
