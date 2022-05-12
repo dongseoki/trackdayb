@@ -115,7 +115,6 @@ http://52.79.223.169:8080/
 <hr>
 
 ## ERD
-<iframe width="600" height="336" src="https://www.erdcloud.com/p/pMhndMEj8ag42BjaR" frameborder="0" allowfullscreen></iframe>
 https://www.erdcloud.com/p/pMhndMEj8ag42BjaR
 
 ## 🕹️ 주요 기능
