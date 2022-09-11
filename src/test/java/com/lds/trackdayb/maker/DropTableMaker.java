@@ -1,4 +1,4 @@
-package com.lds.trackdayb;
+package com.lds.trackdayb.maker;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

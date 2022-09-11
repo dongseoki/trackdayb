@@ -1,3 +1,5 @@
+package com.lds.trackdayb;
+
 import com.lds.trackdayb.util.SecurityUtil;
 
 public class validationTest {

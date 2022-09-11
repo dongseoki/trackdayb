@@ -1,4 +1,4 @@
-package com.lds.trackdayb;
+package com.lds.trackdayb.rxjava;
 
 import io.reactivex.Flowable;
 
