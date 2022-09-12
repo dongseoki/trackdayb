@@ -12,7 +12,9 @@
 
 ### 4. [기술 스텍 및 라이브러리](#-기술-스텍-및-라이브러리)
 
-### 5. [ERD](#erd)
+### 5. 설계
+#### 5.1 [ERD](#erd)
+#### 5.2 [Rest API 명세](#restapidoc)
 
 ### 6. [주요 기능](#%EF%B8%8F-주요-기능)
 
@@ -114,8 +116,13 @@ http://52.79.223.169:8080/
   - react-toastify : 알림창을 위해 사용
 <hr>
 
-## ERD
+## 설계
+
+### ERD
 https://www.erdcloud.com/p/pMhndMEj8ag42BjaR
+
+### restApiDoc
+[RestApi 명세서 링크](https://1drv.ms/x/s!Agrqa6K66vWeg-ENocIu-UrQvj4h5w?e=tmf5RS)
 
 ## 🕹️ 주요 기능
 
