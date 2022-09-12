@@ -8,15 +8,6 @@ import com.lds.trackdayb.vo.ActivityVO;
 import com.lds.trackdayb.vo.TimeRecordVO;
 
 public interface TimeManageService {
-    void createTimeRecord(TimeRecordVO vo);
-
-    TimeRecordMVO selectTimeRecord(TimeRecordVO vo);
-
-    TimeRecordMVO modifyTimeRecord(TimeRecordVO timeRecordVO);
-
-    TimeRecordMVO deleteTimeRecord(TimeRecordVO timeRecordVO);
-
-    List<TimeRecordMVO> selectTimeRecordList(List<String> selectedDateList, String memberSerialNumber);
 
     List<ActivityMVO> getActivityList(ActivityVO activityVO);
 

@@ -2,7 +2,6 @@ package com.lds.trackdayb.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.PrivateKey;
 import java.util.*;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -26,7 +25,6 @@ import com.lds.trackdayb.util.SecurityUtil;
 
 import com.lds.trackdayb.vo.MemberForm;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +48,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import static com.lds.trackdayb.util.CommonCodeUtil.supportFilePartNameToFilePartIdMap;
 import static com.lds.trackdayb.util.RSAHelper.*;
@@ -73,14 +70,6 @@ public class MemberServiceImpl extends MemberService {
 
     @Override
     public String save(MemberEntity memberEntity) {
-        // MessageDigest md = null;
-        // try {
-        // md = MessageDigest.getInstance("SHA-512");
-        // } catch (NoSuchAlgorithmException e) {
-        // e.printStackTrace();
-        // }
-        // md.update(memberDTO.getPassword().getBytes());
-        // String hex = String.format("%0128x", new BigInteger(1, md.digest()));
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         memberEntity.setPassword(encoder.encode(memberEntity.getPassword()));
         memberRepository.save(memberEntity);
@@ -116,8 +105,6 @@ public class MemberServiceImpl extends MemberService {
         // RSA 복호화를 하여 password 해석.
         memberEntity =  RSApreprocess(request, memberEntity);
         String rsaDecrytedPwd = memberEntity.getPassword();
-
-
 
         if (!ObjectUtils.isEmpty(memberRepository.findByMemberId(memberEntity.getUsername()))) {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
@@ -224,21 +211,12 @@ public class MemberServiceImpl extends MemberService {
     public String googleAuthServerAuthenticate(String tokenId) throws Exception {
         String email = "";
 
-//        //HTTP Request를 위한 RestTemplate
-//        RestTemplate restTemplate = new RestTemplate();
-
-        // google example code
-
         GoogleIdTokenVerifier verifier =
                 new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                        // Specify the CLIENT_ID of the app that accesses the backend:
                         .setAudience(Collections.singletonList(SNS_GOOGLE_CLIENT_ID))
-                        // Or, if multiple clients access the backend:
-                        //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
                         .build();
 
 // (Receive idTokenString by HTTPS POST)
-
         try{
             GoogleIdToken idToken = verifier.verify(tokenId);
             if (idToken != null) {
@@ -254,11 +232,7 @@ public class MemberServiceImpl extends MemberService {
                 String name = (String) payload.get("name");
                 String pictureUrl = (String) payload.get("picture");
                 String locale = (String) payload.get("locale");
-                String familyName = (String) payload.get("family_name");
-                String givenName = (String) payload.get("given_name");
 
-                // Use or store profile information
-                // ...
                 LOGGER.info("test tokensignin : userId : {}, email : {} emailVerified:{}, name:{}, pictureUrl:{}, local:{}",userId,email,emailVerified,name,pictureUrl,locale);
                 if (StringUtils.isEmpty(email) || emailVerified == false){
                     throw new SnsAuthServerException("emailVerified false.");
@@ -346,20 +320,6 @@ public class MemberServiceImpl extends MemberService {
     }
 
 
-    public void RSApreprocessTest2(HttpServletRequest request, MemberEntity memberEntity) throws Exception {
-        HttpSession session = request.getSession();
-        PrivateKey privateKey = (PrivateKey) session.getAttribute("__rsaPrivateKey__");
-        session.removeAttribute("__rsaPrivateKey__"); // 키의 재사용을 막는다. 항상 새로운 키를 받도록 강제.
-        if (privateKey == null) {
-            throw new RuntimeException("암호화 비밀키 정보를 찾을 수 없습니다.");
-        }
-        String decodedMemberId = decryptRsa(privateKey, memberEntity.getMemberId());
-        String decodedPassword = decryptRsa(privateKey, memberEntity.getPassword());
-        memberEntity.setMemberId(decodedMemberId);
-        memberEntity.setPassword(decodedPassword);
-        return;
-    }
-
     @Override
     public void changePassword(HttpServletRequest request, PasswordChangeDTO passwordChangeDTO, MemberInfo memberInfo) throws Exception {
         //        RSApreprocess  로 복호화를 한다.
@@ -427,11 +387,6 @@ public class MemberServiceImpl extends MemberService {
 
         // 특정 경로에 파일 저장.
         UploadFile uploadFile = fileStore.storeFile(multipartFile);
-
-        // memberFile 로 변경 예정.
-        // 메모리 관리를 위한 삭제 처리.
-        // 차후 논의.
-//        fileStore.deleteFiles(memberSerialNumberber);
 
         // DB에 경로 저장.
         // 멤버 file id 변경.

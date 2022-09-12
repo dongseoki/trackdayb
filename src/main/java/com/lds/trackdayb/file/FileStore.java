@@ -35,8 +35,6 @@ public class FileStore {
     }
 
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
-//        String originalFilename = multipartFile.getOriginalFilename();
-
         // 변형. part의 name 을 이용. ex) "profilePhoto" 또는 "backgroundPhoto". etc..
         String filePartName = multipartFile.getName();
 

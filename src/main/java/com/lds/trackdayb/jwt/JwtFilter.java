@@ -50,16 +50,9 @@ public class JwtFilter extends GenericFilterBean {
        filterChain.doFilter(servletRequest, servletResponse);
     }
 
-
-
     // resolove token 의 역할
  // header에서 토큰 정보를 가져오고, 
 // 'Bearer'을 제외한 문자열만 반환해주도록 처리해줍니다
-
-//  참고자료
-//  우리가 궁금해하던 bearer는 위 형식에서 type에 해당합니다. 토큰에는 많은 종류가 있고 서버는 다양한 종류의 토큰을 처리하기 위해 전송받은 type에 따라 토큰을 다르게 처리합니다
-
-// https://velog.io/@cada/%ED%86%A0%EA%B7%BC-%EA%B8%B0%EB%B0%98-%EC%9D%B8%EC%A6%9D%EC%97%90%EC%84%9C-bearer%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%BC%EA%B9%8C#bearer
     private String resolveToken(HttpServletRequest request) {
        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

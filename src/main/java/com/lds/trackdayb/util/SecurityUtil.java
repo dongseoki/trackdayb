@@ -53,9 +53,6 @@ public class SecurityUtil {
          }else if(!password.matches(".*[0-9]+.*")){
                return "비밀번호는 숫자를 포함해야 합니다.";
          }
-         // if(!password.matches(".*[~!@#$%^&*()_+|<>?:{}]+.*")){
-         //       return "비밀번호는 특수문자를 포함해야 합니다.";
-         // }
          if (containsSpecialChar(password) == false) {
             return "비밀번호는 특수문자를 포함해야 합니다.";
          }

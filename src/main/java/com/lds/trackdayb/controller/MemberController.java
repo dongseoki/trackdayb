@@ -70,163 +70,7 @@ public class MemberController {
     private final MemberService memberService;
     private final TokenProvider tokenProvider;
     private final FileStore fileStore;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final ModelMapper modelMapper;
-    private final ServletContext servletContext;
     static final Logger LOGGER = LoggerFactory.getLogger(TimeManageController.class);
-
-    @GetMapping("/google/auth")
-    public String googleAuth(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "code") String authCode) throws JsonProcessingException {
-        final String GOOGLE_TOKEN_BASE_URL ="https://oauth2.googleapis.com/token";
-
-        //HTTP Request를 위한 RestTemplate
-        RestTemplate restTemplate = new RestTemplate();
-
-        String clientId = "XXXXXX";
-        String clientSecret = "XXXXXXX";
-        //Google OAuth Access Token 요청을 위한 파라미터 세팅
-        GoogleOAuthRequest googleOAuthRequestParam = GoogleOAuthRequest
-                .builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .code(authCode)
-                .redirectUri("http://localhost:8080/member/google/auth")
-                .grantType("authorization_code").build();
-
-
-        //JSON 파싱을 위한 기본값 세팅
-        //요청시 파라미터는 스네이크 케이스로 세팅되므로 Object mapper에 미리 설정해준다.
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        //AccessToken 발급 요청
-        ResponseEntity<String> resultEntity = restTemplate.postForEntity(GOOGLE_TOKEN_BASE_URL, googleOAuthRequestParam, String.class);
-
-        //Token Request
-        GoogleOAuthResponse result = mapper.readValue(resultEntity.getBody(), new TypeReference<GoogleOAuthResponse>() {
-        });
-
-        //ID Token만 추출 (사용자의 정보는 jwt로 인코딩 되어있다)
-        String jwtToken = result.getIdToken();
-        String requestUrl = UriComponentsBuilder.fromHttpUrl("https://oauth2.googleapis.com/tokeninfo")
-                .queryParam("id_token", jwtToken).encode().toUriString();
-
-        String resultJson = restTemplate.getForObject(requestUrl, String.class);
-
-        Map<String,String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>(){});
-
-        LOGGER.info("test userInfo : {}",userInfo.toString());
-
-        String redirect_uri = request.getScheme() + "://" +   // "http" + "://
-                request.getServerName() +       // "myhost"
-                ":" + request.getServerPort(); // ":" + "8080"
-        try{
-            response.sendRedirect(redirect_uri);
-        }catch (Exception exception){
-
-        }
-        return "success?";
-    }
-
-    @PostMapping("/google/tokensignin")
-    public String googleTokensignin(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "idtoken") String idTokenString) throws JsonProcessingException {
-        final String GOOGLE_TOKEN_BASE_URL ="https://oauth2.googleapis.com/token";
-
-        //HTTP Request를 위한 RestTemplate
-        RestTemplate restTemplate = new RestTemplate();
-
-        String CLIENT_ID = "618262920527-sl1h49hr7mugct12j5ab5g0q10kaso6n.apps.googleusercontent.com";
-        String clientSecret = "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";
-
-        // google example code
-
-        GoogleIdTokenVerifier verifier =
-                new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                // Specify the CLIENT_ID of the app that accesses the backend:
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                // Or, if multiple clients access the backend:
-                //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
-                .build();
-
-// (Receive idTokenString by HTTPS POST)
-
-        try{
-            GoogleIdToken idToken = verifier.verify(idTokenString);
-            if (idToken != null) {
-                Payload payload = idToken.getPayload();
-
-                // Print user identifier
-                String userId = payload.getSubject();
-                System.out.println("User ID: " + userId);
-
-                // Get profile information from payload
-                String email = payload.getEmail();
-                boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-                String name = (String) payload.get("name");
-                String pictureUrl = (String) payload.get("picture");
-                String locale = (String) payload.get("locale");
-                String familyName = (String) payload.get("family_name");
-                String givenName = (String) payload.get("given_name");
-
-                // Use or store profile information
-                // ...
-                LOGGER.info("test tokensignin : userId : {}, email : {} emailVerified:{}, name:{}, pictureUrl:{}, local:{}",userId,email,emailVerified,name,pictureUrl,locale);
-
-            } else {
-                LOGGER.info("test tokensignin : {}","Invalid ID token");
-            }
-        }catch (Exception e){
-
-        }
-
-        return "success?";
-    }
-
-    @PostMapping(value="/logout")
-    public ResultMVO logout(HttpServletRequest request) {
-        ResultMVO resultMVO = new ResultMVO();
-        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-        try {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();   // 세션 날림
-            }
-        } catch (Exception e) {
-            resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-            LOGGER.error("logout error {}", e.toString());
-        }
-
-    
-        return resultMVO;
-    }
-
-    // 로그인 인터셉터를 이용한 login 예시.
-    // @PostMapping(value = "/login")
-    // public ResultMVO login(@RequestBody MemberDTO memberDTO,HttpServletRequest request){
-    //     ResultMVO resultMVO = new ResultMVO();
-    //     resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-
-    //     try {
-    //         MemberDTO member = memberService.login(memberDTO.getMemberId(), memberDTO.getPassword());
-    //         if (member == null){
-    //             resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_LOGIN_FAIL);
-    //             resultMVO.setMessage("please check your id and password");
-    //         }else{
-    //             resultMVO.setMemberId(member.getMemberId());
-    //              // 로그인 성공 처리
-    //             HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
-    //             session.setAttribute(SessionCodeUtil.LOGIN_MEMBER, member.getMemberId());   // 세션에 로그인 회원 정보 보관
-    //         }
-    //     } catch (Exception e) {
-    //         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-    //         LOGGER.error("login exception", e.toString());
-    //         e.printStackTrace();
-    //     }
-
-    //     return resultMVO; 
-    // }
-
 
     @PostMapping("/reissue")
     public ResponseEntity<ResultMVO> reissue(@Valid @RequestBody TokenRequestDTO tokenRequestDTO){
@@ -238,9 +82,6 @@ public class MemberController {
         // reissue
         TokenDTO tokenInfo =  memberService.reissue(tokenRequestDTO);
         resultMVO.setTokenInfo(tokenInfo);
-
-        // anonymous issue. 멤버 아이디 설정 값이 익명으로 나오는 문제. 해결을 위해 아래 코드 주석 처리.
-//            resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
 
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
@@ -260,34 +101,10 @@ public class MemberController {
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/loginTest")
-    public ResponseEntity<ResultMVO> authorizeTest(@Valid @RequestBody MemberEntity memberEntity, HttpServletRequest request) throws Exception {
-        ResultMVO resultMVO = new ResultMVO();
-        resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-
-        // pwd 를 복호화함.
-        memberService.RSApreprocessTest2(request, memberEntity);
-
-        // spring security Authentication and create access and refreshtoken
-        TokenDTO tokenInfo = tokenProvider.createAccessAndRefreshToken(memberService.springSecurityUsernamePasswordAuthenticate(memberEntity.getUsername(), memberEntity.getPassword()));
-
-        // refresh token 수정.
-        memberService.updateRefreshToken(memberEntity.getMemberId(),tokenInfo.getRefreshToken());
-
-
-        resultMVO.setTokenInfo(tokenInfo);
-        resultMVO.setMemberId(SecurityUtil.getCurrentUsername().orElse(null));
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + tokenInfo.getAccessToken());
-        return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
-    }
-
     @GetMapping("/requestpublickey")
     public  ResponseEntity<ResultMVO> requestpublickey(HttpSession session) throws Exception{
         ResultMVO resultMVO = new ResultMVO();
         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-
 
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048);
@@ -313,22 +130,6 @@ public class MemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         return new ResponseEntity<>(resultMVO, httpHeaders, HttpStatus.OK);
     }
-
-    // login interceptor를 사용한 테스트.
-    // @PostMapping(value = "/signup")
-    // public ResultMVO signup(@RequestBody MemberDTO memberDTO){
-    //     ResultMVO resultMVO = new ResultMVO();
-    //     resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_SUCESS);
-    //     try {
-    //         memberService.save(memberDTO);
-    //     } catch (Exception e) {
-    //         LOGGER.error("signup error : {}", e.toString());
-    //         resultMVO.setResultCode(ResponseCodeUtil.RESULT_CODE_FAIL);
-    //         resultMVO.setMessage("signup fail.");
-    //     }
-
-    //     return resultMVO;
-    // }
 
     @PostMapping(value="/simplesignup/{snsName}")
     public ResultMVO simpleSignUp(@PathVariable("snsName") String snsName, @RequestBody SimpleSignUpVO simpleSignUpVO) throws Exception {
@@ -466,12 +267,6 @@ public class MemberController {
     @GetMapping("/currentUser")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public String getMyUserInfo(HttpServletRequest request) {
-//        String testPath = servletContext.getRealPath("/");
-//        System.out.println("testPath = " + testPath);
-//        String testPath2 = servletContext.getContextPath();
-//        System.out.println("testPath2 = " + testPath2);
-//        System.out.println("testPath3 =" + System.getProperty("user.dir"));
-//        System.out.println("testPath4 =" + fileStore.getFullPath("testfile.txt"));
         JsonObject jo = new JsonObject();
         jo.addProperty("resultCode", ResponseCodeUtil.RESULT_CODE_SUCESS);
         MemberInfo memberInfo =memberService.getMyUserWithAuthorities();

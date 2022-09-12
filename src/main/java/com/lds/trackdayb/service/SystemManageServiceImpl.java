@@ -36,10 +36,6 @@ public class SystemManageServiceImpl implements SystemManageService{
         return referenceFavoriteMVOs;
     }
 
-
-
-
-
     @Override
     public ReferenceFavoriteDefaultSettingDTO viewReferenceFavoriteDefaultSetting(String managementType,
             String timeUnit, String memberSerialNumber) {
@@ -49,8 +45,6 @@ public class SystemManageServiceImpl implements SystemManageService{
                 param.put("memberSerialNumber", memberSerialNumber);
         return systemManageRepository.selectReferenceFavoriteDefaultSetting(param);
     }
-
-
 
     @Override
     public List<ClassificationDTO> viewClassificationList(String managementType, String timeUnit,

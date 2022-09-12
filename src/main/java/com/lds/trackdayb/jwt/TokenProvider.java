@@ -131,12 +131,6 @@ public class TokenProvider implements InitializingBean {
    public Authentication getAuthentication(String token) {
 
       Claims claims = parseClaims(token);
-//      Claims claims = Jwts
-//              .parserBuilder()
-//              .setSigningKey(key)
-//              .build()
-//              .parseClaimsJws(token)
-//              .getBody();
       if (claims.get(AUTHORITIES_KEY) == null) {
          throw new RuntimeException("권한 정보가 없는 토큰입니다.");
       }

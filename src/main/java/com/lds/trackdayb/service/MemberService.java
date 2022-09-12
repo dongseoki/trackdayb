@@ -43,8 +43,6 @@ public abstract class MemberService implements UserDetailsService{
 
     public abstract TokenDTO idPwdLogin(HttpServletRequest request, MemberEntity memberEntity) throws Exception;
 
-    public abstract void RSApreprocessTest2(HttpServletRequest request, MemberEntity memberEntity) throws Exception;
-
     public abstract void changePassword(HttpServletRequest request, PasswordChangeDTO passwordChangeDTO, MemberInfo memberInfo) throws Exception;
 
     public abstract void changeMemberInfo(MemberForm memberForm) throws IOException;

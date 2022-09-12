@@ -144,41 +144,6 @@
         </foreach>
         ;
     </insert>
-
-
-    <!--    <select id="selectTimeRecord" resultType="TimeRecordMVO">-->
-    <!--        select *-->
-    <!--        FROM time_record-->
-    <!--        WHERE-->
-    <!--            1=1-->
-    <!--            AND-->
-    <!--            selection_date = #{selectionDate}-->
-    <!--            AND-->
-    <!--            member_serial_number = #{memberSerialNumber}-->
-    <!--            AND-->
-    <!--            deletion_status = 'N'-->
-    <!--        limit 1;-->
-    <!--    </select>-->
-
-    <!--    <select id="selectTimeRecord" resultType="TimeRecordMVO">-->
-    <!--        select-->
-    <!--        time_record_id as timeRecordId,-->
-    <!--        selection_date as selectionDate,-->
-    <!--        modification_datetime as modificationDatetime,-->
-    <!--        create_datetime as createDatetime,-->
-    <!--        deletion_status as deletionStatus,-->
-    <!--        member_serial_number as  memberSerialNumber-->
-    <!--        FROM time_record-->
-    <!--        WHERE-->
-    <!--        1=1-->
-    <!--        AND-->
-    <!--        selection_date = #{selectionDate}-->
-    <!--        AND-->
-    <!--        member_serial_number = #{memberSerialNumber}-->
-    <!--        AND-->
-    <!--        deletion_status = 'N'-->
-    <!--        limit 1;-->
-    <!--    </select>-->
     
     <resultMap id="activityResultMap" type="com.lds.trackdayb.mvo.ActivityMVO">
         <id column="activity_id" property="activityId"/>

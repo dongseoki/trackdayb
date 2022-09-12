@@ -84,12 +84,8 @@ public class GoalManageServiceImpl implements GoalManageService {
             deleteGoalVO.setSearchGoalId(goalVO.getGoalId());
             GoalMVO deleteGoal = goalManageRepository.getGoalTitleList(deleteGoalVO).get(0);
 
-
             param.setSearchParentId(deleteGoal.getGoalId());
             for (GoalMVO updateParam : goalManageRepository.getGoalFullList(param)){
-                // goal Id
-//                updateParam.setGoalId(goalMVO.getGoalId());
-                // parent Id
                 String parentId = deleteGoal.getParentId();
                 updateParam.setParentId(parentId);
                 if (StringUtils.isEmpty(parentId)){
@@ -101,10 +97,6 @@ public class GoalManageServiceImpl implements GoalManageService {
                 LOGGER.debug("in delete, update targetGoal : {}, updatedParentId : {}", updateParam.getGoalId(), updateParam.getParentId());
             }
         }
-
-        
-
-
         goalManageRepository.deleteGoal(goalVO);
         //PeriodicityInfo 는 삭제처리 되지 않음.
     }

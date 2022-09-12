@@ -48,9 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // corsFilter에 대해
                 // 서블릿 필터 인터페이스를 이용하여 개발되었다. 웹 서버의 모든 리소스의 요청을 가로채서 Cross-Domain 요청 인지를 체크하여 실제
                 // 요청 페이지에 전달하기전에 적절한 CORS 정책과 해더들을 적용한다.
-
-                // 서블릿 필터 방식이기 때문에 기존의 웹 서비스에 수정없이 쉽게 적용 할 수 있다. CORS jar 파일만 클래스패스 상에 복사하고
-                // web.xml에서 서블릿 필터 설정만 하면된다.
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .exceptionHandling()

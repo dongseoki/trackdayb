@@ -66,24 +66,4 @@ public final class CommonCodeUtil {
         return '#' + Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
     }
 
-    // byte[] to hex sting
-    public static String byteArrayToHex(byte[] ba) {
-        if (ba == null || ba.length == 0) {
-
-            return null;
-        }
-
-        StringBuffer sb = new StringBuffer(ba.length * 2);
-
-        String hexNumber = "";
-
-        for (int x = 0; x < ba.length; x++) {
-            hexNumber = "0" + Integer.toHexString(0xff & ba[x]);
-
-            sb.append(hexNumber.substring(hexNumber.length() - 2));
-
-        }
-        return sb.toString();
-    }
-
 }
